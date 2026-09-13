@@ -2,5 +2,31 @@
   "source": "star-athletes-draco-lab/assets-source/draco-master.png.png",
   "width": 1448,
   "height": 1086,
-  "mode": "RGBA"
+  "mode": "RGBA",
+  "version": "4.0.4",
+  "generated": [
+    "body_base.png",
+    "face_normal.png",
+    "face_happy.png",
+    "face_fight.png",
+    "face_sad.png",
+    "face_tired.png",
+    "horn_normal.png",
+    "horn_curl.png",
+    "horn_crystal.png",
+    "wing_normal.png",
+    "wing_feather.png",
+    "wing_crystal.png",
+    "tail_normal.png",
+    "tail_star.png",
+    "tail_leaf.png",
+    "pattern_star.png",
+    "pattern_moon.png",
+    "pattern_line.png",
+    "accessory_ribbon.png",
+    "accessory_scarf.png",
+    "accessory_flower.png",
+    "preview.png"
+  ],
+  "note": "Implementation crops generated from the approved Draco master sheet. No redraw."
 }
