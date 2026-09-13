@@ -3,8 +3,8 @@
   "width": 1448,
   "height": 1086,
   "mode": "RGBA",
-  "version": "4.0.4",
-  "generated": [
+  "version": "4.0.5",
+  "generated_raw": [
     "body_base.png",
     "face_normal.png",
     "face_happy.png",
@@ -25,8 +25,31 @@
     "pattern_line.png",
     "accessory_ribbon.png",
     "accessory_scarf.png",
-    "accessory_flower.png",
-    "preview.png"
+    "accessory_flower.png"
   ],
-  "note": "Implementation crops generated from the approved Draco master sheet. No redraw."
+  "generated_clean": [
+    "body_base_clean.png",
+    "face_normal_clean.png",
+    "face_happy_clean.png",
+    "face_fight_clean.png",
+    "face_sad_clean.png",
+    "face_tired_clean.png",
+    "horn_normal_clean.png",
+    "horn_curl_clean.png",
+    "horn_crystal_clean.png",
+    "wing_normal_clean.png",
+    "wing_feather_clean.png",
+    "wing_crystal_clean.png",
+    "tail_normal_clean.png",
+    "tail_star_clean.png",
+    "tail_leaf_clean.png",
+    "pattern_star_clean.png",
+    "pattern_moon_clean.png",
+    "pattern_line_clean.png",
+    "accessory_ribbon_clean.png",
+    "accessory_scarf_clean.png",
+    "accessory_flower_clean.png",
+    "preview_clean.png"
+  ],
+  "note": "Clean implementation assets: edge-connected sheet background removed; largest connected artwork component retained."
 }
