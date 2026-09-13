@@ -6,6 +6,7 @@ on:
     paths:
       - 'star-athletes-draco-lab/assets-source/**'
       - 'scripts/build_draco_assets.py'
+      - 'scripts/build_draco_variant_parts.py'
       - '.github/workflows/build-draco-assets.yml'
   workflow_dispatch:
 
@@ -22,6 +23,7 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install pillow
       - run: python scripts/build_draco_assets.py
+      - run: python scripts/build_draco_variant_parts.py
       - name: Commit generated assets
         run: |
           git config user.name "github-actions[bot]"
