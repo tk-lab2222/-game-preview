@@ -3,43 +3,77 @@
   "width": 1448,
   "height": 1086,
   "mode": "RGBA",
-  "version": "4.1.0",
-  "asset_revision": "410-exact-reference-patches",
+  "version": "4.1.1",
+  "asset_revision": "411-bilateral-reference-patches",
   "body_stage": {
     "file": "body_stage.png",
     "width": 545,
     "height": 515
   },
   "references": {
-    "horn": {
-      "file": "ref_horn.png",
+    "horn_left": {
+      "file": "ref_horn_left.png",
       "rect": [
-        135,
-        0,
-        390,
-        190
+        180,
+        5,
+        325,
+        165
       ],
       "anchor": {
-        "x": 0.481651376146789,
-        "y": 0.18446601941747573,
-        "scale": 0.46788990825688076,
+        "x": 0.463302752293578,
+        "y": 0.1650485436893204,
+        "scale": 0.26605504587155965,
         "rotation": 0,
         "flipX": false,
         "flipY": false
       }
     },
-    "wing": {
-      "file": "ref_wing.png",
+    "horn_right": {
+      "file": "ref_horn_right.png",
       "rect": [
-        45,
-        120,
-        250,
-        365
+        315,
+        35,
+        425,
+        170
       ],
       "anchor": {
-        "x": 0.2706422018348624,
-        "y": 0.470873786407767,
-        "scale": 0.3761467889908257,
+        "x": 0.6788990825688074,
+        "y": 0.19902912621359223,
+        "scale": 0.2018348623853211,
+        "rotation": 0,
+        "flipX": false,
+        "flipY": false
+      }
+    },
+    "wing_left": {
+      "file": "ref_wing_left.png",
+      "rect": [
+        45,
+        135,
+        270,
+        355
+      ],
+      "anchor": {
+        "x": 0.2889908256880734,
+        "y": 0.47572815533980584,
+        "scale": 0.41284403669724773,
+        "rotation": 0,
+        "flipX": false,
+        "flipY": false
+      }
+    },
+    "wing_right": {
+      "file": "ref_wing_right.png",
+      "rect": [
+        330,
+        165,
+        475,
+        350
+      ],
+      "anchor": {
+        "x": 0.7385321100917431,
+        "y": 0.5,
+        "scale": 0.26605504587155965,
         "rotation": 0,
         "flipX": false,
         "flipY": false
@@ -110,9 +144,11 @@
     "accessory_flower_clean.png",
     "preview_clean.png",
     "body_stage.png",
-    "ref_horn.png",
-    "ref_wing.png",
+    "ref_horn_left.png",
+    "ref_horn_right.png",
+    "ref_wing_left.png",
+    "ref_wing_right.png",
     "ref_tail.png"
   ],
-  "note": "Reference patches are copied directly from the approved body stage, so their canonical placement is pixel-exact."
+  "note": "Horn and wing references are split into screen-left and screen-right canonical patches. Each patch is copied directly from the approved body stage, so placement is pixel-exact."
 }
