@@ -10,7 +10,9 @@ OUT.mkdir(parents=True, exist_ok=True)
 im = Image.open(SRC).convert('RGBA')
 
 CROPS = {
-    'body_base.png': (105, 28, 510, 492),
+    # Expanded from (105, 28, 510, 492). The approved master sheet contains
+    # the complete Draco; the old crop was shaving the right edge.
+    'body_base.png': (75, 20, 518, 500),
     'face_normal.png': (526, 67, 694, 273),
     'face_happy.png': (697, 67, 868, 273),
     'face_fight.png': (870, 67, 1038, 273),
@@ -39,7 +41,6 @@ def bg_like(px):
     if a == 0:
         return True
     hi, lo = max(r, g, b), min(r, g, b)
-    # White / very pale blue sheet background.
     return (r > 228 and g > 232 and b > 232 and hi - lo < 30) or (r > 238 and g > 238 and b > 238)
 
 
@@ -140,7 +141,6 @@ for name, box in CROPS.items():
     assets[name] = clean
     clean_names.append(clean_name)
 
-# Transparent checker preview of the core implementation assets.
 thumb_w, thumb_h = 180, 170
 preview_items = [
     ('body', assets['body_base.png']),
@@ -154,7 +154,6 @@ preview = Image.new('RGB', (thumb_w * 3, thumb_h * 2), '#eef4fb')
 d = ImageDraw.Draw(preview)
 for i, (label, asset) in enumerate(preview_items):
     cell_x = (i % 3) * thumb_w; cell_y = (i // 3) * thumb_h
-    # checkerboard to make transparency visible
     for yy in range(cell_y, cell_y + thumb_h, 16):
         for xx in range(cell_x, cell_x + thumb_w, 16):
             c = '#ffffff' if ((xx-cell_x)//16 + (yy-cell_y)//16) % 2 == 0 else '#dce8f3'
@@ -171,9 +170,10 @@ meta = {
     'height': im.height,
     'mode': im.mode,
     'version': '4.0.5',
+    'asset_revision': '405b-full-body-crop',
     'generated_raw': list(CROPS.keys()),
     'generated_clean': clean_names + ['preview_clean.png'],
-    'note': 'Clean implementation assets: edge-connected sheet background removed; largest connected artwork component retained.',
+    'note': 'Clean implementation assets. Body crop expanded to preserve full approved Draco silhouette.',
 }
 (OUT / 'source-copy.png').write_bytes(SRC.read_bytes())
 (OUT / 'metadata.json').write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding='utf-8')
