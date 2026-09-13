@@ -1,0 +1,1 @@
+Approved transparent character assets for STAR ATHLETES. Source art comes from the adopted character guide design; do not replace with unrelated placeholder JPG/SVG art.
