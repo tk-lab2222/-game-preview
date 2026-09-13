@@ -1,0 +1,92 @@
+{
+  "horn_left": {
+    "curl": {
+      "dx": -0.01,
+      "dy": -0.012,
+      "scale": 0.94,
+      "rotation": -4,
+      "flipX": false,
+      "flipY": false
+    },
+    "crystal": {
+      "dx": -0.008,
+      "dy": -0.014,
+      "scale": 0.96,
+      "rotation": -2,
+      "flipX": false,
+      "flipY": false
+    }
+  },
+  "horn_right": {
+    "curl": {
+      "dx": 0.006,
+      "dy": -0.01,
+      "scale": 0.9,
+      "rotation": 5,
+      "flipX": false,
+      "flipY": false
+    },
+    "crystal": {
+      "dx": 0.006,
+      "dy": -0.012,
+      "scale": 0.93,
+      "rotation": 3,
+      "flipX": false,
+      "flipY": false
+    }
+  },
+  "wing_left": {
+    "feather": {
+      "dx": -0.006,
+      "dy": 0.004,
+      "scale": 1.0,
+      "rotation": -8,
+      "flipX": true,
+      "flipY": false
+    },
+    "crystal": {
+      "dx": -0.004,
+      "dy": 0.002,
+      "scale": 0.98,
+      "rotation": -7,
+      "flipX": true,
+      "flipY": false
+    }
+  },
+  "wing_right": {
+    "feather": {
+      "dx": 0.004,
+      "dy": 0.0,
+      "scale": 0.98,
+      "rotation": 7,
+      "flipX": false,
+      "flipY": false
+    },
+    "crystal": {
+      "dx": 0.004,
+      "dy": -0.002,
+      "scale": 0.96,
+      "rotation": 6,
+      "flipX": false,
+      "flipY": false
+    }
+  },
+  "tail": {
+    "star": {
+      "dx": -0.008,
+      "dy": 0.006,
+      "scale": 1.0,
+      "rotation": -6,
+      "flipX": true,
+      "flipY": false
+    },
+    "leaf": {
+      "dx": -0.006,
+      "dy": 0.01,
+      "scale": 0.97,
+      "rotation": -4,
+      "flipX": true,
+      "flipY": false
+    }
+  }
+}
