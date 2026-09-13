@@ -4,7 +4,7 @@
   "height": 1086,
   "mode": "RGBA",
   "version": "4.0.5",
-  "asset_revision": "405b-full-body-crop",
+  "asset_revision": "405c-safe-body-crop",
   "generated_raw": [
     "body_base.png",
     "face_normal.png",
@@ -52,5 +52,5 @@
     "accessory_flower_clean.png",
     "preview_clean.png"
   ],
-  "note": "Clean implementation assets. Body crop expanded to preserve full approved Draco silhouette."
+  "note": "Clean implementation assets. Body crop uses a generous safety margin to prevent edge clipping."
 }
