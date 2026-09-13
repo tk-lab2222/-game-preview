@@ -1,6 +1,6 @@
 from pathlib import Path
 from collections import deque
-from PIL import Image, ImageOps, ImageDraw
+from PIL import Image, ImageDraw
 import json
 
 SRC = Path('star-athletes-draco-lab/assets-source/draco-master.png.png')
@@ -10,8 +10,6 @@ OUT.mkdir(parents=True, exist_ok=True)
 im = Image.open(SRC).convert('RGBA')
 
 CROPS = {
-    # Intentionally generous crop. It may overlap the neighboring sheet panel;
-    # clean-up keeps the largest connected Draco artwork and drops the rest.
     'body_base.png': (55, 10, 600, 525),
     'face_normal.png': (526, 67, 694, 273),
     'face_happy.png': (697, 67, 868, 273),
@@ -33,6 +31,14 @@ CROPS = {
     'accessory_ribbon.png': (929, 607, 1073, 777),
     'accessory_scarf.png': (1078, 607, 1222, 777),
     'accessory_flower.png': (1227, 607, 1385, 777),
+}
+
+# Coordinates inside the untrimmed body crop (545 x 515).
+# These are exact reference patches copied from the approved Draco itself.
+REFERENCE_RECTS = {
+    'horn': (135, 0, 390, 190),
+    'wing': (45, 120, 250, 365),
+    'tail': (55, 240, 225, 455),
 }
 
 
@@ -82,8 +88,7 @@ def remove_edge_background(src):
 def keep_largest_component(src):
     img = src.convert('RGBA')
     w, h = img.size
-    alpha = img.getchannel('A')
-    ap = alpha.load()
+    ap = img.getchannel('A').load()
     seen = bytearray(w * h)
     comps = []
 
@@ -141,6 +146,30 @@ for name, box in CROPS.items():
     assets[name] = clean
     clean_names.append(clean_name)
 
+# Untrimmed cleaned body preserves a stable 545x515 coordinate system.
+body_raw = im.crop(CROPS['body_base.png'])
+body_stage = keep_largest_component(remove_edge_background(body_raw))
+body_stage.save(OUT / 'body_stage.png', optimize=True)
+
+reference_meta = {}
+for part, rect in REFERENCE_RECTS.items():
+    ref = body_stage.crop(rect)
+    name = f'ref_{part}.png'
+    ref.save(OUT / name, optimize=True)
+    l, t, r, b = rect
+    reference_meta[part] = {
+        'file': name,
+        'rect': [l, t, r, b],
+        'anchor': {
+            'x': ((l + r) / 2) / body_stage.width,
+            'y': ((t + b) / 2) / body_stage.height,
+            'scale': (r - l) / body_stage.width,
+            'rotation': 0,
+            'flipX': False,
+            'flipY': False,
+        },
+    }
+
 thumb_w, thumb_h = 180, 170
 preview_items = [
     ('body', assets['body_base.png']),
@@ -169,11 +198,13 @@ meta = {
     'width': im.width,
     'height': im.height,
     'mode': im.mode,
-    'version': '4.0.5',
-    'asset_revision': '405c-safe-body-crop',
+    'version': '4.1.0',
+    'asset_revision': '410-exact-reference-patches',
+    'body_stage': {'file': 'body_stage.png', 'width': body_stage.width, 'height': body_stage.height},
+    'references': reference_meta,
     'generated_raw': list(CROPS.keys()),
-    'generated_clean': clean_names + ['preview_clean.png'],
-    'note': 'Clean implementation assets. Body crop uses a generous safety margin to prevent edge clipping.',
+    'generated_clean': clean_names + ['preview_clean.png', 'body_stage.png'] + [f'ref_{k}.png' for k in REFERENCE_RECTS],
+    'note': 'Reference patches are copied directly from the approved body stage, so their canonical placement is pixel-exact.',
 }
 (OUT / 'source-copy.png').write_bytes(SRC.read_bytes())
 (OUT / 'metadata.json').write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding='utf-8')
