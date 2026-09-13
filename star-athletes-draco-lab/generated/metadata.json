@@ -3,8 +3,8 @@
   "width": 1448,
   "height": 1086,
   "mode": "RGBA",
-  "version": "4.1.1",
-  "asset_revision": "411-bilateral-reference-patches",
+  "version": "4.1.4",
+  "asset_revision": "414-full-crystal-wing-crop",
   "body_stage": {
     "file": "body_stage.png",
     "width": 545,
@@ -150,5 +150,5 @@
     "ref_wing_right.png",
     "ref_tail.png"
   ],
-  "note": "Horn and wing references are split into screen-left and screen-right canonical patches. Each patch is copied directly from the approved body stage, so placement is pixel-exact."
+  "note": "v4.1.4 expands the crystal-wing source crop to preserve the full outer wing tip; bilateral canonical references remain unchanged."
 }
