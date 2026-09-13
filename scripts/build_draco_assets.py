@@ -34,10 +34,14 @@ CROPS = {
 }
 
 # Coordinates inside the untrimmed body crop (545 x 515).
-# These are exact reference patches copied from the approved Draco itself.
+# Left/right mean SCREEN left/right to avoid character-perspective ambiguity.
+# These patches are copied directly from the approved Draco body and therefore
+# have an exact canonical placement with no transform required.
 REFERENCE_RECTS = {
-    'horn': (135, 0, 390, 190),
-    'wing': (45, 120, 250, 365),
+    'horn_left': (180, 5, 325, 165),
+    'horn_right': (315, 35, 425, 170),
+    'wing_left': (45, 135, 270, 355),
+    'wing_right': (330, 165, 475, 350),
     'tail': (55, 240, 225, 455),
 }
 
@@ -198,13 +202,13 @@ meta = {
     'width': im.width,
     'height': im.height,
     'mode': im.mode,
-    'version': '4.1.0',
-    'asset_revision': '410-exact-reference-patches',
+    'version': '4.1.1',
+    'asset_revision': '411-bilateral-reference-patches',
     'body_stage': {'file': 'body_stage.png', 'width': body_stage.width, 'height': body_stage.height},
     'references': reference_meta,
     'generated_raw': list(CROPS.keys()),
     'generated_clean': clean_names + ['preview_clean.png', 'body_stage.png'] + [f'ref_{k}.png' for k in REFERENCE_RECTS],
-    'note': 'Reference patches are copied directly from the approved body stage, so their canonical placement is pixel-exact.',
+    'note': 'Horn and wing references are split into screen-left and screen-right canonical patches. Each patch is copied directly from the approved body stage, so placement is pixel-exact.',
 }
 (OUT / 'source-copy.png').write_bytes(SRC.read_bytes())
 (OUT / 'metadata.json').write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding='utf-8')
