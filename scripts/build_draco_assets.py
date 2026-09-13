@@ -10,9 +10,9 @@ OUT.mkdir(parents=True, exist_ok=True)
 im = Image.open(SRC).convert('RGBA')
 
 CROPS = {
-    # Expanded from (105, 28, 510, 492). The approved master sheet contains
-    # the complete Draco; the old crop was shaving the right edge.
-    'body_base.png': (75, 20, 518, 500),
+    # Intentionally generous crop. It may overlap the neighboring sheet panel;
+    # clean-up keeps the largest connected Draco artwork and drops the rest.
+    'body_base.png': (55, 10, 600, 525),
     'face_normal.png': (526, 67, 694, 273),
     'face_happy.png': (697, 67, 868, 273),
     'face_fight.png': (870, 67, 1038, 273),
@@ -117,7 +117,7 @@ def keep_largest_component(src):
     return out
 
 
-def trim(src, pad=4):
+def trim(src, pad=12):
     bbox = src.getbbox()
     if not bbox:
         return src
@@ -170,10 +170,10 @@ meta = {
     'height': im.height,
     'mode': im.mode,
     'version': '4.0.5',
-    'asset_revision': '405b-full-body-crop',
+    'asset_revision': '405c-safe-body-crop',
     'generated_raw': list(CROPS.keys()),
     'generated_clean': clean_names + ['preview_clean.png'],
-    'note': 'Clean implementation assets. Body crop expanded to preserve full approved Draco silhouette.',
+    'note': 'Clean implementation assets. Body crop uses a generous safety margin to prevent edge clipping.',
 }
 (OUT / 'source-copy.png').write_bytes(SRC.read_bytes())
 (OUT / 'metadata.json').write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding='utf-8')
