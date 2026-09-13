@@ -21,7 +21,9 @@ CROPS = {
     'horn_crystal.png': (796, 365, 928, 510),
     'wing_normal.png': (956, 365, 1090, 510),
     'wing_feather.png': (1096, 365, 1230, 510),
-    'wing_crystal.png': (1237, 365, 1385, 510),
+    # v4.1.4: old crystal-wing crop ended at x=1385 and clipped the outer wing tip.
+    # Keep generous transparent/background margin so the full artwork survives cleaning.
+    'wing_crystal.png': (1230, 350, 1425, 520),
     'tail_normal.png': (28, 607, 158, 777),
     'tail_star.png': (164, 607, 291, 777),
     'tail_leaf.png': (300, 607, 425, 777),
@@ -33,10 +35,6 @@ CROPS = {
     'accessory_flower.png': (1227, 607, 1385, 777),
 }
 
-# Coordinates inside the untrimmed body crop (545 x 515).
-# Left/right mean SCREEN left/right to avoid character-perspective ambiguity.
-# These patches are copied directly from the approved Draco body and therefore
-# have an exact canonical placement with no transform required.
 REFERENCE_RECTS = {
     'horn_left': (180, 5, 325, 165),
     'horn_right': (315, 35, 425, 170),
@@ -45,7 +43,6 @@ REFERENCE_RECTS = {
     'tail': (55, 240, 225, 455),
 }
 
-
 def bg_like(px):
     r, g, b, a = px
     if a == 0:
@@ -53,34 +50,28 @@ def bg_like(px):
     hi, lo = max(r, g, b), min(r, g, b)
     return (r > 228 and g > 232 and b > 232 and hi - lo < 30) or (r > 238 and g > 238 and b > 238)
 
-
 def remove_edge_background(src):
     img = src.convert('RGBA')
     w, h = img.size
     pix = img.load()
     seen = bytearray(w * h)
     q = deque()
-
     def push(x, y):
         i = y * w + x
         if not seen[i] and bg_like(pix[x, y]):
             seen[i] = 1
             q.append((x, y))
-
     for x in range(w):
         push(x, 0); push(x, h - 1)
     for y in range(h):
         push(0, y); push(w - 1, y)
-
     while q:
         x, y = q.popleft()
         if x: push(x - 1, y)
         if x + 1 < w: push(x + 1, y)
         if y: push(x, y - 1)
         if y + 1 < h: push(x, y + 1)
-
-    out = img.copy()
-    op = out.load()
+    out = img.copy(); op = out.load()
     for y in range(h):
         for x in range(w):
             if seen[y * w + x]:
@@ -88,22 +79,18 @@ def remove_edge_background(src):
                 op[x, y] = (r, g, b, 0)
     return out
 
-
 def keep_largest_component(src):
     img = src.convert('RGBA')
     w, h = img.size
     ap = img.getchannel('A').load()
     seen = bytearray(w * h)
     comps = []
-
     for y in range(h):
         for x in range(w):
             idx = y * w + x
             if seen[idx] or ap[x, y] < 20:
                 continue
-            q = deque([(x, y)])
-            seen[idx] = 1
-            pts = []
+            q = deque([(x, y)]); seen[idx] = 1; pts = []
             while q:
                 cx, cy = q.popleft(); pts.append((cx, cy))
                 for nx, ny in ((cx-1,cy),(cx+1,cy),(cx,cy-1),(cx,cy+1)):
@@ -112,7 +99,6 @@ def keep_largest_component(src):
                         if not seen[ni] and ap[nx, ny] >= 20:
                             seen[ni] = 1; q.append((nx, ny))
             comps.append(pts)
-
     if not comps:
         return img
     comps.sort(key=len, reverse=True)
@@ -125,7 +111,6 @@ def keep_largest_component(src):
                 op[x, y] = (r, g, b, 0)
     return out
 
-
 def trim(src, pad=12):
     bbox = src.getbbox()
     if not bbox:
@@ -133,7 +118,6 @@ def trim(src, pad=12):
     l, t, r, b = bbox
     l = max(0, l-pad); t = max(0, t-pad); r = min(src.width, r+pad); b = min(src.height, b+pad)
     return src.crop((l, t, r, b))
-
 
 def make_clean(name, box):
     raw = im.crop(box)
@@ -143,73 +127,34 @@ def make_clean(name, box):
     clean.save(OUT / clean_name, optimize=True)
     return raw, clean, clean_name
 
-assets = {}
-clean_names = []
+assets = {}; clean_names = []
 for name, box in CROPS.items():
     raw, clean, clean_name = make_clean(name, box)
-    assets[name] = clean
-    clean_names.append(clean_name)
+    assets[name] = clean; clean_names.append(clean_name)
 
-# Untrimmed cleaned body preserves a stable 545x515 coordinate system.
 body_raw = im.crop(CROPS['body_base.png'])
 body_stage = keep_largest_component(remove_edge_background(body_raw))
 body_stage.save(OUT / 'body_stage.png', optimize=True)
 
 reference_meta = {}
 for part, rect in REFERENCE_RECTS.items():
-    ref = body_stage.crop(rect)
-    name = f'ref_{part}.png'
-    ref.save(OUT / name, optimize=True)
+    ref = body_stage.crop(rect); name = f'ref_{part}.png'; ref.save(OUT / name, optimize=True)
     l, t, r, b = rect
-    reference_meta[part] = {
-        'file': name,
-        'rect': [l, t, r, b],
-        'anchor': {
-            'x': ((l + r) / 2) / body_stage.width,
-            'y': ((t + b) / 2) / body_stage.height,
-            'scale': (r - l) / body_stage.width,
-            'rotation': 0,
-            'flipX': False,
-            'flipY': False,
-        },
-    }
+    reference_meta[part] = {'file': name,'rect': [l,t,r,b],'anchor': {'x':((l+r)/2)/body_stage.width,'y':((t+b)/2)/body_stage.height,'scale':(r-l)/body_stage.width,'rotation':0,'flipX':False,'flipY':False}}
 
 thumb_w, thumb_h = 180, 170
-preview_items = [
-    ('body', assets['body_base.png']),
-    ('normal', assets['face_normal.png']),
-    ('happy', assets['face_happy.png']),
-    ('horn', assets['horn_crystal.png']),
-    ('wing', assets['wing_feather.png']),
-    ('tail', assets['tail_star.png']),
-]
-preview = Image.new('RGB', (thumb_w * 3, thumb_h * 2), '#eef4fb')
-d = ImageDraw.Draw(preview)
-for i, (label, asset) in enumerate(preview_items):
-    cell_x = (i % 3) * thumb_w; cell_y = (i // 3) * thumb_h
-    for yy in range(cell_y, cell_y + thumb_h, 16):
-        for xx in range(cell_x, cell_x + thumb_w, 16):
-            c = '#ffffff' if ((xx-cell_x)//16 + (yy-cell_y)//16) % 2 == 0 else '#dce8f3'
-            d.rectangle((xx, yy, xx+15, yy+15), fill=c)
-    t = asset.copy(); t.thumbnail((thumb_w - 18, thumb_h - 35), Image.Resampling.LANCZOS)
-    px = cell_x + (thumb_w - t.width)//2; py = cell_y + 6
-    preview.paste(t, (px, py), t)
-    d.text((cell_x + 8, cell_y + thumb_h - 22), label, fill='#17304d')
-preview.save(OUT / 'preview_clean.png', optimize=True)
+preview_items=[('body',assets['body_base.png']),('normal',assets['face_normal.png']),('happy',assets['face_happy.png']),('horn',assets['horn_crystal.png']),('wing',assets['wing_crystal.png']),('tail',assets['tail_star.png'])]
+preview=Image.new('RGB',(thumb_w*3,thumb_h*2),'#eef4fb'); d=ImageDraw.Draw(preview)
+for i,(label,asset) in enumerate(preview_items):
+    cell_x=(i%3)*thumb_w; cell_y=(i//3)*thumb_h
+    for yy in range(cell_y,cell_y+thumb_h,16):
+        for xx in range(cell_x,cell_x+thumb_w,16):
+            c='#ffffff' if ((xx-cell_x)//16+(yy-cell_y)//16)%2==0 else '#dce8f3'; d.rectangle((xx,yy,xx+15,yy+15),fill=c)
+    t=asset.copy(); t.thumbnail((thumb_w-18,thumb_h-35),Image.Resampling.LANCZOS)
+    px=cell_x+(thumb_w-t.width)//2; py=cell_y+6; preview.paste(t,(px,py),t); d.text((cell_x+8,cell_y+thumb_h-22),label,fill='#17304d')
+preview.save(OUT/'preview_clean.png',optimize=True)
 
-meta = {
-    'source': str(SRC),
-    'width': im.width,
-    'height': im.height,
-    'mode': im.mode,
-    'version': '4.1.1',
-    'asset_revision': '411-bilateral-reference-patches',
-    'body_stage': {'file': 'body_stage.png', 'width': body_stage.width, 'height': body_stage.height},
-    'references': reference_meta,
-    'generated_raw': list(CROPS.keys()),
-    'generated_clean': clean_names + ['preview_clean.png', 'body_stage.png'] + [f'ref_{k}.png' for k in REFERENCE_RECTS],
-    'note': 'Horn and wing references are split into screen-left and screen-right canonical patches. Each patch is copied directly from the approved body stage, so placement is pixel-exact.',
-}
-(OUT / 'source-copy.png').write_bytes(SRC.read_bytes())
-(OUT / 'metadata.json').write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding='utf-8')
-print(json.dumps(meta, ensure_ascii=False))
+meta={'source':str(SRC),'width':im.width,'height':im.height,'mode':im.mode,'version':'4.1.4','asset_revision':'414-full-crystal-wing-crop','body_stage':{'file':'body_stage.png','width':body_stage.width,'height':body_stage.height},'references':reference_meta,'generated_raw':list(CROPS.keys()),'generated_clean':clean_names+['preview_clean.png','body_stage.png']+[f'ref_{k}.png' for k in REFERENCE_RECTS],'note':'v4.1.4 expands the crystal-wing source crop to preserve the full outer wing tip; bilateral canonical references remain unchanged.'}
+(OUT/'source-copy.png').write_bytes(SRC.read_bytes())
+(OUT/'metadata.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2),encoding='utf-8')
+print(json.dumps(meta,ensure_ascii=False))
