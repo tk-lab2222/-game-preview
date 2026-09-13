@@ -3,8 +3,66 @@
   "width": 1448,
   "height": 1086,
   "mode": "RGBA",
-  "version": "4.0.5",
-  "asset_revision": "405c-safe-body-crop",
+  "version": "4.1.0",
+  "asset_revision": "410-exact-reference-patches",
+  "body_stage": {
+    "file": "body_stage.png",
+    "width": 545,
+    "height": 515
+  },
+  "references": {
+    "horn": {
+      "file": "ref_horn.png",
+      "rect": [
+        135,
+        0,
+        390,
+        190
+      ],
+      "anchor": {
+        "x": 0.481651376146789,
+        "y": 0.18446601941747573,
+        "scale": 0.46788990825688076,
+        "rotation": 0,
+        "flipX": false,
+        "flipY": false
+      }
+    },
+    "wing": {
+      "file": "ref_wing.png",
+      "rect": [
+        45,
+        120,
+        250,
+        365
+      ],
+      "anchor": {
+        "x": 0.2706422018348624,
+        "y": 0.470873786407767,
+        "scale": 0.3761467889908257,
+        "rotation": 0,
+        "flipX": false,
+        "flipY": false
+      }
+    },
+    "tail": {
+      "file": "ref_tail.png",
+      "rect": [
+        55,
+        240,
+        225,
+        455
+      ],
+      "anchor": {
+        "x": 0.25688073394495414,
+        "y": 0.6747572815533981,
+        "scale": 0.3119266055045872,
+        "rotation": 0,
+        "flipX": false,
+        "flipY": false
+      }
+    }
+  },
   "generated_raw": [
     "body_base.png",
     "face_normal.png",
@@ -50,7 +108,11 @@
     "accessory_ribbon_clean.png",
     "accessory_scarf_clean.png",
     "accessory_flower_clean.png",
-    "preview_clean.png"
+    "preview_clean.png",
+    "body_stage.png",
+    "ref_horn.png",
+    "ref_wing.png",
+    "ref_tail.png"
   ],
-  "note": "Clean implementation assets. Body crop uses a generous safety margin to prevent edge clipping."
+  "note": "Reference patches are copied directly from the approved body stage, so their canonical placement is pixel-exact."
 }
