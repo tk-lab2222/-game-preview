@@ -1,4 +1,5 @@
 from pathlib import Path
+from collections import deque
 from PIL import Image, ImageOps, ImageDraw
 import json
 
@@ -8,8 +9,6 @@ OUT.mkdir(parents=True, exist_ok=True)
 
 im = Image.open(SRC).convert('RGBA')
 
-# Coordinates are tied to the approved 1448x1086 Draco character asset sheet.
-# Keep the master art unchanged; generated files are implementation crops only.
 CROPS = {
     'body_base.png': (105, 28, 510, 492),
     'face_normal.png': (526, 67, 694, 273),
@@ -34,41 +33,147 @@ CROPS = {
     'accessory_flower.png': (1227, 607, 1385, 777),
 }
 
-def crop_save(name, box):
-    asset = im.crop(box)
-    asset.save(OUT / name, optimize=True)
-    return asset
 
-assets = {name: crop_save(name, box) for name, box in CROPS.items()}
+def bg_like(px):
+    r, g, b, a = px
+    if a == 0:
+        return True
+    hi, lo = max(r, g, b), min(r, g, b)
+    # White / very pale blue sheet background.
+    return (r > 228 and g > 232 and b > 232 and hi - lo < 30) or (r > 238 and g > 238 and b > 238)
 
-# Build a simple visual verification sheet so mobile testing can confirm
-# that the Action generated the expected regions before Canvas composition.
-thumb_w, thumb_h = 180, 150
-items = [
+
+def remove_edge_background(src):
+    img = src.convert('RGBA')
+    w, h = img.size
+    pix = img.load()
+    seen = bytearray(w * h)
+    q = deque()
+
+    def push(x, y):
+        i = y * w + x
+        if not seen[i] and bg_like(pix[x, y]):
+            seen[i] = 1
+            q.append((x, y))
+
+    for x in range(w):
+        push(x, 0); push(x, h - 1)
+    for y in range(h):
+        push(0, y); push(w - 1, y)
+
+    while q:
+        x, y = q.popleft()
+        if x: push(x - 1, y)
+        if x + 1 < w: push(x + 1, y)
+        if y: push(x, y - 1)
+        if y + 1 < h: push(x, y + 1)
+
+    out = img.copy()
+    op = out.load()
+    for y in range(h):
+        for x in range(w):
+            if seen[y * w + x]:
+                r, g, b, _ = op[x, y]
+                op[x, y] = (r, g, b, 0)
+    return out
+
+
+def keep_largest_component(src):
+    img = src.convert('RGBA')
+    w, h = img.size
+    alpha = img.getchannel('A')
+    ap = alpha.load()
+    seen = bytearray(w * h)
+    comps = []
+
+    for y in range(h):
+        for x in range(w):
+            idx = y * w + x
+            if seen[idx] or ap[x, y] < 20:
+                continue
+            q = deque([(x, y)])
+            seen[idx] = 1
+            pts = []
+            while q:
+                cx, cy = q.popleft(); pts.append((cx, cy))
+                for nx, ny in ((cx-1,cy),(cx+1,cy),(cx,cy-1),(cx,cy+1)):
+                    if 0 <= nx < w and 0 <= ny < h:
+                        ni = ny * w + nx
+                        if not seen[ni] and ap[nx, ny] >= 20:
+                            seen[ni] = 1; q.append((nx, ny))
+            comps.append(pts)
+
+    if not comps:
+        return img
+    comps.sort(key=len, reverse=True)
+    keep = set(comps[0])
+    out = img.copy(); op = out.load()
+    for y in range(h):
+        for x in range(w):
+            if op[x, y][3] and (x, y) not in keep:
+                r, g, b, _ = op[x, y]
+                op[x, y] = (r, g, b, 0)
+    return out
+
+
+def trim(src, pad=4):
+    bbox = src.getbbox()
+    if not bbox:
+        return src
+    l, t, r, b = bbox
+    l = max(0, l-pad); t = max(0, t-pad); r = min(src.width, r+pad); b = min(src.height, b+pad)
+    return src.crop((l, t, r, b))
+
+
+def make_clean(name, box):
+    raw = im.crop(box)
+    raw.save(OUT / name, optimize=True)
+    clean = trim(keep_largest_component(remove_edge_background(raw)))
+    clean_name = name.replace('.png', '_clean.png')
+    clean.save(OUT / clean_name, optimize=True)
+    return raw, clean, clean_name
+
+assets = {}
+clean_names = []
+for name, box in CROPS.items():
+    raw, clean, clean_name = make_clean(name, box)
+    assets[name] = clean
+    clean_names.append(clean_name)
+
+# Transparent checker preview of the core implementation assets.
+thumb_w, thumb_h = 180, 170
+preview_items = [
     ('body', assets['body_base.png']),
     ('normal', assets['face_normal.png']),
     ('happy', assets['face_happy.png']),
-    ('fight', assets['face_fight.png']),
-    ('sad', assets['face_sad.png']),
-    ('tired', assets['face_tired.png']),
+    ('horn', assets['horn_crystal.png']),
+    ('wing', assets['wing_feather.png']),
+    ('tail', assets['tail_star.png']),
 ]
-preview = Image.new('RGB', (thumb_w * 3, thumb_h * 2), 'white')
-for i, (_, asset) in enumerate(items):
-    t = asset.convert('RGB')
-    t.thumbnail((thumb_w - 12, thumb_h - 12), Image.Resampling.LANCZOS)
-    x = (i % 3) * thumb_w + (thumb_w - t.width) // 2
-    y = (i // 3) * thumb_h + (thumb_h - t.height) // 2
-    preview.paste(t, (x, y))
-preview.save(OUT / 'preview.png', optimize=True)
+preview = Image.new('RGB', (thumb_w * 3, thumb_h * 2), '#eef4fb')
+d = ImageDraw.Draw(preview)
+for i, (label, asset) in enumerate(preview_items):
+    cell_x = (i % 3) * thumb_w; cell_y = (i // 3) * thumb_h
+    # checkerboard to make transparency visible
+    for yy in range(cell_y, cell_y + thumb_h, 16):
+        for xx in range(cell_x, cell_x + thumb_w, 16):
+            c = '#ffffff' if ((xx-cell_x)//16 + (yy-cell_y)//16) % 2 == 0 else '#dce8f3'
+            d.rectangle((xx, yy, xx+15, yy+15), fill=c)
+    t = asset.copy(); t.thumbnail((thumb_w - 18, thumb_h - 35), Image.Resampling.LANCZOS)
+    px = cell_x + (thumb_w - t.width)//2; py = cell_y + 6
+    preview.paste(t, (px, py), t)
+    d.text((cell_x + 8, cell_y + thumb_h - 22), label, fill='#17304d')
+preview.save(OUT / 'preview_clean.png', optimize=True)
 
 meta = {
     'source': str(SRC),
     'width': im.width,
     'height': im.height,
     'mode': im.mode,
-    'version': '4.0.4',
-    'generated': list(CROPS.keys()) + ['preview.png'],
-    'note': 'Implementation crops generated from the approved Draco master sheet. No redraw.',
+    'version': '4.0.5',
+    'generated_raw': list(CROPS.keys()),
+    'generated_clean': clean_names + ['preview_clean.png'],
+    'note': 'Clean implementation assets: edge-connected sheet background removed; largest connected artwork component retained.',
 }
 (OUT / 'source-copy.png').write_bytes(SRC.read_bytes())
 (OUT / 'metadata.json').write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding='utf-8')
