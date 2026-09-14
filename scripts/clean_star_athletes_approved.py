@@ -1,4 +1,7 @@
 from pathlib import Path
+import base64
+import io
+import re
 import cv2
 import numpy as np
 from PIL import Image
@@ -29,18 +32,36 @@ CONFIGS = {
     },
 }
 
+IMAGE_SIGS=(b'\xff\xd8',b'\x89PNG',b'RIFF')
+
+def open_source(path):
+    raw=path.read_bytes().strip()
+    for depth in range(6):
+        if raw.startswith(IMAGE_SIGS):
+            print(path.name, 'decoded depth', depth)
+            return Image.open(io.BytesIO(raw)).convert('RGB')
+        # Connector-created image files may contain base64 text rather than binary bytes.
+        raw=re.sub(rb'\s+',b'',raw)
+        if not raw:
+            break
+        raw += b'='*((4-len(raw)%4)%4)
+        try:
+            raw=base64.b64decode(raw,validate=False)
+        except Exception as e:
+            raise RuntimeError(f'{path.name}: invalid base64 at depth {depth}') from e
+    raise RuntimeError(f'{path.name}: no image signature after decoding')
+
 def scale_cfg(cfg, w, h):
-    rw, rh = cfg['ref']
-    sx, sy = w/rw, h/rh
+    rw,rh=cfg['ref']; sx,sy=w/rw,h/rh
     poly=[(round(x*sx),round(y*sy)) for x,y in cfg['poly']]
     points=[(round(x*sx),round(y*sy),max(2,round(r*(sx+sy)/2))) for x,y,r in cfg['points']]
     y1,y2,x1,x2=cfg['text_bg']
-    text=(round(y1*sy), round(min(y2,rh)*sy), round(x1*sx), round(min(x2,rw)*sx))
-    return poly, points, text
+    text=(round(y1*sy),round(min(y2,rh)*sy),round(x1*sx),round(min(x2,rw)*sx))
+    return poly,points,text
 
-def clean(species, cfg):
+def clean(species,cfg):
     src=ASSETS/f'{species}.jpg'
-    crop=np.array(Image.open(src).convert('RGB'))
+    crop=np.array(open_source(src))
     h,w=crop.shape[:2]
     poly,points,text_bg=scale_cfg(cfg,w,h)
     bgr=cv2.cvtColor(crop,cv2.COLOR_RGB2BGR)
@@ -69,12 +90,11 @@ def clean(species, cfg):
     xa=max(0,xs.min()-pad); xb=min(w,xs.max()+pad+1)
     ya=max(0,ys.min()-pad); yb=min(h,ys.max()+pad+1)
     rgba=np.dstack([crop,alpha])[ya:yb,xa:xb]
-    # upscale the small in-repo source for cleaner mobile rendering
     im=Image.fromarray(rgba,'RGBA')
-    scale=max(1, min(3, round(420/max(im.size))))
+    scale=max(1,min(3,round(420/max(im.size))))
     if scale>1: im=im.resize((im.width*scale,im.height*scale),Image.Resampling.LANCZOS)
     out=APPROVED/f'{species}-transparent.webp'
     im.save(out,'WEBP',quality=94,method=6)
-    print(species, 'source', (w,h), '->', im.size)
+    print(species,'source',(w,h),'->',im.size)
 
 for species,cfg in CONFIGS.items(): clean(species,cfg)
