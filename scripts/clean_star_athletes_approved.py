@@ -32,16 +32,22 @@ CONFIGS = {
 IMAGE_SIGS = (b'RIFF', b'\xff\xd8', b'\x89PNG')
 
 
+def decode_b64_loose(raw: bytes) -> bytes:
+    raw = b''.join(raw.split())
+    raw += b'=' * ((4 - len(raw) % 4) % 4)
+    return base64.b64decode(raw, validate=False)
+
+
 def open_source(path: Path) -> Image.Image:
     raw = path.read_bytes().strip()
     # Earlier connector uploads nested base64 text around the image bytes.
     # Peel layers until an actual image signature appears.
-    for depth in range(4):
+    for depth in range(5):
         if raw.startswith(IMAGE_SIGS):
             print(path.name, f'decoded depth={depth}')
             return Image.open(io.BytesIO(raw))
         try:
-            raw = base64.b64decode(raw, validate=False)
+            raw = decode_b64_loose(raw)
         except Exception as e:
             raise RuntimeError(f'{path.name}: invalid nested base64 at depth {depth}') from e
     raise RuntimeError(f'{path.name}: image signature not found after nested base64 decode')
