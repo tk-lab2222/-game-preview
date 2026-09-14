@@ -1,0 +1,22 @@
+(()=>{
+function affinity126(){
+ const bp=breederPool(),a=bp.find(x=>x.id===S.parents?.[0]),b=bp.find(x=>x.id===S.parents?.[1]);if(!a||!b)return null;
+ let v=0;if(a.species!==b.species)v++;if(a.personality!==b.personality)v++;if(a.rarity===b.rarity)v++;if(a.visual?.color!==b.visual?.color)v++;
+ return {a,b,label:v>=3?'とても良い':v>=2?'良い':'ふつう',stars:v>=3?'★★★':v>=2?'★★☆':'★☆☆'};
+}
+function decorateBreed126(){
+ const breed=document.getElementById('breed');if(!breed)return;
+ const boxes=[...breed.querySelectorAll(':scope>.box')];const pair=boxes.find(x=>x.querySelector('#breedBtn'));if(!pair)return;
+ pair.classList.add('breedHero126');
+ let title=pair.querySelector('h3');if(title)title.innerHTML='✨ スター配合 <span class="sm">2体の個性を次世代へ</span>';
+ const parents=pair.querySelector('.parents');if(parents){parents.classList.add('parentsHero126');if(!pair.querySelector('.core126')){const core=document.createElement('div');core.className='core126';core.innerHTML='<i>✦</i><b>NEST CORE</b>';parents.insertBefore(core,parents.children[1]||null)}}
+ const x=pair.querySelector('.x');if(x)x.style.display='none';
+ let info=pair.querySelector('#affinity126');if(!info){info=document.createElement('div');info.id='affinity126';info.className='affinity126';const btn=pair.querySelector('#breedBtn');btn.parentElement?.insertBefore(info,btn.parentElement.firstChild)}
+ const af=affinity126();info.innerHTML=af?`<span>配合相性</span><b>${af.label}</b><em>${af.stars}</em><small>${af.a.visual?.color||''} × ${af.b.visual?.color||''} / ${af.a.personality} × ${af.b.personality}</small>`:'<span>親を2体選ぶと相性が表示されます</span>';
+ const btn=pair.querySelector('#breedBtn');if(btn){btn.textContent=S.parents?.length===2?'✦ スター配合を開始':'親を2体選ぶ';btn.classList.add('breedMain126')}
+}
+const prevRender126=render;render=function(){prevRender126();requestAnimationFrame(decorateBreed126)};
+const css=document.createElement('style');css.textContent=`
+.breedHero126{position:relative;overflow:hidden;background:radial-gradient(circle at 50% 40%,#203c66 0,#111c32 48%,#080d17 100%)!important;color:#fff!important;border:0!important;box-shadow:0 15px 35px #0004!important}.breedHero126:before{content:'';position:absolute;inset:-30%;background:conic-gradient(from 0deg,transparent,#56d7ff19,transparent,#ff74c819,transparent);animation:spin126 14s linear infinite;pointer-events:none}@keyframes spin126{to{transform:rotate(360deg)}}.breedHero126>h3,.breedHero126>*{position:relative;z-index:1}.breedHero126 h3{color:#fff}.breedHero126 h3 .sm{color:#9bdfff!important}.parentsHero126{display:grid!important;grid-template-columns:1fr 74px 1fr!important;align-items:center!important;gap:8px!important}.parentsHero126 .par{min-height:150px!important;border:1px solid #ffffff38!important;border-radius:16px!important;background:#ffffff0c!important;color:#fff!important;overflow:hidden!important}.parentsHero126 .par .avatar{height:112px!important;background:transparent!important;border:0!important}.core126{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.core126 i{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;font-style:normal;font-size:28px;color:#fff7bc;background:radial-gradient(circle,#fff 0 6%,#65e5ff 7% 20%,#4c6cff 45%,#17244a 70%);box-shadow:0 0 16px #63ddff,0 0 35px #596bff88;animation:pulse126 1.5s ease-in-out infinite alternate}.core126 b{font-size:7px;letter-spacing:.12em;color:#a9dfff}@keyframes pulse126{to{transform:scale(1.08);filter:brightness(1.25)}}.affinity126{display:grid;grid-template-columns:auto 1fr auto;gap:3px 8px;align-items:center;margin:10px 0;padding:9px;border:1px solid #ffffff24;border-radius:12px;background:#07101d99}.affinity126 span{font-size:8px;color:#8fdfff}.affinity126 b{font-size:14px}.affinity126 em{font-style:normal;color:#ffd66c;font-weight:1000}.affinity126 small{grid-column:1/4;font-size:8px;opacity:.7}.breedMain126{width:100%;padding:13px!important;border-radius:12px!important;font-size:14px!important;background:linear-gradient(180deg,#68efff,#7869ff)!important;color:#07101b!important;border:1px solid #c6f8ff!important;box-shadow:0 0 20px #59dfff66,0 4px 0 #26358b!important}
+`;document.head.appendChild(css);setTimeout(()=>{try{render()}catch(e){console.error(e)}},0);
+})();
