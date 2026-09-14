@@ -29,18 +29,22 @@ CONFIGS = {
     },
 }
 
+IMAGE_SIGS = (b'RIFF', b'\xff\xd8', b'\x89PNG')
+
 
 def open_source(path: Path) -> Image.Image:
-    raw = path.read_bytes()
-    # Earlier connector uploads accidentally stored base64 text instead of image bytes.
-    # Decode that once; after this workflow succeeds the files become real WebP images.
-    if not raw.startswith(b'RIFF') and not raw.startswith(b'\xff\xd8') and not raw.startswith(b'\x89PNG'):
+    raw = path.read_bytes().strip()
+    # Earlier connector uploads nested base64 text around the image bytes.
+    # Peel layers until an actual image signature appears.
+    for depth in range(4):
+        if raw.startswith(IMAGE_SIGS):
+            print(path.name, f'decoded depth={depth}')
+            return Image.open(io.BytesIO(raw))
         try:
-            decoded = base64.b64decode(raw, validate=False)
-            return Image.open(io.BytesIO(decoded))
+            raw = base64.b64decode(raw, validate=False)
         except Exception as e:
-            raise RuntimeError(f'{path.name}: neither an image nor decodable base64') from e
-    return Image.open(io.BytesIO(raw))
+            raise RuntimeError(f'{path.name}: invalid nested base64 at depth {depth}') from e
+    raise RuntimeError(f'{path.name}: image signature not found after nested base64 decode')
 
 
 def clean(path: Path, cfg: dict) -> None:
