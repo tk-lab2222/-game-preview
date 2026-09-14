@@ -1,5 +1,5 @@
 (()=>{
-// v0.11.5: make training gains explicit and make meet participant selection card-based.
+// v0.11.8: explicit training gains + themed training names + card-based meet selection.
 const TRAIN_GAIN={
   speed:{speed:12,agility:7},
   power:{power:12,guts:7},
@@ -7,7 +7,13 @@ const TRAIN_GAIN={
   stamina:{stamina:12,guts:6},
   team:{guts:7,tech:7}
 };
-const PLAN_OPTS=[['speed','走り込み'],['power','パワー'],['tech','技術'],['stamina','持久'],['team','連携']];
+const PLAN_OPTS=[
+  ['speed','星駆けダッシュ'],
+  ['power','メテオクラッシュ'],
+  ['tech','スタートリック'],
+  ['stamina','エンドレスロード'],
+  ['team','スターリンク']
+];
 
 function trainStats(m,plan){
   const gain=TRAIN_GAIN[plan]||{};
@@ -71,5 +77,5 @@ st.textContent=`
 .meetStrategy select{flex:1}
 `;
 document.head.appendChild(st);
-setTimeout(()=>{try{render()}catch(e){console.error('v0.11.5 UI patch failed',e)}},0);
+setTimeout(()=>{try{render()}catch(e){console.error('v0.11.8 UI patch failed',e)}},0);
 })();
