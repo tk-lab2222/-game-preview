@@ -1,4 +1,6 @@
 from pathlib import Path
+import base64
+import io
 import cv2
 import numpy as np
 from PIL import Image
@@ -28,8 +30,21 @@ CONFIGS = {
 }
 
 
+def open_source(path: Path) -> Image.Image:
+    raw = path.read_bytes()
+    # Earlier connector uploads accidentally stored base64 text instead of image bytes.
+    # Decode that once; after this workflow succeeds the files become real WebP images.
+    if not raw.startswith(b'RIFF') and not raw.startswith(b'\xff\xd8') and not raw.startswith(b'\x89PNG'):
+        try:
+            decoded = base64.b64decode(raw, validate=False)
+            return Image.open(io.BytesIO(decoded))
+        except Exception as e:
+            raise RuntimeError(f'{path.name}: neither an image nor decodable base64') from e
+    return Image.open(io.BytesIO(raw))
+
+
 def clean(path: Path, cfg: dict) -> None:
-    crop = np.array(Image.open(path).convert('RGB'))
+    crop = np.array(open_source(path).convert('RGB'))
     h, w = crop.shape[:2]
     if (w, h) != cfg['expected']:
         raise RuntimeError(f'{path.name}: unexpected size {(w,h)}, expected {cfg["expected"]}')
