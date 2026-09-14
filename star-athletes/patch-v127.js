@@ -1,0 +1,16 @@
+(()=>{
+const EGG127={C:['#f7f1df','#d6cab0'],U:['#dff7ff','#77c9ef'],R:['#e5f3ff','#5b8cff'],SR:['#eee5ff','#9a6cff'],SSR:['#fff3c7','#ffbe2e'],UR:['#fff0fa','#ff66c4'],EX:['#fff','#7df7ff']};
+function eggTone127(r){return EGG127[r]||EGG127.C}
+function decorateEgg127(){
+ const egg=document.getElementById('egg');if(!egg)return;
+ egg.classList.add('eggStage127');
+ const r=S.egg?.rarity||'C',c=eggTone127(r);egg.style.setProperty('--eggA',c[0]);egg.style.setProperty('--eggB',c[1]);
+ egg.dataset.rarity=r;
+ if(S.egg){egg.innerHTML=`<div class="eggShell127"><span>🥚</span><i>${r}</i></div><div class="eggAura127"></div>`}
+}
+const prevRender127=render;render=function(){prevRender127();requestAnimationFrame(decorateEgg127)};
+const hatch=document.getElementById('hatch');if(hatch){const old=hatch.onclick;hatch.onclick=()=>{if(!S.egg)return;hatch.disabled=true;const egg=document.getElementById('egg');egg?.classList.add('hatching127');setTimeout(()=>{egg?.classList.remove('hatching127');old?.();},850)}}
+const css=document.createElement('style');css.textContent=`
+.eggStage127{position:relative!important;min-height:130px!important;display:grid!important;place-items:center!important;background:radial-gradient(circle,var(--eggA,#fff8e9),transparent 65%)!important;border-radius:18px!important;overflow:hidden!important}.eggShell127{position:relative;z-index:2;text-align:center;animation:eggFloat127 1.8s ease-in-out infinite alternate}.eggShell127 span{display:block;font-size:70px;filter:drop-shadow(0 10px 14px #0004) drop-shadow(0 0 15px var(--eggB,#ffd78a))}.eggShell127 i{display:inline-block;margin-top:-4px;font-style:normal;font-size:9px;font-weight:1000;background:#151515;color:#fff;border-radius:999px;padding:3px 8px;box-shadow:0 0 12px var(--eggB,#ffd78a)}.eggAura127{position:absolute;width:150px;height:150px;border-radius:50%;border:3px solid var(--eggB,#ffd78a);box-shadow:0 0 22px var(--eggB,#ffd78a),inset 0 0 20px var(--eggB,#ffd78a);opacity:.45;animation:aura127 1.2s ease-in-out infinite alternate}@keyframes eggFloat127{to{transform:translateY(-5px) rotate(2deg)}}@keyframes aura127{to{transform:scale(1.12);opacity:.8}}.eggStage127[data-rarity='SSR'] .eggAura127,.eggStage127[data-rarity='UR'] .eggAura127,.eggStage127[data-rarity='EX'] .eggAura127{animation-duration:.65s}.hatching127 .eggShell127{animation:crack127 .12s linear infinite}.hatching127 .eggAura127{animation:burst127 .85s ease-out forwards}@keyframes crack127{25%{transform:translateX(-5px) rotate(-4deg)}75%{transform:translateX(5px) rotate(4deg)}}@keyframes burst127{to{transform:scale(2.3);opacity:0}}
+`;document.head.appendChild(css);setTimeout(()=>{try{render()}catch(e){console.error(e)}},0);
+})();
