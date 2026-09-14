@@ -1,0 +1,34 @@
+name: Clean STAR ATHLETES approved art
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/clean_star_athletes_approved.py'
+      - '.github/workflows/clean-star-athletes-approved.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pillow opencv-python-headless
+      - run: python scripts/clean_star_athletes_approved.py
+      - name: Commit cleaned assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add star-athletes/approved/*.webp
+          if git diff --cached --quiet; then
+            echo "No approved art changes"
+          else
+            git commit -m "Clean approved STAR ATHLETES art"
+            git push
+          fi
