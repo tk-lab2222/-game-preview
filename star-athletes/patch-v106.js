@@ -1,9 +1,9 @@
 (()=>{
-// v0.10.7: force approved art at final avatar render stage.
+// v0.10.8: final avatar render uses rebuilt binary WebP approved art.
 const APPROVED={
-  unil:'../star-athletes/approved/unil-transparent.webp?v=107',
-  grimo:'../star-athletes/approved/grimo-transparent.webp?v=107',
-  puru:'../star-athletes/approved/puru-transparent.webp?v=107'
+  unil:'../star-athletes/approved/unil-transparent.webp?v=108',
+  grimo:'../star-athletes/approved/grimo-transparent.webp?v=108',
+  puru:'../star-athletes/approved/puru-transparent.webp?v=108'
 };
 const prevAvatar=avatar;
 avatar=function(m,big=false){
