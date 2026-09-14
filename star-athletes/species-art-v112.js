@@ -1,16 +1,11 @@
 (()=>{
-// v0.11.4: render Unil / Grimo / Purumon through the same avatar override + canvas path used by Draco.
-// Use approved reference crops stored as base64 text and fill the card art frame consistently.
-const VER='114';
+// v0.11.5: render Unil / Grimo / Purumon through the Draco-style avatar override + canvas path.
+// Keep the original contained size; transparent cutout assets will replace the scenic JPEG crops separately.
+const VER='115';
 const B64={
   unil:'../star-athletes/embedded/unil-v110-small.b64?v='+VER,
   grimo:'../star-athletes/embedded/grimo-v110-small.b64?v='+VER,
   puru:'../star-athletes/embedded/puru-v110-small.b64?v='+VER
-};
-const POS={
-  unil:{zoom:1.00,oy:-0.02},
-  grimo:{zoom:1.00,oy:-0.01},
-  puru:{zoom:1.00,oy:0.00}
 };
 const cache={};
 async function sourceFor(sp){
@@ -39,13 +34,9 @@ async function paintOne(c){
     const x=c.getContext('2d');
     x.clearRect(0,0,c.width,c.height);
     x.fillStyle='#fffaf0';x.fillRect(0,0,c.width,c.height);
-    const p=POS[sp]||{zoom:1,oy:0};
-    // cover: fill the same visual frame as Draco; crop only the excess edge area.
-    const scale=Math.max(c.width/im.naturalWidth,c.height/im.naturalHeight)*p.zoom;
+    const scale=Math.min(c.width/im.naturalWidth,c.height/im.naturalHeight);
     const w=im.naturalWidth*scale,h=im.naturalHeight*scale;
-    const dx=(c.width-w)/2;
-    const dy=(c.height-h)/2 + c.height*p.oy;
-    x.drawImage(im,dx,dy,w,h);
+    x.drawImage(im,(c.width-w)/2,(c.height-h)/2,w,h);
     c.dataset.painted='1';
     c.dataset.error='0';
   }catch(e){
