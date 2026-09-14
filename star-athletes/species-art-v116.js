@@ -1,16 +1,15 @@
 (()=>{
-// v0.11.6: body-only transparent WebP art for Unil / Grimo / Purumon.
-// Draco keeps its existing layered canvas renderer.
-const VER='116';
+// v0.11.7: transparent body-only art with aspect ratio preserved in every UI slot.
+const VER='117';
 const FILES={
   unil:['../star-athletes/embedded/unil-v116.webp.b64?v='+VER],
   grimo:[1,2,3,4,5].map(n=>`../star-athletes/embedded/grimo-v116-${n}.b64?v=${VER}`),
   puru:[1,2,3].map(n=>`../star-athletes/embedded/puru-v116-${n}.b64?v=${VER}`)
 };
 const FIT={
-  unil:{boxW:.82,boxH:.82,scale:.98,dx:0,dy:6},
-  grimo:{boxW:.86,boxH:.84,scale:.98,dx:0,dy:5},
-  puru:{boxW:.78,boxH:.78,scale:.96,dx:0,dy:9}
+  unil:{scale:.88,dx:0,dy:.02},
+  grimo:{scale:.84,dx:0,dy:.02},
+  puru:{scale:.80,dx:0,dy:.04}
 };
 const sourceCache={},imageCache={};
 async function sourceFor(sp){
@@ -31,38 +30,30 @@ async function loadImage(sp){
   if(imageCache[sp]) return imageCache[sp];
   imageCache[sp]=(async()=>{
     const src=await sourceFor(sp);
-    return await new Promise((ok,no)=>{
-      const i=new Image();
-      i.onload=()=>ok(i);
-      i.onerror=()=>no(new Error('image decode '+sp));
-      i.src=src;
-    });
+    return await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(new Error('image decode '+sp));i.src=src;});
   })();
   return imageCache[sp];
 }
 async function paintOne(c){
-  if(c.dataset.painting==='1'||c.dataset.painted==='1') return;
-  const sp=c.dataset.species;
-  if(!FILES[sp]) return;
+  if(c.dataset.painting==='1') return;
+  const sp=c.dataset.species;if(!FILES[sp]) return;
+  const rect=c.getBoundingClientRect();
+  if(rect.width<2||rect.height<2) return;
   c.dataset.painting='1';
   try{
     const im=await loadImage(sp);
-    c.width=420;c.height=320;
-    const x=c.getContext('2d');
-    x.clearRect(0,0,c.width,c.height); // keep canvas transparent
-    const f=FIT[sp]||{boxW:.82,boxH:.82,scale:1,dx:0,dy:0};
-    const base=Math.min((c.width*f.boxW)/im.naturalWidth,(c.height*f.boxH)/im.naturalHeight)*f.scale;
+    const dpr=Math.min(2,window.devicePixelRatio||1);
+    const W=Math.max(2,Math.round(rect.width*dpr)),H=Math.max(2,Math.round(rect.height*dpr));
+    if(c.width!==W||c.height!==H){c.width=W;c.height=H}
+    const x=c.getContext('2d');x.clearRect(0,0,W,H);
+    const f=FIT[sp]||{scale:.84,dx:0,dy:0};
+    const base=Math.min(W/im.naturalWidth,H/im.naturalHeight)*f.scale;
     const w=im.naturalWidth*base,h=im.naturalHeight*base;
-    const dx=(c.width-w)/2+f.dx;
-    const dy=(c.height-h)/2+f.dy;
+    const dx=(W-w)/2+W*f.dx,dy=(H-h)/2+H*f.dy;
     x.drawImage(im,dx,dy,w,h);
-    c.dataset.painted='1';
     c.dataset.error='0';
   }catch(e){
-    c.dataset.error='1';
-    const x=c.getContext('2d');c.width=420;c.height=320;x.clearRect(0,0,c.width,c.height);
-    x.fillStyle='#b33';x.font='bold 18px system-ui';x.textAlign='center';x.fillText('ART LOAD ERROR',210,155);
-    console.error('species art v116 failed',sp,e);
+    c.dataset.error='1';console.error('species art v117 failed',sp,e);
   }finally{c.dataset.painting='0'}
 }
 function paintAll(){document.querySelectorAll('canvas.speciesCanvas').forEach(paintOne)}
@@ -70,16 +61,13 @@ const previousAvatar=avatar;
 avatar=function(m,big=false){
   if(!m||m.species==='draco'||!FILES[m.species]) return previousAvatar(m,big);
   const label=(typeof SP!=='undefined'&&SP[m.species])?SP[m.species][0]:m.species;
-  return `<div class="avatar art species-live species-${m.species} ${big?'bigArt':''}"><canvas class="speciesCanvas" data-species="${m.species}" aria-label="${label}"></canvas></div>`;
+  return `<div class="avatar art species-live species-${m.species} ${m.shiny?'shinyArt':''} ${big?'bigArt':''}"><canvas class="speciesCanvas" data-species="${m.species}" aria-label="${label}"></canvas></div>`;
 };
 const style=document.createElement('style');
-style.textContent=`
-.avatar.species-live{position:relative;overflow:hidden;background:linear-gradient(#fff9eb,#f4ead6);padding:0}
-.speciesCanvas{width:100%;height:100%;display:block;background:transparent}
-.avatar.species-live .pattern,.avatar.species-live .accessory{display:none}
-`;
+style.textContent=`.avatar.species-live{position:relative;overflow:hidden;background:linear-gradient(#fff9eb,#f4ead6);padding:0}.speciesCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;background:transparent}.avatar.species-live .pattern,.avatar.species-live .accessory{display:none}`;
 document.head.appendChild(style);
-new MutationObserver(()=>requestAnimationFrame(paintAll)).observe(document.body,{childList:true,subtree:true});
+const ro=new ResizeObserver(()=>requestAnimationFrame(paintAll));
+new MutationObserver(()=>{document.querySelectorAll('.avatar.species-live').forEach(e=>ro.observe(e));requestAnimationFrame(paintAll)}).observe(document.body,{childList:true,subtree:true});
 window.paintSpecies=paintAll;
-setTimeout(()=>{try{render();paintAll()}catch(e){console.error('species renderer v116 boot failed',e)}},0);
+setTimeout(()=>{try{render();document.querySelectorAll('.avatar.species-live').forEach(e=>ro.observe(e));paintAll()}catch(e){console.error('species renderer v117 boot failed',e)}},0);
 })();
