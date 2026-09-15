@@ -8,40 +8,17 @@ const MEETS212={
 4:[['メジャースターカップ','プライムアリーナ','晴れ',['50m走','障害物競走','10000m走','リレー']],['チャンピオンズ運動会','王都スタジアム','くもり',['大玉ころがし','的当て','坂道かけあがり','綱引き']],['コズミックメジャー杯','軌道競技場','変わりやすい',['50m走','的当て','10000m走','リレー']]],
 5:[['プラネット第1予選','代表選考アリーナ','晴れ',['障害物競走','10000m走','大玉ころがし','リレー']],['プラネット最終予選','代表選考アリーナ','くもり',['50m走','的当て','坂道かけあがり','綱引き']]],
 6:[['プラネット代表決定戦','プラネット・コロシアム','決戦日和',['50m走','障害物競走','10000m走','リレー']]]};
-function rule212(season,index){
-  // Current design: every displayed candidate is open. Keep this hook for later rank/fame requirements.
-  return {open:true,reason:''};
-}
-function notice212(msg){
-  let n=document.getElementById('meetNotice212');
-  const host=document.getElementById('season119');if(!host)return;
-  if(!n){n=document.createElement('div');n.id='meetNotice212';n.className='meetNotice212';host.appendChild(n)}
-  n.textContent=msg;n.classList.add('show212');clearTimeout(n._t);n._t=setTimeout(()=>n.classList.remove('show212'),2200);
-}
-function choose212(index){
-  const season=S.season||1,list=MEETS212[season]||MEETS212[6],m=list[index],r=rule212(season,index);
-  if(!m)return;
-  if(!r.open){notice212(`🔒 この大会は選べません：${r.reason||'出場条件を満たしていません'}`);return;}
-  S.seasonMeet={name:m[0],place:m[1],weather:m[2],events:[...m[3]]};
-  S.schedule=[...m[3]];S.assign={};S.strat={};
-  try{typeof save200==='function'&&save200()}catch(_){}
-  try{render()}catch(e){console.error('choose212 render',e)}
-  setTimeout(renderChoices212,0);
-}
-function renderChoices212(){
-  const season=S.season||1,root=document.getElementById('season119');if(!root)return;
-  const old=root.querySelector('.meetChoice119');if(!old)return;
-  const list=MEETS212[season]||MEETS212[6];
-  old.innerHTML=list.map((m,i)=>{const r=rule212(season,i),sel=S.seasonMeet?.name===m[0];return `<button type="button" data-pick212="${i}" class="meetChoice212 ${sel?'sel212':''} ${r.open?'open212':'locked212'}"><div class="meetTop212"><b>${m[0]}</b><span>${r.open?(sel?'選択中':'出場可能'):'🔒 LOCK'}</span></div><small>📍 ${m[1]}　☁️ ${m[2]}</small><small>${m[3].join(' / ')}</small><em>${r.open?(sel?'この大会を選択中':'この大会を選ぶ'):`条件：${r.reason||'出場条件不足'}`}</em></button>`}).join('');
-}
-// Capture phase: older onclick handlers cannot swallow the lower cards anymore.
-document.addEventListener('click',e=>{
-  const b=e.target.closest?.('[data-pick212]');if(!b)return;
-  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-  choose212(+b.dataset.pick212);
-},true);
-const prev212=render;render=function(){const out=prev212();requestAnimationFrame(renderChoices212);return out};
+function rule212(season,index){return {open:true,reason:''};}
+function notice212(msg){let n=document.getElementById('meetNotice212');const host=document.getElementById('season119');if(!host)return;if(!n){n=document.createElement('div');n.id='meetNotice212';n.className='meetNotice212';host.appendChild(n)}n.textContent=msg;n.classList.add('show212');clearTimeout(n._t);n._t=setTimeout(()=>n.classList.remove('show212'),2200);}
+function choose212(index){const season=S.season||1,list=MEETS212[season]||MEETS212[6],m=list[index],r=rule212(season,index);if(!m)return;if(!r.open){notice212(`🔒 この大会は選べません：${r.reason||'出場条件を満たしていません'}`);return;}S.seasonMeet={name:m[0],place:m[1],weather:m[2],events:[...m[3]]};S.schedule=[...m[3]];S.assign={};S.strat={};try{typeof save200==='function'&&save200()}catch(_){}try{render()}catch(e){console.error('choose212 render',e)}setTimeout(renderChoices212,0);}
+function renderChoices212(){const season=S.season||1,root=document.getElementById('season119');if(!root)return;const old=root.querySelector('.meetChoice119');if(!old)return;const list=MEETS212[season]||MEETS212[6];old.innerHTML=list.map((m,i)=>{const r=rule212(season,i),sel=S.seasonMeet?.name===m[0];return `<button type="button" data-pick212="${i}" class="meetChoice212 ${sel?'sel212':''} ${r.open?'open212':'locked212'}"><div class="meetTop212"><b>${m[0]}</b><span>${r.open?(sel?'選択中':'出場可能'):'🔒 LOCK'}</span></div><small>📍 ${m[1]}　☁️ ${m[2]}</small><small>${m[3].join(' / ')}</small><em>${r.open?(sel?'この大会を選択中':'この大会を選ぶ'):`条件：${r.reason||'出場条件不足'}`}</em></button>`}).join('');}
+function polishResults212(){const events=document.getElementById('events');if(!events)return;[...events.querySelectorAll(':scope > .evt')].forEach(row=>{row.classList.add('resultRow212');const d=row.querySelector('div');if(!d)return;const txt=d.textContent||'';const rank=(txt.match(/([1-8])位/)||[])[1]||'';const phase=(txt.match(/(\d+)\s*phase\s*pt/i)||[])[1]||'';let meta=row.querySelector('.resultMeta212');if(!meta){meta=document.createElement('div');meta.className='resultMeta212';row.appendChild(meta)}meta.innerHTML=`${rank?`<span class="rank212">${rank}位</span>`:''}${phase?`<span class="phase212">${phase} phase pt</span>`:''}`;});}
+document.addEventListener('click',e=>{const b=e.target.closest?.('[data-pick212]');if(!b)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();choose212(+b.dataset.pick212);},true);
+const prev212=render;render=function(){const out=prev212();requestAnimationFrame(()=>{renderChoices212();polishResults212()});return out};
+const mo212=new MutationObserver(()=>requestAnimationFrame(polishResults212));mo212.observe(document.body,{subtree:true,childList:true,characterData:true});
 const css=document.createElement('style');css.textContent=`
 .meetChoice119{display:grid!important;gap:9px!important}.meetChoice212{display:grid!important;gap:5px!important;text-align:left!important;border:2px solid #26364e!important;border-radius:14px!important;padding:11px!important;box-shadow:0 4px 0 #0001!important;touch-action:manipulation!important}.meetChoice212.open212{background:linear-gradient(145deg,#fff,#edf5ff)!important;color:#18263a!important}.meetChoice212.sel212{background:linear-gradient(145deg,#e6f8ff,#fff7d4)!important;outline:3px solid #58cfff!important}.meetChoice212.locked212{background:#e4e8ed!important;border-color:#a9b0b8!important;color:#7b838b!important;filter:grayscale(.8)}.meetTop212{display:flex;justify-content:space-between;align-items:center;gap:8px}.meetTop212 b{font-size:12px}.meetTop212 span{font-size:7px;font-weight:1000;border-radius:999px;padding:3px 6px;background:#ddf7e9;color:#08703a}.locked212 .meetTop212 span{background:#c6ccd2;color:#60666c}.meetChoice212 small{font-size:8px;color:#667}.locked212 small{color:#8a9096}.meetChoice212 em{font-style:normal;font-size:8px;font-weight:1000;color:#0870a8}.locked212 em{color:#7b838b}.meetNotice212{margin-top:8px;padding:8px 10px;border-radius:10px;background:#1b2940;color:#fff;font-size:9px;font-weight:900;opacity:0;transform:translateY(-4px);transition:.18s}.meetNotice212.show212{opacity:1;transform:none}
-`;document.head.appendChild(css);setTimeout(renderChoices212,0);
+#meet #events>.evt.resultRow212{display:grid!important;grid-template-columns:1fr auto!important;gap:5px 10px!important;align-items:center!important;background:linear-gradient(145deg,#14233a,#0d1727)!important;color:#f7fbff!important;border:1px solid #ffffff24!important;border-radius:14px!important;padding:12px 14px!important;margin:0 0 9px!important;box-shadow:0 6px 18px #0004,inset 0 1px 0 #ffffff12!important;min-height:72px!important}
+#meet #events>.evt.resultRow212>b{color:#fff!important;font-size:16px!important;line-height:1.2!important}.resultRow212>div:not(.resultMeta212){grid-column:1/3!important;color:#a9c3dd!important;font-size:10px!important}.resultMeta212{grid-column:2!important;grid-row:1!important;display:flex!important;flex-direction:column!important;align-items:flex-end!important;gap:4px!important}.rank212{padding:5px 8px!important;border-radius:999px!important;background:linear-gradient(180deg,#ffe274,#d7a31f)!important;color:#201600!important;font-size:14px!important;font-weight:1000!important;box-shadow:0 0 14px #ffcf5060!important}.phase212{padding:3px 6px!important;border:1px solid #60dfff55!important;border-radius:999px!important;background:#0a2533!important;color:#79e8ff!important;font-size:8px!important;font-weight:1000!important}
+`;document.head.appendChild(css);setTimeout(()=>{renderChoices212();polishResults212()},0);
 })();
