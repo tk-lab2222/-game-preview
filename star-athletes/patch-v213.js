@@ -1,25 +1,65 @@
 (()=>{
-// v0.21.3: fix tournament result-list contrast and make each event row visually meaningful.
+// v0.21.3: tournament result contrast + own season progression end-to-end.
 function polishMeetRows213(){
   const meet=document.getElementById('meet'),events=document.getElementById('events');
   if(!meet||!events)return;
   const rows=[...events.querySelectorAll(':scope > .evt')];
   if(!rows.length)return;
-  rows.forEach((row,i)=>{
+  rows.forEach(row=>{
     row.classList.add('resultRow213');
-    const b=row.querySelector('b');
-    const d=row.querySelector('div');
+    const b=row.querySelector('b'),d=row.querySelector('div');
     if(!b||!d)return;
     const text=d.textContent||'';
     const rank=(text.match(/([1-8])位/)||[])[1]||'';
     const phase=(text.match(/(\d+)\s*phase\s*pt/i)||[])[1]||'';
-    if(!row.querySelector('.resultMeta213')){
-      const meta=document.createElement('div');meta.className='resultMeta213';
-      meta.innerHTML=`${rank?`<span class="rank213">${rank}位</span>`:''}${phase?`<span class="phasePt213">${phase} phase pt</span>`:''}`;
-      row.appendChild(meta);
-    }
+    let meta=row.querySelector('.resultMeta213');
+    if(!meta){meta=document.createElement('div');meta.className='resultMeta213';row.appendChild(meta)}
+    meta.innerHTML=`${rank?`<span class="rank213">${rank}位</span>`:''}${phase?`<span class="phasePt213">${phase} phase pt</span>`:''}`;
   });
 }
+function clearMeet213(){
+  const run=document.getElementById('run'),next=document.getElementById('next'),result=document.getElementById('result'),events=document.getElementById('events'),gain=document.getElementById('gain');
+  if(run){run.classList.remove('hide');run.disabled=false;run.textContent='大会スタート'}
+  if(next)next.classList.add('hide');
+  if(result)result.innerHTML='';
+  if(events)events.innerHTML='';
+  if(gain)gain.innerHTML='';
+}
+function goTrain213(){
+  try{if(typeof show==='function')show('train');else if(typeof window.show==='function')window.show('train')}catch(_){}
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v==='train'));
+}
+function goBreed213(){
+  try{if(typeof show==='function')show('breed');else if(typeof window.show==='function')window.show('breed')}catch(_){}
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v==='breed'));
+}
+function nextSeason213(){
+  const season=Math.max(1,Math.min(6,Number(S.season)||1));
+  if(season<6){
+    S.season=season+1;
+    S.turn=0;S.plans={};S.assign={};S.strat={};S.schedule=[];S.seasonMeet=null;
+    S.generationActive=true;
+    clearMeet213();
+    try{render()}catch(e){console.error('v213 render next season',e)}
+    goTrain213();
+    setTimeout(()=>{try{render()}catch(_){}},0);
+    return;
+  }
+  // S6 complete: only here does the generation finish and breeding unlock.
+  S.parents=[];S.cands=[];S.sel=[];S.egg=null;S.turn=0;S.schedule=[];S.plans={};S.assign={};S.strat={};
+  S.season=1;S.seasonMeet=null;S.generationActive=false;
+  clearMeet213();
+  try{render()}catch(e){console.error('v213 render next generation',e)}
+  goBreed213();
+  setTimeout(()=>{try{render()}catch(_){}},0);
+}
+// Capture before all legacy next handlers so the season cannot be reset by an older layer.
+document.addEventListener('click',e=>{
+  const next=e.target.closest?.('#next');if(!next)return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  nextSeason213();
+},true);
+
 const mo213=new MutationObserver(()=>requestAnimationFrame(polishMeetRows213));
 mo213.observe(document.body,{subtree:true,childList:true,characterData:true});
 const css=document.createElement('style');css.textContent=`
