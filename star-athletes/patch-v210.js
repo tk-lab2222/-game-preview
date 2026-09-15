@@ -2,11 +2,11 @@
 // v0.21.0 hotfix: self-contained adoption + roster rendering. No dependency on prior private IIFE helpers.
 const ROSTER_KEY210='star-athletes-active-roster-v210';
 const TRAIN210={
- speed:{name:'星駆けダッシュ',icon:'💨',gain:{speed:12,agility:7}},
- power:{name:'メテオクラッシュ',icon:'💥',gain:{power:12,guts:7}},
- tech:{name:'スタートリック',icon:'✨',gain:{tech:12,agility:6}},
- stamina:{name:'エンドレスロード',icon:'🔥',gain:{stamina:12,guts:6}},
- team:{name:'スターリンク',icon:'🤝',gain:{guts:7,tech:7}}
+ speed:{name:'星駆けダッシュ',icon:'💨',gain:{speed:3,agility:1}},
+ power:{name:'メテオクラッシュ',icon:'💥',gain:{power:3,guts:1}},
+ tech:{name:'スタートリック',icon:'✨',gain:{tech:3,agility:1}},
+ stamina:{name:'エンドレスロード',icon:'🔥',gain:{stamina:3,guts:1}},
+ team:{name:'スターリンク',icon:'🤝',gain:{guts:2,tech:2}}
 };
 const STRAT210=['先行','バランス','温存','追込'];
 function saveRoster210(){
@@ -19,7 +19,7 @@ function restoreRoster210(){
  return false;
 }
 function eventKeys210(e){return e==='50m走'?['speed','agility','tech']:e==='障害物競走'?['tech','agility','speed']:e==='大玉ころがし'?['power','stamina','guts']:e==='坂道かけあがり'?['power','stamina','guts']:e==='10000m走'?['stamina','guts','speed']:e==='的当て'?['tech','power','agility']:e==='リレー'?['speed','tech','agility']:['power','stamina','guts']}
-function gainRows210(m,g){return Object.keys(SL).map(k=>`<span class="${g[k]?'up210':''}"><i>${SL[k]}</i><b>${m.stats?.[k]??0}${g[k]?` <em>+${g[k]}</em>`:''}</b></span>`).join('')}
+function gainRows210(m,g){return Object.keys(SL).map(k=>`<span class="${g[k]?'up210':''}"><i>${SL[k]}</i><b>${m.stats?.[k]??0}${g[k]?` <em>+${g[k]}基準</em>`:''}</b></span>`).join('')}
 function renderRoster210(){
  const plans=document.getElementById('plans'),prep=document.getElementById('prep');if(!plans||!prep)return;
  if(!restoreRoster210()){
