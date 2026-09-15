@@ -1,0 +1,47 @@
+(()=>{
+// v0.21.2: make tournament candidate selection reliable and explicit.
+// S1-S4 displayed candidates are selectable. Locked cards (future rules) show why.
+const MEETS212={
+1:[['スタータウン杯','スタータウン','晴れ',['50m走','障害物競走','的当て','リレー']],['リバーフィールド杯','リバー地区','くもり',['50m走','大玉ころがし','坂道かけあがり','綱引き']],['ルーキースター杯','ネスト広場','晴れ',['障害物競走','的当て','大玉ころがし','リレー']]],
+2:[['ノースエリア杯','ノースドーム','向かい風',['50m走','10000m走','障害物競走','リレー']],['クリスタル地区杯','クリスタル平原','晴れ',['的当て','坂道かけあがり','大玉ころがし','綱引き']],['スカイエリア杯','高原競技場','強めの風',['50m走','障害物競走','坂道かけあがり','リレー']]],
+3:[['グランドスター杯','中央大競技場','晴れ',['10000m走','障害物競走','的当て','リレー']],['メテオグラウンド杯','クレーター会場','砂ぼこり',['大玉ころがし','坂道かけあがり','50m走','綱引き']],['オーロラグランド杯','北極光スタジアム','低温',['10000m走','50m走','的当て','リレー']]],
+4:[['メジャースターカップ','プライムアリーナ','晴れ',['50m走','障害物競走','10000m走','リレー']],['チャンピオンズ運動会','王都スタジアム','くもり',['大玉ころがし','的当て','坂道かけあがり','綱引き']],['コズミックメジャー杯','軌道競技場','変わりやすい',['50m走','的当て','10000m走','リレー']]],
+5:[['プラネット第1予選','代表選考アリーナ','晴れ',['障害物競走','10000m走','大玉ころがし','リレー']],['プラネット最終予選','代表選考アリーナ','くもり',['50m走','的当て','坂道かけあがり','綱引き']]],
+6:[['プラネット代表決定戦','プラネット・コロシアム','決戦日和',['50m走','障害物競走','10000m走','リレー']]]};
+function rule212(season,index){
+  // Current design: every displayed candidate is open. Keep this hook for later rank/fame requirements.
+  return {open:true,reason:''};
+}
+function notice212(msg){
+  let n=document.getElementById('meetNotice212');
+  const host=document.getElementById('season119');if(!host)return;
+  if(!n){n=document.createElement('div');n.id='meetNotice212';n.className='meetNotice212';host.appendChild(n)}
+  n.textContent=msg;n.classList.add('show212');clearTimeout(n._t);n._t=setTimeout(()=>n.classList.remove('show212'),2200);
+}
+function choose212(index){
+  const season=S.season||1,list=MEETS212[season]||MEETS212[6],m=list[index],r=rule212(season,index);
+  if(!m)return;
+  if(!r.open){notice212(`🔒 この大会は選べません：${r.reason||'出場条件を満たしていません'}`);return;}
+  S.seasonMeet={name:m[0],place:m[1],weather:m[2],events:[...m[3]]};
+  S.schedule=[...m[3]];S.assign={};S.strat={};
+  try{typeof save200==='function'&&save200()}catch(_){}
+  try{render()}catch(e){console.error('choose212 render',e)}
+  setTimeout(renderChoices212,0);
+}
+function renderChoices212(){
+  const season=S.season||1,root=document.getElementById('season119');if(!root)return;
+  const old=root.querySelector('.meetChoice119');if(!old)return;
+  const list=MEETS212[season]||MEETS212[6];
+  old.innerHTML=list.map((m,i)=>{const r=rule212(season,i),sel=S.seasonMeet?.name===m[0];return `<button type="button" data-pick212="${i}" class="meetChoice212 ${sel?'sel212':''} ${r.open?'open212':'locked212'}"><div class="meetTop212"><b>${m[0]}</b><span>${r.open?(sel?'選択中':'出場可能'):'🔒 LOCK'}</span></div><small>📍 ${m[1]}　☁️ ${m[2]}</small><small>${m[3].join(' / ')}</small><em>${r.open?(sel?'この大会を選択中':'この大会を選ぶ'):`条件：${r.reason||'出場条件不足'}`}</em></button>`}).join('');
+}
+// Capture phase: older onclick handlers cannot swallow the lower cards anymore.
+document.addEventListener('click',e=>{
+  const b=e.target.closest?.('[data-pick212]');if(!b)return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  choose212(+b.dataset.pick212);
+},true);
+const prev212=render;render=function(){const out=prev212();requestAnimationFrame(renderChoices212);return out};
+const css=document.createElement('style');css.textContent=`
+.meetChoice119{display:grid!important;gap:9px!important}.meetChoice212{display:grid!important;gap:5px!important;text-align:left!important;border:2px solid #26364e!important;border-radius:14px!important;padding:11px!important;box-shadow:0 4px 0 #0001!important;touch-action:manipulation!important}.meetChoice212.open212{background:linear-gradient(145deg,#fff,#edf5ff)!important;color:#18263a!important}.meetChoice212.sel212{background:linear-gradient(145deg,#e6f8ff,#fff7d4)!important;outline:3px solid #58cfff!important}.meetChoice212.locked212{background:#e4e8ed!important;border-color:#a9b0b8!important;color:#7b838b!important;filter:grayscale(.8)}.meetTop212{display:flex;justify-content:space-between;align-items:center;gap:8px}.meetTop212 b{font-size:12px}.meetTop212 span{font-size:7px;font-weight:1000;border-radius:999px;padding:3px 6px;background:#ddf7e9;color:#08703a}.locked212 .meetTop212 span{background:#c6ccd2;color:#60666c}.meetChoice212 small{font-size:8px;color:#667}.locked212 small{color:#8a9096}.meetChoice212 em{font-style:normal;font-size:8px;font-weight:1000;color:#0870a8}.locked212 em{color:#7b838b}.meetNotice212{margin-top:8px;padding:8px 10px;border-radius:10px;background:#1b2940;color:#fff;font-size:9px;font-weight:900;opacity:0;transform:translateY(-4px);transition:.18s}.meetNotice212.show212{opacity:1;transform:none}
+`;document.head.appendChild(css);setTimeout(renderChoices212,0);
+})();
