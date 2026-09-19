@@ -1,5 +1,5 @@
 (()=>{
-// v0.27.0: M2.1 + M2.2 training decisions.
+// v0.27.1: M2.1 + M2.2 training decisions. Fix late roster rendering ownership.
 // 3 rounds x 4 training points. Each athlete 0-2pt per round.
 // Intensity: safe / standard / high-load. Hidden growth/stability/luck influence outcomes.
 const SAVE263='star-athletes-save-v200',ROSTER263='star-athletes-active-roster-v210';
@@ -72,7 +72,7 @@ function outcome263(m,mode){
     if(r<fail+ultra+great)return{grade:'大成功',mul:gmul*1.55,risk:'high'};
     return{grade:'成功',mul:gmul*1.12,risk:'high'};
   }
-  const bad=clamp(.13-stability*.018-luck*.005,.025,.13);
+  const bad=clamp263(.13-stability*.018-luck*.005,.025,.13);
   const ultra=.018+luck*.005;
   const great=.12+luck*.01+growth*.006;
   if(r<bad)return{grade:'不調',mul:gmul*.40,risk:'normal'};
@@ -151,13 +151,26 @@ function train263(){
   render263();persist263();
 }
 window.addEventListener('click',e=>{
+  if(e.target?.closest?.('.tab[data-v="train"],#adopt,#doTrain,#toMeet')){
+    setTimeout(late263,0);
+  }
   const dec=e.target?.closest?.('[data-dec263]');if(dec){e.preventDefault();e.stopPropagation();adjust263(dec.dataset.dec263,-1);return}
   const inc=e.target?.closest?.('[data-inc263]');if(inc){e.preventDefault();e.stopPropagation();adjust263(inc.dataset.inc263,1);return}
   const it=e.target?.closest?.('[data-int263]');if(it){e.preventDefault();e.stopPropagation();state263().intensity[it.dataset.ath263]=it.dataset.int263;persist263();render263();return}
   const go=e.target?.closest?.('#doTrain263');if(go){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();train263();return}
 },true);
-function late263(){render263();[60,180,420].forEach(ms=>setTimeout(render263,ms))}
+function late263(){
+  render263();
+  [40,100,220,450,800,1300,2100,3200].forEach(ms=>setTimeout(render263,ms));
+}
 try{const prev263=render;render=function(){const out=prev263();late263();return out}}catch(e){console.warn('wrap263',e)}
+try{
+  if(typeof window.renderRoster210Live==='function'&&!window.renderRoster210Live263){
+    const prevRoster263=window.renderRoster210Live;
+    window.renderRoster210Live263=true;
+    window.renderRoster210Live=function(){const out=prevRoster263();setTimeout(render263,0);setTimeout(render263,80);return out};
+  }
+}catch(e){console.warn('roster263',e)}
 const css=document.createElement('style');css.textContent=`
 .decision263{margin-top:9px;padding-top:8px;border-top:1px dashed #bdc9d4}.alloc263{display:grid;grid-template-columns:1fr 34px 34px 34px;align-items:center;gap:5px}.alloc263 span{font-size:8px;font-weight:1000}.alloc263 button{height:30px;border:1px solid #9eafbf;border-radius:8px;background:#fff;font-size:15px;font-weight:1000}.alloc263 b{text-align:center;font-size:13px}.intensity263{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:7px}.intensity263 button{border:1px solid #aebdca;border-radius:9px;background:#fff;padding:6px 3px;color:#223344}.intensity263 button strong{display:block;font-size:8px}.intensity263 button small{display:block;font-size:6px;line-height:1.25;margin-top:2px;color:#71808e}.intensity263 button.on263{border-color:#e18c20;background:#fff0cf;box-shadow:0 0 0 2px #ffd58f}.risk263{margin-top:5px;font-size:7px;color:#637384}.risk263 b{color:#273849}
 .trainingDecision263{margin-top:9px;padding:10px;border:2px solid #344b63;border-radius:13px;background:linear-gradient(145deg,#f7fbff,#edf4fa)}.budgetHead263{display:flex;justify-content:space-between;align-items:center}.budgetHead263 small{display:block;font-size:6px;color:#718293;font-weight:1000}.budgetHead263 b{font-size:12px}.budgetHead263 strong{font-size:11px;background:#25384b;color:#fff;padding:4px 8px;border-radius:999px}.budgetDots263{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:8px 0}.budgetDots263 i{height:8px;background:#d7e0e8;border-radius:999px}.budgetDots263 i.on263{background:#e4a338}.budgetHint263{font-size:7px;color:#657585;margin-bottom:7px}.trainingDecision263 .btn{width:100%}.trainGain263{border:2px solid #79c99a!important;background:#effff5!important;color:#173d29!important}.trainGain263 small{font-size:7px;color:#5f7167}
