@@ -27,7 +27,7 @@ function panel260(){
   const phase=n<3?'最初の候補':n<6?'追加候補':'最終候補';
   box.innerHTML=`<div class="batchTop260"><div><small>BREEDING BATCH</small><b>候補 ${Math.min(n,MAX260)}/${MAX260}</b></div><span>${phase}</span></div><div class="batchBar260"><i style="width:${Math.min(100,n/MAX260*100)}%"></i></div><button id="batchGo260" class="btn or" ${ready?'':'disabled'}>${n===0?'🥚 3体まとめて誕生':n>=MAX260?'候補10体生成済み':`🥚 あと${need}体まとめて誕生`}</button><div class="batchHint260">${n<3?'まず3体。ここで十分なら3体を選んで進めます。':n<MAX260?'もっと比較したい時だけ追加生成。最大10体まで。':'10体からベスト3を選べます。'}</div>`;
   box.querySelector('#batchGo260')?.addEventListener('click',batch260);
-  const cnt=document.getElementById('cnt'),mx=document.getElementById('mx');if(cnt)cnt.textContent=n;if(mx)mx.textContent=MAX260;
+  const cnt=document.getElementById('cnt'),mx=document.getElementById('mx'),capEl=document.getElementById('cap');if(cnt)cnt.textContent=n;if(mx)mx.textContent=MAX260;if(capEl)capEl.textContent=MAX260;
   const cand=document.getElementById('candBox');if(cand&&n>=1)cand.classList.remove('hide');
   const adopt=document.getElementById('adopt');if(adopt)adopt.disabled=(S.sel||[]).length!==3;
 }
