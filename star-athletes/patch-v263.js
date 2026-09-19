@@ -1,6 +1,6 @@
 (()=>{
-// v0.27.2: M2.1 + M2.2 training decisions. Fix allocation edits being reset.
-// 3 rounds x 4 training points. Each athlete 0-2pt per round.
+// v0.27.4: keep M2 intensity choices in story mode; defer manual training-point allocation to LIMIT progression.
+// Story: 3 rounds, all 3 athletes train once per round.
 // Intensity: safe / standard / high-load. Hidden growth/stability/luck influence outcomes.
 const SAVE263='star-athletes-save-v200',ROSTER263='star-athletes-active-roster-v210';
 const KEYS263=['power','speed','stamina','agility','tech','guts'];
@@ -93,13 +93,13 @@ function ensureGrowthMeta263(m){
 }
 function controls263(){
   if(!Array.isArray(S.nest)||S.nest.length!==3)return;
-  defaultAlloc263();const st=state263();
+  const st=state263();
   document.querySelectorAll('.train210[data-athlete210]').forEach(card=>{
     const id=card.dataset.athlete210,m=S.nest.find(x=>x.id===id);if(!m)return;
     let box=card.querySelector('.decision263');
     if(!box){box=document.createElement('div');box.className='decision263';card.appendChild(box)}
-    const pt=clamp263(n263(st.alloc[id]),0,2),mode=INT263[st.intensity[id]]?st.intensity[id]:'normal';st.intensity[id]=mode;
-    box.innerHTML=`<div class="alloc263"><span>育成pt</span><button type="button" data-dec263="${id}" ${pt<=0?'disabled':''}>−</button><b>${pt}</b><button type="button" data-inc263="${id}" ${pt>=2||total263()>=4?'disabled':''}>＋</button></div>
+    const mode=INT263[st.intensity[id]]?st.intensity[id]:'normal';st.intensity[id]=mode;
+    box.innerHTML=`<div class="intensityTitle263"><span>トレーニング強度</span><small>ストーリー中は3体とも1回ずつ育成</small></div>
       <div class="intensity263">${Object.entries(INT263).map(([k,x])=>`<button type="button" data-int263="${k}" data-ath263="${id}" class="${mode===k?'on263':''}"><strong>${x.icon} ${x.label}</strong><small>${x.desc}</small></button>`).join('')}</div>
       <div class="risk263">現在：<b>${riskText263(m,mode)}</b></div>`;
   });
@@ -109,47 +109,32 @@ function panel263(){
   old.style.display='none';
   let host=document.getElementById('trainingDecision263');
   if(!host){host=document.createElement('div');host.id='trainingDecision263';host.className='trainingDecision263';old.after(host)}
-  defaultAlloc263();
-  const used=total263(),turn=clamp263(n263(S.turn),0,3),left=Math.max(0,3-turn);
-  host.innerHTML=`<div class="budgetHead263"><div><small>TRAINING BUDGET</small><b>第${turn+1}ラウンド</b></div><strong>${used}/4 pt</strong></div>
-   <div class="budgetDots263">${Array.from({length:4},(_,i)=>`<i class="${i<used?'on263':''}"></i>`).join('')}</div>
-   <div class="budgetHint263">3体へ合計4ptを配分。1体最大2pt。残り ${left}ラウンド。</div>
-   <button type="button" id="doTrain263" class="btn or" ${used===4&&turn<3?'':'disabled'}>この配分で練習する</button>`;
+  const turn=clamp263(n263(S.turn),0,3),left=Math.max(0,3-turn);
+  host.innerHTML=`<div class="budgetHead263"><div><small>TRAINING</small><b>第${Math.min(3,turn+1)}ラウンド</b></div><strong>${turn}/3</strong></div>
+   <div class="budgetHint263">3体それぞれの育成種目と強度を決めます。ポイント配分はLIMIT到達後に解禁予定。</div>
+   <button type="button" id="doTrain263" class="btn or" ${turn<3?'':'disabled'}>${turn<3?'この内容で練習する':'育成完了'}</button>`;
 }
 function render263(){try{controls263();panel263()}catch(e){console.warn('render263',e)}}
-function adjust263(id,delta){
-  const st=state263(),cur=clamp263(n263(st.alloc[id]),0,2);
-  const next=clamp263(cur+delta,0,2);
-  const nextTotal=total263()-cur+next;
-  if(nextTotal>4)return;
-  st.alloc[id]=next;persist263();render263();
-}
-function resetRound263(){
-  const st=state263();st.alloc={};
-  defaultAlloc263();
-}
 function train263(){
-  if(n263(S.turn)>=3||!Array.isArray(S.nest)||S.nest.length!==3||total263()!==4)return;
-  const st=state263(),out=[],grades={};
+  if(n263(S.turn)>=3||!Array.isArray(S.nest)||S.nest.length!==3)return;
+  const st=state263(),out=[];
   for(const m of S.nest){
-    const pt=clamp263(n263(st.alloc[m.id]),0,2),mode=INT263[st.intensity[m.id]]?st.intensity[m.id]:'normal';
-    if(pt<=0){out.push(`<b>${m.name}：休養</b> 育成pt 0`);grades[m.id]='休養';continue}
+    const mode=INT263[st.intensity[m.id]]?st.intensity[m.id]:'normal';
     ensureGrowthMeta263(m);
     const plan=TRAIN263[S.plans?.[m.id]]?S.plans[m.id]:'speed';
-    const o=outcome263(m,mode),pm=pointMul263(pt),ups=[];grades[m.id]=o.grade;
+    const o=outcome263(m,mode),ups=[];
     for(const [k,base] of Object.entries(TRAIN263[plan].gain)){
       const cur=n263(m.stats[k]),soft=highStatMul263(cur),jitter=o.grade==='失敗'?0:(Math.random()<.35?1:0);
-      const raw=(base*pm*o.mul+jitter)*soft;
+      const raw=(base*o.mul+jitter)*soft;
       const gain=Math.max(0,Math.round(raw));
       m.stats[k]=Math.min(999,cur+gain);
       const actual=m.stats[k]-cur;
       m.trainingGain226[k]=n263(m.trainingGain226[k])+actual;
       ups.push(`${SL[k]}+${actual}`);
     }
-    out.push(`<b>${m.name}：${INT263[mode].label} / ${o.grade}</b> ${ups.join(' / ')} <small>(${pt}pt)</small>`);
+    out.push(`<b>${m.name}：${INT263[mode].label} / ${o.grade}</b> ${ups.join(' / ')}`);
   }
   S.turn=n263(S.turn)+1;
-  resetRound263();
   persist263();
   try{render()}catch(e){console.error('render train263',e)}
   try{window.renderRoster210Live&&window.renderRoster210Live()}catch(_){}
@@ -160,8 +145,6 @@ window.addEventListener('click',e=>{
   if(e.target?.closest?.('.tab[data-v="train"],#adopt,#doTrain,#toMeet')){
     setTimeout(late263,0);
   }
-  const dec=e.target?.closest?.('[data-dec263]');if(dec){e.preventDefault();e.stopPropagation();adjust263(dec.dataset.dec263,-1);return}
-  const inc=e.target?.closest?.('[data-inc263]');if(inc){e.preventDefault();e.stopPropagation();adjust263(inc.dataset.inc263,1);return}
   const it=e.target?.closest?.('[data-int263]');if(it){e.preventDefault();e.stopPropagation();state263().intensity[it.dataset.ath263]=it.dataset.int263;persist263();render263();return}
   const go=e.target?.closest?.('#doTrain263');if(go){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();train263();return}
 },true);
@@ -178,7 +161,7 @@ try{
   }
 }catch(e){console.warn('roster263',e)}
 const css=document.createElement('style');css.textContent=`
-.decision263{margin-top:9px;padding-top:8px;border-top:1px dashed #bdc9d4}.alloc263{display:grid;grid-template-columns:1fr 34px 34px 34px;align-items:center;gap:5px}.alloc263 span{font-size:8px;font-weight:1000}.alloc263 button{height:30px;border:1px solid #9eafbf;border-radius:8px;background:#fff;font-size:15px;font-weight:1000}.alloc263 b{text-align:center;font-size:13px}.intensity263{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:7px}.intensity263 button{border:1px solid #aebdca;border-radius:9px;background:#fff;padding:6px 3px;color:#223344}.intensity263 button strong{display:block;font-size:8px}.intensity263 button small{display:block;font-size:6px;line-height:1.25;margin-top:2px;color:#71808e}.intensity263 button.on263{border-color:#e18c20;background:#fff0cf;box-shadow:0 0 0 2px #ffd58f}.risk263{margin-top:5px;font-size:7px;color:#637384}.risk263 b{color:#273849}
-.trainingDecision263{margin-top:9px;padding:10px;border:2px solid #344b63;border-radius:13px;background:linear-gradient(145deg,#f7fbff,#edf4fa)}.budgetHead263{display:flex;justify-content:space-between;align-items:center}.budgetHead263 small{display:block;font-size:6px;color:#718293;font-weight:1000}.budgetHead263 b{font-size:12px}.budgetHead263 strong{font-size:11px;background:#25384b;color:#fff;padding:4px 8px;border-radius:999px}.budgetDots263{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:8px 0}.budgetDots263 i{height:8px;background:#d7e0e8;border-radius:999px}.budgetDots263 i.on263{background:#e4a338}.budgetHint263{font-size:7px;color:#657585;margin-bottom:7px}.trainingDecision263 .btn{width:100%}.trainGain263{border:2px solid #79c99a!important;background:#effff5!important;color:#173d29!important}.trainGain263 small{font-size:7px;color:#5f7167}
+.decision263{margin-top:9px;padding-top:8px;border-top:1px dashed #bdc9d4}.intensityTitle263{display:flex;justify-content:space-between;align-items:center;gap:8px}.intensityTitle263 span{font-size:8px;font-weight:1000}.intensityTitle263 small{font-size:6px;color:#71808e}.intensity263{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:7px}.intensity263 button{border:1px solid #aebdca;border-radius:9px;background:#fff;padding:6px 3px;color:#223344}.intensity263 button strong{display:block;font-size:8px}.intensity263 button small{display:block;font-size:6px;line-height:1.25;margin-top:2px;color:#71808e}.intensity263 button.on263{border-color:#e18c20;background:#fff0cf;box-shadow:0 0 0 2px #ffd58f}.risk263{margin-top:5px;font-size:7px;color:#637384}.risk263 b{color:#273849}
+.trainingDecision263{margin-top:9px;padding:10px;border:2px solid #344b63;border-radius:13px;background:linear-gradient(145deg,#f7fbff,#edf4fa)}.budgetHead263{display:flex;justify-content:space-between;align-items:center}.budgetHead263 small{display:block;font-size:6px;color:#718293;font-weight:1000}.budgetHead263 b{font-size:12px}.budgetHead263 strong{font-size:11px;background:#25384b;color:#fff;padding:4px 8px;border-radius:999px}.budgetHint263{font-size:7px;color:#657585;margin-bottom:7px}.trainingDecision263 .btn{width:100%}.trainGain263{border:2px solid #79c99a!important;background:#effff5!important;color:#173d29!important}.trainGain263 small{font-size:7px;color:#5f7167}
 `;document.head.appendChild(css);late263();
 })();
