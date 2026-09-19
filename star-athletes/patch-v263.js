@@ -1,5 +1,5 @@
 (()=>{
-// v0.27.1: M2.1 + M2.2 training decisions. Fix late roster rendering ownership.
+// v0.27.2: M2.1 + M2.2 training decisions. Fix allocation edits being reset.
 // 3 rounds x 4 training points. Each athlete 0-2pt per round.
 // Intensity: safe / standard / high-load. Hidden growth/stability/luck influence outcomes.
 const SAVE263='star-athletes-save-v200',ROSTER263='star-athletes-active-roster-v210';
@@ -30,12 +30,18 @@ function state263(){
 function defaultAlloc263(){
   const st=state263(),nest=S.nest||[];
   if(!nest.length)return;
-  const valid=nest.reduce((s,m)=>s+clamp263(n263(st.alloc[m.id]),0,2),0)===4;
-  if(valid)return;
+  // Initialize only when this roster has no allocation state yet.
+  // Do NOT refill to 4 after the player presses minus; partial totals are an intentional edit state.
+  const ids=new Set(nest.map(m=>m.id));
+  const hasAny=Object.keys(st.alloc||{}).some(id=>ids.has(id));
+  if(hasAny){
+    nest.forEach(m=>st.alloc[m.id]=clamp263(n263(st.alloc[m.id]),0,2));
+    for(const id of Object.keys(st.alloc))if(!ids.has(id))delete st.alloc[id];
+    return;
+  }
   const ace=best263();
   st.alloc={};
   nest.forEach(m=>st.alloc[m.id]=m.id===ace?2:1);
-  // In case order/state is unusual, normalize to exactly 4.
   let total=nest.reduce((s,m)=>s+n263(st.alloc[m.id]),0);
   for(const m of nest){
     while(total>4&&st.alloc[m.id]>0){st.alloc[m.id]--;total--}
