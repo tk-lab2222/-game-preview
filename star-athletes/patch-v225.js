@@ -94,7 +94,7 @@ function renderRivals225(promo=false){
  let c=promo?actual:tourChance225(tour);
  if(!promo){
    try{
-     const exact=window.STAR_TOUR225?.chance?.(tour.id,S.schedule||[],rivals);
+     const exact=window.STAR_SIM295?.chance?.(tour.id,S.schedule||[],rivals);
      if(exact&&Number.isFinite(Number(exact.pct)))c=exact;
    }catch(_){}
  }
