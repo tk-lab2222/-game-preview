@@ -35,7 +35,11 @@ function hiddenHtml320(m){
   </div>`;
 }
 function syncParents320(){
- const pool=parentPool320();
+ const pool=parentPool320(),valid=new Set(pool.map(m=>m.id));
+ if(Array.isArray(S?.parents)){
+   const next=S.parents.filter(id=>valid.has(id));
+   if(next.length!==S.parents.length)S.parents=next;
+ }
  document.querySelectorAll('#breeders .card[data-id]').forEach(card=>{
    const m=pool.find(x=>x.id===card.dataset.id);if(!m)return;
    const host=card.querySelector('.bd')||card;
@@ -49,6 +53,8 @@ function syncParents320(){
      box.replaceWith(wrap.firstElementChild);
    }
  });
+ const breedBtn=document.getElementById('breedBtn');
+ if(breedBtn)breedBtn.disabled=(S?.parents||[]).length!==2||!!S?.egg||(S?.cands||[]).length>=(typeof cap==='function'?cap():3);
  // Keep the older lineage/special-birth decorations alive too.
  try{window.STAR_LINEAGE271?.sync?.()}catch(_){}
  try{window.STAR_ULTRA274?.sync?.()}catch(_){}
@@ -58,10 +64,10 @@ function pristine320(){
  const gen=Math.max(1,n320(S?.generation233)||n320(S?.generation232)||1);
  return gen===1
    && !(S?.lineage||[]).length
-   && !(S?.nest||[]).length
+   && !(S?.lineage||[]).length
    && !(S?.cands||[]).length
    && n320(S?.wins)===0
-   && (S?.starters||[]).length===2;
+   && ((S?.starters||[]).length===2||(S?.nest||[]).length===2);
 }
 function syncCopy320(){
  const section=document.getElementById('breed');if(!section)return;
