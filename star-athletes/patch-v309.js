@@ -116,5 +116,6 @@ try{
  render=function(){const out=prev();setTimeout(renderShop309,0);return out}
 }catch(e){console.warn('render309',e)}
 window.STAR_SHOP309={sync:sync309,target:(id)=>targetId309(id)};
+setTimeout(sync309,0);
 
 })();
