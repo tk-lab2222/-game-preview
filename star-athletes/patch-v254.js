@@ -4,11 +4,11 @@ const SK254={
  power:{icon:'💥',name:'豪腕',cls:'power254'},speed:{icon:'💨',name:'疾風',cls:'speed254'},stamina:{icon:'🔥',name:'鉄肺',cls:'stamina254'},
  agility:{icon:'✨',name:'軽業',cls:'agility254'},tech:{icon:'🎯',name:'精密',cls:'tech254'},guts:{icon:'❤️‍🔥',name:'勝負魂',cls:'guts254'}
 };
-const RK254=['E','D','C','B','A','S'];
+const RK254=['G','F','E','D','C','B','A','S'];
 function n254(v){return Number(v)||0}
 function all254(){const out=[],seen=new Set();for(const k of ['starters','nest','lineage','released','cands','foster'])for(const m of(S[k]||[]))if(m&&!seen.has(m.id)){seen.add(m.id);out.push(m)}if(S.egg&&!seen.has(S.egg.id))out.push(S.egg);return out}
 function byId254(id){return id?all254().find(m=>m?.id===id)||null:null}
-function rank254(v){return RK254[Math.max(0,Math.min(5,Math.round(n254(v))))]}
+function rank254(v){return RK254[Math.max(0,Math.min(7,Math.round(n254(v))))]}
 function skillBadges254(m){const ids=Array.isArray(m?.skills233)?m.skills233.filter(x=>SK254[x]):[];return ids.length?ids.map(id=>{const s=SK254[id];return `<span class="breedSkillBadge254 ${s.cls}">${s.icon} ${s.name}</span>`}).join(''):'<span class="breedSkillBadge254 none254">未修得</span>'}
 function cardSkills254(){
  document.querySelectorAll('#breeders .card[data-id],#cands .card[data-id]').forEach(card=>{
@@ -21,7 +21,7 @@ function cardSkills254(){
 }
 function selected254(){const ids=Array.isArray(S.parents)?S.parents:[];return [byId254(ids[0]),byId254(ids[1])]}
 function score254(box){const t=box?.textContent||'';let m=t.match(/相性\s*(\d{1,3})/);return m?Math.max(0,Math.min(100,Number(m[1]))):null}
-function skillChance254(id,a,b){const aa=(a?.skills233||[]).includes(id),bb=(b?.skills233||[]).includes(id);if(!aa&&!bb)return 0;let p=aa&&bb?35:18;const hr=Math.max(n254(a?.hidden233?.heredity),n254(b?.hidden233?.heredity));if(hr>=4)p+=hr===5?8:5;return p}
+function skillChance254(id,a,b){const aa=(a?.skills233||[]).includes(id),bb=(b?.skills233||[]).includes(id);if(!aa&&!bb)return 0;let p=aa&&bb?35:18;const hr=Math.max(n254(a?.hidden233?.heredity),n254(b?.hidden233?.heredity));if(hr>=6)p+=hr===7?8:5;return p}
 function scoutRows254(a,b,score){
  const h1=a?.hidden233||{},h2=b?.hidden233||{},avg=k=>rank254((n254(h1[k])+n254(h2[k]))/2),rows=[];
  if(score>=40)rows.push(['成長力',avg('growth')]);
