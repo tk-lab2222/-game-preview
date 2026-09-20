@@ -66,6 +66,23 @@ function migrate233(){
  if(!S.annual233&&S.annual232){try{S.annual233=JSON.parse(JSON.stringify(S.annual232))}catch(_){}}
  save233();
 }
+function repairEarlyHidden233(){
+ if(S.hiddenEarlyBalanceV315)return;
+ let changed=false;
+ for(const m of all233()){
+   const gen=Math.max(0,n233(m?.gen));
+   if(gen>2||!m?.hidden233)continue;
+   const keys=['growth','heredity','clutch','stability','mutation','luck'];
+   const high=keys.filter(k=>n233(m.hidden233[k])>=5).length;
+   // Four or more B-S traits at G0-G2 is an unmistakable old-balance outlier.
+   if(high<4)continue;
+   for(const k of keys)m.hidden233[k]=rollRank233(m);
+   changed=true;
+ }
+ S.hiddenEarlyBalanceV315=true;
+ if(changed)save233();
+}
+
 function rankName233(v){return RK233[clamp233(n233(v),0,7)]}
 function topStat233(m){let k=K233[0];for(const x of K233)if(n233(m.stats?.[x])>n233(m.stats?.[k]))k=x;return k}
 function skillEffect233(m,stats){const out={...stats};for(const id of(m.skills233||[])){const sk=SK233[id];if(sk)out[sk.key]=Math.min(999,Math.round(n233(out[sk.key])*sk.mul))}return out}
@@ -100,18 +117,29 @@ try{
  const beforeBaby233=baby;
  baby=function(a,b){hidden233(a);hidden233(b);const c=beforeBaby233(a,b);hidden233(c);const ha=a.hidden233,hb=b.hidden233,hc=c.hidden233;
    for(const k of ['growth','heredity','clutch','stability','mutation','luck']){
+     const base=n233(hc[k]);
      const avg=(n233(ha[k])+n233(hb[k]))/2;
      const hr=(n233(ha.heredity)+n233(hb.heredity))/14;
      const maxParent=Math.max(n233(ha[k]),n233(hb[k]));
-     let v=clamp233(Math.round(avg+(Math.random()<.28?rnd233(-1,1):0)+(Math.random()<hr*.10?1:0)),0,7);
-     if(v>=7){
-       const inheritS=maxParent>=7&&Math.random()<(.12+hr*.16);
-       const breakthrough=maxParent<7&&Math.random()<(.0015+Math.max(0,n233(c.gen))*0.00045+n233(hc.mutation)*.0009);
-       if(!inheritS&&!breakthrough)v=6;
+     // Generation curve remains the base. Strong heredity increases how much the parents can pull it upward.
+     const inheritWeight=.28+hr*.24;
+     let v=Math.round(base*(1-inheritWeight)+avg*inheritWeight);
+     if(Math.random()<.22)v+=rnd233(-1,1);
+     if(avg>base&&Math.random()<(.04+hr*.08))v++;
+     v=clamp233(v,0,7);
+     // Early generations can still spike, but B/A/S stay exceptional rather than becoming the default.
+     const gen=Math.max(0,n233(c.gen));
+     if(gen<=2&&v>=5){
+       const bChance=.045+hr*.055+Math.max(0,n233(hc.mutation))*.004;
+       if(Math.random()>=bChance)v=4;
      }
-     if(v>=6&&maxParent<6){
-       const breakthroughA=Math.random()<(.012+Math.max(0,n233(c.gen))*0.0018+hr*.020+n233(hc.mutation)*.002);
-       if(!breakthroughA)v=5;
+     if(v>=6){
+       const aChance=(maxParent>=6?.055:.012)+hr*.045+gen*.0015;
+       if(Math.random()>=aChance)v=5;
+     }
+     if(v>=7){
+       const sChance=(maxParent>=7?.025:.002)+hr*.018+gen*.0005;
+       if(Math.random()>=sChance)v=6;
      }
      hc[k]=clamp233(v,0,7)
    }
@@ -152,6 +180,6 @@ const beforeRender233=render;render=function(){const out=beforeRender233();setTi
 const css=document.createElement('style');css.textContent=`
 .annual233{border:2px solid #cda631!important;background:linear-gradient(145deg,#fff9dc,#fff)!important}.annualHead233,.compatHead233{display:flex;justify-content:space-between;align-items:center}.annualHead233 small,.compatHead233 small{display:block;font-size:7px;color:#8a6f17}.annualHead233 b,.compatHead233 b{font-size:13px}.annualList233{display:grid;gap:4px;margin:8px 0}.annualList233>div{display:grid;grid-template-columns:22px 1fr auto;gap:5px;padding:5px 7px;border-radius:8px;background:#fff;border:1px solid #eadb9b;font-size:9px}.annualList233 .you233,.annualFinal233 .you233{background:#fff0a6!important}.annualList233 i{font-style:normal;font-weight:1000}.skills233{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}.skills233 span{border:1px solid #b8a4dd;background:#f5efff;border-radius:999px;padding:3px 6px;font-size:7px;font-weight:1000;color:#56436f}.compat233{margin:8px 0 4px;padding:9px;border:2px solid #8fb5d9;border-radius:13px;background:#f5fbff}.compat233.hide{display:none}.compatHead233 strong{font-size:10px}.compatBar233{height:7px;background:#dbe7ef;border-radius:999px;overflow:hidden;margin:7px 0}.compatBar233 i{display:block;height:100%;background:linear-gradient(90deg,#79b7df,#e5bd4f);border-radius:999px}.compatBreak233{font-size:6px;line-height:1.5;color:#65778a}.reveal233{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:7px}.reveal233>small{grid-column:1/3;font-size:7px;color:#52677b}.reveal233 span{display:flex;justify-content:space-between;border:1px solid #cbd9e6;border-radius:7px;background:#fff;padding:4px 6px;font-size:7px}.reveal233 em{font-style:normal;font-weight:1000}.compatHint233{font-size:7px;color:#687b8e;margin-top:6px}.annualFinal233{margin-top:10px;padding:10px;border:2px solid #d9b13e;border-radius:12px;background:#fff7cf;color:#42350d}.annualFinal233>div{display:grid;gap:3px;margin:7px 0}.annualFinal233 span{display:flex;justify-content:space-between;padding:4px 6px;border-radius:6px;background:#fff;font-size:8px}.annualFinal233 em{font-style:normal;font-weight:1000}.skillLearn233{margin:8px 0;padding:7px;border-radius:9px;background:#f2eaff!important;border:1px solid #bea6e5;font-size:9px}.skillNo233{margin:7px 0!important;font-size:7px;color:#786b56}
 `;document.head.appendChild(css);
-setTimeout(()=>{migrate233();ensureAnnual233();renderAnnual233();skillPills233();renderCompat233()},0);
+setTimeout(()=>{migrate233();repairEarlyHidden233();ensureAnnual233();renderAnnual233();skillPills233();renderCompat233()},0);
 window.STAR_ANNUAL233={showPromotion:showPromotion233,runPromotion:runPromotion233,finishGeneration:finishGen233,annualFinish:annualFinish233,ensureHidden:(m)=>hidden233(m)};
 })();
