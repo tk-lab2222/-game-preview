@@ -28,6 +28,10 @@ function rivalsFor290(i,list){
  if(!Array.isArray(S.tourRivals317[key])||S.tourRivals317[key].length!==7){
    const tier=tierAt290(i,list.length);
    try{S.tourRivals317[key]=window.STAR_TOUR225?.buildRivals?.(tier,false)||[]}catch(_){S.tourRivals317[key]=[]}
+   // Rival sets are part of the season state: persist immediately so reloads cannot reroll odds.
+   if(Array.isArray(S.tourRivals317[key])&&S.tourRivals317[key].length===7){
+     try{localStorage.setItem(SAVE290,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}
+   }
  }
  return S.tourRivals317[key];
 }
