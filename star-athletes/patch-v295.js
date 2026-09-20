@@ -41,15 +41,24 @@ function chance295(tier='standard',eventsOverride=null){
  const events=Array.isArray(eventsOverride)&&eventsOverride.length?eventsOverride:(Array.isArray(S?.schedule)&&S.schedule.length?S.schedule:['50m走','障害物競走','的当て','リレー']);
  const rand=rng295(hash295(sig));
  const RUNS=500;
+ const exactSelected=tier===S?.meetChoice225
+   && Array.isArray(S?.schedule)
+   && events.join('|')===S.schedule.join('|')
+   && Array.isArray(S?.rivals225)
+   && S.rivals225.length===7
+   && !S?.rivalsPromo225;
+ const fixedRivals=exactSelected?S.rivals225.map(r=>({...r.stats})):null;
  let wins=0,rivalAvgTotal=0;
  for(let n=0;n<RUNS;n++){
-   const rivals=[];
-   for(let r=0;r<7;r++){
-     const stats={},bias=base+(r-3)*1.5;
-     KEYS295.forEach(k=>stats[k]=Math.max(70,Math.round(bias+(rand()*18-9))));
-     const strong=KEYS295[Math.floor(rand()*KEYS295.length)];
-     stats[strong]+=10+Math.floor(rand()*10);
-     rivals.push(stats);
+   const rivals=fixedRivals?fixedRivals.map(r=>({...r})):[];
+   if(!fixedRivals){
+     for(let r=0;r<7;r++){
+       const stats={},bias=base+(r-3)*1.5;
+       KEYS295.forEach(k=>stats[k]=Math.max(70,Math.round(bias+(rand()*18-9))));
+       const strong=KEYS295[Math.floor(rand()*KEYS295.length)];
+       stats[strong]+=10+Math.floor(rand()*10);
+       rivals.push(stats);
+     }
    }
    rivalAvgTotal+=rivals.reduce((sum,r)=>sum+KEYS295.reduce((a,k)=>a+(r[k]||0),0)/KEYS295.length,0)/rivals.length;
    const total=[0,0,0,0,0,0,0,0];
@@ -66,7 +75,7 @@ function chance295(tier='standard',eventsOverride=null){
  const ours=Math.round(nest.reduce((sum,m)=>sum+KEYS295.reduce((a,k)=>a+(Number(m?.stats?.[k])||0),0)/KEYS295.length,0)/nest.length);
  const theirs=Math.round(rivalAvgTotal/RUNS);
  const pct=Math.max(1,Math.min(99,Math.round(wins/RUNS*100)));
- const out={ours,theirs,pct,label:label295(pct),simulations:RUNS};
+ const out={ours,theirs,pct,label:label295(pct),simulations:RUNS,exactRivals:!!fixedRivals};
  cache295.set(sig,out);
  if(cache295.size>30){const first=cache295.keys().next().value;cache295.delete(first)}
  return out;
