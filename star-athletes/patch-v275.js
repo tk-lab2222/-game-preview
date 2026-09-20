@@ -14,7 +14,7 @@ function st275(){
  if(!S.training263.fatigue||typeof S.training263.fatigue!=='object')S.training263.fatigue={};
  return S.training263;
 }
-function hidden275(m,k,d=2){const v=Number(m?.hidden233?.[k]);return Number.isFinite(v)?clamp275(v,0,5):d}
+function hidden275(m,k,d=2){const v=Number(m?.hidden233?.[k]);if(!Number.isFinite(v))return d;return [0,0,0,1,2,3,4,5][clamp275(Math.round(v),0,7)]}
 function fatigue275(m){return clamp275(n275(st275().fatigue[m.id]),0,2)}
 function condition275(m){const f=fatigue275(m);return f===0?'好調':f===1?'普通':'疲労'}
 function rate275(m,mode){
