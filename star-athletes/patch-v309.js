@@ -101,10 +101,22 @@ function renderShop309(){
  <button data-special200="lucky" ${coins<900?'disabled':''}><b>🍀 ラッキーチャーム</b><small>次の子のレア度を1段階UP</small><em>🪙 900</em></button>
  <button data-special200="condition" ${coins<500||!has?'disabled':''}><b>🥤 コンディションドリンク</b><small>${has?S.nest[0].name:'育成メンバー'} 全能力+3</small><em>🪙 500</em></button>
  <button data-special200="scout" ${coins<700?'disabled':''}><b>🔭 スカウトパス</b><small>血統候補を1体スカウト</small><em>🪙 700</em></button></div><div class="specialStock200">所持効果：🍀 ${S.specialShop?.lucky||0}</div></div><div id="shopMsg122" class="shopMsg122"></div>`;
- shop.querySelectorAll('[data-buy122]').forEach(b=>b.onclick=e=>{e.preventDefault();if(!b.disabled)buyNormal309(b.dataset.buy122)});
- shop.querySelectorAll('[data-special200]').forEach(b=>b.onclick=e=>{e.preventDefault();if(!b.disabled)buySpecial309(b.dataset.special200)});
+ // Interaction is owned by the delegated handlers below; keep render side-effect free.
 }
 function sync309(){renderShop309()}
+document.addEventListener('click',e=>{
+ const normal=e.target?.closest?.('#shop122 [data-buy122]');
+ if(normal){
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   if(!normal.disabled)buyNormal309(normal.dataset.buy122);
+   return;
+ }
+ const special=e.target?.closest?.('#shop122 [data-special200]');
+ if(special){
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   if(!special.disabled)buySpecial309(special.dataset.special200);
+ }
+},true);
 document.addEventListener('change',e=>{
  const sel=e.target?.closest?.('#shop122 [data-shop-target]');
  if(!sel)return;
