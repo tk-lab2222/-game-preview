@@ -23,9 +23,20 @@ function restore311(){
  grid.querySelectorAll('[data-mode="c"]').forEach(el=>{
    const id=el.dataset.id;
    el.classList.toggle('sel',(S.sel||[]).includes(id));
-   el.onclick=()=>{
-     if((S.sel||[]).includes(id))S.sel=S.sel.filter(x=>x!==id);
-     else if((S.sel||[]).length<3)S.sel.push(id);
+   el.onclick=e=>{
+     e?.preventDefault?.();
+     e?.stopPropagation?.();
+     const sel=Array.isArray(S.sel)?S.sel:[];
+     if(sel.includes(id)){
+       S.sel=sel.filter(x=>x!==id);
+       restore311();
+       return;
+     }
+     if(sel.length>=3){
+       // Selection is already full. Do not render/toggle/rebuild: this prevents mobile jitter.
+       return;
+     }
+     S.sel=[...sel,id];
      restore311();
    };
  });
@@ -44,6 +55,8 @@ function restore311(){
    adopt.disabled=(S.sel||[]).length!==3;
    adopt.style.removeProperty('display');
  }
+ try{window.STAR_ULTRA274?.sync?.()}catch(_){}
+ try{window.STAR_RARE273?.sync?.()}catch(_){}
 }
 function late311(){[0,40,120,300,650].forEach(ms=>setTimeout(restore311,ms))}
 document.addEventListener('click',e=>{
