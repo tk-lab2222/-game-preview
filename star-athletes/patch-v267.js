@@ -42,7 +42,7 @@ function render267(result=''){
   const plans=document.getElementById('plans');if(!plans)return;
   let host=document.getElementById('event267');if(!host){host=document.createElement('div');host.id='event267';plans.before(host)}
   const p=st267().pending;if(!p){host.innerHTML=result?`<div class="eventResult267">${result}</div>`:'';return}
-  const e=EV267[p.type];host.innerHTML=`<div class="eventCutin267">TRAINING EVENT</div><div class="eventCard267"><div class="eventTitle267"><b>${e.icon} ${e.name}</b><span>${p.name}</span></div><p>${e.text}</p><div class="eventActions267"><button type="button" data-event267="a">${e.a}</button><button type="button" data-event267="b">${e.b}</button></div><small>イベント発生は運。結果はあなたの判断で変わります。</small></div>`;
+  const e=EV267[p.type];host.innerHTML=`<div class="eventCutin267">育成イベント</div><div class="eventCard267"><div class="eventTitle267"><b>${e.icon} ${e.name}</b><span>${p.name}</span></div><p>${e.text}</p><div class="eventActions267"><button type="button" data-event267="a">${e.a}</button><button type="button" data-event267="b">${e.b}</button></div><small>イベントの発生は運。結果は選択で変わります。</small></div>`;
   const go=document.getElementById('doTrain263');if(go){go.disabled=true;go.title='先にイベントの選択を決めてください'}
 }
 window.addEventListener('click',e=>{
