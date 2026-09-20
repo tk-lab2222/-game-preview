@@ -36,8 +36,8 @@ function observedLevel276(id,list){
    if(list.some(m=>skills276(m).includes('power')||skills276(m).includes('stamina')))return 1;
  }
  if(id==='aberrant'){
-   if(list.some(m=>h276(m,'mutation')>=5))return 2;
-   if(list.some(m=>h276(m,'mutation')>=4))return 1;
+   if(list.some(m=>h276(m,'mutation')>=7))return 2;
+   if(list.some(m=>h276(m,'mutation')>=6))return 1;
  }
  if(id==='pureblood'){
    const maxGen=list.reduce((a,m)=>Math.max(a,n276(m?.gen)),0);
