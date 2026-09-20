@@ -29,7 +29,7 @@ function athlete295(e,i){
  const nest=Array.isArray(S?.nest)?S.nest:[];
  return nest.find(x=>x.id===S?.assign?.[i])||nest.slice().sort((a,b)=>score295(b?.stats,e)-score295(a?.stats,e))[0]||null;
 }
-function chance295(tier='standard',eventsOverride=null){
+function chance295(tier='standard',eventsOverride=null,rivalsOverride=null){
  if(!['safe','standard','challenge'].includes(tier))tier='standard';
  const sig=signature295(tier,eventsOverride);
  if(cache295.has(sig))return cache295.get(sig);
@@ -41,13 +41,15 @@ function chance295(tier='standard',eventsOverride=null){
  const events=Array.isArray(eventsOverride)&&eventsOverride.length?eventsOverride:(Array.isArray(S?.schedule)&&S.schedule.length?S.schedule:['50m走','障害物競走','的当て','リレー']);
  const rand=rng295(hash295(sig));
  const RUNS=500;
+ const supplied=Array.isArray(rivalsOverride)&&rivalsOverride.length===7?rivalsOverride:null;
  const exactSelected=tier===S?.meetChoice225
    && Array.isArray(S?.schedule)
    && events.join('|')===S.schedule.join('|')
    && Array.isArray(S?.rivals225)
    && S.rivals225.length===7
    && !S?.rivalsPromo225;
- const fixedRivals=exactSelected?S.rivals225.map(r=>({...r.stats})):null;
+ const sourceRivals=supplied||(exactSelected?S.rivals225:null);
+ const fixedRivals=sourceRivals?sourceRivals.map(r=>({...r.stats})):null;
  let wins=0,rivalAvgTotal=0;
  for(let n=0;n<RUNS;n++){
    const rivals=fixedRivals?fixedRivals.map(r=>({...r})):[];
