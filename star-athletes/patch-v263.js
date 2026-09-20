@@ -74,7 +74,7 @@ function riskText263(m,mode){
 function pointMul263(pt){return pt<=0?0:pt===1?.75:1.45}
 function outcome263(m,mode){
   const growth=hidden263(m,'growth',2),stability=hidden263(m,'stability',2),luck=hidden263(m,'luck',2),f=fatigue263(m);
-  let gmul=[.86,.92,1,1.08,1.17,1.28][growth]||1;
+  let gmul=[.86,.92,1,1.08,1.21,1.36][growth]||1;
   const policy=state263().policy266||'';
   if(policy==='compete'&&(mode==='normal'||mode==='high'))gmul*=1.08;
   else if(policy==='growth'&&(mode==='safe'||mode==='normal'))gmul*=1.10;
