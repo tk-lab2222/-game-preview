@@ -1,6 +1,6 @@
 (()=>{
 // v0.28.2: M3.3 separate competition value from breeding-parent value.
-const RK270=['E','D','C','B','A','S'];
+const RK270=['G','F','E','D','C','B','A','S'];
 const RAR270=['C','U','R','SR','SSR','UR','EX'];
 const STAT270=['power','speed','stamina','agility','tech','guts'];
 const SK270={power:'豪腕',speed:'疾風',stamina:'鉄肺',agility:'軽業',tech:'精密',guts:'勝負魂'};
@@ -8,14 +8,15 @@ function n270(v){return Number(v)||0}
 function clamp270(v,a,b){return Math.max(a,Math.min(b,v))}
 function avg270(m){const a=STAT270.map(k=>n270(m?.stats?.[k]));return a.reduce((x,y)=>x+y,0)/(a.length||1)}
 function max270(m){return Math.max(...STAT270.map(k=>n270(m?.stats?.[k]))) }
-function h270(m,k,d=2){const v=Number(m?.hidden233?.[k]);return Number.isFinite(v)?clamp270(v,0,5):d}
-function rank270(v){return RK270[clamp270(Math.round(n270(v)),0,5)]}
+function h270(m,k,d=2){const v=Number(m?.hidden233?.[k]);return Number.isFinite(v)?clamp270(v,0,7):d}
+function rank270(v){return RK270[clamp270(Math.round(n270(v)),0,7)]}
+function eff270(v){return [0,0,0,1,2,3,4,5][clamp270(Math.round(n270(v)),0,7)]}
 function skills270(m){return Array.isArray(m?.skills233)?m.skills233:[]}
-function athlete270(m){return avg270(m)*.58+max270(m)*.28+h270(m,'clutch')*12+h270(m,'stability')*8+skills270(m).length*14}
-function parent270(m){return h270(m,'heredity')*26+h270(m,'mutation')*21+h270(m,'growth')*12+h270(m,'stability')*8+skills270(m).length*18+Math.max(0,RAR270.indexOf(m?.rarity))*5}
-function future270(m){return h270(m,'growth')*22+h270(m,'mutation')*18+h270(m,'heredity')*15+skills270(m).length*12+avg270(m)*.08}
+function athlete270(m){return avg270(m)*.58+max270(m)*.28+eff270(h270(m,'clutch'))*12+eff270(h270(m,'stability'))*8+skills270(m).length*14}
+function parent270(m){return eff270(h270(m,'heredity'))*26+eff270(h270(m,'mutation'))*21+eff270(h270(m,'growth'))*12+eff270(h270(m,'stability'))*8+skills270(m).length*18+Math.max(0,RAR270.indexOf(m?.rarity))*5}
+function future270(m){return eff270(h270(m,'growth'))*22+eff270(h270(m,'mutation'))*18+eff270(h270(m,'heredity'))*15+skills270(m).length*12+avg270(m)*.08}
 function grade270(score,type){const cuts=type==='athlete'?[380,300,235,175,120]:[250,205,160,115,75];return score>=cuts[0]?'S':score>=cuts[1]?'A':score>=cuts[2]?'B':score>=cuts[3]?'C':score>=cuts[4]?'D':'E'}
-function tags270(m){const out=[];if(h270(m,'heredity')>=4)out.push('🧬 遺伝力'+rank270(h270(m,'heredity')));if(h270(m,'mutation')>=4)out.push('✨ 変異因子'+rank270(h270(m,'mutation')));if(h270(m,'growth')>=4)out.push('🌱 成長力'+rank270(h270(m,'growth')));if(skills270(m).length>=2)out.push('📚 多才');return out.slice(0,2)}
+function tags270(m){const out=[];if(h270(m,'heredity')>=6)out.push('🧬 遺伝力'+rank270(h270(m,'heredity')));if(h270(m,'mutation')>=6)out.push('✨ 変異因子'+rank270(h270(m,'mutation')));if(h270(m,'growth')>=6)out.push('🌱 成長力'+rank270(h270(m,'growth')));if(skills270(m).length>=2)out.push('📚 多才');return out.slice(0,2)}
 function best270(list,fn){return [...list].sort((a,b)=>fn(b)-fn(a))[0]?.id}
 function renderCandidate270(){
  const host=document.getElementById('candidateCompare262');if(!host)return;const list=S.cands||[];if(!list.length)return;
