@@ -20,10 +20,13 @@ function strat295(s){return s==='先行'?1.015:s==='温存'?1.008:s==='追込'?1
 function hash295(str){let h=2166136261>>>0;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
 function rng295(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function label295(p){return p>=72?'かなり有利':p>=58?'やや有利':p>=42?'互角':p>=28?'やや不利':'強敵注意'}
-function signature295(tier,eventsOverride){
+function signature295(tier,eventsOverride,rivalsOverride){
  const nest=(Array.isArray(S?.nest)?S.nest:[]).map(m=>[m.id,...KEYS295.map(k=>Number(m?.stats?.[k])||0)]);
  const events=Array.isArray(eventsOverride)&&eventsOverride.length?eventsOverride:(S?.schedule||[]);
- return JSON.stringify([tier,Number(S?.leagueRank)||0,Number(S?.season)||1,events,S?.assign||{},S?.strat||{},nest]);
+ const rivals=Array.isArray(rivalsOverride)?rivalsOverride.map(r=>[
+   r.id||'',...KEYS295.map(k=>Number(r?.stats?.[k])||0),r.strong||''
+ ]):[];
+ return JSON.stringify([tier,Number(S?.leagueRank)||0,Number(S?.season)||1,events,S?.assign||{},S?.strat||{},nest,rivals]);
 }
 function athlete295(e,i){
  const nest=Array.isArray(S?.nest)?S.nest:[];
@@ -31,7 +34,7 @@ function athlete295(e,i){
 }
 function chance295(tier='standard',eventsOverride=null,rivalsOverride=null){
  if(!['safe','standard','challenge'].includes(tier))tier='standard';
- const sig=signature295(tier,eventsOverride);
+ const sig=signature295(tier,eventsOverride,rivalsOverride);
  if(cache295.has(sig))return cache295.get(sig);
  const nest=Array.isArray(S?.nest)?S.nest:[];
  if(!nest.length){const z={ours:0,theirs:0,pct:5,label:'強敵注意',simulations:0};cache295.set(sig,z);return z}
@@ -85,14 +88,7 @@ function chance295(tier='standard',eventsOverride=null,rivalsOverride=null){
 window.STAR_TOUR225=window.STAR_TOUR225||{};
 window.STAR_TOUR225.chance=chance295;
 function sync295(){
- try{window.STAR_CHANCE292?.sync?.()}catch(_){}
- document.querySelectorAll('.chance290').forEach(el=>{const m=el.textContent.match(/(\d+)%/);if(m)el.textContent='推定勝率 '+m[1]+'%'});
  const meet=document.querySelector('#rival .chance225 span');if(meet)meet.textContent='推定勝率';
 }
-try{
- const prev=render;
- render=function(){const out=prev();[0,30,100].forEach(ms=>setTimeout(sync295,ms));return out};
-}catch(e){console.warn('render295',e)}
-[0,80,250].forEach(ms=>setTimeout(sync295,ms));
-window.STAR_SIM295={chance:chance295,clear:()=>cache295.clear()};
+window.STAR_SIM295={chance:chance295,clear:()=>cache295.clear(),sync:sync295};
 })();
