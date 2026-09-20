@@ -18,7 +18,7 @@ function state268(){
  if(!S.nemesis268.defeated)S.nemesis268.defeated={};if(!S.nemesis268.seen)S.nemesis268.seen={};return S.nemesis268;
 }
 function nem268(rank=rank268()){const n=NEM268[rank]||NEM268[0];return {...n,rank}}
-function base268(rank){return [112,132,154,180,210,246][rank]||112}
+function base268(rank){const base=([112,132,154,180,210,246][rank]||112);const diff=S.meetChoice225==='safe'?-18:S.meetChoice225==='challenge'?20:0;return base+diff}
 function stats268(rank,n){
  const b=base268(rank),s={};KEYS268.forEach((k,i)=>s[k]=Math.round(b+((rank+1)*(i+3)%9)-4));
  s[n.strong]+=24+rank*3;s[n.weak]=Math.max(70,s[n.weak]-15-rank*2);return s;
