@@ -22,8 +22,19 @@ function tags273(m,a,b){
  if(a&&b){if(a.species===b.species)t.add('sameSpecies');else t.add('mixed');if(hidden273(a,'mutation')==='S'&&hidden273(b,'mutation')==='S')t.add('parents:mutationS');const prev=Math.max(n273(a.mixedLineage273),n273(b.mixedLineage273));m.mixedLineage273=a.species!==b.species?prev+1:0;if(m.mixedLineage273>=3)t.add('mixedLineage:3')}
  return t;
 }
-function evaluate273(m,a,b,roll=true){const tags=tags273(m,a,b),hits=[];for(const r of RECIPES273){if(!r.need.every(x=>tags.has(x)))continue;let mult=1;const reasons=[];for(const [tag,x] of r.mult||[])if(tags.has(tag)){mult*=x;reasons.push(`${tag}×${x}`)}const chance=Math.min(.25,r.base*mult),won=roll&&Math.random()<chance;hits.push({id:r.id,name:r.name,hint:r.hint,base:r.base,mult,chance,won,reasons})}return hits}
-function apply273(m,a,b){if(!m||m.rareRecipeRolled273)return m;const hits=evaluate273(m,a,b,true);m.rareRecipeRolled273=true;m.rareRecipeCandidates273=hits.map(x=>({id:x.id,chance:x.chance,mult:x.mult}));const won=hits.filter(x=>x.won).sort((x,y)=>x.chance-y.chance)[0];if(won){m.specialLineage273={id:won.id,name:won.name,chance:won.chance,mult:won.mult,at:Date.now()};m.tags273=[...(m.tags273||[]),won.id]}return m}
+function rareRecipeParentMult273(a,b,m){
+ let mult=1,reasons=[];
+ const apply=p=>{
+   const id=p?.ultraRare274?.id;
+   const x=id==='mutation'?1.35:id==='miracle'?1.50:id==='mythic'?1.75:1;
+   if(x>1){mult*=x;reasons.push(`${p.name||'親'}の特殊誕生血統×${x}`)}
+ };
+ apply(a);apply(b);
+ if(m?.miracleFactor274){const x=1+.15*Math.max(1,Number(m.miracleFactor274.strength)||1);mult*=x;reasons.push(`奇跡因子×${x.toFixed(2)}`)}
+ return{mult:Math.min(3,mult),reasons};
+}
+function evaluate273(m,a,b,roll=true){const tags=tags273(m,a,b),hits=[],rare=rareRecipeParentMult273(a,b,m);for(const r of RECIPES273){if(!r.need.every(x=>tags.has(x)))continue;let mult=1;const reasons=[];for(const [tag,x] of r.mult||[])if(tags.has(tag)){mult*=x;reasons.push(`${tag}×${x}`)}mult*=rare.mult;reasons.push(...rare.reasons);const chance=Math.min(.25,r.base*mult),won=roll&&Math.random()<chance;hits.push({id:r.id,name:r.name,hint:r.hint,base:r.base,mult,chance,won,reasons})}return hits}
+function apply273(m,a,b){if(!m||m.rareRecipeRolled273)return m;const hits=evaluate273(m,a,b,true);m.rareRecipeRolled273=true;m.rareRecipeCandidates273=hits.map(x=>({id:x.id,name:x.name,hint:x.hint,base:x.base,chance:x.chance,mult:x.mult,reasons:x.reasons}));const won=hits.filter(x=>x.won).sort((x,y)=>x.chance-y.chance)[0];if(won){m.specialLineage273={id:won.id,name:won.name,chance:won.chance,mult:won.mult,at:Date.now()};m.tags273=[...(m.tags273||[]),won.id]}return m}
 try{const prevBaby273=baby;baby=function(a,b){const m=prevBaby273(a,b);return apply273(m,a,b)}}catch(e){console.warn('baby273',e)}
 function badge273(){document.querySelectorAll('#cands .card[data-id],#breeders .card[data-id],#lineagePool .card[data-id]').forEach(card=>{const id=card.dataset.id,m=[...(S.cands||[]),...(S.nest||[]),...(S.lineage||[]),...(S.starters||[])].find(x=>x?.id===id);if(!m?.specialLineage273)return;let b=card.querySelector('.rare273');if(!b){b=document.createElement('div');b.className='rare273';(card.querySelector('.bd')||card).appendChild(b)}b.textContent=`✦ ${m.specialLineage273.name} / 推定 ${(m.specialLineage273.chance*100).toFixed(m.specialLineage273.chance<.001?3:2)}%`})}
 function late273(){try{badge273()}catch(e){console.warn('badge273',e)}}
