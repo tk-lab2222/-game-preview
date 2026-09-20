@@ -63,39 +63,29 @@ function buySpecial309(id){
    rerender309();msg309('🔭 '+(SP[sp]?.[0]||'新種族')+'をスカウト！');return;
  }
 }
-function sync309(){
- const shop=document.getElementById('shop122');if(!shop)return;
+function renderShop309(){
+ const host=document.getElementById('nestShopHost201');if(!host)return;
+ let shop=document.getElementById('shop122');
+ if(!shop){shop=document.createElement('div');shop.id='shop122';shop.className='box shop122';host.appendChild(shop)}
+ else if(shop.parentElement!==host)host.appendChild(shop);
  const coins=Number(S.coins)||0,has=Array.isArray(S.nest)&&S.nest.length>0;
- shop.querySelectorAll('[data-buy122]').forEach(b=>{
-   const x=NORMAL309[b.dataset.buy122];if(x)b.disabled=!has||coins<x.cost;
- });
- shop.querySelectorAll('[data-special200]').forEach(b=>{
-   const id=b.dataset.special200,cost=id==='lucky'?900:id==='condition'?500:700;
-   b.disabled=coins<cost||(id==='condition'&&!has);
- });
+ const items=[
+  ['berry','🍓','元気ベリー','3体全員のスタミナ・こんじょう +2',250,false],
+  ['speed','🍋','スピードフルーツ','選んだ1体のスピード・すばやさ +5',450,true],
+  ['power','🍖','パワーミート','選んだ1体のちから・こんじょう +5',450,true],
+  ['tech','⭐','スタークッキー','選んだ1体のテクニック・すばやさ +6',600,true]
+ ];
+ shop.innerHTML=`<div class="shopHead122"><div><small>NEST SHOP</small><h3>🪙 ネストショップ</h3></div><b>${coins} coin</b></div>
+ <div class="shopGrid122">${items.map(([id,ic,n,d,cost,target])=>`<div class="shopItem122"><div class="shopIcon122">${ic}</div><div class="shopText122"><b>${n}</b><small>${d}</small></div>${target?`<select data-shop-target="${id}" ${!has?'disabled':''}>${has?S.nest.map(m=>`<option value="${m.id}">${m.name}</option>`).join(''):'<option>育成メンバーなし</option>'}</select>`:''}<button type="button" data-buy122="${id}" ${!has||coins<cost?'disabled':''}>🪙 ${cost}</button></div>`).join('')}</div>
+ <div class="specialShop200"><div class="specialTitle200"><b>✨ SPECIAL</b><span>大会後のもう一手</span></div><div class="specialGrid200">
+ <button data-special200="lucky" ${coins<900?'disabled':''}><b>🍀 ラッキーチャーム</b><small>次の子のレア度を1段階UP</small><em>🪙 900</em></button>
+ <button data-special200="condition" ${coins<500||!has?'disabled':''}><b>🥤 コンディションドリンク</b><small>${has?S.nest[0].name:'育成メンバー'} 全能力+3</small><em>🪙 500</em></button>
+ <button data-special200="scout" ${coins<700?'disabled':''}><b>🔭 スカウトパス</b><small>血統候補を1体スカウト</small><em>🪙 700</em></button></div><div class="specialStock200">所持効果：🍀 ${S.specialShop?.lucky||0}</div></div><div id="shopMsg122" class="shopMsg122"></div>`;
+ shop.querySelectorAll('[data-buy122]').forEach(b=>b.onclick=e=>{e.preventDefault();if(!b.disabled)buyNormal309(b.dataset.buy122)});
+ shop.querySelectorAll('[data-special200]').forEach(b=>b.onclick=e=>{e.preventDefault();if(!b.disabled)buySpecial309(b.dataset.special200)});
 }
-document.addEventListener('click',e=>{
- const normal=e.target?.closest?.('#shop122 [data-buy122]');
- if(normal){
-   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-   if(!normal.disabled)buyNormal309(normal.dataset.buy122);
-   return;
- }
- const special=e.target?.closest?.('#shop122 [data-special200]');
- if(special){
-   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-   if(!special.disabled)buySpecial309(special.dataset.special200);
- }
-},true);
-document.addEventListener('change',e=>{
- if(e.target?.matches?.('#shop122 [data-shop-target]'))sync309();
-},true);
-try{const prev=render;render=function(){const out=prev();[0,40,120].forEach(ms=>setTimeout(sync309,ms));return out}}catch(e){console.warn('render309',e)}
-const css=document.createElement('style');css.id='shopFix309';css.textContent=`
-#shop122 [data-buy122],#shop122 [data-special200],#shop122 select{pointer-events:auto!important;touch-action:manipulation!important}
-.shopToast309{position:fixed;left:50%;bottom:92px;transform:translate(-50%,12px);z-index:100000;background:#172033;color:#ffe273;border:1px solid #ffffff33;border-radius:999px;padding:9px 14px;font-size:10px;font-weight:1000;opacity:0;pointer-events:none;transition:.18s}
-.shopToast309.show309{opacity:1;transform:translate(-50%,0)}
-`;document.head.appendChild(css);
-[0,100,300].forEach(ms=>setTimeout(sync309,ms));
-window.STAR_SHOP309={sync:sync309};
+function sync309(){renderShop309()}
+document.addEventListener('change',e=>{if(e.target?.matches?.('#shop122 [data-shop-target]')){}},true);
+try{const prev=render;render=function(){const out=prev();[0,40,120].forEach(ms=>setTimeout(renderShop309,ms));return out}}catch(e){console.warn('render309',e)}
+
 })();
