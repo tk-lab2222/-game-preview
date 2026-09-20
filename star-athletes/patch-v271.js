@@ -3,7 +3,7 @@
 const SAVE271='star-athletes-save-v200';
 const ST271=['power','speed','stamina','agility','tech','guts'];
 function n271(v){return Number(v)||0}
-function h271(m,k,d=2){const v=Number(m?.hidden233?.[k]);return Number.isFinite(v)?Math.max(0,Math.min(5,v)):d}
+function h271(m,k,d=2){const v=Number(m?.hidden233?.[k]);return Number.isFinite(v)?Math.max(0,Math.min(7,v)):d}
 function skills271(m){return Array.isArray(m?.skills233)?m.skills233:[]}
 function generation271(m){return Math.max(1,n271(m?.generation||m?.gen||S.generation||1))}
 function hasSkill271(m,key){return skills271(m).some(s=>String(s?.key||s?.id||s?.name||s).includes(key))}
@@ -11,15 +11,15 @@ function titles271(m){
  const out=[];
  if(n271(m?.stats?.speed)>=500||hasSkill271(m,'speed')||hasSkill271(m,'疾風'))out.push({id:'gale',name:'疾風一族',icon:'💨'});
  if(n271(m?.stats?.power)>=500||hasSkill271(m,'power')||hasSkill271(m,'豪腕'))out.push({id:'power',name:'豪腕血統',icon:'💪'});
- if(h271(m,'heredity')>=4&&h271(m,'mutation')>=4)out.push({id:'gold',name:'黄金血統',icon:'👑'});
+ if(h271(m,'heredity')>=6&&h271(m,'mutation')>=6)out.push({id:'gold',name:'黄金血統',icon:'👑'});
  if(generation271(m)>=10)out.push({id:'ten',name:'10代継承',icon:'🔗'});
  return out;
 }
 function complete271(m){
  const checks=[
   {label:'10代継承',ok:generation271(m)>=10},
-  {label:'遺伝力A以上',ok:h271(m,'heredity')>=4},
-  {label:'変異因子A以上',ok:h271(m,'mutation')>=4},
+  {label:'遺伝力A以上',ok:h271(m,'heredity')>=6},
+  {label:'変異因子A以上',ok:h271(m,'mutation')>=6},
   {label:'SKILL 2個以上',ok:skills271(m).length>=2},
   {label:'能力500以上',ok:Math.max(...ST271.map(k=>n271(m?.stats?.[k])))>=500}
  ];
@@ -42,7 +42,7 @@ function summary271(){
  const book=Object.values(S.lineageTitleBook271||{});box.innerHTML=`<b>🧬 血統称号</b><span>${book.length}/4</span>${book.length?`<small>${book.map(x=>`${x.icon}${x.name}`).join(' ・ ')}</small>`:'<small>条件を満たす血統を育てると称号を獲得</small>'}`;
 }
 function hiddenBlock271(m){
- const h=m?.hidden233||{},rk=v=>['E','D','C','B','A','S'][Math.max(0,Math.min(5,Math.round(Number(v)||0)))];
+ const h=m?.hidden233||{},rk=v=>['G','F','E','D','C','B','A','S'][Math.max(0,Math.min(7,Math.round(Number(v)||0)))];
  return `<div class="hidden271"><small>隠れステータス</small><div><span>成長 <b>${rk(h.growth)}</b></span><span>遺伝 <b>${rk(h.heredity)}</b></span><span>勝負 <b>${rk(h.clutch)}</b></span><span>安定 <b>${rk(h.stability)}</b></span><span>変異 <b>${rk(h.mutation)}</b></span><span>LUCK <b>${rk(h.luck)}</b></span></div><em>気性 ${h.temperament||'-'}</em></div>`;
 }
 function parentExtras271(){
