@@ -21,16 +21,31 @@ function n233(v){return Number(v)||0}function clamp233(v,a,b){return Math.max(a,
 function save233(){try{localStorage.setItem(SAVE233,JSON.stringify({savedAt:Date.now(),S}))}catch(e){console.error('save233',e)}try{if(Array.isArray(S.nest)&&S.nest.length===3)localStorage.setItem(ROSTER233,JSON.stringify(S.nest))}catch(_){}}
 function all233(){const a=[],seen=new Set();for(const key of ['starters','nest','lineage','released','cands','foster'])for(const m of(S[key]||[]))if(m&&!seen.has(m.id)){seen.add(m.id);a.push(m)}if(S.egg&&!seen.has(S.egg.id))a.push(S.egg);return a}
 function rarityBonus233(m){try{return Math.max(0,R.indexOf(m.rarity))}catch(_){return 0}}
+function traitDist233(gen){
+ const g=Math.max(0,Math.min(20,n233(gen)));
+ const anchors=[
+  {g:0, p:[.32,.30,.24,.10,.036,.004]},
+  {g:5, p:[.24,.29,.27,.15,.044,.006]},
+  {g:10,p:[.16,.24,.30,.22,.070,.010]},
+  {g:15,p:[.10,.19,.29,.29,.115,.015]},
+  {g:20,p:[.06,.14,.26,.36,.160,.020]}
+ ];
+ let a=anchors[0],b=anchors[anchors.length-1];
+ for(let i=0;i<anchors.length-1;i++)if(g>=anchors[i].g&&g<=anchors[i+1].g){a=anchors[i];b=anchors[i+1];break}
+ const t=a.g===b.g?0:(g-a.g)/(b.g-a.g);
+ const p=a.p.map((v,i)=>v+(b.p[i]-v)*t);
+ const sum=p.reduce((x,y)=>x+y,0);
+ return p.map(x=>x/sum)
+}
 function rollRank233(m,bias=0){
- const g=Math.max(0,n233(m?.gen)||0),u=Math.random();
- // A/S are intentionally rare early; lineage maturity raises the ceiling gradually.
- const s=Math.min(.028,.004+g*.0010+Math.max(0,bias)*.01);
- const a=Math.min(.12,.035+g*.0038+Math.max(0,bias)*.03);
- if(u<s)return 5;
- if(u<s+a)return 4;
- if(u< s+a+.17)return 3;
- if(u< s+a+.47)return 2;
- if(u< s+a+.76)return 1;
+ const p=traitDist233(m?.gen||0).slice();
+ // Positive bias shifts a small amount of mass upward without skipping the curve.
+ const sh=Math.max(0,Math.min(.06,Number(bias)||0));
+ if(sh>0){
+   const move=Math.min(p[0],sh*.35);p[0]-=move;p[2]+=move*.45;p[3]+=move*.35;p[4]+=move*.17;p[5]+=move*.03;
+ }
+ const u=Math.random();let acc=0;
+ for(let i=0;i<p.length;i++){acc+=p[i];if(u<acc)return i}
  return 0
 }
 function hidden233(m){if(!m)return null;if(!m.hidden233){m.hidden233={growth:rollRank233(m),heredity:rollRank233(m),clutch:rollRank233(m),stability:rollRank233(m),mutation:rollRank233(m),luck:rollRank233(m),temperament:TEMPER233[rnd233(0,3)]}}if(!Array.isArray(m.skills233))m.skills233=[];return m.hidden233}
