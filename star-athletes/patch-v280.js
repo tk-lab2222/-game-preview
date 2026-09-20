@@ -98,7 +98,7 @@ function register280(){
  const snapshot={
   at:Date.now(),score:calc.score,tactic:st.tactic,
   synergy:calc.synergy.score,
-  members:team.map(m=>({id:m.id,name:m.name,rarity:m.rarity,gen:n280(m.gen),role:st.roles[m.id],avg:avg280(m),stats:{...m.stats}}))
+  members:team.map(m=>({id:m.id,name:m.name,rarity:m.rarity,gen:n280(m.gen),role:st.roles[m.id],avg:avg280(m),stats:{...m.stats},skills:[...skills280(m)]}))
  };
  const prev=n280(st.best?.score),isBest=snapshot.score>prev;
  if(isBest)st.best=snapshot;
@@ -122,9 +122,15 @@ function render280(flag=''){
  let host=document.getElementById('rep280');
  if(!host){host=document.createElement('div');host.id='rep280';host.className='box rep280';const lim=document.getElementById('limitTrain279')||document.getElementById('limitPanel278');lim?.after(host);if(!host.parentNode)nest.appendChild(host)}
  const best=st.best;
+ const bestMembers=Array.isArray(best?.members)?best.members:[];
+ const selfBestCards=bestMembers.length?bestMembers.map(m=>{
+   const top=STATS280.slice().sort((a,b)=>n280(m.stats?.[b])-n280(m.stats?.[a]))[0];
+   const sk=Array.isArray(m.skills)&&m.skills.length?m.skills.map(k=>SK280[k]||k).join(' / '):'なし';
+   return `<article><b>${m.name}</b><span>⭐ ${LAB280[top]} ${n280(m.stats?.[top])}</span><small>✨ ${sk}</small></article>`;
+ }).join(''):'<small class="bestEmpty280">代表3体を登録するとここに残ります</small>';
  host.innerHTML=`<div class="repHead280"><div><small>NEST REPRESENTATIVE</small><b>🏁 ネスト代表3体</b></div><span>${st.selected.length}/3</span></div>
- <p class="repIntro280">現役・歴代血統から、自分史上最高の3体を登録。出生レア度だけではなく、能力・役割・SKILL・連携で評価します。</p>
- <div class="best280"><div><small>SELF BEST</small><strong>${best?n280(best.score).toLocaleString():'---'}</strong></div><span>${best?new Date(best.at).toLocaleDateString('ja-JP'):'未登録'}</span>${flag?`<em>${flag==='BEST UPDATED'?'自己ベスト更新！':'代表を登録しました'}</em>`:''}</div>
+ <p class="repIntro280">現役・歴代血統から3体を選び、代表チームとして記録します。</p>
+ <div class="best280"><div class="bestHead280"><div><small>SELF BEST</small><b>🏅 ベスト代表</b></div><span>${best?new Date(best.at).toLocaleDateString('ja-JP'):'未登録'}</span></div><div class="bestMembers280">${selfBestCards}</div>${best?`<small class="bestScore280">TEAM POWER ${n280(best.score).toLocaleString()}</small>`:''}${flag?`<em>${flag==='BEST UPDATED'?'自己ベスト更新！':'代表を登録しました'}</em>`:''}</div>
  <div class="tactic280"><b>チーム戦術</b><div>${Object.entries(TACTIC280).map(([k,v])=>`<button type="button" data-tactic280="${k}" class="${st.tactic===k?'on280':''}"><strong>${v.name}</strong><small>${v.desc}</small></button>`).join('')}</div></div>
  <div class="score280"><div><small>TEAM POWER</small><b>${calc?calc.score.toLocaleString():'3体選択'}</b></div><div><small>SYNERGY</small><b>${calc?calc.synergy.label:'-'}</b><em>${calc&&calc.synergy.parts.length?calc.synergy.parts.join(' / '):'役割とSKILLで変化'}</em></div></div>
  <div class="selected280">${team.length?team.map((m,i)=>`<span><i>${i+1}</i><b>${m.name}</b><small>${ROLE280[st.roles[m.id]]?.icon||''} ${ROLE280[st.roles[m.id]]?.name||''}</small></span>`).join(''):'<small>下の候補から3体を選択</small>'}</div>
@@ -145,7 +151,7 @@ try{const prev280=render;render=function(){const out=prev280();setTimeout(render
 window.STAR_REP280={state:()=>({...state280()}),score:()=>calc280(team280()),pool:pool280};
 const css=document.createElement('style');css.textContent=`
 .rep280{border:2px solid #263b5c!important;background:linear-gradient(145deg,#f8fbff,#f2f6fb)!important}.repHead280{display:flex;justify-content:space-between;align-items:center}.repHead280 small{display:block;font-size:6px;letter-spacing:.14em;color:#6a7d95;font-weight:1000}.repHead280 b{font-size:14px}.repHead280>span{font-size:8px;font-weight:1000;border:1px solid #8ea0b1;border-radius:999px;padding:4px 8px;background:#fff}.repIntro280{font-size:7px;line-height:1.5;color:#637183}
-.best280{display:grid;grid-template-columns:1fr auto;gap:3px 7px;align-items:center;margin:8px 0;padding:9px;border-radius:11px;background:#152640;color:#fff}.best280 small{display:block;font-size:6px;color:#86dfff;font-weight:1000}.best280 strong{font-size:22px;color:#ffe378}.best280 span{font-size:7px}.best280 em{grid-column:1/-1;font-style:normal;font-size:7px;color:#7dffbd;font-weight:1000}
+.best280{margin:8px 0;padding:9px;border-radius:11px;background:#152640;color:#fff}.bestHead280{display:flex;justify-content:space-between;align-items:center;gap:8px}.bestHead280 small{display:block;font-size:6px;color:#86dfff;font-weight:1000}.bestHead280 b{font-size:11px;color:#ffe378}.bestHead280 span{font-size:7px}.bestMembers280{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:7px}.bestMembers280 article{padding:7px 5px;border:1px solid #ffffff2b;border-radius:9px;background:#ffffff0d;text-align:center;min-width:0}.bestMembers280 article b,.bestMembers280 article span,.bestMembers280 article small{display:block}.bestMembers280 article b{font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bestMembers280 article span{font-size:7px;color:#ffe378;margin-top:3px}.bestMembers280 article small{font-size:6px;color:#b9e8ff;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bestEmpty280{display:block;text-align:center;padding:8px;font-size:7px;color:#a9bbcf}.bestScore280{display:block;text-align:right;margin-top:5px;font-size:6px!important;color:#91a9c0!important}.best280 em{display:block;margin-top:5px;font-style:normal;font-size:7px;color:#7dffbd;font-weight:1000}
 .tactic280>b{font-size:8px}.tactic280>div{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:5px}.tactic280 button{min-height:48px;border:1px solid #aebdca;border-radius:9px;background:#fff;padding:5px;color:#253a50}.tactic280 button strong,.tactic280 button small{display:block}.tactic280 button strong{font-size:8px}.tactic280 button small{font-size:5.5px;line-height:1.3;margin-top:3px;color:#728191}.tactic280 button.on280{border-color:#e0a329;background:#fff3c9;box-shadow:0 0 0 1px #f0ca68}
 .score280{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}.score280>div{padding:8px;border-radius:10px;background:#fff;border:1px solid #c4cfda}.score280 small{display:block;font-size:6px;color:#708093;font-weight:1000}.score280 b{font-size:17px}.score280 em{display:block;font-size:5.5px;font-style:normal;color:#71808e}
 .selected280{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:7px 0}.selected280>span{position:relative;border:1px solid #b8c5d0;border-radius:9px;padding:6px;background:#fff;text-align:center}.selected280 i{position:absolute;left:4px;top:4px;width:15px;height:15px;border-radius:50%;background:#253d61;color:#fff;font-size:7px;font-style:normal;display:grid;place-items:center}.selected280 b,.selected280 small{display:block}.selected280 b{font-size:8px}.selected280 small{font-size:6px;color:#69798a}.selected280>small{grid-column:1/4;text-align:center;font-size:7px;color:#71808d}.rep280>#register280{width:100%}
