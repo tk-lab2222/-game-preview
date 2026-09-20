@@ -1,7 +1,7 @@
 (()=>{
 // v0.23.3: integrated hidden traits + compatibility scouting + earned/inherited skills.
 // Replaces v0.23.2 annual/skill patch. Skills are optional; promotion battles are the main acquisition event.
-const SAVE233='star-athletes-save-v200',ROSTER233='star-athletes-active-roster-v210';
+const SAVE233='star-athletes-save-v200',ROSTER233='star-athletes-active-roster-v210',ROSTER209_233='star-athletes-active-roster-v209';
 const K233=['power','speed','stamina','agility','tech','guts'];
 const L233={power:'ちから',speed:'スピード',stamina:'スタミナ',agility:'すばやさ',tech:'テクニック',guts:'こんじょう'};
 const RK233=['G','F','E','D','C','B','A','S'];
@@ -18,7 +18,16 @@ const NPC233=['ガルド','ミーティア','ルーチェ','ノクス','フィ�
 const CHAMP233=[10,7,5,3,2,1,0,0],PTS233=[8,6,5,4,3,2,1,0];
 const TEMPER233=['大胆','冷静','粘り強い','慎重'];
 function n233(v){return Number(v)||0}function clamp233(v,a,b){return Math.max(a,Math.min(b,v))}function rnd233(a,b){return Math.floor(Math.random()*(b-a+1))+a}
-function save233(){try{localStorage.setItem(SAVE233,JSON.stringify({savedAt:Date.now(),S}))}catch(e){console.error('save233',e)}try{if(Array.isArray(S.nest)&&S.nest.length===3)localStorage.setItem(ROSTER233,JSON.stringify(S.nest))}catch(_){}}
+function save233(){
+ try{localStorage.setItem(SAVE233,JSON.stringify({savedAt:Date.now(),S}))}catch(e){console.error('save233',e)}
+ try{
+   if(Array.isArray(S.nest)&&S.nest.length===3){
+     const raw=JSON.stringify(S.nest);
+     localStorage.setItem(ROSTER233,raw);
+     localStorage.setItem(ROSTER209_233,raw);
+   }
+ }catch(_){}
+}
 function all233(){const a=[],seen=new Set();for(const key of ['starters','nest','lineage','released','cands','foster'])for(const m of(S[key]||[]))if(m&&!seen.has(m.id)){seen.add(m.id);a.push(m)}if(S.egg&&!seen.has(S.egg.id))a.push(S.egg);return a}
 function rarityBonus233(m){try{return Math.max(0,R.indexOf(m.rarity))}catch(_){return 0}}
 function traitDist233(gen){
