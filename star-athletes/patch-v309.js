@@ -1,14 +1,23 @@
 (()=>{
 // v0.31.21: authoritative Nest Shop purchase handler.
 // Handles purchases directly because legacy shop functions are closure-local.
-const SAVE309='star-athletes-save-v200';
+const SAVE309='star-athletes-save-v200',ROSTER309='star-athletes-active-roster-v210',ROSTER209='star-athletes-active-roster-v209';
 const NORMAL309={
  berry:{cost:250,msg:'🍓 元気ベリー',apply(){(S.nest||[]).forEach(m=>{m.stats.stamina=(Number(m.stats.stamina)||0)+2;m.stats.guts=(Number(m.stats.guts)||0)+2})}},
  speed:{cost:450,msg:'🍋 スピードフルーツ',target:true,apply(m){m.stats.speed=(Number(m.stats.speed)||0)+5;m.stats.agility=(Number(m.stats.agility)||0)+5}},
  power:{cost:450,msg:'🍖 パワーミート',target:true,apply(m){m.stats.power=(Number(m.stats.power)||0)+5;m.stats.guts=(Number(m.stats.guts)||0)+5}},
  tech:{cost:600,msg:'⭐ スタークッキー',target:true,apply(m){m.stats.tech=(Number(m.stats.tech)||0)+6;m.stats.agility=(Number(m.stats.agility)||0)+6}}
 };
-function save309(){try{localStorage.setItem(SAVE309,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
+function save309(){
+ try{localStorage.setItem(SAVE309,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}
+ try{
+   if(Array.isArray(S.nest)&&S.nest.length){
+     const raw=JSON.stringify(S.nest);
+     localStorage.setItem(ROSTER309,raw);
+     localStorage.setItem(ROSTER209,raw);
+   }
+ }catch(_){}
+}
 function targets309(){
  S.shopTargets309=S.shopTargets309&&typeof S.shopTargets309==='object'?S.shopTargets309:{};
  return S.shopTargets309;
