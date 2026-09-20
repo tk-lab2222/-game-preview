@@ -31,7 +31,7 @@ function ensureAnnualPromo307(){
       b.style.setProperty('display','inline-block','important');
       b.onclick=()=>{
         try{
-          if(typeof showPromotion233==='function'){showPromotion233();return}
+          if(window.STAR_ANNUAL233?.showPromotion){window.STAR_ANNUAL233.showPromotion();return}
         }catch(e){console.warn('showPromotion307',e)}
       };
     }else if(b&&/年間王者・昇格戦/.test(b.textContent||'')){
