@@ -126,7 +126,7 @@ function nextSeason225(){
  const next=cur<6?cur+1:1;
  S.season=next;S.turn=0;S.plans={};S.assign={};S.strat={};S.schedule=[];S.seasonMeet=null;S.rivals225=[];S.rivalsPromo225=false;
  try{if(typeof makeSchedule==='function')makeSchedule()}catch(_){}
- save225();location.replace(location.pathname+'?v=225&season='+next+'&t='+Date.now());
+ save225();location.replace(location.pathname+'?season='+next+'&t='+Date.now());
 }
 function beginPromo225(){
  S.rivals225=[];S.rivalsPromo225=true;mkRivals225(true);save225();
