@@ -20,21 +20,27 @@ function strat295(s){return s==='先行'?1.015:s==='温存'?1.008:s==='追込'?1
 function hash295(str){let h=2166136261>>>0;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
 function rng295(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function label295(p){return p>=72?'かなり有利':p>=58?'やや有利':p>=42?'互角':p>=28?'やや不利':'強敵注意'}
-function signature295(tier,eventsOverride,rivalsOverride){
+function signature295(tier,eventsOverride,rivalsOverride,mode='actual'){
  const nest=(Array.isArray(S?.nest)?S.nest:[]).map(m=>[m.id,...KEYS295.map(k=>Number(m?.stats?.[k])||0)]);
  const events=Array.isArray(eventsOverride)&&eventsOverride.length?eventsOverride:(S?.schedule||[]);
  const rivals=Array.isArray(rivalsOverride)?rivalsOverride.map(r=>[
    r.id||'',...KEYS295.map(k=>Number(r?.stats?.[k])||0),r.strong||''
  ]):[];
- return JSON.stringify([tier,Number(S?.leagueRank)||0,Number(S?.season)||1,events,S?.assign||{},S?.strat||{},nest,rivals]);
+ const assign=mode==='baseline'?{}:(S?.assign||{}),strat=mode==='baseline'?{}:(S?.strat||{});
+ return JSON.stringify([mode,tier,Number(S?.leagueRank)||0,Number(S?.season)||1,events,assign,strat,nest,rivals]);
 }
-function athlete295(e,i){
+function athlete295(e,i,mode='actual'){
  const nest=Array.isArray(S?.nest)?S.nest:[];
- return nest.find(x=>x.id===S?.assign?.[i])||nest.slice().sort((a,b)=>score295(b?.stats,e)-score295(a?.stats,e))[0]||null;
+ if(mode!=='baseline'){
+   const assigned=nest.find(x=>x.id===S?.assign?.[i]);
+   if(assigned)return assigned;
+ }
+ return nest.slice().sort((a,b)=>score295(b?.stats,e)-score295(a?.stats,e))[0]||null;
 }
-function chance295(tier='standard',eventsOverride=null,rivalsOverride=null){
+function chance295(tier='standard',eventsOverride=null,rivalsOverride=null,mode='actual'){
  if(!['safe','standard','challenge'].includes(tier))tier='standard';
- const sig=signature295(tier,eventsOverride,rivalsOverride);
+ mode=mode==='baseline'?'baseline':'actual';
+ const sig=signature295(tier,eventsOverride,rivalsOverride,mode);
  if(cache295.has(sig))return cache295.get(sig);
  const nest=Array.isArray(S?.nest)?S.nest:[];
  if(!nest.length){const z={ours:0,theirs:0,pct:5,label:'強敵注意',simulations:0};cache295.set(sig,z);return z}
@@ -68,8 +74,9 @@ function chance295(tier='standard',eventsOverride=null,rivalsOverride=null){
    rivalAvgTotal+=rivals.reduce((sum,r)=>sum+KEYS295.reduce((a,k)=>a+(r[k]||0),0)/KEYS295.length,0)/rivals.length;
    const total=[0,0,0,0,0,0,0,0];
    for(let i=0;i<events.length;i++){
-     const e=events[i],m=athlete295(e,i);if(!m)continue;
-     const scores=[score295(m.stats,e)*strat295(S?.strat?.[i]||'バランス')*(.96+rand()*.08)];
+     const e=events[i],m=athlete295(e,i,mode);if(!m)continue;
+     const strategy=mode==='baseline'?'バランス':(S?.strat?.[i]||'バランス');
+     const scores=[score295(m.stats,e)*strat295(strategy)*(.96+rand()*.08)];
      rivals.forEach(r=>scores.push(score295(r,e)*(.95+rand()*.10)));
      const order=scores.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v);
      order.forEach((x,pos)=>total[x.idx]+=PTS295[pos]||0);
@@ -90,6 +97,6 @@ window.STAR_TOUR225.chance=chance295;
 function sync295(){
  const meet=document.querySelector('#rival .chance225 span');if(meet)meet.textContent='推定勝率';
 }
-window.STAR_SIM295={chance:chance295,clear:()=>cache295.clear(),sync:sync295};
+window.STAR_SIM295={chance:chance295,baseline:(tier,events,rivals)=>chance295(tier,events,rivals,'baseline'),actual:(tier,events,rivals)=>chance295(tier,events,rivals,'actual'),clear:()=>cache295.clear(),sync:sync295};
 setTimeout(()=>{try{window.STAR_MEET290?.sync?.()}catch(_){}},0);
 })();
