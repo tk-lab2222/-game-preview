@@ -63,11 +63,17 @@ function chooseMeet119(idx){
 function seasonUi119(){
   initSeason119();
   const host=$('train')?.querySelector('.box');if(!host)return;
-  let el=document.getElementById('season119');if(!el){el=document.createElement('div');el.id='season119';host.insertBefore(el,host.firstChild)}
-  const s=SEASONS[S.season]||SEASONS[6],list=TOURNAMENTS[S.season]||[];
-  el.innerHTML=`<div class="seasonHead119"><div><small>GENERATION SEASON</small><b>S${S.season}/6　${s.name}</b><span>${s.sub}</span></div><div class="seasonDots119">${[1,2,3,4,5,6].map(n=>`<i class="${n<S.season?'done':''} ${n===S.season?'now':''}">${n}</i>`).join('')}</div></div><div class="wallet119"><span>🪙 ${S.coins}</span><span>⭐ 名声 ${S.fame}</span></div><div class="meetChoice119">${list.map((x,i)=>`<button type="button" data-meet119="${i}" class="${S.seasonMeet?.name===x.name?'sel':''}"><b>${x.name}</b><small>📍${x.place}　☁️${x.weather}</small><small>${x.events.join(' / ')}</small></button>`).join('')}</div>`;
-  el.querySelectorAll('[data-meet119]').forEach(b=>b.onclick=()=>chooseMeet119(+b.dataset.meet119));
-  const title=host.querySelector('h3');if(title)title.textContent=`次の大会：${S.seasonMeet?.name||s.name}`;
+  let el=document.getElementById('season119');
+  if(!el){
+    el=document.createElement('div');el.id='season119';host.insertBefore(el,host.firstChild);
+    el.innerHTML='<div class="seasonHead119"></div><div class="wallet119"></div><div class="meetChoice119"></div>';
+  }
+  const s=SEASONS[S.season]||SEASONS[6];
+  const head=el.querySelector('.seasonHead119');
+  if(head)head.innerHTML=`<div><small>GENERATION SEASON</small><b>S${S.season}/6　${s.name}</b><span>${s.sub}</span></div><div class="seasonDots119">${[1,2,3,4,5,6].map(n=>`<i class="${n<S.season?'done':''} ${n===S.season?'now':''}">${n}</i>`).join('')}</div>`;
+  const wallet=el.querySelector('.wallet119');
+  if(wallet)wallet.innerHTML=`<span>🪙 ${S.coins}</span><span>⭐ 名声 ${S.fame}</span>`;
+  // Tournament cards are owned exclusively by patch-v290. Do not redraw them here.
 }
 
 const renderBefore119=render;
