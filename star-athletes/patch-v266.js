@@ -1,7 +1,8 @@
 (()=>{
-// v0.27.6: M2.4 generation policy. One meaningful training direction per generation.
+// v0.28.8: generation policy UI restored; avoid private TRAIN210 reference.
 const SAVE266='star-athletes-save-v200';
 const MEM266='star-athletes-training-memory-v243';
+const PLAN_NAME266={speed:'星駆けダッシュ',power:'メテオクラッシュ',tech:'スタートリック',stamina:'エンドレスロード',team:'スターリンク'};
 const POL266={
   compete:{icon:'🏆',name:'大会重視',desc:'得意能力のメニューを自動選択',hint:'今世代の勝利を優先'},
   growth:{icon:'🌱',name:'成長重視',desc:'弱点能力のメニューを自動選択',hint:'安定して能力を伸ばす'},
@@ -42,7 +43,7 @@ function render266(){
   const cur=policy266(),locked=Number(S.turn)>0;
   host.innerHTML=`<div class="policyHead266"><div><small>GENERATION POLICY</small><b>今世代の育成方針</b></div>${cur?`<strong>${POL266[cur].icon} ${POL266[cur].name}</strong>`:'<strong>未選択</strong>'}</div>
     <div class="policyGrid266">${Object.entries(POL266).map(([k,p])=>`<button type="button" data-policy266="${k}" class="${cur===k?'on266':''}" ${locked?'disabled':''}><b>${p.icon} ${p.name}</b><small>${p.desc}</small></button>`).join('')}</div>
-    <div class="policyApplied266">${cur?`自動設定：${(S.nest||[]).map(m=>`${m.name}→${TRAIN210?.[S.plans?.[m.id]]?.name||S.plans?.[m.id]||'-'} / ${state266().intensity?.[m.id]==='safe'?'安全':state266().intensity?.[m.id]==='high'?'高負荷':'標準'}`).join('　')}`:'方針を選ぶと3体の練習メニューが自動で切り替わります'}</div><div class="policyHint266">${cur?(locked?'この世代は「'+POL266[cur].name+'」で固定中':'育成開始までは変更できます'):'最初の育成前に1つ選択。固定の最強方針ではなく、育て方を変える選択です。'}</div>`;
+    <div class="policyApplied266">${cur?`自動設定：${(S.nest||[]).map(m=>`${m.name}→${PLAN_NAME266[S.plans?.[m.id]]||S.plans?.[m.id]||'-'} / ${state266().intensity?.[m.id]==='safe'?'安全':state266().intensity?.[m.id]==='high'?'高負荷':'標準'}`).join('　')}`:'方針を選ぶと3体の練習メニューが自動で切り替わります'}</div><div class="policyHint266">${cur?(locked?'この世代は「'+POL266[cur].name+'」で固定中':'育成開始までは変更できます'):'最初の育成前に1つ選択。固定の最強方針ではなく、育て方を変える選択です。'}</div>`;
   const go=document.getElementById('doTrain263');if(go){go.disabled=Number(S.turn)>=3||!cur;go.title=!cur?'先に今世代の育成方針を選んでください':''}
 }
 // Modify M2.2 outcome multipliers, while leaving click ownership with v263.
