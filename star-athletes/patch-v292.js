@@ -24,7 +24,9 @@ function syncSeasonChance292(){
     const buttons=[...card.parentElement?.querySelectorAll?.('[data-star-meet290]')||[]];
     const n=buttons.length;
     const t=n>=3?(i===0?'safe':i===1?'standard':'challenge'):n===2?(i===0?'standard':'challenge'):'standard';
-    let c=null;try{c=window.STAR_TOUR225?.chance?.(t)}catch(_){}
+    const eventText=card.querySelector('small')?.textContent||'';
+    const events=eventText.split('/').map(x=>x.trim()).filter(Boolean);
+    let c=null;try{c=window.STAR_TOUR225?.chance?.(t,events)}catch(_){}
     const el=card.querySelector('.chance290');
     if(el&&c&&Number.isFinite(Number(c.pct)))el.textContent=`勝率 ${Math.round(Number(c.pct))}%`;
   });
