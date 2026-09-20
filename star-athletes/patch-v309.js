@@ -25,7 +25,7 @@ function msg309(t){
  if(!toast){toast=document.createElement('div');toast.id='shopToast309';toast.className='shopToast309';document.body.appendChild(toast)}
  toast.textContent=t;toast.classList.add('show309');clearTimeout(window.__shopToast309);window.__shopToast309=setTimeout(()=>toast.classList.remove('show309'),1400);
 }
-function rerender309(){save309();try{render()}catch(_){};[30,120,300].forEach(ms=>setTimeout(sync309,ms))}
+function rerender309(){save309();try{render()}catch(_){setTimeout(sync309,0)}}
 function buyNormal309(id){
  const item=NORMAL309[id];if(!item)return;
  if(!(S.nest||[]).length){msg309('育成メンバーがいません');return}
@@ -117,12 +117,14 @@ document.addEventListener('click',e=>{
    if(!special.disabled)buySpecial309(special.dataset.special200);
  }
 },true);
-document.addEventListener('change',e=>{
+function commitTarget309(e){
  const sel=e.target?.closest?.('#shop122 [data-shop-target]');
  if(!sel)return;
  targets309()[sel.dataset.shopTarget]=sel.value;
  save309();
-},true);
+}
+document.addEventListener('input',commitTarget309,true);
+document.addEventListener('change',commitTarget309,true);
 try{
  const prev=render;
  render=function(){const out=prev();setTimeout(renderShop309,0);return out}
