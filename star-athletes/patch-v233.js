@@ -103,15 +103,15 @@ try{
      const avg=(n233(ha[k])+n233(hb[k]))/2;
      const hr=(n233(ha.heredity)+n233(hb.heredity))/14;
      const maxParent=Math.max(n233(ha[k]),n233(hb[k]));
-     let v=clamp233(Math.round(avg+(Math.random()<.28?rnd233(-1,1):0)+(Math.random()<hr*.10?1:0)),0,5);
+     let v=clamp233(Math.round(avg+(Math.random()<.28?rnd233(-1,1):0)+(Math.random()<hr*.10?1:0)),0,7);
      if(v>=7){
        const inheritS=maxParent>=7&&Math.random()<(.12+hr*.16);
        const breakthrough=maxParent<7&&Math.random()<(.0015+Math.max(0,n233(c.gen))*0.00045+n233(hc.mutation)*.0009);
-       if(!inheritS&&!breakthrough)v=4;
+       if(!inheritS&&!breakthrough)v=6;
      }
      if(v>=6&&maxParent<6){
        const breakthroughA=Math.random()<(.012+Math.max(0,n233(c.gen))*0.0018+hr*.020+n233(hc.mutation)*.002);
-       if(!breakthroughA)v=3;
+       if(!breakthroughA)v=5;
      }
      hc[k]=clamp233(v,0,7)
    }
