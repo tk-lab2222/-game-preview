@@ -12,6 +12,22 @@ const RK274=['G','F','E','D','C','B','A','S'];
 function n274(v){return Number(v)||0}
 function rank274(v){return RK274[Math.max(0,Math.min(7,Math.round(n274(v))))]}
 function hidden274(m,k){return rank274(m?.hidden233?.[k])}
+function hash274(s){let h=2166136261;for(const ch of String(s||'')){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
+function strength274(m,create=false){
+ if(!m?.ultraRare274)return 100;
+ const cur=Number(m.ultraRare274.strength274);
+ if(Number.isFinite(cur)&&cur>=70&&cur<=130)return Math.round(cur);
+ if(!create)return 100;
+ const h=hash274(m.id||m.name||Date.now()),v=70+(h%61);
+ m.ultraRare274.strength274=v;
+ return v;
+}
+function rollStrength274(){return Math.max(70,Math.min(130,Math.round(70+((Math.random()+Math.random())/2)*60)))}
+function persistStrength274(){
+ let changed=false;
+ for(const m of all274()){if(m?.ultraRare274&&!Number.isFinite(Number(m.ultraRare274.strength274))){strength274(m,true);changed=true}}
+ if(changed){try{localStorage.setItem('star-athletes-save-v200',JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
+}
 function multiplier274(m){
  let mult=1,reasons=[];
  const rr=Array.isArray(m?.rareRecipeCandidates273)?m.rareRecipeCandidates273:[];
@@ -43,7 +59,7 @@ function apply274(m){
     miracle:'奇跡因子を低確率で子へ継承',
     mythic:'上振れ・特殊血統・奇跡因子継承を強化'
   }[r.won.id]||'特殊血統ボーナス';
-  m.ultraRare274={id:r.won.id,name:r.won.name,base:r.won.base,mult:r.won.mult,chance:r.won.chance,reasons:r.won.reasons,benefit,at:Date.now()};
+  m.ultraRare274={id:r.won.id,name:r.won.name,base:r.won.base,mult:r.won.mult,chance:r.won.chance,reasons:r.won.reasons,benefit,strength274:rollStrength274(),at:Date.now()};
 }
  return m;
 }
@@ -55,12 +71,12 @@ function badge274(){
   let b=card.querySelector('.ultra274');if(!b){b=document.createElement('div');b.className='ultra274';(card.querySelector('.bd')||card).appendChild(b)}
   const u=m.ultraRare274,c=u.chance,p=c<.00001?(c*100).toFixed(5):c<.001?(c*100).toFixed(3):(c*100).toFixed(2);
   const bp=(Number(u.base)||0)*100,bpTxt=bp<.001?bp.toFixed(4):bp<.1?bp.toFixed(3):bp.toFixed(2);
-  const mult=Number(u.mult)||1;
-  b.innerHTML=`<b>✧ 特殊誕生 ${u.name}</b><small>基礎 ${bpTxt}% × 補正 ${mult.toFixed(mult%1?2:1)} = ${p}%</small>`;
+  const mult=Number(u.mult)||1,strength=strength274(m,true);
+  b.innerHTML=`<b>✧ 特殊誕生 ${u.name}</b><small>基礎 ${bpTxt}% × 補正 ${mult.toFixed(mult%1?2:1)} = ${p}%</small><em>血統強度 ${strength}/130</em>`;
  });
 }
 function late274(){try{badge274()}catch(e){console.warn('badge274',e)}}
 try{const prevRender274=render;render=function(){const out=prevRender274();setTimeout(late274,0);return out}}catch(e){console.warn('render274',e)}
-window.STAR_ULTRA274={tiers:TIERS274,evaluate:(m)=>evaluate274(m,false),multiplier:multiplier274,sync:late274};
-const css=document.createElement('style');css.textContent='.ultra274{margin-top:6px;padding:6px 8px;border:2px solid #7c4dff;border-radius:9px;background:linear-gradient(135deg,#f7f0ff,#fff7d6);letter-spacing:.03em}.ultra274 b{display:block;font-size:8px}.ultra274 small{display:block;margin-top:2px;font-size:6px;color:#66537a;font-weight:900}';document.head.appendChild(css);late274();
+window.STAR_ULTRA274={tiers:TIERS274,evaluate:(m)=>evaluate274(m,false),multiplier:multiplier274,strength:(m)=>strength274(m,true),sync:late274};
+const css=document.createElement('style');css.textContent='.ultra274{margin-top:6px;padding:6px 8px;border:2px solid #7c4dff;border-radius:9px;background:linear-gradient(135deg,#f7f0ff,#fff7d6);letter-spacing:.03em}.ultra274 b{display:block;font-size:8px}.ultra274 small{display:block;margin-top:2px;font-size:6px;color:#66537a;font-weight:900}.ultra274 em{display:block;margin-top:3px;font-size:6px;font-style:normal;font-weight:1000;color:#5c3f8a}';document.head.appendChild(css);late274();
 })();
