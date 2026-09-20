@@ -8,9 +8,9 @@ const TIERS274=[
  {id:'miracle',name:'奇跡個体',base:.00001},
  {id:'mythic',name:'神話級',base:.000001}
 ];
-const RK274=['E','D','C','B','A','S'];
+const RK274=['G','F','E','D','C','B','A','S'];
 function n274(v){return Number(v)||0}
-function rank274(v){return RK274[Math.max(0,Math.min(5,Math.round(n274(v))))]}
+function rank274(v){return RK274[Math.max(0,Math.min(7,Math.round(n274(v))))]}
 function hidden274(m,k){return rank274(m?.hidden233?.[k])}
 function multiplier274(m){
  let mult=1,reasons=[];
