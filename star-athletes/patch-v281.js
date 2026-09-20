@@ -12,89 +12,23 @@ function gen281(){return Math.max(1,n281(S.nest?.[0]?.gen)||n281(S.lineage?.[0]?
 function rareCount281(){return [...(S.nest||[]),...(S.lineage||[]),...(S.cands||[])].filter(m=>['SSR','UR','EX'].includes(m?.rarity)).length}
 function bestRep281(){return n281(S.rep280?.best?.score)}
 function totalMissions281(){return Object.keys(S.missions269?.completed||S.mission269?.completed||{}).length}
-function state281(){
- if(!S.cont281||typeof S.cont281!=='object')S.cont281={daily:null,weekly:null,season:null,titles:[]};
- if(!Array.isArray(S.cont281.titles))S.cont281.titles=[];
- return S.cont281;
-}
-function snapshot281(){return{
- breed:n281(S.dex?.b),wins:n281(S.wins),train:n281(S.limit279?.sessions)+n281(S.turn),
- rare:rareCount281(),rep:n281(S.rep280?.history?.length),missions:totalMissions281(),gen:gen281()
-}}
+function state281(){if(!S.cont281||typeof S.cont281!=='object')S.cont281={daily:null,weekly:null,season:null,titles:[]};if(!Array.isArray(S.cont281.titles))S.cont281.titles=[];return S.cont281}
+function snapshot281(){return{breed:n281(S.dex?.b),wins:n281(S.wins),train:n281(S.limit279?.sessions)+n281(S.turn),rare:rareCount281(),rep:n281(S.rep280?.history?.length),missions:totalMissions281(),gen:gen281()}}
 function persist281(){try{localStorage.setItem(SAVE281,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
-function init281(){
- const st=state281(),d=dayKey281(),w=weekKey281(),s=seasonKey281();
- if(!st.daily||st.daily.key!==d)st.daily={key:d,base:snapshot281(),claimed:{},stars:0};
- if(!st.weekly||st.weekly.key!==w)st.weekly={key:w,base:snapshot281(),claimed:{},stars:0};
- if(!st.season||st.season.key!==s)st.season={key:s,stars:0,claimed:{},title:null};
-}
+function init281(){const st=state281(),d=dayKey281(),w=weekKey281(),s=seasonKey281();if(!st.daily||st.daily.key!==d)st.daily={key:d,base:snapshot281(),claimed:{},stars:0};if(!st.weekly||st.weekly.key!==w)st.weekly={key:w,base:snapshot281(),claimed:{},stars:0};if(!st.season||st.season.key!==s)st.season={key:s,stars:0,claimed:{},title:null}}
 function delta281(scope,k){init281();const st=state281(),cur=snapshot281(),base=st[scope].base||{};return Math.max(0,n281(cur[k])-n281(base[k]))}
-function dailyDefs281(){
- const seed=dayKey281()%4;
- const pool=[
-  {id:'breed1',name:'新しい候補を見る',desc:'今日、1体以上誕生',cur:()=>delta281('daily','breed'),goal:1,reward:'🪙 +120',coin:120,stars:1},
-  {id:'train1',name:'1回育成する',desc:'通常またはLIMIT育成を1回',cur:()=>delta281('daily','train'),goal:1,reward:'⭐ +12',fame:12,stars:1},
-  {id:'meet1',name:'大会へ出る',desc:'今日、大会勝利数を1つ進める',cur:()=>delta281('daily','wins'),goal:1,reward:'🪙 +150',coin:150,stars:1},
-  {id:'rep1',name:'代表を見直す',desc:'ネスト代表を1回登録',cur:()=>delta281('daily','rep'),goal:1,reward:'⭐ +15',fame:15,stars:1}
- ];
- return [pool[seed],pool[(seed+1)%pool.length]];
-}
-function weeklyDefs281(){
- const seed=weekKey281()%3;
- const sets=[
-  [
-   {id:'breed5',name:'血統を掘る',desc:'今週5体誕生',cur:()=>delta281('weekly','breed'),goal:5,reward:'🪙 +500',coin:500,stars:3},
-   {id:'win2',name:'大会で前進',desc:'今週2勝',cur:()=>delta281('weekly','wins'),goal:2,reward:'⭐ +50',fame:50,stars:3}
-  ],
-  [
-   {id:'train4',name:'育成週間',desc:'今週4回育成',cur:()=>delta281('weekly','train'),goal:4,reward:'⭐ +45',fame:45,stars:3},
-   {id:'rep2',name:'代表研究',desc:'代表を2回登録',cur:()=>delta281('weekly','rep'),goal:2,reward:'🪙 +450',coin:450,stars:3}
-  ],
-  [
-   {id:'breed4',name:'配合研究',desc:'今週4体誕生',cur:()=>delta281('weekly','breed'),goal:4,reward:'🪙 +400',coin:400,stars:3},
-   {id:'train3',name:'育成判断',desc:'今週3回育成',cur:()=>delta281('weekly','train'),goal:3,reward:'⭐ +40',fame:40,stars:3}
-  ]
- ];
- return sets[seed];
-}
+function dailyDefs281(){const seed=dayKey281()%4;const pool=[{id:'breed1',name:'新しい候補を見る',desc:'今日、1体以上誕生',cur:()=>delta281('daily','breed'),goal:1,reward:'🪙 +120',coin:120,stars:1},{id:'train1',name:'1回育成する',desc:'通常またはLIMIT育成を1回',cur:()=>delta281('daily','train'),goal:1,reward:'⭐ +12',fame:12,stars:1},{id:'meet1',name:'大会へ出る',desc:'今日、大会勝利数を1つ進める',cur:()=>delta281('daily','wins'),goal:1,reward:'🪙 +150',coin:150,stars:1},{id:'rep1',name:'代表を見直す',desc:'ネスト代表を1回登録',cur:()=>delta281('daily','rep'),goal:1,reward:'⭐ +15',fame:15,stars:1}];return[pool[seed],pool[(seed+1)%pool.length]]}
+function weeklyDefs281(){const seed=weekKey281()%3;const sets=[[{id:'breed5',name:'血統を掘る',desc:'今週5体誕生',cur:()=>delta281('weekly','breed'),goal:5,reward:'🪙 +500',coin:500,stars:3},{id:'win2',name:'大会で前進',desc:'今週2勝',cur:()=>delta281('weekly','wins'),goal:2,reward:'⭐ +50',fame:50,stars:3}],[{id:'train4',name:'育成週間',desc:'今週4回育成',cur:()=>delta281('weekly','train'),goal:4,reward:'⭐ +45',fame:45,stars:3},{id:'rep2',name:'代表研究',desc:'代表を2回登録',cur:()=>delta281('weekly','rep'),goal:2,reward:'🪙 +450',coin:450,stars:3}],[{id:'breed4',name:'配合研究',desc:'今週4体誕生',cur:()=>delta281('weekly','breed'),goal:4,reward:'🪙 +400',coin:400,stars:3},{id:'train3',name:'育成判断',desc:'今週3回育成',cur:()=>delta281('weekly','train'),goal:3,reward:'⭐ +40',fame:40,stars:3}]];return sets[seed]}
 function seasonGoal281(){return{goal:18,title:'星路を歩む者'}}
-function claim281(scope,id){
- init281();const defs=scope==='daily'?dailyDefs281():weeklyDefs281(),d=defs.find(x=>x.id===id);if(!d)return;
- const st=state281(),box=st[scope];if(box.claimed[id]||Math.min(d.goal,d.cur())<d.goal)return;
- box.claimed[id]=true;S.coins=n281(S.coins)+n281(d.coin);S.fame=n281(S.fame)+n281(d.fame);st.season.stars=n281(st.season.stars)+n281(d.stars);
- const sg=seasonGoal281();
- if(st.season.stars>=sg.goal&&!st.season.title){
-   st.season.title=sg.title;if(!st.titles.includes(sg.title))st.titles.push(sg.title);
- }
- persist281();render281();
-}
-function remainingDay281(){const next=(dayKey281()+1)*DAY-(jstNow281());return Math.max(0,Math.ceil(next/3600000))}
+function claim281(scope,id){init281();const defs=scope==='daily'?dailyDefs281():weeklyDefs281(),d=defs.find(x=>x.id===id);if(!d)return;const st=state281(),box=st[scope];if(box.claimed[id]||Math.min(d.goal,d.cur())<d.goal)return;box.claimed[id]=true;S.coins=n281(S.coins)+n281(d.coin);S.fame=n281(S.fame)+n281(d.fame);st.season.stars=n281(st.season.stars)+n281(d.stars);const sg=seasonGoal281();if(st.season.stars>=sg.goal&&!st.season.title){st.season.title=sg.title;if(!st.titles.includes(sg.title))st.titles.push(sg.title)}persist281();render281()}
+function remainingDay281(){const next=(dayKey281()+1)*DAY-jstNow281();return Math.max(0,Math.ceil(next/3600000))}
 function remainingWeek281(){const next=(weekKey281()+1)*WEEK-jstNow281();return Math.max(1,Math.ceil(next/DAY))}
-function task281(d,scope){
- const st=state281(),cur=Math.min(d.goal,d.cur()),done=cur>=d.goal,claimed=!!st[scope].claimed[d.id],pct=Math.round(cur/d.goal*100);
- return `<article class="${done?'done281':''}"><header><b>${done?'✓ ':''}${d.name}</b><span>${cur}/${d.goal}</span></header><p>${d.desc}</p><div class="bar281"><i style="width:${pct}%"></i></div><footer><small>${d.reward} / SEASON ★+${d.stars}</small><button type="button" data-claim281="${scope}:${d.id}" ${!done||claimed?'disabled':''}>${claimed?'受取済':done?'受け取る':'進行中'}</button></footer></article>`;
-}
-function render281(){
- const nest=document.getElementById('nest201');if(!nest)return;init281();const st=state281(),sg=seasonGoal281();
- let host=document.getElementById('continuity281');
- if(!host){host=document.createElement('div');host.id='continuity281';host.className='box continuity281';const rep=document.getElementById('rep280')||document.getElementById('limitTrain279');rep?.after(host);if(!host.parentNode)nest.appendChild(host)}
- const stars=n281(st.season.stars),pct=Math.min(100,Math.round(stars/sg.goal*100));
- host.innerHTML=`<div class="head281"><div><small>STAR ROUTINE</small><b>🗓️ 継続チャレンジ</b></div><span>連続ログインなし</span></div>
- <p class="policy281">毎日やらないと損する設計にはしません。小さな目標だけ置き、通常プレイのついでに進みます。</p>
- <section class="season281"><header><div><small>28-DAY SEASON</small><b>シーズン★ ${stars}/${sg.goal}</b></div><strong>${st.season.title?'🏅 '+st.season.title:'称号まで '+Math.max(0,sg.goal-stars)+'★'}</strong></header><div class="bar281"><i style="width:${pct}%"></i></div><small>達成報酬は称号のみ。能力ボーナスはありません。</small></section>
- <div class="scopeHead281"><b>今日のチャレンジ</b><span>更新まで約${remainingDay281()}時間</span></div><div class="tasks281">${dailyDefs281().map(d=>task281(d,'daily')).join('')}</div>
- <div class="scopeHead281"><b>今週の目標</b><span>あと約${remainingWeek281()}日</span></div><div class="tasks281">${weeklyDefs281().map(d=>task281(d,'weekly')).join('')}</div>
- <small class="note281">未達成でもペナルティなし / ストリークなし / 限定能力なし。報酬量は検証用の初期値です。</small>`;
-}
-window.addEventListener('click',e=>{
- const b=e.target?.closest?.('[data-claim281]');if(b){e.preventDefault();const [scope,id]=b.dataset.claim281.split(':');claim281(scope,id);return}
- if(e.target?.closest?.('.tab[data-v="nest201"],#batchGo260,#hatch,#adopt,#doTrain263,#limitGo279,#register280,#run,#next225,#annualNext233'))[0,180,500].forEach(ms=>setTimeout(render281,ms));
-},true);
+function task281(d,scope){const st=state281(),cur=Math.min(d.goal,d.cur()),done=cur>=d.goal,claimed=!!st[scope].claimed[d.id],pct=Math.round(cur/d.goal*100);return `<article class="${done?'done281':''}"><header><b>${done?'✓ ':''}${d.name}</b><span>${cur}/${d.goal}</span></header><p>${d.desc}</p><div class="bar281"><i style="width:${pct}%"></i></div><footer><small>${d.reward} / SEASON ★+${d.stars}</small><button type="button" data-claim281="${scope}:${d.id}" ${!done||claimed?'disabled':''}>${claimed?'受取済':done?'受け取る':'進行中'}</button></footer></article>`}
+function render281(){const nest=document.getElementById('nest201');if(!nest)return;init281();const st=state281(),sg=seasonGoal281();let host=document.getElementById('continuity281');if(!host){host=document.createElement('div');host.id='continuity281';host.className='box continuity281';const rep=document.getElementById('rep280')||document.getElementById('limitTrain279');rep?.after(host);if(!host.parentNode)nest.appendChild(host)}const stars=n281(st.season.stars),pct=Math.min(100,Math.round(stars/sg.goal*100));host.innerHTML=`<div class="head281"><div><small>STAR ROUTINE</small><b>🗓️ 継続チャレンジ</b></div><span>連続ログインなし</span></div><p class="policy281">毎日やらないと損する設計にはしません。小さな目標だけ置き、通常プレイのついでに進みます。</p><section class="season281"><header><div><small>28-DAY SEASON</small><b>シーズン★ ${stars}/${sg.goal}</b></div><strong>${st.season.title?'🏅 '+st.season.title:'称号まで '+Math.max(0,sg.goal-stars)+'★'}</strong></header><div class="bar281"><i style="width:${pct}%"></i></div><small>達成報酬は称号のみ。能力ボーナスはありません。</small></section><div class="scopeHead281"><b>今日のチャレンジ</b><span>更新まで約${remainingDay281()}時間</span></div><div class="tasks281">${dailyDefs281().map(d=>task281(d,'daily')).join('')}</div><div class="scopeHead281"><b>今週の目標</b><span>あと約${remainingWeek281()}日</span></div><div class="tasks281">${weeklyDefs281().map(d=>task281(d,'weekly')).join('')}</div><small class="note281">未達成でもペナルティなし / ストリークなし / 限定能力なし。報酬量は検証用の初期値です。</small>`}
+window.addEventListener('click',e=>{const b=e.target?.closest?.('[data-claim281]');if(b){e.preventDefault();const[scope,id]=b.dataset.claim281.split(':');claim281(scope,id);return}if(e.target?.closest?.('.tab[data-v="nest201"],#batchGo260,#hatch,#adopt,#doTrain263,#limitGo279,#register280,#run,#next225,#annualNext233'))[0,180,500].forEach(ms=>setTimeout(render281,ms))},true);
 try{const prev281=render;render=function(){const out=prev281();setTimeout(render281,0);return out}}catch(e){console.warn('render281',e)}
 window.STAR_CONT281={state:()=>({...state281()}),render:render281};
-const css=document.createElement('style');css.textContent=`
-.continuity281{border:2px solid #446679!important;background:linear-gradient(145deg,#f8fcff,#eef8f4)!important}.head281{display:flex;justify-content:space-between;align-items:center;gap:7px}.head281 small{display:block;font-size:6px;letter-spacing:.14em;color:#617d89;font-weight:1000}.head281 b{font-size:14px}.head281>span{font-size:6px;border:1px solid #92a9b2;border-radius:999px;padding:4px 6px;background:#fff}.policy281{margin:7px 0;font-size:7px;line-height:1.45;color:#62747d}
-.season281{padding:8px;border-radius:10px;background:#173142;color:#fff}.season281 header{display:flex;justify-content:space-between;align-items:center;gap:8px}.season281 small{font-size:6px;color:#b9d1db}.season281 b{font-size:10px}.season281 strong{font-size:7px;color:#ffe276}.bar281{height:6px;border-radius:99px;background:#dce7ea;overflow:hidden;margin:5px 0}.bar281 i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#50b8cb,#63c488)}
-.scopeHead281{display:flex;justify-content:space-between;align-items:center;margin:9px 0 5px}.scopeHead281 b{font-size:9px}.scopeHead281 span{font-size:6px;color:#72828a}.tasks281{display:grid;gap:6px}.tasks281 article{padding:7px;border:1px solid #bdcdd3;border-radius:9px;background:#fff}.tasks281 article.done281{border-color:#78b991;background:#f1fff5}.tasks281 header,.tasks281 footer{display:flex;justify-content:space-between;gap:7px;align-items:center}.tasks281 header b{font-size:8px}.tasks281 header span{font-size:7px;font-weight:1000}.tasks281 p{margin:3px 0;font-size:6px;color:#697980}.tasks281 footer small{font-size:6px;color:#667981}.tasks281 footer button{border:1px solid #87a0aa;border-radius:999px;background:#fff;padding:4px 7px;font-size:6px;font-weight:1000}.tasks281 footer button:not(:disabled){background:#1f7551;color:#fff;border-color:#1f7551}.note281{display:block;margin-top:7px;font-size:6px;color:#6f7d84}
-`;document.head.appendChild(css);setTimeout(render281,0);
+const css=document.createElement('style');css.textContent=`.continuity281{border:2px solid #446679!important;background:linear-gradient(145deg,#f8fcff,#eef8f4)!important}.head281{display:flex;justify-content:space-between;align-items:center;gap:7px}.head281 small{display:block;font-size:6px;letter-spacing:.14em;color:#617d89;font-weight:1000}.head281 b{font-size:14px}.head281>span{font-size:6px;border:1px solid #92a9b2;border-radius:999px;padding:4px 6px;background:#fff}.policy281{margin:7px 0;font-size:7px;line-height:1.45;color:#62747d}.season281{padding:8px;border-radius:10px;background:#173142;color:#fff}.season281 header{display:flex;justify-content:space-between;align-items:center;gap:8px}.season281 small{font-size:6px;color:#b9d1db}.season281 b{font-size:10px}.season281 strong{font-size:7px;color:#ffe276}.bar281{height:6px;border-radius:99px;background:#dce7ea;overflow:hidden;margin:5px 0}.bar281 i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#50b8cb,#63c488)}.scopeHead281{display:flex;justify-content:space-between;align-items:center;margin:9px 0 5px}.scopeHead281 b{font-size:9px}.scopeHead281 span{font-size:6px;color:#72828a}.tasks281{display:grid;gap:6px}.tasks281 article{padding:7px;border:1px solid #bdcdd3;border-radius:9px;background:#fff}.tasks281 article.done281{border-color:#78b991;background:#f1fff5}.tasks281 header,.tasks281 footer{display:flex;justify-content:space-between;gap:7px;align-items:center}.tasks281 header b{font-size:8px}.tasks281 header span{font-size:7px;font-weight:1000}.tasks281 p{margin:3px 0;font-size:6px;color:#697980}.tasks281 footer small{font-size:6px;color:#667981}.tasks281 footer button{border:1px solid #87a0aa;border-radius:999px;background:#fff;padding:4px 7px;font-size:6px;font-weight:1000}.tasks281 footer button:not(:disabled){background:#1f7551;color:#fff;border-color:#1f7551}.note281{display:block;margin-top:7px;font-size:6px;color:#6f7d84}`;document.head.appendChild(css);setTimeout(render281,0);
 })();
+// v0.29.5 loader: keep M10.2 isolated from the stable M8 implementation.
+(()=>{if(window.STAR_SHARE282||document.querySelector('script[data-star-v282]'))return;const s=document.createElement('script');s.dataset.starV282='1';s.src='../star-athletes/patch-v282.js?v=295';document.head.appendChild(s)})();
