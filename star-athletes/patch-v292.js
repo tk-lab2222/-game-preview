@@ -1,6 +1,5 @@
 (()=>{
-// Tournament odds display compatibility layer.
-// Generation Season cards are owned by patch-v290; this patch only mirrors the selected odds on Meet.
+// Meet-screen odds mirror only. No render ownership.
 function label292(p){return p>=72?'かなり有利':p>=58?'やや有利':p>=42?'互角':p>=28?'やや不利':'強敵注意'}
 function sync292(){
  const panel=document.querySelector('#rival .rivalPanel225');if(!panel)return;
@@ -12,7 +11,8 @@ function sync292(){
    if(em)em.textContent=c.label||label292(Number(c.pct));
  }catch(_){}
 }
-try{const prev=render;render=function(){const out=prev();setTimeout(sync292,0);return out}}catch(_){}
-document.addEventListener('click',e=>{if(e.target?.closest?.('#toMeet,.tab[data-v="meet"]'))setTimeout(sync292,0)},true);
+document.addEventListener('click',e=>{
+ if(e.target?.closest?.('#toMeet,.tab[data-v="meet"]'))setTimeout(sync292,0);
+},true);
 window.STAR_CHANCE292={sync:sync292};
 })();
