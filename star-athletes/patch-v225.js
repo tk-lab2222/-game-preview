@@ -70,7 +70,7 @@ function renderLeague225(){
  const train=document.getElementById('train');if(!train)return;
  let el=document.getElementById('league225');if(!el){el=document.createElement('div');el.id='league225';el.className='box league225';train.prepend(el)}
  const lg=league225(),max=S.leagueRank===LEAGUES225.length-1;
- el.innerHTML=`<div class="leagueHead225"><div><small>LEAGUE CLASS</small><b>${lg.icon} ${lg.name}級</b></div><span>S${Number(S.season)||1}/6</span></div><div class="leagueTrack225">${LEAGUES225.map((x,i)=>`<i class="${i<S.leagueRank?'done225':''} ${i===S.leagueRank?'now225':''}">${x.icon}<small>${x.name}</small></i>`).join('')}</div><div class="leagueRule225">${max?'最高ランク。ここからはギャラクシー級で勝利数を伸ばそう。':'通常大会で総合1位 → 昇格戦が発生 → 勝利で次ランクへ'}</div>`;
+ el.innerHTML=`<div class="leagueHead225"><div><small>LEAGUE CLASS</small><b>${lg.icon} ${lg.name}級</b></div><span>S${Number(S.season)||1}/6</span></div><div class="leagueTrack225">${LEAGUES225.map((x,i)=>`<i class="${i<S.leagueRank?'done225':''} ${i===S.leagueRank?'now225':''}">${x.icon}<small>${x.name}</small></i>`).join('')}</div><div class="leagueRule225">${max?'最高ランク。ここからはギャラクシー級で勝利数を伸ばそう。':'S1〜S6の年間ランキング1位 → 昇格戦へ'}</div>`;
  // overwrite legacy season labels so S no longer implies league class.
  document.querySelectorAll('#season119 .seasonHead119 b,.seasonHead125 b').forEach(x=>x.textContent=`S${Number(S.season)||1}/6　${lg.name}級シーズン`);
  const title=train.querySelector('.box h3');
@@ -114,10 +114,10 @@ async function runBattle225(promo=false){
    if(result)result.innerHTML=`<div class="notice leagueResult225 ${won?'win225':'lose225'}"><b>🔥 ${lg.name}級 → ${LEAGUES225[Math.min(S.leagueRank+(won?0:1),LEAGUES225.length-1)].name}級 昇格戦</b><br>${rows.map(x=>`${x.e}：${x.rank}位`).join('<br>')}<hr><strong>${won?`🎉 昇格成功！ ${league225().name}級へ`:'昇格失敗… 次の優勝で再挑戦'}</strong><br>総合${overall}位 / ${totalPts[0]}pt</div>`;
    save225();installNext225();run.classList.add('hide');run.disabled=false;return;
  }
- if(overall===1){S.wins=(S.wins||0)+1;S.leagueWins[lg.name]=(S.leagueWins[lg.name]||0)+1;if(S.leagueRank<LEAGUES225.length-1){S.promotionPending=true;S.promotionFromSeason=Number(S.season)||1;}}
+ if(overall===1){S.wins=(S.wins||0)+1;S.leagueWins[lg.name]=(S.leagueWins[lg.name]||0)+1;}S.promotionPending=false;S.promotionFromSeason=0;
  const coin=Math.round((overall===1?1000:overall===2?700:overall===3?450:250)*lg.reward*tour.reward),fame=Math.round((overall===1?120:overall===2?80:overall===3?50:25)*lg.reward*tour.reward);S.coins=(S.coins||0)+coin;S.fame=(S.fame||0)+fame;
  S.seasonHistory=S.seasonHistory||[];S.seasonHistory.push({season:Number(S.season)||1,league:lg.name,name:tour.name,meetChoice:tour.id,annualMul:tour.annual,overall,points:totalPts[0],coins:coin,fame});
- if(result)result.innerHTML=`<div class="notice leagueResult225"><b>${tour.icon} ${tour.name} / ${lg.icon} ${lg.name}級・S${Number(S.season)||1}</b><br>${rows.map(x=>`${x.e}：${x.rank}位`).join('<br>')}<hr><strong>総合${overall}位 / ${totalPts[0]}pt</strong><br>🪙 +${coin}　⭐名声 +${fame}${S.promotionPending?'<br><em>🔥 昇格戦が発生！</em>':''}</div>`;
+ if(result)result.innerHTML=`<div class="notice leagueResult225"><b>${tour.icon} ${tour.name} / ${lg.icon} ${lg.name}級・S${Number(S.season)||1}</b><br>${rows.map(x=>`${x.e}：${x.rank}位`).join('<br>')}<hr><strong>総合${overall}位 / ${totalPts[0]}pt</strong><br>🪙 +${coin}　⭐名声 +${fame}</div>`;
  save225();run.classList.add('hide');run.disabled=false;installNext225();
 }
 function nextSeason225(){
@@ -137,11 +137,11 @@ function installNext225(){
  hideLegacyNext225();const p=document.querySelector('#meet .box p');if(!p)return;
  let b=document.getElementById('next225');if(!b){b=document.createElement('button');b.id='next225';b.type='button';b.className='btn yl';p.appendChild(b)}
  b.style.display='inline-block';
- if(S.promotionPending){b.textContent='🔥 昇格戦へ';b.onclick=beginPromo225}else{b.textContent=(Number(S.season)||1)<6?'次シーズンへ':'次のS1へ';b.onclick=nextSeason225}
+ b.textContent=(Number(S.season)||1)<6?'次シーズンへ':'年間結果へ';b.onclick=nextSeason225
 }
 function wire225(){
  init225();renderLeague225();renderTournamentSelect225();
- const run=document.getElementById('run');if(run&&!S.promotionPending){run.onclick=()=>runBattle225(false)}
+ const run=document.getElementById('run');if(run&&!S.promotion233){run.onclick=()=>runBattle225(false)}
  const meetTab=document.querySelector('.tab[data-v="meet"]');if(meetTab&&!meetTab.dataset.rival225){meetTab.dataset.rival225='1';meetTab.addEventListener('click',()=>setTimeout(()=>renderRivals225(false),0))}
  const to=document.getElementById('toMeet');if(to&&!to.dataset.rival225){to.dataset.rival225='1';to.addEventListener('click',()=>setTimeout(()=>renderRivals225(false),0))}
  if(!document.getElementById('meet')?.classList.contains('hide'))renderRivals225(false);
