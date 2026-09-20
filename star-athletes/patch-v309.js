@@ -106,10 +106,11 @@ function renderShop309(){
  shop.dataset.renderKey309=renderKey;
  shop.innerHTML=`<div class="shopHead122"><div><small>NEST SHOP</small><h3>🪙 ネストショップ</h3></div><b>${coins} coin</b></div>
  <div class="shopGrid122">${items.map(([id,ic,n,d,cost,target])=>`<div class="shopItem122"><div class="shopIcon122">${ic}</div><div class="shopText122"><b>${n}</b><small>${d}</small></div>${target?`<select data-shop-target="${id}" ${!has?'disabled':''}>${has?S.nest.map(m=>`<option value="${m.id}" ${targetId309(id)===m.id?'selected':''}>${m.name}</option>`).join(''):'<option>育成メンバーなし</option>'}</select>`:''}<button type="button" data-buy122="${id}" ${!has||coins<cost?'disabled':''}>🪙 ${cost}</button></div>`).join('')}</div>
- <div class="specialShop200"><div class="specialTitle200"><b>✨ SPECIAL</b><span>大会後のもう一手</span></div><div class="specialGrid200">
- <button data-special200="lucky" ${coins<900?'disabled':''}><b>🍀 ラッキーチャーム</b><small>次の子のレア度を1段階UP</small><em>🪙 900</em></button>
- <button data-special200="condition" ${coins<500||!has?'disabled':''}><b>🥤 コンディションドリンク</b><small>${has?S.nest[0].name:'育成メンバー'} 全能力+3</small><em>🪙 500</em></button>
- <button data-special200="scout" ${coins<700?'disabled':''}><b>🔭 スカウトパス</b><small>血統候補を1体スカウト</small><em>🪙 700</em></button></div><div class="specialStock200">所持効果：🍀 ${S.specialShop?.lucky||0}</div></div><div id="shopMsg122" class="shopMsg122"></div>`;
+ <div class="specialShop200 shopSpecial309"><div class="specialTitle200"><b>✨ SPECIAL</b><span>大会後のもう一手</span></div><div class="specialStock200">所持効果：🍀 ${S.specialShop?.lucky||0}</div><div class="shopGrid122 specialGrid309">
+ <div class="shopItem122 specialItem309"><div class="shopIcon122">🍀</div><div class="shopText122"><b>ラッキーチャーム</b><small>次の子のレア度を1段階UP</small></div><button type="button" data-special200="lucky" ${coins<900?'disabled':''}>🪙 900</button></div>
+ <div class="shopItem122 specialItem309"><div class="shopIcon122">🥤</div><div class="shopText122"><b>コンディションドリンク</b><small>${has?S.nest[0].name:'育成メンバー'} 全能力+3</small></div><button type="button" data-special200="condition" ${coins<500||!has?'disabled':''}>🪙 500</button></div>
+ <div class="shopItem122 specialItem309"><div class="shopIcon122">🔭</div><div class="shopText122"><b>スカウトパス</b><small>血統候補を1体スカウト</small></div><button type="button" data-special200="scout" ${coins<700?'disabled':''}>🪙 700</button></div>
+ </div></div><div id="shopMsg122" class="shopMsg122"></div>`;
  // Interaction is owned by the delegated handlers below; keep render side-effect free.
 }
 function sync309(){renderShop309()}
@@ -140,5 +141,17 @@ try{
 }catch(e){console.warn('render309',e)}
 window.STAR_SHOP309={sync:sync309,target:(id)=>targetId309(id)};
 setTimeout(sync309,0);
+
+const css309=document.createElement('style');css309.id='shopVisual309';css309.textContent=`
+#shop122 .shopSpecial309{margin-top:12px;padding-top:10px;border-top:1px dashed #cda94d}
+#shop122 .shopSpecial309 .specialTitle200{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+#shop122 .shopSpecial309 .specialTitle200 b{font-size:9px;color:#9b6a00}
+#shop122 .shopSpecial309 .specialTitle200 span{font-size:8px;color:#7b6a3a}
+#shop122 .shopSpecial309 .specialStock200{font-size:8px;font-weight:900;color:#715a1c;margin:0 0 8px}
+#shop122 .specialGrid309{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+#shop122 .specialItem309 button{grid-column:1/3;border:0;border-radius:8px;background:#222;color:#ffd966;font-weight:1000;padding:7px;font-size:9px}
+#shop122 .specialItem309 button:disabled{opacity:.35}
+@media(max-width:430px){#shop122 .specialGrid309{grid-template-columns:1fr}}
+`;document.head.appendChild(css309);
 
 })();
