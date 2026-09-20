@@ -41,11 +41,25 @@ function summary271(){
  const host=document.getElementById('nestSummary201');if(!host)return;let box=host.querySelector('.lineageSummary271');if(!box){box=document.createElement('div');box.className='lineageSummary271';host.appendChild(box)}
  const book=Object.values(S.lineageTitleBook271||{});box.innerHTML=`<b>🧬 血統称号</b><span>${book.length}/4</span>${book.length?`<small>${book.map(x=>`${x.icon}${x.name}`).join(' ・ ')}</small>`:'<small>条件を満たす血統を育てると称号を獲得</small>'}`;
 }
+function hiddenBlock271(m){
+ const h=m?.hidden233||{},rk=v=>['E','D','C','B','A','S'][Math.max(0,Math.min(5,Math.round(Number(v)||0)))];
+ return `<div class="hidden271"><small>隠れステータス</small><div><span>成長 <b>${rk(h.growth)}</b></span><span>遺伝 <b>${rk(h.heredity)}</b></span><span>勝負 <b>${rk(h.clutch)}</b></span><span>安定 <b>${rk(h.stability)}</b></span><span>変異 <b>${rk(h.mutation)}</b></span><span>LUCK <b>${rk(h.luck)}</b></span></div><em>気性 ${h.temperament||'-'}</em></div>`;
+}
+function parentExtras271(){
+ const pool=[];const seen=new Set();for(const key of ['starters','lineage','nest'])for(const m of(S[key]||[]))if(m?.id&&!seen.has(m.id)){seen.add(m.id);pool.push(m)}
+ document.querySelectorAll('#breeders .card[data-id]').forEach(card=>{
+   const m=pool.find(x=>x.id===card.dataset.id);if(!m)return;award271(m);
+   const host=card.querySelector('.bd')||card;
+   let box=host.querySelector('.parentLineage271');if(!box){box=document.createElement('div');box.className='parentLineage271';host.appendChild(box)}
+   box.innerHTML=badge271(m)+hiddenBlock271(m);
+ });
+}
 function render271(){
- try{const c=S.cands||[],l=S.lineage||[],n=S.nest||[];cards271('#cands .card[data-id]',c);cards271('#lineagePool .card',l);cards271('.train210[data-athlete210]',n);summary271();persist271()}catch(e){console.warn('lineage271',e)}
+ try{const c=S.cands||[],l=S.lineage||[],n=S.nest||[];cards271('#cands .card[data-id]',c);cards271('#lineagePool .card',l);cards271('.train210[data-athlete210]',n);cards271('#breeders .card[data-id]',[...(S.starters||[]),...(S.lineage||[]),...(S.nest||[])]);parentExtras271();summary271();persist271()}catch(e){console.warn('lineage271',e)}
 }
 function late271(){render271();[80,220,500,900].forEach(ms=>setTimeout(render271,ms))}
 try{const prev271=render;render=function(){const out=prev271();setTimeout(late271,0);return out}}catch(e){console.warn('render271 wrap',e)}
 window.addEventListener('click',e=>{if(e.target?.closest?.('#batchGo260,#hatch,#adopt,#doTrain263,.tab[data-v="breed"],.tab[data-v="train"],.tab[data-v="nest201"]'))setTimeout(late271,0)},true);
-const css=document.createElement('style');css.textContent=`.lineage271{margin-top:5px;padding-top:5px;border-top:1px dashed #d0d7dd}.titles271{display:flex;gap:3px;flex-wrap:wrap}.titles271 span{font-size:6px;font-weight:900;padding:2px 5px;border:1px solid #c7b66a;border-radius:999px;background:#fffbea}.complete271{margin-top:4px;display:flex;justify-content:space-between;align-items:center;font-size:6px;color:#73808c}.complete271.done271{color:#775d00;font-weight:1000}.lineageSummary271{margin-top:7px;padding:7px;border:1px solid #cbd5dd;border-radius:9px;background:#f8fbfd;display:grid;grid-template-columns:1fr auto;gap:3px;font-size:7px}.lineageSummary271 small{grid-column:1/-1;color:#697a89}`;document.head.appendChild(css);setTimeout(late271,0);
+const css=document.createElement('style');css.textContent=`.lineage271{margin-top:5px;padding-top:5px;border-top:1px dashed #d0d7dd}.titles271{display:flex;gap:3px;flex-wrap:wrap}.titles271 span{font-size:6px;font-weight:900;padding:2px 5px;border:1px solid #c7b66a;border-radius:999px;background:#fffbea}.complete271{margin-top:4px;display:flex;justify-content:space-between;align-items:center;font-size:6px;color:#73808c}.complete271.done271{color:#775d00;font-weight:1000}.parentLineage271>.lineage271{margin-top:6px}.hidden271{margin-top:6px;padding-top:5px;border-top:1px dashed #d0d7dd}.hidden271>small{display:block;font-size:6px;color:#6d7c89;font-weight:1000}.hidden271>div{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:4px}.hidden271 span{display:flex;justify-content:space-between;padding:3px 4px;border:1px solid #d1d9e0;border-radius:6px;background:#f8fafc;font-size:6px}.hidden271 em{display:block;margin-top:4px;font-size:6px;font-style:normal;color:#697887}
+.lineageSummary271{margin-top:7px;padding:7px;border:1px solid #cbd5dd;border-radius:9px;background:#f8fbfd;display:grid;grid-template-columns:1fr auto;gap:3px;font-size:7px}.lineageSummary271 small{grid-column:1/-1;color:#697a89}`;document.head.appendChild(css);setTimeout(late271,0);
 })();
