@@ -33,7 +33,7 @@ function advance217(){
   const cur=Math.max(1,Math.min(6,Number(S.season)||1));
   if(cur<6){
     const next=cur+1;persistWhole(next);
-    const u=new URL(location.href);u.searchParams.set('v','219');u.searchParams.set('season',String(next));location.replace(u.toString());
+    const u=new URL(location.href);u.searchParams.delete('v');u.searchParams.set('season',String(next));location.replace(u.toString());
     return;
   }
   try{
@@ -43,7 +43,7 @@ function advance217(){
     localStorage.setItem(SAVE,JSON.stringify({savedAt:Date.now(),S:x}));
     localStorage.removeItem(FORCE);
   }catch(e){console.error('generation reset v219',e)}
-  location.replace(location.pathname+'?v=219');
+  location.replace(location.pathname+'?t='+Date.now());
 }
 function applyForced217(){
   let n=Number(new URL(location.href).searchParams.get('season'))||Number(localStorage.getItem(FORCE));
