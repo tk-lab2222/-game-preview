@@ -23,14 +23,24 @@ function quality253(m){
  const score=clamp253(stat+hidden+spec+skill,0,100);
  return{score,av,top,stat,hidden,spec,skill};
 }
-function rarityFrom253(score){return score>=81?'EX':score>=69?'UR':score>=57?'SSR':score>=45?'SR':score>=35?'R':score>=25?'U':'C'}
-function genCap253(gen){
- const g=Math.max(0,Math.floor(n253(gen)));
- return g>=20?'EX':g>=15?'UR':g>=10?'SSR':g>=5?'SR':'R';
+function thresholds253(gen){
+ const g=Math.max(0,n253(gen));
+ // Target generations: SR~G5 / SSR~G10 / UR~G15 / EX~G20.
+ // Earlier tiers remain possible, but require exceptional quality.
+ return{
+   SR:45+Math.max(0,5-g)*2.5,
+   SSR:57+Math.max(0,10-g)*2.2,
+   UR:69+Math.max(0,15-g)*1.8,
+   EX:81+Math.max(0,20-g)*1.2
+ };
 }
-function capRarity253(rarity,gen){
- const ri=ORDER253.indexOf(rarity),ci=ORDER253.indexOf(genCap253(gen));
- return ORDER253[Math.max(0,Math.min(ri<0?0:ri,ci))];
+function rarityFrom253(score,gen=0){
+ const t=thresholds253(gen);
+ if(score>=t.EX)return'EX';
+ if(score>=t.UR)return'UR';
+ if(score>=t.SSR)return'SSR';
+ if(score>=t.SR)return'SR';
+ return score>=35?'R':score>=25?'U':'C';
 }
 function specialties253(m){const bias=(typeof SP!=='undefined'&&SP[m?.species]?.[2])||{};return K253.slice().sort((a,b)=>(n253(bias[b])-n253(bias[a]))).slice(0,2)}
 function floor253(m){
@@ -43,9 +53,9 @@ function floor253(m){
 function persist253(){try{localStorage.setItem(SAVE253,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}try{if(Array.isArray(S.nest)&&S.nest.length===3)localStorage.setItem(ROSTER253,JSON.stringify(S.nest))}catch(_){}}
 function finalizeNewborn253(c){
  if(!c?.stats)return c;
- const q=quality253(c),old=c.rarity;c.rarity=capRarity253(rarityFrom253(q.score),c.gen);
+ const q=quality253(c),old=c.rarity;c.rarity=rarityFrom253(q.score,c.gen);
  floor253(c);
- c.rarityPotential253={score:Math.round(q.score),rawAvg:Math.round(q.av),oldRarity:old,model:'potential-v2-gen-cap',genCap:genCap253(c.gen)};
+ c.rarityPotential253={score:Math.round(q.score),rawAvg:Math.round(q.av),oldRarity:old,model:'potential-v3-gen-curve',thresholds:thresholds253(c.gen)};
  // v0.25.2's old flat-bonus marker is obsolete for newly generated athletes.
  delete c.rarityStat252;
  return c;
@@ -55,22 +65,16 @@ function migrateExisting253(){
  let changed=false;
  for(const m of all253()){
    if(!m?.stats)continue;
-   const capped=capRarity253(m.rarity,m.gen);
-   if(capped!==m.rarity){
-     m.rarityLegacy253=m.rarity;
-     m.rarity=capped;
-     changed=true;
-   }
    const before=avg253(m);
    if(floor253(m))changed=true;
-   if(!m.rarityPotential253||m.rarityPotential253.model!=='potential-v2-gen-cap'){
-     m.rarityPotential253={...(m.rarityPotential253||{}),score:m.rarityPotential253?.score??null,rawAvg:Math.round(before),legacy:true,model:'potential-v2-gen-cap',genCap:genCap253(m.gen)};
+   if(!m.rarityPotential253||m.rarityPotential253.model!=='potential-v3-gen-curve'){
+     m.rarityPotential253={...(m.rarityPotential253||{}),score:m.rarityPotential253?.score??null,rawAvg:Math.round(before),legacy:true,model:'potential-v3-gen-curve',thresholds:thresholds253(m.gen)};
      changed=true;
    }
  }
  if(changed)persist253();
 }
 function refresh253(){migrateExisting253();try{render()}catch(_){}try{window.renderRoster210Live&&window.renderRoster210Live()}catch(_){}}
-window.STAR_RARITY253={quality:quality253,cap:genCap253,applyCap:capRarity253};
+window.STAR_RARITY253={quality:quality253,thresholds:thresholds253,rarity:(score,gen)=>rarityFrom253(score,gen)};
 setTimeout(refresh253,0);
 })();
