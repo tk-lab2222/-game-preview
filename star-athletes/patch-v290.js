@@ -79,6 +79,7 @@ window.addEventListener('click',e=>{
  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();apply290(Number(b.dataset.starMeet290));
 },true);
 try{const prev290=render;render=function(){const out=prev290();setTimeout(sync290,0);return out}}catch(e){console.warn('render290',e)}
+window.STAR_MEET290={sync:sync290,apply:(i)=>apply290(Number(i)),cards:cards290,current:()=>{const list=MEETS290[season290()]||MEETS290[6];return currentIndex290(list)}};
 const css=document.createElement('style');css.textContent=`
 .tier290{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:3px}.tier290>b{font-size:8px!important}.tier290>strong{font-size:10px;color:#22384e}.reward290{font-size:6px;color:#6a7480;margin-bottom:2px}.meetCard290{touch-action:manipulation;position:relative;z-index:2}.meetCard290.sel{outline:3px solid #58cfff!important}
 `;document.head.appendChild(css);
