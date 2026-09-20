@@ -36,7 +36,7 @@ function badge271(m){
  const ts=titles271(m),cp=complete271(m);if(!ts.length&&!cp.count)return '';
  return `<div class="lineage271">${ts.length?`<div class="titles271">${ts.map(x=>`<span>${x.icon} ${x.name}</span>`).join('')}</div>`:''}<div class="complete271 ${cp.done?'done271':''}"><b>${cp.done?'✨ 完成血統':'完成血統'}</b><small>${cp.done?'達成':`${cp.count}/5`}</small></div></div>`;
 }
-function cards271(sel,list){document.querySelectorAll(sel).forEach((card,i)=>{const id=card.dataset.id||card.getAttribute('data-m210'),m=(id&&list.find(x=>x.id===id))||list[i];if(!m)return;award271(m);let box=card.querySelector('.lineageHost271');if(!box){box=document.createElement('div');box.className='lineageHost271';(card.querySelector('.bd')||card).appendChild(box)}box.innerHTML=badge271(m)})}
+function cards271(sel,list){document.querySelectorAll(sel).forEach((card,i)=>{const id=card.dataset.id||card.getAttribute('data-m210'),m=(id&&list.find(x=>x.id===id))||list[i];if(!m)return;award271(m);let box=card.querySelector('.lineageHost271');if(!box){box=document.createElement('div');box.className='lineageHost271';(card.querySelector('.bd')||card).appendChild(box)}box.innerHTML=badge271(m)+rareReveal271(m)})}
 function summary271(){
  const host=document.getElementById('nestSummary201');if(!host)return;let box=host.querySelector('.lineageSummary271');if(!box){box=document.createElement('div');box.className='lineageSummary271';host.appendChild(box)}
  const book=Object.values(S.lineageTitleBook271||{});box.innerHTML=`<b>🧬 血統称号</b><span>${book.length}/4</span>${book.length?`<small>${book.map(x=>`${x.icon}${x.name}`).join(' ・ ')}</small>`:'<small>条件を満たす血統を育てると称号を獲得</small>'}`;
@@ -44,6 +44,10 @@ function summary271(){
 function hiddenBlock271(m){
  const h=m?.hidden233||{},rk=v=>['G','F','E','D','C','B','A','S'][Math.max(0,Math.min(7,Math.round(Number(v)||0)))];
  return `<div class="hidden271"><small>隠れステータス</small><div><span>成長 <b>${rk(h.growth)}</b></span><span>遺伝 <b>${rk(h.heredity)}</b></span><span>勝負 <b>${rk(h.clutch)}</b></span><span>安定 <b>${rk(h.stability)}</b></span><span>変異 <b>${rk(h.mutation)}</b></span><span>LUCK <b>${rk(h.luck)}</b></span></div><em>気性 ${h.temperament||'-'}</em></div>`;
+}
+function rareReveal271(m){
+ if(!m?.ultraRare274&&!m?.miracleFactor274)return '';
+ return `<div class="rareHiddenBonus271"><small>✧ 特殊誕生ボーナス / 隠れステータス公開</small>${hiddenBlock271(m)}</div>`;
 }
 function parentExtras271(){
  const pool=[];const seen=new Set();for(const key of ['starters','lineage','nest'])for(const m of(S[key]||[]))if(m?.id&&!seen.has(m.id)){seen.add(m.id);pool.push(m)}
@@ -61,5 +65,5 @@ function late271(){render271();[80,220,500,900].forEach(ms=>setTimeout(render271
 try{const prev271=render;render=function(){const out=prev271();setTimeout(late271,0);return out}}catch(e){console.warn('render271 wrap',e)}
 window.addEventListener('click',e=>{if(e.target?.closest?.('#batchGo260,#hatch,#adopt,#doTrain263,.tab[data-v="breed"],.tab[data-v="train"],.tab[data-v="nest201"]'))setTimeout(late271,0)},true);
 const css=document.createElement('style');css.textContent=`.lineage271{margin-top:5px;padding-top:5px;border-top:1px dashed #d0d7dd}.titles271{display:flex;gap:3px;flex-wrap:wrap}.titles271 span{font-size:6px;font-weight:900;padding:2px 5px;border:1px solid #c7b66a;border-radius:999px;background:#fffbea}.complete271{margin-top:4px;display:flex;justify-content:space-between;align-items:center;font-size:6px;color:#73808c}.complete271.done271{color:#775d00;font-weight:1000}.parentLineage271>.lineage271{margin-top:6px}.hidden271{margin-top:6px;padding-top:5px;border-top:1px dashed #d0d7dd}.hidden271>small{display:block;font-size:6px;color:#6d7c89;font-weight:1000}.hidden271>div{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:4px}.hidden271 span{display:flex;justify-content:space-between;padding:3px 4px;border:1px solid #d1d9e0;border-radius:6px;background:#f8fafc;font-size:6px}.hidden271 em{display:block;margin-top:4px;font-size:6px;font-style:normal;color:#697887}
-.lineageSummary271{margin-top:7px;padding:7px;border:1px solid #cbd5dd;border-radius:9px;background:#f8fbfd;display:grid;grid-template-columns:1fr auto;gap:3px;font-size:7px}.lineageSummary271 small{grid-column:1/-1;color:#697a89}`;document.head.appendChild(css);setTimeout(late271,0);
+.rareHiddenBonus271{margin-top:6px;padding:6px;border:1px solid #a98be8;border-radius:8px;background:#f8f3ff}.rareHiddenBonus271>small{display:block;font-size:6px;font-weight:1000;color:#674a9c}.rareHiddenBonus271 .hidden271{margin-top:4px}.lineageSummary271{margin-top:7px;padding:7px;border:1px solid #cbd5dd;border-radius:9px;background:#f8fbfd;display:grid;grid-template-columns:1fr auto;gap:3px;font-size:7px}.lineageSummary271 small{grid-column:1/-1;color:#697a89}`;document.head.appendChild(css);setTimeout(late271,0);
 })();
