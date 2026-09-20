@@ -115,7 +115,7 @@ async function runBattle225(promo=false){
    if(result)result.innerHTML=`<div class="notice leagueResult225 ${won?'win225':'lose225'}"><b>🔥 ${lg.name}級 → ${LEAGUES225[Math.min(S.leagueRank+(won?0:1),LEAGUES225.length-1)].name}級 昇格戦</b><br>${rows.map(x=>`${x.e}：${x.rank}位`).join('<br>')}<hr><strong>${won?`🎉 昇格成功！ ${league225().name}級へ`:'昇格失敗… 次の優勝で再挑戦'}</strong><br>総合${overall}位 / ${totalPts[0]}pt</div>`;
    save225();installNext225();run.classList.add('hide');run.disabled=false;return;
  }
- if(overall===1){S.wins=(S.wins||0)+1;S.leagueWins[lg.name]=(S.leagueWins[lg.name]||0)+1;}S.promotionPending=false;S.promotionFromSeason=0;
+ if(overall===1){S.wins=(S.wins||0)+1;S.leagueWins[lg.name]=(S.leagueWins[lg.name]||0)+1;if(S.leagueRank===0)S.localFirstWinCap=true;}S.promotionPending=false;S.promotionFromSeason=0;
  const coin=Math.round((overall===1?1000:overall===2?700:overall===3?450:250)*lg.reward*tour.reward),fame=Math.round((overall===1?120:overall===2?80:overall===3?50:25)*lg.reward*tour.reward);S.coins=(S.coins||0)+coin;S.fame=(S.fame||0)+fame;
  S.seasonHistory=S.seasonHistory||[];S.seasonHistory.push({season:Number(S.season)||1,league:lg.name,name:tour.name,meetChoice:tour.id,annualMul:tour.annual,overall,points:totalPts[0],coins:coin,fame});
  if(result)result.innerHTML=`<div class="notice leagueResult225"><b>${tour.icon} ${tour.name} / ${lg.icon} ${lg.name}級・S${Number(S.season)||1}</b><br>${rows.map(x=>`${x.e}：${x.rank}位`).join('<br>')}<hr><strong>総合${overall}位 / ${totalPts[0]}pt</strong><br>🪙 +${coin}　⭐名声 +${fame}</div>`;
