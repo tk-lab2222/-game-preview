@@ -43,21 +43,20 @@ function overlay278(){
 function render278(){
   release278();
   const nest=document.getElementById('nest201');if(!nest)return;
-  let host=document.getElementById('limitPanel278');
-  if(!host){host=document.createElement('div');host.id='limitPanel278';host.className='box limitPanel278';nest.prepend(host)}
   const st=state278();
+  let host=document.getElementById('limitPanel278');
+  // Before unlock, LIMIT must not exist in the visible UI at all.
+  // No lock panel, progress hint, name, or end-game teaser is shown.
   if(!st.released){
-    const wins=n278(S.leagueWins?.['ギャラクシー']);
-    host.innerHTML=`<div class="limitHead278"><div><small>END GAME</small><b>🔒 LIMIT RELEASE</b></div><span>未解禁</span></div>
-      <p>ギャラクシー級で総合1位になると解禁。</p>
-      <div class="progress278"><i style="width:${Math.min(100,(n278(S.leagueRank)/5)*85 + (wins?15:0))}%"></i></div>
-      <small>現在：${n278(S.leagueRank)>=5?'ギャラクシー級到達 / あと優勝1回':`リーグ進行 ${n278(S.leagueRank)+1}/6`}</small>`;
-  }else{
-    host.innerHTML=`<div class="limitHead278 released278"><div><small>END GAME</small><b>⚡ LIMIT 1</b></div><span>RELEASED</span></div>
-      <div class="limitInfo278"><strong>シナリオクリア</strong><span>能力成長の次段階が解禁されました。</span></div>
-      <div class="capLine278"><span>基準上限 999</span><i>→</i><b>LIMIT 1 目標 3,000</b></div>
-      <small>次：LIMIT専用育成 / 突破条件 / 追加育成リソース</small>`;
+    host?.remove();
+    document.getElementById('limitHost285')?.remove();
+    return;
   }
+  if(!host){host=document.createElement('div');host.id='limitPanel278';host.className='box limitPanel278';nest.prepend(host)}
+  host.innerHTML=`<div class="limitHead278 released278"><div><small>END GAME</small><b>⚡ LIMIT 1</b></div><span>RELEASED</span></div>
+    <div class="limitInfo278"><strong>シナリオクリア</strong><span>能力成長の次段階が解禁されました。</span></div>
+    <div class="capLine278"><span>基準上限 999</span><i>→</i><b>LIMIT 1 目標 3,000</b></div>
+    <small>次：LIMIT専用育成 / 突破条件 / 追加育成リソース</small>`;
   overlay278();
 }
 function late278(){render278();[350,900,1600,2600].forEach(ms=>setTimeout(render278,ms))}
