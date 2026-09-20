@@ -95,6 +95,7 @@ function renderRivals225(promo=false){
 function stratMul225(s){return s==='先行'?1.015:s==='温存'?1.008:s==='追込'?1.012:1}
 async function runBattle225(promo=false){
  init225();const run=document.getElementById('run');if(!run||run.disabled)return;
+ if(promo&&S.leagueRank===0){S.localPromotionEnteredCap=true;save225();}
  const rivals=ensureRivals225(promo);run.disabled=true;run.textContent=promo?'昇格戦中…':'大会進行中…';
  const events=Array.isArray(S.schedule)&&S.schedule.length?S.schedule:['50m走','障害物競走','的当て','リレー'];
  const totalPts=[0,0,0,0,0,0,0,0],rows=[];
