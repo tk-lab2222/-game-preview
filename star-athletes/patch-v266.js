@@ -2,15 +2,35 @@
 // v0.27.6: M2.4 generation policy. One meaningful training direction per generation.
 const SAVE266='star-athletes-save-v200';
 const POL266={
-  compete:{icon:'🏆',name:'大会重視',desc:'標準・高負荷の伸びを少し強化',hint:'今世代の勝利を優先'},
-  growth:{icon:'🌱',name:'成長重視',desc:'安全・標準の成長を底上げ',hint:'安定して能力を伸ばす'},
-  lineage:{icon:'🧬',name:'血統研究',desc:'疲労を抑え、次世代へ繋ぎやすくする',hint:'無理をせず素材を守る'},
-  skill:{icon:'✨',name:'スキル育成',desc:'技術・勝負強さ系の練習を強化',hint:'技術 / 勝負強さを重点育成'}
+  compete:{icon:'🏆',name:'大会重視',desc:'得意能力のメニューを自動選択',hint:'今世代の勝利を優先'},
+  growth:{icon:'🌱',name:'成長重視',desc:'弱点能力のメニューを自動選択',hint:'安定して能力を伸ばす'},
+  lineage:{icon:'🧬',name:'血統研究',desc:'弱点育成＋安全強度を自動選択',hint:'無理をせず素材を守る'},
+  skill:{icon:'✨',name:'スキル育成',desc:'技術 / 勝負強さ系を自動選択',hint:'技術 / 勝負強さを重点育成'}
 };
 function state266(){if(!S.training263||typeof S.training263!=='object')S.training263={};return S.training263}
 function policy266(){return state266().policy266||''}
 function persist266(){try{localStorage.setItem(SAVE266,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
-function choose266(k){if(!POL266[k]||Number(S.turn)>0)return;state266().policy266=k;persist266();render266()}
+function planForStat266(k){return k==='power'?'power':k==='stamina'?'stamina':k==='tech'?'tech':k==='guts'?'team':'speed'}
+function statKey266(m,dir='max'){
+  const keys=['power','speed','stamina','agility','tech','guts'];
+  return keys.sort((a,b)=>dir==='max'?(Number(m?.stats?.[b])||0)-(Number(m?.stats?.[a])||0):(Number(m?.stats?.[a])||0)-(Number(m?.stats?.[b])||0))[0]||'speed';
+}
+function applyPolicy266(k){
+  S.plans=(S.plans&&typeof S.plans==='object')?S.plans:{};
+  const st=state266();if(!st.intensity||typeof st.intensity!=='object')st.intensity={};
+  (S.nest||[]).forEach(m=>{
+    if(k==='compete'){S.plans[m.id]=planForStat266(statKey266(m,'max'));st.intensity[m.id]='normal'}
+    else if(k==='growth'){S.plans[m.id]=planForStat266(statKey266(m,'min'));st.intensity[m.id]='normal'}
+    else if(k==='lineage'){S.plans[m.id]=planForStat266(statKey266(m,'min'));st.intensity[m.id]='safe'}
+    else if(k==='skill'){S.plans[m.id]=(Number(m?.stats?.tech)||0)<=(Number(m?.stats?.guts)||0)?'tech':'team';st.intensity[m.id]='normal'}
+  });
+}
+function choose266(k){
+  if(!POL266[k]||Number(S.turn)>0)return;
+  state266().policy266=k;applyPolicy266(k);persist266();
+  try{window.renderRoster210Live&&window.renderRoster210Live()}catch(_){}
+  render266();
+}
 function render266(){
   const plans=document.getElementById('plans');if(!plans||!Array.isArray(S.nest)||S.nest.length!==3)return;
   let host=document.getElementById('policy266');
