@@ -121,16 +121,21 @@ function renderCompat233(){
  const pool=typeof breederPool==='function'?breederPool():all233(),ids=Array.isArray(S.parents)?S.parents:[],a=pool.find(x=>x.id===ids[0]),b=pool.find(x=>x.id===ids[1]);if(!a||!b){box.classList.add('hide');box.innerHTML='';return}box.classList.remove('hide');const c=compatibility233(a,b),rev=reveal233(a,b,c.total);
  box.innerHTML=`<div class="compatHead233"><div><small>BREEDING CHEMISTRY</small><b>相性 ${c.total}</b></div><strong>${compatLabel233(c.total)}</strong></div><div class="compatBar233"><i style="width:${c.total}%"></i></div><div class="compatBreak233">種族 ${c.species}/25 ・ 性格 ${c.personality}/20 ・ 能力補完 ${c.ability}/20 ・ 血統 ${c.blood}/15 ・ 特徴 ${c.visual}/10 ・ 遺伝相性 ${c.chemistry}/10</div>${rev.length?`<div class="reveal233"><small>この組み合わせで読み取れる素質</small>${rev.map(x=>`<span><b>${x[0]}</b><em>${x[1]}</em></span>`).join('')}</div>`:'<div class="compatHint233">相性が上がると、配合前に読み取れる素質が増えます。</div>'}`
 }
+function rareStrength233(m){
+ const s=Number(m?.ultraRare274?.strength274);
+ return Number.isFinite(s)?Math.max(.70,Math.min(1.30,s/100)):1;
+}
 function rareBloodBoost233(m){
  const id=m?.ultraRare274?.id;
- const up={ex:.015,mutation:.018,miracle:.022,mythic:.030}[id]||0;
+ const base={ex:.015,mutation:.018,miracle:.022,mythic:.030}[id]||0;
+ const up=base*rareStrength233(m);
  const factor=m?.miracleFactor274?.strength?Math.min(.030,.012*Number(m.miracleFactor274.strength)):0;
  return up+factor;
 }
 function miracleCarryChance233(m){
- const id=m?.ultraRare274?.id;
- if(id==='mythic')return .25;
- if(id==='miracle')return .14;
+ const id=m?.ultraRare274?.id,s=rareStrength233(m);
+ if(id==='mythic')return Math.min(.35,.25*s);
+ if(id==='miracle')return Math.min(.22,.14*s);
  if(m?.miracleFactor274)return .08;
  return 0;
 }
