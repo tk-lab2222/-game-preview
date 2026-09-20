@@ -3,7 +3,7 @@
 // No broad MutationObserver. Rare recipes are optional collection outcomes, never required for story progression.
 const K273=['power','speed','stamina','agility','tech','guts'];
 const SK273={power:'豪腕',speed:'疾風',stamina:'鉄肺',agility:'軽業',tech:'精密',guts:'勝負魂'};
-const RK273=['E','D','C','B','A','S'];
+const RK273=['G','F','E','D','C','B','A','S'];
 const RECIPES273=[
  {id:'godspeed',name:'神速系',base:.006,need:['skill:speed','skill:agility'],hint:'疾風 + 軽業',mult:[['mutation:A',3],['mutation:S',8],['lineage:5',2]]},
  {id:'titan',name:'巨神系',base:.006,need:['skill:power','skill:stamina'],hint:'豪腕 + 鉄肺',mult:[['mutation:A',3],['mutation:S',8],['lineage:5',2]]},
@@ -12,7 +12,7 @@ const RECIPES273=[
  {id:'hybrid',name:'混血系',base:.004,need:['mixed','mixedLineage:3'],hint:'異種交配を3代以上継続',mult:[['mutation:A',2],['mutation:S',5]]}
 ];
 function n273(v){return Number(v)||0}
-function rank273(v){return RK273[Math.max(0,Math.min(5,Math.round(n273(v))))]}
+function rank273(v){return RK273[Math.max(0,Math.min(7,Math.round(n273(v))))]}
 function hidden273(m,k){return rank273(m?.hidden233?.[k])}
 function skillIds273(m){return Array.isArray(m?.skills233)?m.skills233:[]}
 function tags273(m,a,b){
