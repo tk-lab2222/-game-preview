@@ -3,7 +3,7 @@
 // These outcomes are rare bloodline traits. They grant bounded breeding benefits but never gate story progression.
 // No broad MutationObserver.
 const TIERS274=[
- {id:'ex',name:'EX級',base:.0015},
+ {id:'ex',name:'特異個体',base:.0015},
  {id:'mutation',name:'特殊突然変異',base:.0002},
  {id:'miracle',name:'奇跡個体',base:.00001},
  {id:'mythic',name:'神話級',base:.000001}
