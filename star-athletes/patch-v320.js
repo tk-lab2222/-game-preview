@@ -36,6 +36,7 @@ function hiddenHtml320(m){
 }
 function syncParents320(){
  const pool=parentPool320(),valid=new Set(pool.map(m=>m.id));
+ for(const m of pool){try{window.STAR_ANNUAL233?.ensureHidden?.(m)}catch(_){}}
  if(Array.isArray(S?.parents)){
    const next=S.parents.filter(id=>valid.has(id));
    if(next.length!==S.parents.length)S.parents=next;
@@ -63,11 +64,11 @@ function syncParents320(){
 function pristine320(){
  const gen=Math.max(1,n320(S?.generation233)||n320(S?.generation232)||1);
  return gen===1
-   && !(S?.lineage||[]).length
+   && n320(S?.dex?.b)===0
+   && !(S?.nest||[]).length
    && !(S?.lineage||[]).length
    && !(S?.cands||[]).length
-   && n320(S?.wins)===0
-   && ((S?.starters||[]).length===2||(S?.nest||[]).length===2);
+   && (S?.starters||[]).length===2;
 }
 function syncCopy320(){
  const section=document.getElementById('breed');if(!section)return;
