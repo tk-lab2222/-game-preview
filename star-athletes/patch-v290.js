@@ -16,6 +16,9 @@ const TIERS290={
  challenge:{icon:'🔥',label:'格上',reward:1.6,annual:1.4}
 };
 function season290(){return Math.max(1,Math.min(6,Number(S.season)||1))}
+function oddsStateKey290(){
+ return [Number(S.generation233)||Number(S.generation232)||1,season290(),Number(S.leagueRank)||0].join('|');
+}
 function tierAt290(i,len){return len>=3?(i===0?'safe':i===1?'standard':'challenge'):len===2?(i===0?'standard':'challenge'):'standard'}
 function standardIndex290(list){return list.length>=3?1:0}
 function rivalKey290(i,list){
@@ -62,7 +65,13 @@ function apply290(i,{rerender=false}={}){
  sync290();
 }
 function normalize290(){
- const season=season290(),list=MEETS290[season]||MEETS290[6];
+ const season=season290(),list=MEETS290[season]||MEETS290[6],stateKey=oddsStateKey290();
+ if(S.oddsStateKey290!==stateKey){
+   S.oddsStateKey290=stateKey;
+   S.seasonMeet=null;S.schedule=[];S.rivals225=[];S.rivalsPromo225=false;
+   S.meetChoice225='standard';S.meetChoiceSeason125=0;S.meetUiVersion290=0;
+   try{window.STAR_SIM295?.clear?.()}catch(_){}
+ }
  if(S.meetUiVersion290!==1||Number(S.meetChoiceSeason125)!==season){
    apply290(standardIndex290(list),{rerender:false});
    return;
@@ -73,6 +82,8 @@ function normalize290(){
 function cards290(){
  const root=document.getElementById('season119'),wrap=root?.querySelector('.meetChoice119');if(!wrap)return;
  const season=season290(),list=MEETS290[season]||MEETS290[6],sel=currentIndex290(list);
+ wrap.dataset.season290=String(season);
+ wrap.dataset.oddsState290=oddsStateKey290();
  wrap.innerHTML=list.map((m,i)=>{
    const id=tierAt290(i,list.length),t=TIERS290[id],on=i===sel;
    return `<button type="button" class="meetChoiceCard125 meetCard290 ${on?'sel':''}" data-star-meet290="${i}">
