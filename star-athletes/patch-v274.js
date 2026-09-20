@@ -1,6 +1,6 @@
 (()=>{
 // v0.28.6 / M4.2: ultra-low-probability collection tiers.
-// These outcomes are collection/share metadata only; story progression never requires them.
+// These outcomes are rare bloodline traits. They grant bounded breeding benefits but never gate story progression.
 // No broad MutationObserver.
 const TIERS274=[
  {id:'ex',name:'EX級',base:.0015},
@@ -36,7 +36,15 @@ function apply274(m){
  if(!m||m.ultraRareRolled274)return m;
  const r=evaluate274(m,true);m.ultraRareRolled274=true;
  m.ultraRareOdds274=r.rows.map(x=>({id:x.id,base:x.base,mult:x.mult,chance:x.chance}));
- if(r.won)m.ultraRare274={id:r.won.id,name:r.won.name,base:r.won.base,mult:r.won.mult,chance:r.won.chance,reasons:r.won.reasons,at:Date.now()};
+ if(r.won){
+  const benefit={
+    ex:'子の隠れ素質 上振れ判定UP',
+    mutation:'特殊血統レシピ成立率UP',
+    miracle:'奇跡因子を低確率で子へ継承',
+    mythic:'上振れ・特殊血統・奇跡因子継承を強化'
+  }[r.won.id]||'特殊血統ボーナス';
+  m.ultraRare274={id:r.won.id,name:r.won.name,base:r.won.base,mult:r.won.mult,chance:r.won.chance,reasons:r.won.reasons,benefit,at:Date.now()};
+}
  return m;
 }
 try{const prevBaby274=baby;baby=function(a,b){return apply274(prevBaby274(a,b))}}catch(e){console.warn('baby274',e)}
