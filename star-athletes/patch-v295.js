@@ -21,7 +21,9 @@ function hash295(str){let h=2166136261>>>0;for(let i=0;i<str.length;i++){h^=str.
 function rng295(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function label295(p){return p>=72?'かなり有利':p>=58?'やや有利':p>=42?'互角':p>=28?'やや不利':'強敵注意'}
 function signature295(tier,eventsOverride,rivalsOverride,mode='actual'){
- const nest=(Array.isArray(S?.nest)?S.nest:[]).map(m=>[
+ const rawNest=Array.isArray(S?.nest)?S.nest:[];
+ rawNest.forEach(m=>{try{window.STAR_ANNUAL233?.ensureHidden?.(m)}catch(_){}});
+ const nest=rawNest.map(m=>[
    m.id,...KEYS295.map(k=>Number(m?.stats?.[k])||0),
    ...(m?.skills233||[]).slice().sort(),
    Number(m?.hidden233?.stability??3),
@@ -64,6 +66,7 @@ function chance295(tier='standard',eventsOverride=null,rivalsOverride=null,mode=
  const sig=signature295(tier,eventsOverride,rivalsOverride,mode);
  if(cache295.has(sig))return cache295.get(sig);
  const nest=Array.isArray(S?.nest)?S.nest:[];
+ nest.forEach(m=>{try{window.STAR_ANNUAL233?.ensureHidden?.(m)}catch(_){}});
  if(!nest.length){const z={ours:0,theirs:0,pct:5,label:'強敵注意',simulations:0};cache295.set(sig,z);return z}
  const rank=Math.max(0,Math.min(5,Number(S?.leagueRank)||0));
  const season=Math.max(1,Number(S?.season)||1);
