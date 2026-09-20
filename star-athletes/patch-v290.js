@@ -39,7 +39,22 @@ function apply290(i,{rerender=true}={}){
  const tier=tierAt290(i,list.length);
  S.seasonMeet={name:m[0],place:m[1],weather:m[2],events:[...m[3]]};
  S.meetChoice225=tier;S.meetChoiceSeason125=season;S.schedule=[...m[3]];
- S.assign={};S.strat={};S.rivals225=[];S.rivalsPromo225=false;
+ S.assign={};S.strat={};
+ const key=[Number(S.generation233)||Number(S.generation232)||1,season,Number(S.leagueRank)||0,m[0]].join('|');
+ S.tourRivals317=S.tourRivals317&&typeof S.tourRivals317==='object'?S.tourRivals317:{};
+ const cached=S.tourRivals317[key];
+ if(Array.isArray(cached)&&cached.length===7){
+   S.rivals225=JSON.parse(JSON.stringify(cached));S.rivalsPromo225=false;
+ }else{
+   S.rivals225=[];S.rivalsPromo225=false;
+   try{
+     const made=window.STAR_TOUR225?.generateRivals?.(false);
+     if(Array.isArray(made)&&made.length===7){
+       S.tourRivals317[key]=JSON.parse(JSON.stringify(made));
+       S.rivals225=JSON.parse(JSON.stringify(made));
+     }
+   }catch(_){}
+ }
  S.meetUiVersion290=1;persist290();
  if(rerender){try{render()}catch(e){console.warn('render apply290',e)}}
  sync290();[40,120,280].forEach(ms=>setTimeout(sync290,ms));
