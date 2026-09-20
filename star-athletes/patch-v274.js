@@ -41,7 +41,11 @@ function effects274(m){
 }
 function persistStrength274(){
  let changed=false;
- for(const m of all274()){if(m?.ultraRare274&&!Number.isFinite(Number(m.ultraRare274.strength274))){strength274(m,true);changed=true}}
+ for(const m of all274()){
+   if(!m?.ultraRare274)continue;
+   if(m.ultraRare274.id==='ex'&&m.ultraRare274.name!=='特異個体'){m.ultraRare274.name='特異個体';changed=true}
+   if(!Number.isFinite(Number(m.ultraRare274.strength274))){strength274(m,true);changed=true}
+ }
  if(changed){try{localStorage.setItem('star-athletes-save-v200',JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
 }
 function multiplier274(m){
