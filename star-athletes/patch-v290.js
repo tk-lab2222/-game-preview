@@ -33,7 +33,7 @@ function rivalsFor290(i,list){
 }
 function chance290(tier,events,rivals){
  try{
-   const x=window.STAR_SIM295?.chance?.(tier,events,rivals);
+   const x=window.STAR_SIM295?.baseline?.(tier,events,rivals);
    if(x&&Number.isFinite(Number(x.pct)))return Number(x.pct);
  }catch(_){}
  return null;
