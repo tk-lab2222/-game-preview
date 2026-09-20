@@ -126,7 +126,7 @@ function decorateBreed200(){
   meter.innerHTML=`<div><b>BREED LAB</b><span>配合を重ねて理想個体へ</span><em>${n}/${next}</em></div><div><i style="width:${pct}%"></i></div>`;
 }
 function decorate200(){
-  try{init200();processAwards200();ensureMission200();ensureSpecialShop200();decorateMeetChoices200();ensureProgress200();ensureHistory200();decorateBreed200()}catch(e){console.error('v200 decorate',e)}
+  try{init200();processAwards200();ensureMission200();decorateMeetChoices200();ensureProgress200();ensureHistory200();decorateBreed200()}catch(e){console.error('v200 decorate',e)}
 }
 const renderBefore200=render;
 render=function(){const out=renderBefore200();decorate200();save200();return out};
