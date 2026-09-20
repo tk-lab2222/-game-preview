@@ -32,14 +32,11 @@ function rivalsFor290(i,list){
  return S.tourRivals317[key];
 }
 function chance290(tier,events,rivals){
- try{const x=window.STAR_TOUR225?.chance?.(tier,events,rivals);if(x&&Number.isFinite(Number(x.pct)))return Number(x.pct)}catch(_){}
- const bases=[102,120,140,163,190,222],rank=Math.max(0,Math.min(5,Number(S.leagueRank)||0));
- const base=Math.round((bases[rank]||102)+(season290()-1)*1.5);
- const nest=Array.isArray(S.nest)?S.nest:[],keys=['power','speed','stamina','agility','tech','guts'];
- const ours=nest.length?Math.round(nest.reduce((sum,m)=>sum+keys.reduce((a,k)=>a+(Number(m?.stats?.[k])||0),0)/6,0)/nest.length):0;
- let pct=Math.max(15,Math.min(85,Math.round(50+(ours-base)*1.2)));
- if(tier==='safe')pct+=12;else if(tier==='challenge')pct-=18;
- return Math.max(5,Math.min(95,pct));
+ try{
+   const x=window.STAR_SIM295?.chance?.(tier,events,rivals);
+   if(x&&Number.isFinite(Number(x.pct)))return Number(x.pct);
+ }catch(_){}
+ return null;
 }
 function persist290(){try{localStorage.setItem(SAVE290,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
 function currentIndex290(list){
@@ -75,7 +72,7 @@ function cards290(){
  wrap.innerHTML=list.map((m,i)=>{
    const id=tierAt290(i,list.length),t=TIERS290[id],on=i===sel;
    return `<button type="button" class="meetChoiceCard125 meetCard290 ${on?'sel':''}" data-star-meet290="${i}">
-    <div class="tier290"><b>${t.icon} ${t.label}</b><strong class="chance290">勝率 ${chance290(id,m[3],rivalsFor290(i,list))}%</strong></div><div class="reward290">報酬 ×${t.reward} / 年間pt ×${t.annual}</div>
+    <div class="tier290"><b>${t.icon} ${t.label}</b><strong class="chance290">${(()=>{const p=chance290(id,m[3],rivalsFor290(i,list));return p==null?'計算中…':'勝率 '+p+'%'})()}</strong></div><div class="reward290">報酬 ×${t.reward} / 年間pt ×${t.annual}</div>
     <b>${m[0]}</b><span>📍 ${m[1]}　☁️ ${m[2]}</span><small>${m[3].join(' / ')}</small><em>${on?'選択中':'この大会を選ぶ'}</em>
    </button>`;
  }).join('');
