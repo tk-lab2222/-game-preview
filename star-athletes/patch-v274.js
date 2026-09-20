@@ -53,12 +53,14 @@ function badge274(){
  document.querySelectorAll('#cands .card[data-id],#breeders .card[data-id],#lineagePool .card[data-id]').forEach(card=>{
   const m=all274().find(x=>x?.id===card.dataset.id);if(!m?.ultraRare274)return;
   let b=card.querySelector('.ultra274');if(!b){b=document.createElement('div');b.className='ultra274';(card.querySelector('.bd')||card).appendChild(b)}
-  const c=m.ultraRare274.chance,p=c<.00001?(c*100).toFixed(5):c<.001?(c*100).toFixed(3):(c*100).toFixed(2);
-  b.textContent=`✧ ${m.ultraRare274.name} / 血統設計後 推定 ${p}%`;
+  const u=m.ultraRare274,c=u.chance,p=c<.00001?(c*100).toFixed(5):c<.001?(c*100).toFixed(3):(c*100).toFixed(2);
+  const bp=(Number(u.base)||0)*100,bpTxt=bp<.001?bp.toFixed(4):bp<.1?bp.toFixed(3):bp.toFixed(2);
+  const mult=Number(u.mult)||1;
+  b.innerHTML=`<b>✧ 特殊誕生 ${u.name}</b><small>基礎 ${bpTxt}% × 補正 ${mult.toFixed(mult%1?2:1)} = ${p}%</small>`;
  });
 }
 function late274(){try{badge274()}catch(e){console.warn('badge274',e)}}
 try{const prevRender274=render;render=function(){const out=prevRender274();setTimeout(late274,0);return out}}catch(e){console.warn('render274',e)}
-window.STAR_ULTRA274={tiers:TIERS274,evaluate:(m)=>evaluate274(m,false),multiplier:multiplier274};
-const css=document.createElement('style');css.textContent='.ultra274{margin-top:6px;padding:6px 8px;border:2px solid #7c4dff;border-radius:9px;background:linear-gradient(135deg,#f7f0ff,#fff7d6);font-size:8px;font-weight:1000;letter-spacing:.03em}';document.head.appendChild(css);late274();
+window.STAR_ULTRA274={tiers:TIERS274,evaluate:(m)=>evaluate274(m,false),multiplier:multiplier274,sync:late274};
+const css=document.createElement('style');css.textContent='.ultra274{margin-top:6px;padding:6px 8px;border:2px solid #7c4dff;border-radius:9px;background:linear-gradient(135deg,#f7f0ff,#fff7d6);letter-spacing:.03em}.ultra274 b{display:block;font-size:8px}.ultra274 small{display:block;margin-top:2px;font-size:6px;color:#66537a;font-weight:900}';document.head.appendChild(css);late274();
 })();
