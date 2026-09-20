@@ -18,7 +18,7 @@ const INT263={
 };
 function n263(v){return Number(v)||0}
 function clamp263(v,a,b){return Math.max(a,Math.min(b,v))}
-function hidden263(m,k,d=2){const v=Number(m?.hidden233?.[k]);return Number.isFinite(v)?clamp263(v,0,5):d}
+function hidden263(m,k,d=3){const v=Number(m?.hidden233?.[k]);return Number.isFinite(v)?clamp263(v,0,7):d}
 function avg263(m){const a=KEYS263.map(k=>n263(m?.stats?.[k]));return a.reduce((x,y)=>x+y,0)/(a.length||1)}
 function best263(){return [...(S.nest||[])].sort((a,b)=>avg263(b)-avg263(a))[0]?.id}
 function state263(){
@@ -58,8 +58,8 @@ function fatigueLabel263(m){const f=fatigue263(m);return f===0?'好調':f===1?'�
 function injuryRate263(m,mode){
   const stability=hidden263(m,'stability',2),luck=hidden263(m,'luck',2),f=fatigue263(m);
   if(mode==='safe')return 0;
-  if(mode==='normal')return clamp263(.04-stability*.004-luck*.002+f*.015,.01,.08);
-  let r=clamp263(.28-stability*.035-luck*.008,.06,.28);
+  if(mode==='normal')return clamp263(.04-(stability*5/7)*.004-(luck*5/7)*.002+f*.015,.01,.08);
+  let r=clamp263(.28-(stability*5/7)*.035-(luck*5/7)*.008,.06,.28);
   if(f===1)r=1-(1-r)*.84;
   if(f===2)r=1-(1-r)*.66;
   if(state263().policy266==='lineage')r=Math.max(.03,r-.04);
@@ -74,7 +74,7 @@ function riskText263(m,mode){
 function pointMul263(pt){return pt<=0?0:pt===1?.75:1.45}
 function outcome263(m,mode){
   const growth=hidden263(m,'growth',2),stability=hidden263(m,'stability',2),luck=hidden263(m,'luck',2),f=fatigue263(m);
-  let gmul=[.86,.92,1,1.08,1.21,1.36][growth]||1;
+  let gmul=[.80,.86,.92,1,1.07,1.16,1.28,1.42][growth]||1;
   const policy=state263().policy266||'';
   if(policy==='compete'&&(mode==='normal'||mode==='high'))gmul*=1.08;
   else if(policy==='growth'&&(mode==='safe'||mode==='normal'))gmul*=1.10;
@@ -91,19 +91,19 @@ function outcome263(m,mode){
   const rr=(r-injury)/(1-injury||1);
 
   if(mode==='safe'){
-    const great=.04+luck*.008;
+    const great=.04+(luck*5/7)*.008;
     return {grade:rr<great?'大成功':'成功',mul:gmul*(rr<great?1.12:.88),risk:'safe'};
   }
   if(mode==='high'){
-    const ultra=.025+luck*.008+growth*.004;
-    const great=.15+luck*.012+growth*.008;
+    const ultra=.025+(luck*5/7)*.008+(growth*5/7)*.004;
+    const great=.15+(luck*5/7)*.012+(growth*5/7)*.008;
     if(rr<ultra)return{grade:'超成功',mul:gmul*2.0,risk:'high'};
     if(rr<ultra+great)return{grade:'大成功',mul:gmul*1.55,risk:'high'};
     return{grade:'成功',mul:gmul*1.12,risk:'high'};
   }
-  const bad=clamp263(.11-stability*.014-luck*.004,.02,.11);
-  const ultra=.018+luck*.005;
-  const great=.12+luck*.01+growth*.006;
+  const bad=clamp263(.11-(stability*5/7)*.014-(luck*5/7)*.004,.02,.11);
+  const ultra=.018+(luck*5/7)*.005;
+  const great=.12+(luck*5/7)*.01+(growth*5/7)*.006;
   if(rr<bad)return{grade:'伸び悩み',mul:gmul*.40,risk:'normal'};
   if(rr<bad+ultra)return{grade:'超成功',mul:gmul*1.65,risk:'normal'};
   if(rr<bad+ultra+great)return{grade:'大成功',mul:gmul*1.28,risk:'normal'};
