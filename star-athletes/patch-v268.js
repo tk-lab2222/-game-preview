@@ -35,7 +35,7 @@ function render268(){
  inject268();
  const rank=rank268(),n=nem268(rank),st=state268(),def=!!st.defeated[rank];
  let card=document.getElementById('nemesisCard268');if(!card){card=document.createElement('div');card.id='nemesisCard268';host.prepend(card)}
- card.innerHTML=`<div class="nem268 ${def?'def268':''}"><div class="nemHead268"><div><small>LEAGUE NEMESIS</small><b>⚔️ ${n.name}</b><em>${n.blood}</em></div><span>${def?'撃破済':'宿敵'}</span></div><div class="nemGrid268"><p><small>得意</small><b>${LABEL268[n.strong]}</b></p><p><small>SKILL</small><b>${n.skill}</b></p><p><small>弱点</small><b>${LABEL268[n.weak]}</b></p></div><div class="nemNote268">${n.note}</div><small class="nemHint268">この血統は同じリーグで再登場する。弱点を意識して次世代の配合・育成を組もう。</small></div>`;
+ card.innerHTML=`<div class="nem268 ${def?'def268':''}"><div class="nemHead268"><div><small>RIVAL BLOODLINE</small><b>⚔️ ${n.name}</b><em>${n.blood}</em></div><span>${def?'撃破済':'宿敵血統'}</span></div><div class="nemGrid268"><p><small>得意</small><b>${LABEL268[n.strong]}</b></p><p><small>SKILL</small><b>${n.skill}</b></p><p><small>弱点</small><b>${LABEL268[n.weak]}</b></p></div><div class="nemNote268">${n.note}</div><small class="nemHint268">この宿敵血統は同じリーグで再登場。得意・弱点を見て、次世代の配合と育成で対策しよう。</small></div>`;
 }
 function mark268(){
  const result=document.getElementById('result');if(!result)return;
