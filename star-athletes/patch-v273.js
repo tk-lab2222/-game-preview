@@ -25,9 +25,10 @@ function tags273(m,a,b){
 function rareRecipeParentMult273(a,b,m){
  let mult=1,reasons=[];
  const apply=p=>{
-   const id=p?.ultraRare274?.id;
-   const x=id==='mutation'?1.35:id==='miracle'?1.50:id==='mythic'?1.75:1;
-   if(x>1){mult*=x;reasons.push(`${p.name||'親'}の特殊誕生血統×${x}`)}
+   const id=p?.ultraRare274?.id,s=Math.max(.70,Math.min(1.30,(Number(p?.ultraRare274?.strength274)||100)/100));
+   const extra=id==='mutation'?.35:id==='miracle'?.50:id==='mythic'?.75:0;
+   const x=1+extra*s;
+   if(x>1){mult*=x;reasons.push(`${p.name||'親'}の特殊誕生血統×${x.toFixed(2)}`)}
  };
  apply(a);apply(b);
  if(m?.miracleFactor274){const x=1+.15*Math.max(1,Number(m.miracleFactor274.strength)||1);mult*=x;reasons.push(`奇跡因子×${x.toFixed(2)}`)}
