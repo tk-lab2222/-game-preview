@@ -47,7 +47,7 @@ function currentIndex290(list){
  const i=list.findIndex(m=>m[0]===name);
  return i>=0?i:standardIndex290(list);
 }
-function apply290(i,{rerender=true}={}){
+function apply290(i,{rerender=false}={}){
  const season=season290(),list=MEETS290[season]||MEETS290[6],m=list[i];if(!m)return;
  const tier=tierAt290(i,list.length);
  S.seasonMeet={name:m[0],place:m[1],weather:m[2],events:[...m[3]]};
@@ -58,7 +58,7 @@ function apply290(i,{rerender=true}={}){
  S.rivalsPromo225=false;
  S.meetUiVersion290=1;persist290();
  if(rerender){try{render()}catch(e){console.warn('render apply290',e)}}
- sync290();[40,120,280].forEach(ms=>setTimeout(sync290,ms));
+ sync290();
 }
 function normalize290(){
  const season=season290(),list=MEETS290[season]||MEETS290[6];
@@ -92,7 +92,7 @@ function next290(){
 function sync290(){normalize290();cards290();next290()}
 window.addEventListener('click',e=>{
  const b=e.target?.closest?.('[data-star-meet290]');if(!b)return;
- e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();apply290(Number(b.dataset.starMeet290));
+ e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();apply290(Number(b.dataset.starMeet290),{rerender:false});
 },true);
 try{const prev290=render;render=function(){const out=prev290();setTimeout(sync290,0);return out}}catch(e){console.warn('render290',e)}
 window.STAR_MEET290={sync:sync290,apply:(i)=>apply290(Number(i)),cards:cards290,current:()=>{const list=MEETS290[season290()]||MEETS290[6];return currentIndex290(list)},rivals:(i)=>{const list=MEETS290[season290()]||MEETS290[6];return rivalsFor290(Number(i),list)}};
