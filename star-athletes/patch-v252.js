@@ -14,9 +14,9 @@ function avg253(m){return K253.reduce((a,k)=>a+n253(m?.stats?.[k]),0)/K253.lengt
 function top2avg253(m){return K253.map(k=>n253(m?.stats?.[k])).sort((a,b)=>b-a).slice(0,2).reduce((a,b)=>a+b,0)/2}
 function hiddenScore253(m){
  const h=m?.hidden233;if(!h)return 8;
- const vals=['growth','heredity','clutch','stability','mutation','luck'].map(k=>clamp253(n253(h[k]),0,5));
+ const vals=['growth','heredity','clutch','stability','mutation','luck'].map(k=>clamp253(n253(h[k]),0,7));
  // Hidden traits matter, but A/S should not directly manufacture top rarity.
- const mapped=vals.map(v=>[0,1.5,3.5,6,8.5,11][v]||0);
+ const mapped=vals.map(v=>[0,.7,1.6,3,4.8,6.8,9,11.5][v]||0);
  return Math.min(18,mapped.reduce((a,b)=>a+b,0)/mapped.length*1.65)
 }
 function skillScore253(m){return Math.min(8,(Array.isArray(m?.skills233)?m.skills233.length:0)*4)}
