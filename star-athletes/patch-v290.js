@@ -19,13 +19,14 @@ function season290(){return Math.max(1,Math.min(6,Number(S.season)||1))}
 function tierAt290(i,len){return len>=3?(i===0?'safe':i===1?'standard':'challenge'):len===2?(i===0?'standard':'challenge'):'standard'}
 function standardIndex290(list){return list.length>=3?1:0}
 function chance290(tier){
+ try{const x=window.STAR_TOUR225?.chance?.(tier);if(x&&Number.isFinite(Number(x.pct)))return Number(x.pct)}catch(_){}
  const bases=[102,120,140,163,190,222],rank=Math.max(0,Math.min(5,Number(S.leagueRank)||0));
- const diff=tier==='safe'?-18:tier==='challenge'?20:0;
- const theirs=Math.round((bases[rank]||102)+(season290()-1)*1.5+diff);
+ const base=Math.round((bases[rank]||102)+(season290()-1)*1.5);
  const nest=Array.isArray(S.nest)?S.nest:[],keys=['power','speed','stamina','agility','tech','guts'];
  const ours=nest.length?Math.round(nest.reduce((sum,m)=>sum+keys.reduce((a,k)=>a+(Number(m?.stats?.[k])||0),0)/6,0)/nest.length):0;
- const pct=Math.max(8,Math.min(92,Math.round(50+(ours-theirs)*1.8)));
- return pct;
+ let pct=Math.max(15,Math.min(85,Math.round(50+(ours-base)*1.2)));
+ if(tier==='safe')pct+=12;else if(tier==='challenge')pct-=18;
+ return Math.max(5,Math.min(95,pct));
 }
 function persist290(){try{localStorage.setItem(SAVE290,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
 function currentIndex290(list){
