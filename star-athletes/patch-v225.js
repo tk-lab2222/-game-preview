@@ -38,16 +38,19 @@ function score225(stats,e){
  e==='リレー'?(s.speed||0)*.45+(s.tech||0)*.2+(s.agility||0)*.2+(s.guts||0)*.15:
  (s.power||0)*.45+(s.stamina||0)*.3+(s.guts||0)*.25;
 }
-function mkRivals225(promo=false){
+function buildRivals225(tierId='standard',promo=false){
  init225();
  const target=Math.min(LEAGUES225.length-1,S.leagueRank+(promo?1:0));
- const lg=LEAGUES225[target],seasonBoost=((Number(S.season)||1)-1)*1.5,tour=promo?TOURS225[1]:(TOURS225.find(x=>x.id===S.meetChoice225)||TOURS225[1]);
- const rivals=Array.from({length:7},(_,i)=>{
+ const lg=LEAGUES225[target],seasonBoost=((Number(S.season)||1)-1)*1.5,tour=promo?TOURS225[1]:(TOURS225.find(x=>x.id===tierId)||TOURS225[1]);
+ return Array.from({length:7},(_,i)=>{
    const stats={};const bias=lg.base+seasonBoost+tour.diff+(i-3)*1.5;
    STAT_KEYS225.forEach(k=>stats[k]=Math.max(70,Math.round(bias+(Math.random()*18-9))));
    const strong=STAT_KEYS225[Math.floor(Math.random()*STAT_KEYS225.length)];stats[strong]+=10+Math.floor(Math.random()*10);
    return{id:'r'+i,name:RIVAL_NAMES225[(S.leagueRank*3+i+((Number(S.season)||1)-1))%RIVAL_NAMES225.length],stats,strong};
  });
+}
+function mkRivals225(promo=false){
+ const rivals=buildRivals225(S.meetChoice225||'standard',promo);
  S.rivals225=rivals;S.rivalsPromo225=promo;save225();return rivals;
 }
 function ensureRivals225(promo=false){
@@ -151,6 +154,7 @@ window.STAR_TOUR225={
  chance:(id)=>{const t=TOURS225.find(x=>x.id===id)||TOURS225[1];return tourChance225(t)},
  tiers:TOURS225,
  generateRivals:(promo=false)=>mkRivals225(!!promo),
+ buildRivals:(tier='standard',promo=false)=>buildRivals225(tier,!!promo),
  ensureRivals:(promo=false)=>ensureRivals225(!!promo),
  score:score225
 };
