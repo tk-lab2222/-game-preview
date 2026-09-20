@@ -1,6 +1,7 @@
 (()=>{
 // v0.27.6: M2.4 generation policy. One meaningful training direction per generation.
 const SAVE266='star-athletes-save-v200';
+const MEM266='star-athletes-training-memory-v243';
 const POL266={
   compete:{icon:'🏆',name:'大会重視',desc:'得意能力のメニューを自動選択',hint:'今世代の勝利を優先'},
   growth:{icon:'🌱',name:'成長重視',desc:'弱点能力のメニューを自動選択',hint:'安定して能力を伸ばす'},
@@ -10,6 +11,7 @@ const POL266={
 function state266(){if(!S.training263||typeof S.training263!=='object')S.training263={};return S.training263}
 function policy266(){return state266().policy266||''}
 function persist266(){try{localStorage.setItem(SAVE266,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
+function persistPlans266(){try{const mem=JSON.parse(localStorage.getItem(MEM266)||'{}');(S.nest||[]).forEach(m=>{if(S.plans?.[m.id])mem[m.id]=S.plans[m.id]});localStorage.setItem(MEM266,JSON.stringify(mem))}catch(_){}}
 function planForStat266(k){return k==='power'?'power':k==='stamina'?'stamina':k==='tech'?'tech':k==='guts'?'team':'speed'}
 function statKey266(m,dir='max'){
   const keys=['power','speed','stamina','agility','tech','guts'];
@@ -24,11 +26,13 @@ function applyPolicy266(k){
     else if(k==='lineage'){S.plans[m.id]=planForStat266(statKey266(m,'min'));st.intensity[m.id]='safe'}
     else if(k==='skill'){S.plans[m.id]=(Number(m?.stats?.tech)||0)<=(Number(m?.stats?.guts)||0)?'tech':'team';st.intensity[m.id]='normal'}
   });
+  persistPlans266();
 }
 function choose266(k){
   if(!POL266[k]||Number(S.turn)>0)return;
   state266().policy266=k;applyPolicy266(k);persist266();
   try{window.renderRoster210Live&&window.renderRoster210Live()}catch(_){}
+  setTimeout(()=>{try{window.renderRoster210Live&&window.renderRoster210Live()}catch(_){};render266()},80);
   render266();
 }
 function render266(){
@@ -38,7 +42,7 @@ function render266(){
   const cur=policy266(),locked=Number(S.turn)>0;
   host.innerHTML=`<div class="policyHead266"><div><small>GENERATION POLICY</small><b>今世代の育成方針</b></div>${cur?`<strong>${POL266[cur].icon} ${POL266[cur].name}</strong>`:'<strong>未選択</strong>'}</div>
     <div class="policyGrid266">${Object.entries(POL266).map(([k,p])=>`<button type="button" data-policy266="${k}" class="${cur===k?'on266':''}" ${locked?'disabled':''}><b>${p.icon} ${p.name}</b><small>${p.desc}</small></button>`).join('')}</div>
-    <div class="policyHint266">${cur?(locked?'この世代は「'+POL266[cur].name+'」で固定中':'育成開始までは変更できます'):'最初の育成前に1つ選択。固定の最強方針ではなく、育て方を変える選択です。'}</div>`;
+    <div class="policyApplied266">${cur?`自動設定：${(S.nest||[]).map(m=>`${m.name}→${TRAIN210?.[S.plans?.[m.id]]?.name||S.plans?.[m.id]||'-'} / ${state266().intensity?.[m.id]==='safe'?'安全':state266().intensity?.[m.id]==='high'?'高負荷':'標準'}`).join('　')}`:'方針を選ぶと3体の練習メニューが自動で切り替わります'}</div><div class="policyHint266">${cur?(locked?'この世代は「'+POL266[cur].name+'」で固定中':'育成開始までは変更できます'):'最初の育成前に1つ選択。固定の最強方針ではなく、育て方を変える選択です。'}</div>`;
   const go=document.getElementById('doTrain263');if(go){go.disabled=Number(S.turn)>=3||!cur;go.title=!cur?'先に今世代の育成方針を選んでください':''}
 }
 // Modify M2.2 outcome multipliers, while leaving click ownership with v263.
@@ -79,5 +83,5 @@ window.addEventListener('click',e=>{
 },true);
 function late266(){render266();[60,180,420].forEach(ms=>setTimeout(render266,ms))}
 try{const prev266=render;render=function(){const out=prev266();late266();return out}}catch(e){console.warn('render266',e)}
-const css=document.createElement('style');css.textContent=`.policy266{margin-bottom:10px;padding:9px;border:1px solid #aebdca;border-radius:11px;background:#f7fafc}.policyHead266{display:flex;justify-content:space-between;align-items:center;gap:8px}.policyHead266 small{display:block;font-size:6px;color:#71808e;font-weight:1000}.policyHead266 b{font-size:10px}.policyHead266 strong{font-size:8px;border:1px solid #91a3b3;border-radius:999px;padding:3px 7px;background:#fff}.policyGrid266{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;margin-top:7px}.policyGrid266 button{min-height:48px;border:1px solid #aebdca;border-radius:9px;background:#fff;padding:6px;color:#26394b;text-align:left}.policyGrid266 button b{display:block;font-size:8px}.policyGrid266 button small{display:block;font-size:6px;line-height:1.3;margin-top:2px;color:#71808e}.policyGrid266 button.on266{border-color:#e18c20;background:#fff0cf;box-shadow:0 0 0 1px #ffd58f}.policyGrid266 button:disabled:not(.on266){opacity:.38}.policyHint266{margin-top:6px;font-size:7px;color:#657585}`;document.head.appendChild(css);late266();
+const css=document.createElement('style');css.textContent=`.policy266{margin-bottom:10px;padding:9px;border:1px solid #aebdca;border-radius:11px;background:#f7fafc}.policyHead266{display:flex;justify-content:space-between;align-items:center;gap:8px}.policyHead266 small{display:block;font-size:6px;color:#71808e;font-weight:1000}.policyHead266 b{font-size:10px}.policyHead266 strong{font-size:8px;border:1px solid #91a3b3;border-radius:999px;padding:3px 7px;background:#fff}.policyGrid266{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;margin-top:7px}.policyGrid266 button{min-height:48px;border:1px solid #aebdca;border-radius:9px;background:#fff;padding:6px;color:#26394b;text-align:left}.policyGrid266 button b{display:block;font-size:8px}.policyGrid266 button small{display:block;font-size:6px;line-height:1.3;margin-top:2px;color:#71808e}.policyGrid266 button.on266{border-color:#e18c20;background:#fff0cf;box-shadow:0 0 0 1px #ffd58f}.policyGrid266 button:disabled:not(.on266){opacity:.38}.policyApplied266{margin-top:6px;padding:6px;border-radius:7px;background:#eef4f8;font-size:6px;font-weight:900;color:#43576a}.policyHint266{margin-top:6px;font-size:7px;color:#657585}`;document.head.appendChild(css);late266();
 })();
