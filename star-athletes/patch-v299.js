@@ -15,12 +15,8 @@ function syncCandidates299(){
    if(!host.children.length&&typeof card==='function'){
      host.innerHTML=cands.map(m=>card(m,'c')).join('');
    }
-   host.querySelectorAll('[data-mode="c"]').forEach(el=>{
-     if(!el.dataset.cand299){
-       el.dataset.cand299='1';
-       el.addEventListener('click',()=>{try{pickCand(el.dataset.id)}catch(_){}});
-     }
-   });
+   // Candidate selection ownership is centralized in patch-v311.
+   // v299 only preserves panel visibility/order.
    const adopt=document.getElementById('adopt');
    if(adopt)adopt.disabled=(Array.isArray(S?.sel)?S.sel.length:0)!==3;
  }else{
