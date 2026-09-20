@@ -60,35 +60,7 @@ try{
  };
 }catch(e){console.warn('inherit226',e)}
 
-function leagueIndex226(promo){return clamp226((Number.isInteger(S.leagueRank)?S.leagueRank:0)+(promo?1:0),0,LEAGUE226.length-1)}
-function rivalSeedKey226(promo){return `${leagueIndex226(promo)}:${n226(S.season)||1}:${promo?1:0}`}
-function seedRivals226(promo=false,force=false){
- const key=rivalSeedKey226(promo);
- if(!force&&S.rivalsScale226===key&&Array.isArray(S.rivals225)&&S.rivals225.length===7)return S.rivals225;
- const li=leagueIndex226(promo),lg=LEAGUE226[li],season=clamp226(n226(S.season)||1,1,6);
- const seasonBoost=(season-1)*4,promoBoost=promo?18:0;
- S.rivals225=Array.from({length:7},(_,i)=>{
-   const stats={},bias=lg.base+seasonBoost+promoBoost+(i-3)*4;
-   K226.forEach(k=>stats[k]=clamp226(Math.round(bias+rnd226(-18,18)),70,970));
-   const strong=K226[rnd226(0,K226.length-1)],sr=lg.strong;
-   stats[strong]=clamp226(stats[strong]+rnd226(sr[0],sr[1]),70,999);
-   return{id:'r'+i,name:RIVAL226[(li*3+i+season-1)%RIVAL226.length],stats,strong};
- });
- S.rivalsPromo225=promo;S.rivalsScale226=key;save226();return S.rivals225;
-}
-function avg226(stats){return Math.round(K226.reduce((a,k)=>a+n226(stats[k]),0)/K226.length)}
-function teamAvg226(){return S.nest&&S.nest.length?Math.round(S.nest.reduce((a,m)=>a+avg226(m.stats||{}),0)/S.nest.length):0}
-function chance226(rs){
- const ours=teamAvg226(),theirs=Math.round(rs.reduce((a,r)=>a+avg226(r.stats),0)/rs.length),d=ours-theirs;
- const pct=clamp226(Math.round(50+d*.32),8,92);
- return{ours,theirs,pct,label:pct>=72?'かなり有利':pct>=58?'やや有利':pct>=42?'互角':pct>=28?'やや不利':'強敵注意'};
-}
-function drawRivals226(promo=false){
- const host=document.getElementById('rival');if(!host)return;
- const rs=seedRivals226(promo),c=chance226(rs),lg=LEAGUE226[leagueIndex226(promo)];
- host.innerHTML=`<div class="rivalPanel225 ${promo?'promo225':''}"><div class="rivalTop225"><div><small>${promo?'PROMOTION BATTLE':'RIVAL SCOUT'}</small><b>${promo?'🔥 昇格戦':'👀 注目ライバル'} / ${lg.name}級</b></div><div class="chance225"><span>勝利見込み</span><strong>${c.pct}%</strong><em>${c.label}</em></div></div><div class="powerCompare225"><span>自軍平均 <b>${c.ours}</b></span><i></i><span>相手平均 <b>${c.theirs}</b></span></div><div class="rivalCards225">${rs.slice(0,3).map(r=>`<article><header><b>${r.name}</b><em>${L226[r.strong]}型</em></header><div>${K226.map(k=>`<span class="${k===r.strong?'hot225':''}">${L226[k]} <b>${r.stats[k]}</b></span>`).join('')}</div></article>`).join('')}</div><small class="rivalNote225">※表示値を実際の大会計算に使用。上位リーグほど能力帯が大きく上昇します。</small></div>`;
-}
-
+// Legacy rival scaling removed. Tournament rivals are owned by patch-v290/v225.
 function eventKeys226(e){return e==='50m走'?['speed','agility','tech']:e==='障害物競走'?['tech','agility','speed']:e==='大玉ころがし'?['power','stamina','guts']:e==='坂道かけあがり'?['power','stamina','guts']:e==='10000m走'?['stamina','guts','speed']:e==='的当て'?['tech','power','agility']:e==='リレー'?['speed','tech','agility']:['power','stamina','guts']}
 function highMul226(v){return v>=990?.2:v>=950?.4:v>=850?.65:v>=700?.85:1}
 function addMatch226(m,k,raw){
