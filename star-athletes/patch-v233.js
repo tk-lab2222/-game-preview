@@ -4,7 +4,7 @@
 const SAVE233='star-athletes-save-v200',ROSTER233='star-athletes-active-roster-v210';
 const K233=['power','speed','stamina','agility','tech','guts'];
 const L233={power:'ちから',speed:'スピード',stamina:'スタミナ',agility:'すばやさ',tech:'テクニック',guts:'こんじょう'};
-const RK233=['E','D','C','B','A','S'];
+const RK233=['G','F','E','D','C','B','A','S'];
 const SK233={
  power:{name:'豪腕',icon:'💥',desc:'ちから+6%',key:'power',mul:1.06},
  speed:{name:'疾風',icon:'💨',desc:'スピード+6%',key:'speed',mul:1.06},
@@ -24,11 +24,11 @@ function rarityBonus233(m){try{return Math.max(0,R.indexOf(m.rarity))}catch(_){r
 function traitDist233(gen){
  const g=Math.max(0,Math.min(20,n233(gen)));
  const anchors=[
-  {g:0, p:[.32,.30,.24,.10,.036,.004]},
-  {g:5, p:[.24,.29,.27,.15,.044,.006]},
-  {g:10,p:[.16,.24,.30,.22,.070,.010]},
-  {g:15,p:[.10,.19,.29,.29,.115,.015]},
-  {g:20,p:[.06,.14,.26,.36,.160,.020]}
+  {g:0, p:[.26,.28,.24,.14,.06,.016,.0035,.0005]},
+  {g:5, p:[.15,.24,.26,.20,.105,.035,.009,.001]},
+  {g:10,p:[.08,.16,.24,.25,.18,.07,.018,.002]},
+  {g:15,p:[.04,.10,.18,.25,.25,.13,.045,.005]},
+  {g:20,p:[.02,.06,.13,.22,.29,.20,.07,.01]}
  ];
  let a=anchors[0],b=anchors[anchors.length-1];
  for(let i=0;i<anchors.length-1;i++)if(g>=anchors[i].g&&g<=anchors[i+1].g){a=anchors[i];b=anchors[i+1];break}
@@ -50,12 +50,23 @@ function rollRank233(m,bias=0){
 }
 function hidden233(m){if(!m)return null;if(!m.hidden233){m.hidden233={growth:rollRank233(m),heredity:rollRank233(m),clutch:rollRank233(m),stability:rollRank233(m),mutation:rollRank233(m),luck:rollRank233(m),temperament:TEMPER233[rnd233(0,3)]}}if(!Array.isArray(m.skills233))m.skills233=[];return m.hidden233}
 function migrate233(){
+ // Preserve old E/D/C/B/A/S labels when expanding to G/F/E/D/C/B/A/S.
+ if(!S.hiddenRankV314){
+   for(const m of all233()){
+     if(m?.hidden233){
+       for(const k of ['growth','heredity','clutch','stability','mutation','luck']){
+         if(Number.isFinite(Number(m.hidden233[k])))m.hidden233[k]=clamp233(n233(m.hidden233[k])+2,2,7);
+       }
+     }
+   }
+   S.hiddenRankV314=true;
+ }
  for(const m of all233()){hidden233(m);if(!S.skillMigration233){delete m.skill232}}
  if(!S.skillMigration233)S.skillMigration233=true;
  if(!S.annual233&&S.annual232){try{S.annual233=JSON.parse(JSON.stringify(S.annual232))}catch(_){}}
  save233();
 }
-function rankName233(v){return RK233[clamp233(n233(v),0,5)]}
+function rankName233(v){return RK233[clamp233(n233(v),0,7)]}
 function topStat233(m){let k=K233[0];for(const x of K233)if(n233(m.stats?.[x])>n233(m.stats?.[k]))k=x;return k}
 function skillEffect233(m,stats){const out={...stats};for(const id of(m.skills233||[])){const sk=SK233[id];if(sk)out[sk.key]=Math.min(999,Math.round(n233(out[sk.key])*sk.mul))}return out}
 function skillPills233(){
@@ -90,22 +101,22 @@ try{
  baby=function(a,b){hidden233(a);hidden233(b);const c=beforeBaby233(a,b);hidden233(c);const ha=a.hidden233,hb=b.hidden233,hc=c.hidden233;
    for(const k of ['growth','heredity','clutch','stability','mutation','luck']){
      const avg=(n233(ha[k])+n233(hb[k]))/2;
-     const hr=(n233(ha.heredity)+n233(hb.heredity))/10;
+     const hr=(n233(ha.heredity)+n233(hb.heredity))/14;
      const maxParent=Math.max(n233(ha[k]),n233(hb[k]));
      let v=clamp233(Math.round(avg+(Math.random()<.28?rnd233(-1,1):0)+(Math.random()<hr*.10?1:0)),0,5);
-     if(v>=5){
-       const inheritS=maxParent>=5&&Math.random()<(.16+hr*.18);
-       const breakthrough=maxParent<5&&Math.random()<(.003+Math.max(0,n233(c.gen))*0.0007+n233(hc.mutation)*.0015);
+     if(v>=7){
+       const inheritS=maxParent>=7&&Math.random()<(.12+hr*.16);
+       const breakthrough=maxParent<7&&Math.random()<(.0015+Math.max(0,n233(c.gen))*0.00045+n233(hc.mutation)*.0009);
        if(!inheritS&&!breakthrough)v=4;
      }
-     if(v>=4&&maxParent<4){
-       const breakthroughA=Math.random()<(.025+Math.max(0,n233(c.gen))*0.0025+hr*.025+n233(hc.mutation)*.003);
+     if(v>=6&&maxParent<6){
+       const breakthroughA=Math.random()<(.012+Math.max(0,n233(c.gen))*0.0018+hr*.020+n233(hc.mutation)*.002);
        if(!breakthroughA)v=3;
      }
-     hc[k]=clamp233(v,0,5)
+     hc[k]=clamp233(v,0,7)
    }
    hc.temperament=Math.random()<.45?ha.temperament:Math.random()<.82?hb.temperament:TEMPER233[rnd233(0,3)];
-   const candidates=new Set([...(a.skills233||[]),...(b.skills233||[])]);c.skills233=[];for(const sk of candidates){const both=(a.skills233||[]).includes(sk)&&(b.skills233||[]).includes(sk);let p=both?.35:.18;const hr=Math.max(n233(ha.heredity),n233(hb.heredity));if(hr>=4)p+=hr===5?.08:.05;if(Math.random()<p)c.skills233.push(sk);if(c.skills233.length>=2)break}
+   const candidates=new Set([...(a.skills233||[]),...(b.skills233||[])]);c.skills233=[];for(const sk of candidates){const both=(a.skills233||[]).includes(sk)&&(b.skills233||[]).includes(sk);let p=both?.35:.18;const hr=Math.max(n233(ha.heredity),n233(hb.heredity));if(hr>=6)p+=hr===7?.08:.05;if(Math.random()<p)c.skills233.push(sk);if(c.skills233.length>=2)break}
    return c
  };
 }catch(e){console.warn('baby233',e)}
@@ -121,16 +132,16 @@ function finishGen233(){S.needsBreeding=true;S.generationActive=false;S.parents=
 function nextGen233(label='🥚 次世代配合へ'){const p=document.querySelector('#meet .box p');if(!p)return;document.getElementById('next225')?.style.setProperty('display','none','important');let b=document.getElementById('annualNext233');if(!b){b=document.createElement('button');b.id='annualNext233';b.className='btn yl';b.type='button';p.appendChild(b)}b.textContent=label;b.onclick=finishGen233;b.style.display='inline-block'}
 // ---------- battle modifiers / optional skills ----------
 let temp233=null;
-function applyNormalMods233(){if(temp233)return;temp233=(S.nest||[]).map(m=>({m,stats:{...m.stats},match:{...(m.matchGain226||{})}}));for(const m of(S.nest||[])){const h=hidden233(m),skill=skillEffect233(m,m.stats);for(const k of K233){const stable=(n233(h.stability)-2)*.004,luck=Math.random()*n233(h.luck)*.0015,clutch=(n233(S.season)>=6?(n233(h.clutch)-2)*.004:0);m.stats[k]=Math.min(999,Math.round(n233(skill[k])*(1+stable+luck+clutch)))}}}
+function applyNormalMods233(){if(temp233)return;temp233=(S.nest||[]).map(m=>({m,stats:{...m.stats},match:{...(m.matchGain226||{})}}));for(const m of(S.nest||[])){const h=hidden233(m),skill=skillEffect233(m,m.stats);for(const k of K233){const stable=[-.010,-.008,-.005,0,.004,.009,.015,.022][clamp233(n233(h.stability),0,7)],luck=Math.random()*[0,.0005,.001,.0018,.003,.005,.008,.012][clamp233(n233(h.luck),0,7)],clutch=(n233(S.season)>=6?[-.008,-.006,-.003,0,.004,.009,.016,.026][clamp233(n233(h.clutch),0,7)]:0);m.stats[k]=Math.min(999,Math.round(n233(skill[k])*(1+stable+luck+clutch)))}}}
 function restoreNormalMods233(){if(!temp233)return;for(const x of temp233){for(const k of K233){const mgNow=n233(x.m.matchGain226?.[k]),mgBefore=n233(x.match?.[k]),earned=Math.max(0,mgNow-mgBefore);x.m.stats[k]=Math.min(999,n233(x.stats[k])+earned)}}temp233=null;save233()}
 function watchNormal233(before){let tries=0;const tick=()=>{tries++;const txt=document.getElementById('result')?.textContent||'';if(txt&&txt!==before&&/総合\d+位/.test(txt)){setTimeout(restoreNormalMods233,180);return}if(tries<180)setTimeout(tick,80);else restoreNormalMods233()};setTimeout(tick,80)}
 function score233(s,e){return e==='50m走'?n233(s.speed)*.5+n233(s.agility)*.3+n233(s.tech)*.2:e==='障害物競走'?n233(s.tech)*.4+n233(s.agility)*.35+n233(s.speed)*.15+n233(s.guts)*.1:e==='大玉ころがし'?n233(s.power)*.48+n233(s.stamina)*.3+n233(s.guts)*.22:e==='坂道かけあがり'?n233(s.power)*.35+n233(s.stamina)*.35+n233(s.guts)*.3:e==='10000m走'?n233(s.stamina)*.45+n233(s.guts)*.3+n233(s.speed)*.15+n233(s.tech)*.1:e==='的当て'?n233(s.tech)*.55+n233(s.power)*.2+n233(s.agility)*.15+n233(s.guts)*.1:e==='リレー'?n233(s.speed)*.45+n233(s.tech)*.2+n233(s.agility)*.2+n233(s.guts)*.15:n233(s.power)*.45+n233(s.stamina)*.3+n233(s.guts)*.25}
 function promoRivals233(){const li=clamp233(n233(S.leagueRank)+1,0,LEAGUE233.length-1),lg=LEAGUE233[li];return Array.from({length:7},(_,i)=>{const stats={};for(const k of K233)stats[k]=clamp233(Math.round(lg.base+18+(i-3)*4+rnd233(-18,18)),70,999);const strong=K233[rnd233(0,5)];stats[strong]=clamp233(stats[strong]+rnd233(35,64),70,999);return{id:'pr'+i,name:NPC233[i],stats,strong}})}
 function showPromotion233(){S.promotion233=true;S.promotionPending=false;S.rivals225=promoRivals233();save233();const lg=LEAGUE233[clamp233(n233(S.leagueRank)+1,0,5)],r=document.getElementById('result'),rh=document.getElementById('rival');if(r)r.innerHTML='<div class="notice annualFinal233"><b>🔥 年間王者・昇格戦</b><br>勝っても負けても、この一戦で世代終了。特別な経験からスキルを得ることがあります。</div>';if(rh)rh.innerHTML=`<div class="rivalPanel225 promo225"><div class="rivalTop225"><div><small>PROMOTION BATTLE</small><b>🔥 ${lg.name}級 昇格戦</b></div></div><div class="rivalCards225">${S.rivals225.slice(0,3).map(x=>`<article><header><b>${x.name}</b><em>${L233[x.strong]}型</em></header><div>${K233.map(k=>`<span class="${k===x.strong?'hot225':''}">${L233[k]} <b>${x.stats[k]}</b></span>`).join('')}</div></article>`).join('')}</div></div>`;const run=document.getElementById('run');if(run){run.classList.remove('hide');run.disabled=false;run.textContent='🔥 昇格戦スタート';run.onclick=null}document.getElementById('annualNext233')?.remove();document.getElementById('next225')?.style.setProperty('display','none','important')}
-function variance233(m){return [.12,.105,.085,.068,.05,.035][clamp233(n233(hidden233(m).stability),0,5)]}
+function variance233(m){return [.15,.135,.12,.105,.09,.07,.05,.03][clamp233(n233(hidden233(m).stability),0,7)]}
 function strategyMul233(m,s){const t=hidden233(m).temperament,want=t==='大胆'?'先行':t==='冷静'?'バランス':t==='慎重'?'温存':'追込';return s===want?1.02:1}
-function acquireSkills233(won){const logs=[];for(const m of(S.nest||[])){hidden233(m);if(m.skills233.length>=6)continue;const h=m.hidden233;let p=(won?.38:.20)+[0,.006,.014,.025,.045,.075][clamp233(n233(h.luck),0,5)]+[0,.003,.007,.012,.020,.032][clamp233(n233(h.mutation),0,5)]+[0,.002,.005,.009,.016,.026][clamp233(n233(h.clutch),0,5)];p=Math.min(.62,p);if(Math.random()>=p)continue;let id=Math.random()<.72?topStat233(m):K233[rnd233(0,5)];if(m.skills233.includes(id)){const open=K233.filter(x=>!m.skills233.includes(x));if(!open.length)continue;id=open[rnd233(0,open.length-1)]}m.skills233.push(id);logs.push(`${m.name}：${SK233[id].icon}${SK233[id].name}`)}return logs}
-async function runPromotion233(){const run=document.getElementById('run');if(!run||run.disabled)return;run.disabled=true;run.textContent='昇格戦中…';const rivals=S.rivals225?.length?S.rivals225:promoRivals233(),events=(S.schedule&&S.schedule.length)?S.schedule:['50m走','障害物競走','的当て','リレー'],tot=[0,0,0,0,0,0,0,0],rows=[];for(let i=0;i<events.length;i++){const e=events[i],m=(S.nest||[]).find(x=>x.id===S.assign?.[i])||[...(S.nest||[])].sort((a,b)=>score233(b.stats,e)-score233(a.stats,e))[0];if(!m)continue;const h=hidden233(m),eff=skillEffect233(m,m.stats),clutch=[.97,.985,1,1.018,1.05,1.085][clamp233(n233(h.clutch),0,5)],luck=1+[0,.001,.002,.004,.007,.011][clamp233(n233(h.luck),0,5)]*Math.random(),sm=strategyMul233(m,S.strat?.[i]||'バランス'),vw=variance233(m),ours=score233(eff,e)*clutch*luck*sm*(1-vw/2+Math.random()*vw),scores=[ours,...rivals.map(x=>score233(x.stats,e)*(.95+Math.random()*.10))],ord=scores.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v);ord.forEach((x,rank)=>tot[x.idx]+=PTS233[rank]||0);const rank=ord.findIndex(x=>x.idx===0)+1;rows.push(`${e}：${rank}位`);const ev=document.getElementById('events');if(ev)ev.innerHTML=`<div class="battleEvent225"><b>${e}</b><span>${m.name}${m.skills233.length?' / '+m.skills233.map(x=>SK233[x]?.icon||'').join(''):''}</span><strong>${rank}位</strong></div>`;await new Promise(r=>setTimeout(r,300))}const ord=tot.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v),overall=ord.findIndex(x=>x.idx===0)+1,won=overall===1;if(won&&n233(S.leagueRank)<5)S.leagueRank++;const learned=acquireSkills233(won);S.promotion233=false;const r=document.getElementById('result');if(r)r.innerHTML=`<div class="notice leagueResult225 ${won?'win225':'lose225'}"><b>🔥 昇格戦</b><br>${rows.join('<br>')}<hr><strong>${won?'🎉 昇格成功！ '+LEAGUE233[n233(S.leagueRank)].name+'級へ':'昇格失敗… 現ランク残留'}</strong><br>総合${overall}位 / ${tot[0]}pt${learned.length?`<div class="skillLearn233"><b>✨ スキル習得！</b><br>${learned.join('<br>')}</div>`:'<div class="skillNo233">今回は新しいスキル習得なし</div>'}<small>勝敗に関係なく、この世代は終了します。</small></div>`;save233();run.classList.add('hide');run.disabled=false;nextGen233()}
+function acquireSkills233(won){const logs=[];for(const m of(S.nest||[])){hidden233(m);if(m.skills233.length>=6)continue;const h=m.hidden233;let p=(won?.38:.20)+[0,.003,.007,.012,.020,.032,.050,.080][clamp233(n233(h.luck),0,7)]+[0,.001,.003,.006,.010,.016,.025,.040][clamp233(n233(h.mutation),0,7)]+[0,.001,.002,.004,.007,.012,.020,.032][clamp233(n233(h.clutch),0,7)];p=Math.min(.62,p);if(Math.random()>=p)continue;let id=Math.random()<.72?topStat233(m):K233[rnd233(0,5)];if(m.skills233.includes(id)){const open=K233.filter(x=>!m.skills233.includes(x));if(!open.length)continue;id=open[rnd233(0,open.length-1)]}m.skills233.push(id);logs.push(`${m.name}：${SK233[id].icon}${SK233[id].name}`)}return logs}
+async function runPromotion233(){const run=document.getElementById('run');if(!run||run.disabled)return;run.disabled=true;run.textContent='昇格戦中…';const rivals=S.rivals225?.length?S.rivals225:promoRivals233(),events=(S.schedule&&S.schedule.length)?S.schedule:['50m走','障害物競走','的当て','リレー'],tot=[0,0,0,0,0,0,0,0],rows=[];for(let i=0;i<events.length;i++){const e=events[i],m=(S.nest||[]).find(x=>x.id===S.assign?.[i])||[...(S.nest||[])].sort((a,b)=>score233(b.stats,e)-score233(a.stats,e))[0];if(!m)continue;const h=hidden233(m),eff=skillEffect233(m,m.stats),clutch=[.95,.965,.98,1,1.018,1.04,1.07,1.11][clamp233(n233(h.clutch),0,7)],luck=1+[0,.0005,.001,.002,.0035,.006,.009,.014][clamp233(n233(h.luck),0,7)]*Math.random(),sm=strategyMul233(m,S.strat?.[i]||'バランス'),vw=variance233(m),ours=score233(eff,e)*clutch*luck*sm*(1-vw/2+Math.random()*vw),scores=[ours,...rivals.map(x=>score233(x.stats,e)*(.95+Math.random()*.10))],ord=scores.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v);ord.forEach((x,rank)=>tot[x.idx]+=PTS233[rank]||0);const rank=ord.findIndex(x=>x.idx===0)+1;rows.push(`${e}：${rank}位`);const ev=document.getElementById('events');if(ev)ev.innerHTML=`<div class="battleEvent225"><b>${e}</b><span>${m.name}${m.skills233.length?' / '+m.skills233.map(x=>SK233[x]?.icon||'').join(''):''}</span><strong>${rank}位</strong></div>`;await new Promise(r=>setTimeout(r,300))}const ord=tot.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v),overall=ord.findIndex(x=>x.idx===0)+1,won=overall===1;if(won&&n233(S.leagueRank)<5)S.leagueRank++;const learned=acquireSkills233(won);S.promotion233=false;const r=document.getElementById('result');if(r)r.innerHTML=`<div class="notice leagueResult225 ${won?'win225':'lose225'}"><b>🔥 昇格戦</b><br>${rows.join('<br>')}<hr><strong>${won?'🎉 昇格成功！ '+LEAGUE233[n233(S.leagueRank)].name+'級へ':'昇格失敗… 現ランク残留'}</strong><br>総合${overall}位 / ${tot[0]}pt${learned.length?`<div class="skillLearn233"><b>✨ スキル習得！</b><br>${learned.join('<br>')}</div>`:'<div class="skillNo233">今回は新しいスキル習得なし</div>'}<small>勝敗に関係なく、この世代は終了します。</small></div>`;save233();run.classList.add('hide');run.disabled=false;nextGen233()}
 function annualFinish233(){recordSeason233();const st=standings233(),rk=annualRank233(),r=document.getElementById('result');if(r)r.insertAdjacentHTML('beforeend',`<div class="annualFinal233"><b>🏆 年間ランキング確定</b><div>${st.slice(0,5).map((x,i)=>`<span class="${x.id==='you'?'you233':''}">${i+1}位 ${x.name}<strong>${x.pts}pt</strong></span>`).join('')}</div><em>あなた：年間${rk}位</em></div>`);S.promotionPending=false;save233();document.getElementById('next225')?.style.setProperty('display','none','important');if(rk===1&&n233(S.leagueRank)<5){const p=document.querySelector('#meet .box p');let b=document.getElementById('annualNext233');if(!b){b=document.createElement('button');b.id='annualNext233';b.className='btn yl';b.type='button';p?.appendChild(b)}b.textContent='🔥 年間王者・昇格戦へ';b.onclick=showPromotion233;b.style.display='inline-block'}else nextGen233(rk===1?'🥚 最高ランク・次世代配合へ':'🥚 次世代配合へ')}
 // normal tournament temporary modifiers
 window.addEventListener('click',e=>{const run=e.target?.closest?.('#run');if(run&&!run.disabled&&!S.promotion233){const before=document.getElementById('result')?.textContent||'';applyNormalMods233();watchNormal233(before)}},true);
