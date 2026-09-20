@@ -90,7 +90,14 @@ function tourChance225(t){
 function renderTournamentSelect225(){document.getElementById('tourSelect225')?.remove();}
 function renderRivals225(promo=false){
  const host=document.getElementById('rival');if(!host)return;
- const rivals=ensureRivals225(promo),actual=chance225(rivals),target=LEAGUES225[Math.min(LEAGUES225.length-1,S.leagueRank+(promo?1:0))],tour=promo?null:(TOURS225.find(x=>x.id===S.meetChoice225)||TOURS225[1]),c=promo?actual:tourChance225(tour);
+ const rivals=ensureRivals225(promo),actual=chance225(rivals),target=LEAGUES225[Math.min(LEAGUES225.length-1,S.leagueRank+(promo?1:0))],tour=promo?null:(TOURS225.find(x=>x.id===S.meetChoice225)||TOURS225[1]);
+ let c=promo?actual:tourChance225(tour);
+ if(!promo){
+   try{
+     const exact=window.STAR_TOUR225?.chance?.(tour.id,S.schedule||[],rivals);
+     if(exact&&Number.isFinite(Number(exact.pct)))c=exact;
+   }catch(_){}
+ }
  host.innerHTML=`<div class="rivalPanel225 ${promo?'promo225':''}"><div class="rivalTop225"><div><small>${promo?'PROMOTION BATTLE':'RIVAL SCOUT'}</small><b>${promo?'🔥 昇格戦':`${tour.icon} ${tour.name}`} / ${target.name}級</b></div><div class="chance225"><span>勝利見込み</span><strong>${c.pct}%</strong><em>${c.label}</em></div></div><div class="powerCompare225"><span>自軍平均 <b>${actual.ours}</b></span><i></i><span>相手平均 <b>${actual.theirs}</b></span></div><div class="rivalCards225">${rivals.slice(0,3).map(r=>`<article><header><b>${r.name}</b><em>${STAT_LABEL225[r.strong]}型</em></header><div>${STAT_KEYS225.map(k=>`<span class="${k===r.strong?'hot225':''}">${STAT_LABEL225[k]} <b>${r.stats[k]}</b></span>`).join('')}</div></article>`).join('')}</div><small class="rivalNote225">※表示されている能力値をそのまま大会計算に使用します。</small></div>`;
 }
 function stratMul225(s){return s==='先行'?1.015:s==='温存'?1.008:s==='追込'?1.012:1}
