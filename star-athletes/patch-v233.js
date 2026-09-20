@@ -121,10 +121,29 @@ function renderCompat233(){
  const pool=typeof breederPool==='function'?breederPool():all233(),ids=Array.isArray(S.parents)?S.parents:[],a=pool.find(x=>x.id===ids[0]),b=pool.find(x=>x.id===ids[1]);if(!a||!b){box.classList.add('hide');box.innerHTML='';return}box.classList.remove('hide');const c=compatibility233(a,b),rev=reveal233(a,b,c.total);
  box.innerHTML=`<div class="compatHead233"><div><small>BREEDING CHEMISTRY</small><b>相性 ${c.total}</b></div><strong>${compatLabel233(c.total)}</strong></div><div class="compatBar233"><i style="width:${c.total}%"></i></div><div class="compatBreak233">種族 ${c.species}/25 ・ 性格 ${c.personality}/20 ・ 能力補完 ${c.ability}/20 ・ 血統 ${c.blood}/15 ・ 特徴 ${c.visual}/10 ・ 遺伝相性 ${c.chemistry}/10</div>${rev.length?`<div class="reveal233"><small>この組み合わせで読み取れる素質</small>${rev.map(x=>`<span><b>${x[0]}</b><em>${x[1]}</em></span>`).join('')}</div>`:'<div class="compatHint233">相性が上がると、配合前に読み取れる素質が増えます。</div>'}`
 }
+function rareBloodBoost233(m){
+ const id=m?.ultraRare274?.id;
+ const up={ex:.015,mutation:.018,miracle:.022,mythic:.030}[id]||0;
+ const factor=m?.miracleFactor274?.strength?Math.min(.030,.012*Number(m.miracleFactor274.strength)):0;
+ return up+factor;
+}
+function miracleCarryChance233(m){
+ const id=m?.ultraRare274?.id;
+ if(id==='mythic')return .25;
+ if(id==='miracle')return .14;
+ if(m?.miracleFactor274)return .08;
+ return 0;
+}
 // ---------- inheritance ----------
 try{
  const beforeBaby233=baby;
  baby=function(a,b){hidden233(a);hidden233(b);const c=beforeBaby233(a,b);hidden233(c);const ha=a.hidden233,hb=b.hidden233,hc=c.hidden233;
+   const rareUp=Math.min(.05,rareBloodBoost233(a)+rareBloodBoost233(b));
+   const carryA=miracleCarryChance233(a),carryB=miracleCarryChance233(b);
+   if(Math.random()<1-(1-carryA)*(1-carryB)){
+     const mythic=a?.ultraRare274?.id==='mythic'||b?.ultraRare274?.id==='mythic';
+     c.miracleFactor274={name:'奇跡因子',strength:mythic?2:1,inherited:true,from:[a?.name,b?.name].filter(Boolean),at:Date.now()};
+   }
    for(const k of ['growth','heredity','clutch','stability','mutation','luck']){
      const base=n233(hc[k]);
      const avg=(n233(ha[k])+n233(hb[k]))/2;
@@ -134,7 +153,7 @@ try{
      const inheritWeight=.28+hr*.24;
      let v=Math.round(base*(1-inheritWeight)+avg*inheritWeight);
      if(Math.random()<.22)v+=rnd233(-1,1);
-     if(avg>base&&Math.random()<(.04+hr*.08))v++;
+     if(avg>base&&Math.random()<(.04+hr*.08+rareUp))v++;
      v=clamp233(v,0,7);
      // Early generations can still spike, but B/A/S stay exceptional rather than becoming the default.
      const gen=Math.max(0,n233(c.gen));
