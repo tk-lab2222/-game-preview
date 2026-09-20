@@ -7,7 +7,7 @@ const RANK269=['E','D','C','B','A','S'];
 const SHORT269=[
  {id:'inherit-power',title:'豪腕を継承',desc:'ネストに「豪腕」持ちを1体残す',ok:()=>all269().some(m=>(m.skills233||[]).includes('power'))},
  {id:'speed-300',title:'疾風の芽',desc:'スピード300以上を1体育てる',ok:()=>all269().some(m=>num269(m.stats?.speed)>=300)},
- {id:'rare-ssr',title:'輝く新星',desc:'SSR以上を1体ネストに残す',ok:()=>all269().some(m=>rarity269(m)>=3)},
+ {id:'rare-ssr',title:'輝く新星',desc:'SSR以上を1体ネストに残す',ok:()=>all269().some(m=>rarity269(m)>=4)},
  {id:'heredity-a',title:'血を繋ぐ者',desc:'遺伝力A以上を1体残す',ok:()=>all269().some(m=>num269(m.hidden233?.heredity)>=4)},
  {id:'tech-280',title:'技巧派の系譜',desc:'テクニック280以上を1体育てる',ok:()=>all269().some(m=>num269(m.stats?.tech)>=280)},
  {id:'two-skills',title:'二つの才能',desc:'SKILLを2つ持つ個体を1体残す',ok:()=>all269().some(m=>(m.skills233||[]).length>=2)}
@@ -35,8 +35,27 @@ function syncBonus269(){
    if(delta>0){STAT269.forEach(k=>m.stats[k]=num269(m.stats[k])+delta);m.missionBonusApplied269=target}
  });
 }
+function repairFalseSsr269(){
+ const st=state269(),g=generation269(),sid='g'+g+':rare-ssr';
+ if(!st.completed[sid])return false;
+ const valid=all269().some(m=>rarity269(m)>=4);
+ if(valid)return false;
+ delete st.completed[sid];delete st.claimed[sid];
+ const target=Object.keys(st.completed||{}).length*5;
+ S.missionStatBonus269=target;
+ for(const m of all269()){
+   if(!m?.stats)continue;
+   const applied=num269(m.missionBonusApplied269);
+   if(applied>target){
+     const delta=applied-target;
+     STAT269.forEach(k=>m.stats[k]=Math.max(0,num269(m.stats[k])-delta));
+     m.missionBonusApplied269=target;
+   }
+ }
+ return true;
+}
 function reward269(id,long=false){const st=state269();if(st.claimed[id])return;st.claimed[id]=true;syncBonus269();save269()}
-function evaluate269(){const st=state269(),s=short269(),sid='g'+generation269()+':'+s.id;if(!st.completed[sid]&&s.ok()){st.completed[sid]={at:Date.now(),generation:generation269()};reward269(sid,false)}for(const m of LONG269)if(!st.completed[m.id]&&m.ok()){st.completed[m.id]={at:Date.now(),generation:generation269()};reward269(m.id,true)}syncBonus269();save269()}
+function evaluate269(){repairFalseSsr269();const st=state269(),s=short269(),sid='g'+generation269()+':'+s.id;if(!st.completed[sid]&&s.ok()){st.completed[sid]={at:Date.now(),generation:generation269()};reward269(sid,false)}for(const m of LONG269)if(!st.completed[m.id]&&m.ok()){st.completed[m.id]={at:Date.now(),generation:generation269()};reward269(m.id,true)}syncBonus269();save269()}
 function progress269(m){if(m.id==='gen5')return Math.min(5,generation269())+'/5 世代';if(m.id==='all300'){const best=all269().reduce((a,x)=>Math.max(a,Math.min(...STAT269.map(k=>num269(x.stats?.[k])))),0);return Math.min(300,best)+'/300';}if(m.id==='skill3')return Math.min(3,all269().reduce((a,x)=>Math.max(a,(x.skills233||[]).length),0))+'/3 SKILL';if(m.id==='hidden-s'){const best=all269().reduce((a,x)=>Math.max(a,['growth','heredity','clutch','stability','mutation','luck'].filter(k=>num269(x.hidden233?.[k])>=5).length),0);return Math.min(2,best)+'/2 S';}return ''}
 function render269(){evaluate269();const host=document.getElementById('missionHost203');if(!host)return;const st=state269(),s=short269(),sid='g'+generation269()+':'+s.id,done=!!st.completed[sid];host.innerHTML=`<div class="missionBoard269"><div class="missionTitle269"><div><small>BLOODLINE MISSIONS</small><b>🧬 血統ミッション</b></div><span>第${generation269()}世代</span></div><div class="missionBonus269"><div><small>MISSION BONUS</small><b>ネスト達成ボーナス</b></div><strong>全能力 +${bonus269()}</strong><em>達成 ${completedCount269()}件 × +5 / 現役3体へ常時反映</em></div><div class="shortMission269 ${done?'done269':''}"><small>今世代の目標</small><b>${done?'✓ ':''}${s.title}</b><p>${s.desc}</p><em>${done?'✓ 達成 / 全能力+5 反映済':'報酬：全能力+5 ・ 世代を越える前に狙おう'}</em></div><div class="longTitle269">長期目標 <small>世代をまたいで進行</small></div><div class="longList269">${LONG269.map(m=>{const d=!!st.completed[m.id];return `<div class="${d?'done269':''}"><span>${d?'✓':'◇'}</span><p><b>${m.title}</b><small>${m.desc}</small></p><em>${d?'✓ 達成 / 全能力+5 反映済':`報酬：全能力+5 ・ ${progress269(m)}`}</em></div>`}).join('')}</div><div class="missionNote269">大会で強い個体だけでなく、次世代へ残す価値のある血統を作るための目標です。</div></div>`}
 function late269(){render269();[80,220,500].forEach(ms=>setTimeout(render269,ms))}
