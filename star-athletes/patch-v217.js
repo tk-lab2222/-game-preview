@@ -14,10 +14,17 @@ function cloneLive(){
   try{return JSON.parse(JSON.stringify(S))}catch(_){return S}
 }
 function seed(n,obj){
-  const m=(MEETS[n]||MEETS[6])[0];
   obj.season=n;obj.turn=0;obj.plans={};obj.assign={};obj.strat={};
-  obj.seasonMeet={name:m[0],place:m[1],weather:m[2],events:[...m[3]]};
-  obj.schedule=[...m[3]];obj.generationActive=n>=1&&n<=6;
+  // Tournament selection belongs exclusively to patch-v290.
+  // Invalidate old-season tournament UI/data so the first paint cannot reuse previous odds.
+  obj.seasonMeet=null;
+  obj.schedule=[];
+  obj.rivals225=[];
+  obj.rivalsPromo225=false;
+  obj.meetChoice225='standard';
+  obj.meetChoiceSeason125=0;
+  obj.meetUiVersion290=0;
+  obj.generationActive=n>=1&&n<=6;
   return obj;
 }
 function persistWhole(n){
