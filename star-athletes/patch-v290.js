@@ -18,6 +18,15 @@ const TIERS290={
 function season290(){return Math.max(1,Math.min(6,Number(S.season)||1))}
 function tierAt290(i,len){return len>=3?(i===0?'safe':i===1?'standard':'challenge'):len===2?(i===0?'standard':'challenge'):'standard'}
 function standardIndex290(list){return list.length>=3?1:0}
+function chance290(tier){
+ const bases=[102,120,140,163,190,222],rank=Math.max(0,Math.min(5,Number(S.leagueRank)||0));
+ const diff=tier==='safe'?-18:tier==='challenge'?20:0;
+ const theirs=Math.round((bases[rank]||102)+(season290()-1)*1.5+diff);
+ const nest=Array.isArray(S.nest)?S.nest:[],keys=['power','speed','stamina','agility','tech','guts'];
+ const ours=nest.length?Math.round(nest.reduce((sum,m)=>sum+keys.reduce((a,k)=>a+(Number(m?.stats?.[k])||0),0)/6,0)/nest.length):0;
+ const pct=Math.max(8,Math.min(92,Math.round(50+(ours-theirs)*1.8)));
+ return pct;
+}
 function persist290(){try{localStorage.setItem(SAVE290,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
 function currentIndex290(list){
  const name=S.seasonMeet?.name;
@@ -49,7 +58,7 @@ function cards290(){
  wrap.innerHTML=list.map((m,i)=>{
    const id=tierAt290(i,list.length),t=TIERS290[id],on=i===sel;
    return `<button type="button" class="meetChoiceCard125 meetCard290 ${on?'sel':''}" data-star-meet290="${i}">
-    <div class="tier290"><b>${t.icon} ${t.label}</b><strong>報酬 ×${t.reward} / 年間pt ×${t.annual}</strong></div>
+    <div class="tier290"><b>${t.icon} ${t.label}</b><strong class="chance290">勝率 ${chance290(id)}%</strong></div><div class="reward290">報酬 ×${t.reward} / 年間pt ×${t.annual}</div>
     <b>${m[0]}</b><span>📍 ${m[1]}　☁️ ${m[2]}</span><small>${m[3].join(' / ')}</small><em>${on?'選択中':'この大会を選ぶ'}</em>
    </button>`;
  }).join('');
@@ -70,7 +79,7 @@ window.addEventListener('click',e=>{
 },true);
 try{const prev290=render;render=function(){const out=prev290();setTimeout(sync290,0);return out}}catch(e){console.warn('render290',e)}
 const css=document.createElement('style');css.textContent=`
-.tier290{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:3px}.tier290>b{font-size:8px!important}.tier290>strong{font-size:7px;color:#6a7480}.meetCard290{touch-action:manipulation;position:relative;z-index:2}.meetCard290.sel{outline:3px solid #58cfff!important}
+.tier290{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:3px}.tier290>b{font-size:8px!important}.tier290>strong{font-size:10px;color:#22384e}.reward290{font-size:6px;color:#6a7480;margin-bottom:2px}.meetCard290{touch-action:manipulation;position:relative;z-index:2}.meetCard290.sel{outline:3px solid #58cfff!important}
 `;document.head.appendChild(css);
 setTimeout(sync290,0);
 })();
