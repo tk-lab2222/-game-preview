@@ -63,10 +63,10 @@ function teamPower225(){
  return Math.round(S.nest.reduce((a,m)=>a+STAT_KEYS225.reduce((x,k)=>x+(m.stats?.[k]||0),0)/6,0)/S.nest.length);
 }
 function rivalPower225(r){return Math.round(STAT_KEYS225.reduce((a,k)=>a+(r.stats[k]||0),0)/STAT_KEYS225.length)}
-function chance225(rivals){
- const ours=teamPower225(),theirs=Math.round(rivals.reduce((a,r)=>a+rivalPower225(r),0)/rivals.length),d=ours-theirs;
- const pct=Math.max(8,Math.min(92,Math.round(50+d*1.8)));
- return{ours,theirs,pct,label:pct>=72?'かなり有利':pct>=58?'やや有利':pct>=42?'互角':pct>=28?'やや不利':'強敵注意'};
+function comparePower225(rivals){
+ const ours=teamPower225();
+ const theirs=Math.round(rivals.reduce((a,r)=>a+rivalPower225(r),0)/rivals.length);
+ return{ours,theirs};
 }
 function renderLeague225(){
  init225();
@@ -78,20 +78,12 @@ function renderLeague225(){
  document.querySelectorAll('#season119 .seasonHead119 b,.seasonHead125 b').forEach(x=>x.textContent=`S${Number(S.season)||1}/6　${lg.name}級シーズン`);
  const title=train.querySelector('.box h3');
 }
-function tourChance225(t){
- const ours=teamPower225(),base=Math.round(league225().base+((Number(S.season)||1)-1)*1.5),d=ours-base;
- let pct=Math.max(15,Math.min(85,Math.round(50+d*1.2)));
- if(t.id==='safe')pct+=12;
- else if(t.id==='challenge')pct-=18;
- pct=Math.max(5,Math.min(95,pct));
- const theirs=base+t.diff;
- return{ours,theirs,pct,label:pct>=72?'かなり有利':pct>=58?'やや有利':pct>=42?'互角':pct>=28?'やや不利':'強敵注意'};
-}
+
 function renderTournamentSelect225(){document.getElementById('tourSelect225')?.remove();}
 function renderRivals225(promo=false){
  const host=document.getElementById('rival');if(!host)return;
- const rivals=ensureRivals225(promo),actual=chance225(rivals),target=LEAGUES225[Math.min(LEAGUES225.length-1,S.leagueRank+(promo?1:0))],tour=promo?null:(TOURS225.find(x=>x.id===S.meetChoice225)||TOURS225[1]);
- let c=promo?actual:tourChance225(tour);
+ const rivals=ensureRivals225(promo),actual=comparePower225(rivals),target=LEAGUES225[Math.min(LEAGUES225.length-1,S.leagueRank+(promo?1:0))],tour=promo?null:(TOURS225.find(x=>x.id===S.meetChoice225)||TOURS225[1]);
+ let c=promo?{pct:null,label:''}:{pct:null,label:''};
  if(!promo){
    try{
      const exact=window.STAR_SIM295?.chance?.(tour.id,S.schedule||[],rivals);
@@ -158,12 +150,12 @@ function wire225(){
 }
 
 window.STAR_TOUR225={
- chance:(id)=>{const t=TOURS225.find(x=>x.id===id)||TOURS225[1];return tourChance225(t)},
  tiers:TOURS225,
  generateRivals:(promo=false)=>mkRivals225(!!promo),
  buildRivals:(tier='standard',promo=false)=>buildRivals225(tier,!!promo),
  ensureRivals:(promo=false)=>ensureRivals225(!!promo),
- score:score225
+ score:score225,
+ comparePower:comparePower225
 };
 const css=document.createElement('style');css.textContent=`
 .league225{background:linear-gradient(145deg,#0e1b31,#142a49)!important;color:#fff;border:1px solid #65d8ff55!important}.leagueHead225{display:flex;justify-content:space-between;align-items:center}.leagueHead225 small{display:block;font-size:7px;color:#72dcff;font-weight:1000;letter-spacing:.14em}.leagueHead225 b{font-size:16px}.leagueHead225>span{background:#ffffff17;border:1px solid #ffffff22;border-radius:999px;padding:5px 8px;font-size:9px;font-weight:1000}.leagueTrack225{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin:9px 0}.leagueTrack225 i{font-style:normal;text-align:center;opacity:.35;font-size:15px}.leagueTrack225 i small{display:block;font-size:5px}.leagueTrack225 .done225,.leagueTrack225 .now225{opacity:1}.leagueTrack225 .now225{background:#ffffff15;border-radius:8px;padding:3px}.leagueRule225{font-size:8px;color:#dcecff}.rivalPanel225{margin:8px 0;padding:10px;border:2px solid #273d5d;border-radius:15px;background:linear-gradient(145deg,#f8fbff,#eaf3ff);color:#172033}.rivalPanel225.promo225{border-color:#e5a800;background:linear-gradient(145deg,#fff9df,#fff1b9)}.rivalTop225{display:flex;justify-content:space-between;gap:8px}.rivalTop225 small{display:block;font-size:7px;letter-spacing:.14em;color:#607998}.rivalTop225 b{font-size:13px}.chance225{text-align:right}.chance225 span,.chance225 em{display:block;font-size:6px;font-style:normal}.chance225 strong{font-size:20px}.powerCompare225{display:grid;grid-template-columns:1fr 34px 1fr;align-items:center;gap:6px;margin:8px 0;font-size:8px}.powerCompare225 i{height:4px;background:linear-gradient(90deg,#2ca8ff,#ff774d);border-radius:99px}.powerCompare225 span:last-child{text-align:right}.rivalCards225{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.rivalCards225 article{border:1px solid #bac9db;border-radius:10px;background:#fff;padding:6px}.rivalCards225 header{display:flex;justify-content:space-between;align-items:center;gap:3px}.rivalCards225 header b{font-size:9px}.rivalCards225 header em{font-size:5px;font-style:normal;background:#fff0b3;border-radius:999px;padding:2px 4px}.rivalCards225 article>div{margin-top:4px}.rivalCards225 article span{display:flex;justify-content:space-between;font-size:5.5px;border-top:1px dotted #d4deea;padding:1px}.rivalCards225 .hot225{background:#fff1dd;color:#a94900;font-weight:1000}.rivalNote225{display:block;margin-top:6px;color:#65758a;font-size:6px}.tourSelect225{border:2px solid #496984!important;background:linear-gradient(145deg,#f8fbff,#edf6ff)!important}.tourHead225{display:flex;justify-content:space-between;align-items:center}.tourHead225 small{display:block;font-size:6px;color:#63798e;font-weight:1000;letter-spacing:.12em}.tourHead225 b{font-size:13px}.tourHead225>span{font-size:7px;border:1px solid #9aabba;border-radius:999px;padding:4px 7px;background:#fff}.tourSelect225>p{margin:7px 0;font-size:7px;color:#607182}.tourChoices225{display:grid;gap:6px}.tourChoices225 button{border:1px solid #b7c6d3;border-radius:10px;background:#fff;padding:8px;text-align:left;color:#23364a}.tourChoices225 button.on225{border:2px solid #2f79ad;background:#eef8ff}.tourChoices225 header{display:flex;justify-content:space-between;align-items:center}.tourChoices225 header b{font-size:9px}.tourChoices225 header strong{font-size:13px}.tourChoices225 small{display:block;font-size:6px;color:#687a8b}.tourChoices225 button>div{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}.tourChoices225 button>div span{font-size:6px;border-radius:999px;padding:3px 5px;background:#eef2f5}.tourNote225{display:block;margin-top:6px;font-size:6px;color:#697b89}
