@@ -38,6 +38,12 @@ function strength277(m){
  const s=Number(m?.ultraRare274?.strength274);
  return Number.isFinite(s)?Math.max(70,Math.min(130,Math.round(s))):100;
 }
+function strengthLabel277(m){
+ try{return window.STAR_ULTRA274?.strengthLabel?.(strength277(m))||''}catch(_){return''}
+}
+function effects277(m){
+ try{return window.STAR_ULTRA274?.effects?.(m)||[]}catch(_){return[]}
+}
 function benefit277(m){
  if(m?.ultraRare274?.benefit)return m.ultraRare274.benefit;
  const id=m?.ultraRare274?.id;
@@ -91,7 +97,7 @@ function card277(m){
      <div class="art277">${typeof avatar==='function'?avatar(m,true):''}</div>
      <div class="name277"><b>${m.name}</b><span>${sp} ・ G${n277(m.gen)}</span></div>
      <div class="odds277"><small>SPECIAL BIRTH RATE</small><b>${chanceText277(m)}</b><em>この「特殊誕生ランク」を引く推定確率</em></div>
-     <div class="benefit277">${benefit277(m)?`<small>SPECIAL BLOODLINE EFFECT</small><b>✨ ${benefit277(m)}</b><em>血統強度 ${strength277(m)}/130</em>`:''}</div><div class="stats277">${statHtml}</div>
+     <div class="benefit277">${benefit277(m)?`<small>SPECIAL BLOODLINE EFFECT</small><b>✨ ${benefit277(m)}</b><em>血統強度 ${strength277(m)}/130${strengthLabel277(m)?`｜${strengthLabel277(m)}`:''}</em>${effects277(m).length?`<div class="effectRows277">${effects277(m).map(x=>`<span><i>${x.label}</i><strong>${x.value}</strong></span>`).join('')}</div>`:''}`:''}</div><div class="stats277">${statHtml}</div>
      <div class="meta277"><span>SKILL</span><b>${skills277(m)}</b></div>
      <div class="meta277"><span>血統</span><b>${lineage277(m)}</b></div>
    </div>
@@ -127,7 +133,7 @@ const css=document.createElement('style');css.textContent=`
 .shareCard277:before{content:'';position:absolute;inset:-40%;background:conic-gradient(transparent,#7eeaff24,transparent,#ff7cd424,transparent);animation:spin277 8s linear infinite;pointer-events:none}@keyframes spin277{to{transform:rotate(360deg)}}
 .shareCard277>*{position:relative;z-index:1}.rarity277{display:flex;justify-content:space-between;align-items:center}.rarity277 span,.rarity277 strong{display:grid;gap:1px}.rarity277 span{background:#172033;color:#ffe171;border-radius:9px;padding:4px 8px}.rarity277 span small,.rarity277 strong small{font-size:5px;font-weight:900;opacity:.72}.rarity277 span b{font-size:18px}.rarity277 strong{font-size:9px;color:#774d00;text-align:right}.rarity277 strong b{font-size:10px}
 .art277{height:175px;margin:7px 0}.art277 .avatar,.art277 .bigArt{height:175px!important;border:0!important;background:transparent!important}.name277{text-align:center}.name277 b{display:block;font-size:22px}.name277 span{font-size:8px;color:#667}
-.odds277{text-align:center;margin:9px 0;padding:8px;border-radius:10px;background:#172033;color:#fff}.odds277 small{display:block;font-size:6px;color:#91dcff}.odds277 b{font-size:19px;color:#ffe273}.odds277 em{display:block;margin-top:2px;font-size:6px;font-style:normal;color:#c8d5e9}.benefit277{margin:7px 0;padding:7px 8px;border:1px solid #d9b64f;border-radius:9px;background:#fff3be;text-align:center}.benefit277:empty{display:none}.benefit277 small{display:block;font-size:5px;color:#886600}.benefit277 b{display:block;font-size:8px;color:#5b4300}.benefit277 em{display:block;margin-top:3px;font-size:6px;font-style:normal;font-weight:1000;color:#6b5312}
+.odds277{text-align:center;margin:9px 0;padding:8px;border-radius:10px;background:#172033;color:#fff}.odds277 small{display:block;font-size:6px;color:#91dcff}.odds277 b{font-size:19px;color:#ffe273}.odds277 em{display:block;margin-top:2px;font-size:6px;font-style:normal;color:#c8d5e9}.benefit277{margin:7px 0;padding:7px 8px;border:1px solid #d9b64f;border-radius:9px;background:#fff3be;text-align:center}.benefit277:empty{display:none}.benefit277 small{display:block;font-size:5px;color:#886600}.benefit277 b{display:block;font-size:8px;color:#5b4300}.benefit277 em{display:block;margin-top:3px;font-size:6px;font-style:normal;font-weight:1000;color:#6b5312}.effectRows277{display:grid;gap:3px;margin-top:5px}.effectRows277 span{display:flex;justify-content:space-between;gap:8px;padding-top:3px;border-top:1px dashed #d9b64f}.effectRows277 i{font-size:6px;font-style:normal;color:#76621f}.effectRows277 strong{font-size:7px;color:#4f3d00}
 .stats277{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.stats277 span{display:flex;justify-content:space-between;border:1px solid #ccd6df;border-radius:8px;padding:5px;background:#fff}.stats277 small{font-size:6px}.stats277 b{font-size:9px}
 .meta277{display:grid;grid-template-columns:46px 1fr;gap:6px;margin-top:6px;padding-top:6px;border-top:1px dashed #c9b86b;font-size:7px}.meta277 span{font-weight:1000;color:#785b16}.meta277 b{text-align:right}
 .actions277{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:11px}.actions277 .btn{width:100%}.privacy277{display:block;text-align:center;margin-top:7px;font-size:6px;color:#aeb8ca}
