@@ -55,7 +55,7 @@ function parentExtras271(){
  });
 }
 function render271(){
- try{const c=S.cands||[],l=S.lineage||[],n=S.nest||[];cards271('#cands .card[data-id]',c);cards271('#lineagePool .card',l);cards271('.train210[data-athlete210]',n);cards271('#breeders .card[data-id]',[...(S.starters||[]),...(S.lineage||[]),...(S.nest||[])]);parentExtras271();summary271();persist271()}catch(e){console.warn('lineage271',e)}
+ try{const c=S.cands||[],l=S.lineage||[],n=S.nest||[];cards271('#cands .card[data-id]',c);cards271('#lineagePool .card',l);cards271('.train210[data-athlete210]',n);parentExtras271();summary271();persist271()}catch(e){console.warn('lineage271',e)}
 }
 function late271(){render271();[80,220,500,900].forEach(ms=>setTimeout(render271,ms))}
 try{const prev271=render;render=function(){const out=prev271();setTimeout(late271,0);return out}}catch(e){console.warn('render271 wrap',e)}
