@@ -61,7 +61,14 @@ function render262(){
  host.querySelectorAll('[data-cmp262]').forEach(b=>b.onclick=()=>{
    const card=document.querySelector(`#cands .card[data-id="${CSS.escape(b.dataset.cmp262)}"]`);card?.click();
  });
- const pick=host.querySelector('#pickTop262');if(pick)pick.onclick=()=>{S.sel=sorted.slice(0,3).map(m=>m.id);try{render()}catch(_){}};
+ const pick=host.querySelector('#pickTop262');if(pick)pick.onclick=()=>{
+  S.sel=sorted.slice(0,3).map(m=>m.id);
+  // Do not call the global render here: it can collapse the candidate flow.
+  decorateCards262(sorted);
+  host.querySelectorAll('[data-cmp262]').forEach(row=>row.classList.toggle('selected262',S.sel.includes(row.dataset.cmp262)));
+  const adopt=document.getElementById('adopt');if(adopt)adopt.disabled=S.sel.length!==3;
+  const box=document.getElementById('candBox');if(box){box.classList.remove('hide');box.style.setProperty('display','block','important')}
+};
  decorateCards262(sorted);
 }
 function late262(){render262();[60,180,420].forEach(ms=>setTimeout(render262,ms))}
