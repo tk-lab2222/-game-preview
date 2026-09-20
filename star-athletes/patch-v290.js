@@ -18,8 +18,21 @@ const TIERS290={
 function season290(){return Math.max(1,Math.min(6,Number(S.season)||1))}
 function tierAt290(i,len){return len>=3?(i===0?'safe':i===1?'standard':'challenge'):len===2?(i===0?'standard':'challenge'):'standard'}
 function standardIndex290(list){return list.length>=3?1:0}
-function chance290(tier,events){
- try{const x=window.STAR_TOUR225?.chance?.(tier,events);if(x&&Number.isFinite(Number(x.pct)))return Number(x.pct)}catch(_){}
+function rivalKey290(i,list){
+ const m=list[i],season=season290();
+ return [Number(S.generation233)||Number(S.generation232)||1,season,Number(S.leagueRank)||0,m?.[0]||i].join('|');
+}
+function rivalsFor290(i,list){
+ S.tourRivals317=S.tourRivals317&&typeof S.tourRivals317==='object'?S.tourRivals317:{};
+ const key=rivalKey290(i,list);
+ if(!Array.isArray(S.tourRivals317[key])||S.tourRivals317[key].length!==7){
+   const tier=tierAt290(i,list.length);
+   try{S.tourRivals317[key]=window.STAR_TOUR225?.buildRivals?.(tier,false)||[]}catch(_){S.tourRivals317[key]=[]}
+ }
+ return S.tourRivals317[key];
+}
+function chance290(tier,events,rivals){
+ try{const x=window.STAR_TOUR225?.chance?.(tier,events,rivals);if(x&&Number.isFinite(Number(x.pct)))return Number(x.pct)}catch(_){}
  const bases=[102,120,140,163,190,222],rank=Math.max(0,Math.min(5,Number(S.leagueRank)||0));
  const base=Math.round((bases[rank]||102)+(season290()-1)*1.5);
  const nest=Array.isArray(S.nest)?S.nest:[],keys=['power','speed','stamina','agility','tech','guts'];
@@ -40,21 +53,9 @@ function apply290(i,{rerender=true}={}){
  S.seasonMeet={name:m[0],place:m[1],weather:m[2],events:[...m[3]]};
  S.meetChoice225=tier;S.meetChoiceSeason125=season;S.schedule=[...m[3]];
  S.assign={};S.strat={};
- const key=[Number(S.generation233)||Number(S.generation232)||1,season,Number(S.leagueRank)||0,m[0]].join('|');
- S.tourRivals317=S.tourRivals317&&typeof S.tourRivals317==='object'?S.tourRivals317:{};
- const cached=S.tourRivals317[key];
- if(Array.isArray(cached)&&cached.length===7){
-   S.rivals225=JSON.parse(JSON.stringify(cached));S.rivalsPromo225=false;
- }else{
-   S.rivals225=[];S.rivalsPromo225=false;
-   try{
-     const made=window.STAR_TOUR225?.generateRivals?.(false);
-     if(Array.isArray(made)&&made.length===7){
-       S.tourRivals317[key]=JSON.parse(JSON.stringify(made));
-       S.rivals225=JSON.parse(JSON.stringify(made));
-     }
-   }catch(_){}
- }
+ const cached=rivalsFor290(i,list);
+ S.rivals225=Array.isArray(cached)?JSON.parse(JSON.stringify(cached)):[];
+ S.rivalsPromo225=false;
  S.meetUiVersion290=1;persist290();
  if(rerender){try{render()}catch(e){console.warn('render apply290',e)}}
  sync290();[40,120,280].forEach(ms=>setTimeout(sync290,ms));
@@ -74,7 +75,7 @@ function cards290(){
  wrap.innerHTML=list.map((m,i)=>{
    const id=tierAt290(i,list.length),t=TIERS290[id],on=i===sel;
    return `<button type="button" class="meetChoiceCard125 meetCard290 ${on?'sel':''}" data-star-meet290="${i}">
-    <div class="tier290"><b>${t.icon} ${t.label}</b><strong class="chance290">勝率 ${chance290(id,m[3])}%</strong></div><div class="reward290">報酬 ×${t.reward} / 年間pt ×${t.annual}</div>
+    <div class="tier290"><b>${t.icon} ${t.label}</b><strong class="chance290">勝率 ${chance290(id,m[3],rivalsFor290(i,list))}%</strong></div><div class="reward290">報酬 ×${t.reward} / 年間pt ×${t.annual}</div>
     <b>${m[0]}</b><span>📍 ${m[1]}　☁️ ${m[2]}</span><small>${m[3].join(' / ')}</small><em>${on?'選択中':'この大会を選ぶ'}</em>
    </button>`;
  }).join('');
@@ -94,7 +95,7 @@ window.addEventListener('click',e=>{
  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();apply290(Number(b.dataset.starMeet290));
 },true);
 try{const prev290=render;render=function(){const out=prev290();setTimeout(sync290,0);return out}}catch(e){console.warn('render290',e)}
-window.STAR_MEET290={sync:sync290,apply:(i)=>apply290(Number(i)),cards:cards290,current:()=>{const list=MEETS290[season290()]||MEETS290[6];return currentIndex290(list)}};
+window.STAR_MEET290={sync:sync290,apply:(i)=>apply290(Number(i)),cards:cards290,current:()=>{const list=MEETS290[season290()]||MEETS290[6];return currentIndex290(list)},rivals:(i)=>{const list=MEETS290[season290()]||MEETS290[6];return rivalsFor290(Number(i),list)}};
 const css=document.createElement('style');css.textContent=`
 .tier290{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:3px}.tier290>b{font-size:8px!important}.tier290>strong{font-size:10px;color:#22384e}.reward290{font-size:6px;color:#6a7480;margin-bottom:2px}.meetCard290{touch-action:manipulation;position:relative;z-index:2}.meetCard290.sel{outline:3px solid #58cfff!important}
 `;document.head.appendChild(css);
