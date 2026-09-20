@@ -124,7 +124,7 @@ async function runBattle225(promo=false){
 function nextSeason225(){
  const cur=Math.max(1,Math.min(6,Number(S.season)||1));
  const next=cur<6?cur+1:1;
- S.season=next;S.turn=0;S.plans={};S.assign={};S.strat={};S.schedule=[];S.seasonMeet=null;S.rivals225=[];S.rivalsPromo225=false;
+ S.season=next;S.turn=0;S.plans={};S.assign={};S.strat={};S.schedule=[];S.seasonMeet=null;S.rivals225=[];S.rivalsPromo225=false;S.meetChoice225='standard';S.meetChoiceSeason125=0;S.meetUiVersion290=0;
  try{if(typeof makeSchedule==='function')makeSchedule()}catch(_){}
  save225();location.replace(location.pathname+'?season='+next+'&t='+Date.now());
 }
