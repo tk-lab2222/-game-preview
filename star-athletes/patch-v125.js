@@ -16,7 +16,7 @@ function chooseMeet125(i){
  const season=S.season||1,list=MEETS125[season]||MEETS125[6],m=list[i];if(!m)return;
  const t=tierFor125(i,list.length);
  S.seasonMeet={name:m[0],place:m[1],weather:m[2],events:[...m[3]]};
- S.meetChoice225=t.id;S.schedule=[...m[3]];S.assign={};S.strat={};S.rivals225=[];S.rivalsPromo225=false;
+ S.meetChoice225=t.id;S.meetChoiceSeason125=season;S.schedule=[...m[3]];S.assign={};S.strat={};S.rivals225=[];S.rivalsPromo225=false;
  try{render()}catch(e){console.error('chooseMeet125',e)}
  try{localStorage.setItem('star-athletes-save-v200',JSON.stringify({savedAt:Date.now(),S}))}catch(_){}
 }
@@ -29,8 +29,17 @@ function renderMeetChoices125(){
  const season=S.season||1,root=document.getElementById('season119');if(!root)return;
  let old=root.querySelector('.meetChoice119');if(!old)return;
  const list=MEETS125[season]||MEETS125[6];
+ // Each new season starts at standard. Old saves that were accidentally pinned to the first/low tier are normalized once.
+ if(Number(S.meetChoiceSeason125)!==Number(season)){
+   const i=list.length>=3?1:0,m=list[i],t=tierFor125(i,list.length);
+   S.seasonMeet={name:m[0],place:m[1],weather:m[2],events:[...m[3]]};
+   S.meetChoice225=t.id;S.meetChoiceSeason125=season;S.schedule=[...m[3]];S.assign={};S.strat={};S.rivals225=[];S.rivalsPromo225=false;
+   try{localStorage.setItem('star-athletes-save-v200',JSON.stringify({savedAt:Date.now(),S}))}catch(_){}
+ }
  old.innerHTML=list.map((m,i)=>{const t=tierFor125(i,list.length),sel=S.seasonMeet?.name===m[0];return `<button type="button" class="meetChoiceCard125 ${sel?'sel':''}" data-pick125="${i}"><div class="tier125"><b>${t.icon} ${t.label}</b><strong>報酬 ×${t.reward} / 年間pt ×${t.annual}</strong></div><b>${m[0]}</b><span>📍 ${m[1]}　☁️ ${m[2]}</span><small>${m[3].join(' / ')}</small><em>${sel?'選択中':'この大会を選ぶ'}</em></button>`}).join('');
-
+ old.querySelectorAll('[data-pick125]').forEach(b=>{
+   b.onclick=e=>{e.preventDefault();e.stopPropagation();chooseMeet125(Number(b.dataset.pick125))};
+ });
 }
 window.STAR_MEETS125={choose:chooseMeet125,list:MEETS125};
 const prevRender125=render;render=function(){prevRender125();requestAnimationFrame(renderMeetChoices125)};
