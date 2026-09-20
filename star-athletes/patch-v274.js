@@ -23,6 +23,22 @@ function strength274(m,create=false){
  return v;
 }
 function rollStrength274(){return Math.max(70,Math.min(130,Math.round(70+((Math.random()+Math.random())/2)*60)))}
+function strengthLabel274(s){
+ s=Math.max(70,Math.min(130,Number(s)||100));
+ return s<80?'弱め':s<95?'やや弱め':s<=105?'標準':s<120?'強め':'かなり強い';
+}
+function effects274(m){
+ const u=m?.ultraRare274;if(!u)return[];
+ const s=strength274(m,true),ratio=s/100,id=u.id;
+ const rows=[];
+ const hiddenBase={ex:.015,mutation:.018,miracle:.022,mythic:.030}[id]||0;
+ if(hiddenBase)rows.push({key:'hidden',label:'隠れ素質 上振れ判定',value:'+'+(hiddenBase*ratio*100).toFixed(2)+'pt'});
+ const recipeExtra={mutation:.35,miracle:.50,mythic:.75}[id]||0;
+ if(recipeExtra)rows.push({key:'recipe',label:'特殊血統レシピ',value:'×'+(1+recipeExtra*ratio).toFixed(2)});
+ if(id==='miracle')rows.push({key:'carry',label:'奇跡因子 継承率',value:(Math.min(.22,.14*ratio)*100).toFixed(1)+'%'});
+ if(id==='mythic')rows.push({key:'carry',label:'奇跡因子 継承率',value:(Math.min(.35,.25*ratio)*100).toFixed(1)+'%'});
+ return rows;
+}
 function persistStrength274(){
  let changed=false;
  for(const m of all274()){if(m?.ultraRare274&&!Number.isFinite(Number(m.ultraRare274.strength274))){strength274(m,true);changed=true}}
@@ -71,12 +87,12 @@ function badge274(){
   let b=card.querySelector('.ultra274');if(!b){b=document.createElement('div');b.className='ultra274';(card.querySelector('.bd')||card).appendChild(b)}
   const u=m.ultraRare274,c=u.chance,p=c<.00001?(c*100).toFixed(5):c<.001?(c*100).toFixed(3):(c*100).toFixed(2);
   const bp=(Number(u.base)||0)*100,bpTxt=bp<.001?bp.toFixed(4):bp<.1?bp.toFixed(3):bp.toFixed(2);
-  const mult=Number(u.mult)||1,strength=strength274(m,true);
-  b.innerHTML=`<b>✧ 特殊誕生 ${u.name}</b><small>基礎 ${bpTxt}% × 補正 ${mult.toFixed(mult%1?2:1)} = ${p}%</small><em>血統強度 ${strength}/130</em>`;
+  const mult=Number(u.mult)||1,strength=strength274(m,true),label=strengthLabel274(strength),fx=effects274(m);
+  b.innerHTML=`<b>✧ 特殊誕生 ${u.name}</b><small>基礎 ${bpTxt}% × 補正 ${mult.toFixed(mult%1?2:1)} = ${p}%</small><em>血統強度 ${strength}/130｜${label}</em>${fx.length?`<i>${fx[0].label} ${fx[0].value}</i>`:''}`;
  });
 }
 function late274(){try{badge274()}catch(e){console.warn('badge274',e)}}
 try{const prevRender274=render;render=function(){const out=prevRender274();setTimeout(late274,0);return out}}catch(e){console.warn('render274',e)}
-window.STAR_ULTRA274={tiers:TIERS274,evaluate:(m)=>evaluate274(m,false),multiplier:multiplier274,strength:(m)=>strength274(m,true),sync:late274};
-const css=document.createElement('style');css.textContent='.ultra274{margin-top:6px;padding:6px 8px;border:2px solid #7c4dff;border-radius:9px;background:linear-gradient(135deg,#f7f0ff,#fff7d6);letter-spacing:.03em}.ultra274 b{display:block;font-size:8px}.ultra274 small{display:block;margin-top:2px;font-size:6px;color:#66537a;font-weight:900}.ultra274 em{display:block;margin-top:3px;font-size:6px;font-style:normal;font-weight:1000;color:#5c3f8a}';document.head.appendChild(css);late274();
+window.STAR_ULTRA274={tiers:TIERS274,evaluate:(m)=>evaluate274(m,false),multiplier:multiplier274,strength:(m)=>strength274(m,true),strengthLabel:strengthLabel274,effects:effects274,sync:late274};
+const css=document.createElement('style');css.textContent='.ultra274{margin-top:6px;padding:6px 8px;border:2px solid #7c4dff;border-radius:9px;background:linear-gradient(135deg,#f7f0ff,#fff7d6);letter-spacing:.03em}.ultra274 b{display:block;font-size:8px}.ultra274 small{display:block;margin-top:2px;font-size:6px;color:#66537a;font-weight:900}.ultra274 em{display:block;margin-top:3px;font-size:6px;font-style:normal;font-weight:1000;color:#5c3f8a}.ultra274 i{display:block;margin-top:2px;font-size:6px;font-style:normal;color:#614c72}';document.head.appendChild(css);late274();
 })();
