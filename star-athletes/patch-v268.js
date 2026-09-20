@@ -25,9 +25,11 @@ function stats268(rank,n){
 }
 function inject268(){
  if(!Array.isArray(S.rivals225)||!S.rivals225.length)return;
- const rank=Math.max(0,Math.min(NEM268.length-1,Number(S.leagueRank)||0)),n=nem268(rank),stats=stats268(rank,n);
+ const rank=Math.max(0,Math.min(NEM268.length-1,Number(S.leagueRank)||0)),n=nem268(rank);
+ // Nemesis is presentation/progression metadata only.
+ // Never mutate fixed tournament rival identity, stats or strong stat after odds are calculated.
  const r=S.rivals225[0]||{};
- r.id='nemesis268-'+rank;r.name=n.name;r.stats=stats;r.strong=n.strong;r.nemesis268=true;r.bloodline268=n.blood;r.skill268=n.skill;r.weak268=n.weak;
+ r.nemesis268=true;r.bloodline268=n.blood;r.skill268=n.skill;r.weak268=n.weak;
  state268().seen[rank]=true;save268();
 }
 function render268(){
