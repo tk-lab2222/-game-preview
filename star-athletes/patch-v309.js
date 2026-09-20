@@ -9,6 +9,16 @@ const NORMAL309={
  tech:{cost:600,msg:'⭐ スタークッキー',target:true,apply(m){m.stats.tech=(Number(m.stats.tech)||0)+6;m.stats.agility=(Number(m.stats.agility)||0)+6}}
 };
 function save309(){try{localStorage.setItem(SAVE309,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
+function targets309(){
+ S.shopTargets309=S.shopTargets309&&typeof S.shopTargets309==='object'?S.shopTargets309:{};
+ return S.shopTargets309;
+}
+function targetId309(id){
+ const nest=Array.isArray(S.nest)?S.nest:[];
+ const t=targets309(),valid=nest.some(m=>m.id===t[id]);
+ if(!valid)t[id]=nest[0]?.id||'';
+ return t[id]||'';
+}
 function msg309(t){
  const e=document.getElementById('shopMsg122');if(e)e.textContent=t;
  let toast=document.getElementById('shopToast309');
@@ -22,8 +32,8 @@ function buyNormal309(id){
  if((Number(S.coins)||0)<item.cost){msg309('コインが足りません');return}
  let target=null;
  if(item.target){
-   const sel=document.querySelector('#shop122 [data-shop-target="'+id+'"]');
-   target=(S.nest||[]).find(m=>m.id===sel?.value)||(S.nest||[])[0];
+   const targetId=targetId309(id);
+   target=(S.nest||[]).find(m=>m.id===targetId)||null;
    if(!target){msg309('対象を選べません');return}
  }
  S.coins=(Number(S.coins)||0)-item.cost;
@@ -75,8 +85,18 @@ function renderShop309(){
   ['power','🍖','パワーミート','選んだ1体のちから・こんじょう +5',450,true],
   ['tech','⭐','スタークッキー','選んだ1体のテクニック・すばやさ +6',600,true]
  ];
+ const t=targets309();
+ items.forEach(([id,,,,,target])=>{if(target)targetId309(id)});
+ const renderKey=JSON.stringify([
+   coins,
+   (S.nest||[]).map(m=>[m.id,m.name]),
+   Number(S.specialShop?.lucky)||0,
+   t
+ ]);
+ if(shop.dataset.renderKey309===renderKey&&shop.querySelector('[data-buy122]'))return;
+ shop.dataset.renderKey309=renderKey;
  shop.innerHTML=`<div class="shopHead122"><div><small>NEST SHOP</small><h3>🪙 ネストショップ</h3></div><b>${coins} coin</b></div>
- <div class="shopGrid122">${items.map(([id,ic,n,d,cost,target])=>`<div class="shopItem122"><div class="shopIcon122">${ic}</div><div class="shopText122"><b>${n}</b><small>${d}</small></div>${target?`<select data-shop-target="${id}" ${!has?'disabled':''}>${has?S.nest.map(m=>`<option value="${m.id}">${m.name}</option>`).join(''):'<option>育成メンバーなし</option>'}</select>`:''}<button type="button" data-buy122="${id}" ${!has||coins<cost?'disabled':''}>🪙 ${cost}</button></div>`).join('')}</div>
+ <div class="shopGrid122">${items.map(([id,ic,n,d,cost,target])=>`<div class="shopItem122"><div class="shopIcon122">${ic}</div><div class="shopText122"><b>${n}</b><small>${d}</small></div>${target?`<select data-shop-target="${id}" ${!has?'disabled':''}>${has?S.nest.map(m=>`<option value="${m.id}" ${targetId309(id)===m.id?'selected':''}>${m.name}</option>`).join(''):'<option>育成メンバーなし</option>'}</select>`:''}<button type="button" data-buy122="${id}" ${!has||coins<cost?'disabled':''}>🪙 ${cost}</button></div>`).join('')}</div>
  <div class="specialShop200"><div class="specialTitle200"><b>✨ SPECIAL</b><span>大会後のもう一手</span></div><div class="specialGrid200">
  <button data-special200="lucky" ${coins<900?'disabled':''}><b>🍀 ラッキーチャーム</b><small>次の子のレア度を1段階UP</small><em>🪙 900</em></button>
  <button data-special200="condition" ${coins<500||!has?'disabled':''}><b>🥤 コンディションドリンク</b><small>${has?S.nest[0].name:'育成メンバー'} 全能力+3</small><em>🪙 500</em></button>
@@ -85,7 +105,16 @@ function renderShop309(){
  shop.querySelectorAll('[data-special200]').forEach(b=>b.onclick=e=>{e.preventDefault();if(!b.disabled)buySpecial309(b.dataset.special200)});
 }
 function sync309(){renderShop309()}
-document.addEventListener('change',e=>{if(e.target?.matches?.('#shop122 [data-shop-target]')){}},true);
-try{const prev=render;render=function(){const out=prev();[0,40,120].forEach(ms=>setTimeout(renderShop309,ms));return out}}catch(e){console.warn('render309',e)}
+document.addEventListener('change',e=>{
+ const sel=e.target?.closest?.('#shop122 [data-shop-target]');
+ if(!sel)return;
+ targets309()[sel.dataset.shopTarget]=sel.value;
+ save309();
+},true);
+try{
+ const prev=render;
+ render=function(){const out=prev();setTimeout(renderShop309,0);return out}
+}catch(e){console.warn('render309',e)}
+window.STAR_SHOP309={sync:sync309,target:(id)=>targetId309(id)};
 
 })();
