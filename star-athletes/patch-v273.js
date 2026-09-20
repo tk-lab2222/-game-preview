@@ -39,7 +39,7 @@ try{const prevBaby273=baby;baby=function(a,b){const m=prevBaby273(a,b);return ap
 function badge273(){document.querySelectorAll('#cands .card[data-id],#breeders .card[data-id],#lineagePool .card[data-id]').forEach(card=>{const id=card.dataset.id,m=[...(S.cands||[]),...(S.nest||[]),...(S.lineage||[]),...(S.starters||[])].find(x=>x?.id===id);if(!m?.specialLineage273)return;let b=card.querySelector('.rare273');if(!b){b=document.createElement('div');b.className='rare273';(card.querySelector('.bd')||card).appendChild(b)}b.textContent=`✦ ${m.specialLineage273.name} / 推定 ${(m.specialLineage273.chance*100).toFixed(m.specialLineage273.chance<.001?3:2)}%`})}
 function late273(){try{badge273()}catch(e){console.warn('badge273',e)}}
 try{const prevRender273=render;render=function(){const out=prevRender273();setTimeout(late273,0);return out}}catch(e){console.warn('render273',e)}
-window.STAR_RARE273={recipes:RECIPES273,evaluate:(m,a,b)=>evaluate273(m,a,b,false),tags:tags273};
+window.STAR_RARE273={recipes:RECIPES273,evaluate:(m,a,b)=>evaluate273(m,a,b,false),tags:tags273,sync:late273};
 const css=document.createElement('style');css.textContent='.rare273{margin-top:6px;padding:5px 7px;border:1px solid #b88a22;border-radius:8px;background:#fff7d6;color:#6f4b00;font-size:7px;font-weight:1000}';document.head.appendChild(css);late273();
 })();
 // v0.28.6 loader: keep M4.2 isolated while the release shell remains stable.
