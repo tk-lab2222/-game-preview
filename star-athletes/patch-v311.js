@@ -57,6 +57,7 @@ function restore311(){
  }
  try{window.STAR_ULTRA274?.sync?.()}catch(_){}
  try{window.STAR_RARE273?.sync?.()}catch(_){}
+ try{window.STAR_LINEAGE271?.sync?.()}catch(_){}
 }
 function late311(){[0,40,120,300,650].forEach(ms=>setTimeout(restore311,ms))}
 document.addEventListener('click',e=>{
