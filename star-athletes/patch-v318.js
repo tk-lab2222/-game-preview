@@ -27,10 +27,9 @@ function bindReload318(){
    btn.disabled=true;
    btn.textContent='更新中…';
    btn.style.pointerEvents='none';
-   const u=new URL(location.href);
-   u.searchParams.set('v','3139');
-   u.searchParams.set('t',String(Date.now()));
-   requestAnimationFrame(()=>location.replace(u.toString()));
+   const latest=new URL('../star-athletes/',location.href);
+   latest.searchParams.set('t',String(Date.now()));
+   requestAnimationFrame(()=>location.replace(latest.toString()));
  },{passive:false});
 }
 function boot318(){
