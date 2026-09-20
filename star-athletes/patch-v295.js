@@ -92,8 +92,6 @@ function chance295(tier='standard',eventsOverride=null,rivalsOverride=null,mode=
  if(cache295.size>30){const first=cache295.keys().next().value;cache295.delete(first)}
  return out;
 }
-window.STAR_TOUR225=window.STAR_TOUR225||{};
-window.STAR_TOUR225.chance=chance295;
 function sync295(){
  const meet=document.querySelector('#rival .chance225 span');if(meet)meet.textContent='推定勝率';
 }
