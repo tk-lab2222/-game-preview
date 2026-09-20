@@ -127,12 +127,9 @@ function watchBattle226(promo){
  setTimeout(tick,120);
 }
 
-// Seed full-range rivals before v225 renders/uses them.
+// Rival ownership moved to patch-v290/v225.
+// v226 now observes battles only for post-match growth and never replaces tournament rivals.
 document.addEventListener('click',e=>{
- const to=e.target.closest?.('#toMeet'),meet=e.target.closest?.('.tab[data-v="meet"]');
- if((to||meet)&&(n226(S.turn)>=3)){seedRivals226(false)}
- const next=e.target.closest?.('#next225');
- if(next&&S.promotionPending){setTimeout(()=>{seedRivals226(true,true);drawRivals226(true)},0)}
  const run=e.target.closest?.('#run');
  if(run&&!run.disabled){const promo=!!S.rivalsPromo225;watchBattle226(promo)}
 },true);
