@@ -91,4 +91,5 @@ function sync295(){
  const meet=document.querySelector('#rival .chance225 span');if(meet)meet.textContent='推定勝率';
 }
 window.STAR_SIM295={chance:chance295,clear:()=>cache295.clear(),sync:sync295};
+setTimeout(()=>{try{window.STAR_MEET290?.sync?.()}catch(_){}},0);
 })();
