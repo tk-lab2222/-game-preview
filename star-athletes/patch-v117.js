@@ -64,42 +64,17 @@ function scoutReward117(){
   return m;
 }
 
-// --- Meet cut-in + tiny optional mini-game: tap CHEER during each event for a small bonus. ---
-const wait117=ms=>new Promise(r=>setTimeout(r,ms));
-function cheerCutin117(e,m,i){
-  return new Promise(resolve=>{
-    $('events').innerHTML=`<div class="meetCutin117"><div class="cutinNo117">EVENT ${i+1}/4</div><h3>${e}</h3>${avatar(m,true)}<b>${m.name}</b><div class="sm">${INF[e][0]}</div><button class="btn yl cheer117">📣 応援タップ！</button><div class="cheerGauge117"><i></i></div></div>`;
-    try{window.paintSpecies&&window.paintSpecies()}catch(_){}
-    const btn=document.querySelector('.cheer117'),bar=document.querySelector('.cheerGauge117 i');let done=false;
-    requestAnimationFrame(()=>{if(bar)bar.style.width='0%'});
-    const finish=(bonus,label)=>{if(done)return;done=true;if(btn){btn.disabled=true;btn.textContent=label}setTimeout(()=>resolve(bonus),180)};
-    if(btn)btn.onclick=()=>finish(.035,'✨ ナイス応援！');
-    setTimeout(()=>finish(0,'スタート！'),1100);
-  });
-}
-async function runMeet117(){
-  const run=$('run');run.disabled=true;run.textContent='大会進行中…';$('result').innerHTML='';
-  let pts=0,lines=[];
-  for(let i=0;i<S.schedule.length;i++){
-    const e=S.schedule[i],m=S.nest.find(x=>x.id===S.assign[i])||best(e);
-    const cheer=await cheerCutin117(e,m,i);
-    const ps=score(m,e)*(0.94+Math.random()*.12+cheer);
-    const op=Array.from({length:7},()=>95+S.wins*5+Math.random()*70);
-    const rank=1+op.filter(x=>x>ps).length;
-    pts+=[0,8,6,5,4,3,2,1,0][rank];lines.push({e,rank,m});
-    $('events').innerHTML=`<div class="meetCutin117 resultCutin117"><h3>${e}</h3>${avatar(m,true)}<div class="phaseRank"><b>${rank}位</b></div></div>`;
-    try{window.paintSpecies&&window.paintSpecies()}catch(_){}
-    await wait117(480);
-  }
-  const overall=pts>=25?1:pts>=20?2:pts>=16?3:4;if(overall===1)S.wins++;
+// --- Tournament post-processing utilities. Tournament execution is owned by v225/v233.
+function afterMeet117(overall,points){
   const scout=scoutReward117();
-  saveRank117({ts:Date.now(),wins:S.wins,points:pts,overall,gen:currentGen117()});
-  $('events').innerHTML=lines.map(x=>`<div class="evt"><b>${x.e}</b><div>${x.m.name}：${x.rank}位</div></div>`).join('');
-  $('result').innerHTML=`<div class="notice meetSummary117">${lines.map(x=>`${x.e}：${x.rank}位`).join('<br>')}<br><b>総合${overall}位 / ${pts}pt</b>${overall===1?'<br>★次世代候補枠+1':''}${scout?`<div class="scout117">🎁 大会スカウト！<br><b>${SP[scout.species][0]}「${scout.name}」</b> が血統プールに加入！</div>`:''}<button class="btn tiny" id="shareMeet117">結果を共有</button></div>`;
-  const sh=document.getElementById('shareMeet117');if(sh)sh.onclick=()=>share117(`STAR ATHLETES｜大会 総合${overall}位 ${pts}pt｜優勝${S.wins}回｜G${currentGen117()}`);
-  run.classList.add('hide');run.disabled=false;run.textContent='大会スタート';$('next').classList.remove('hide');
-  render();renderRanking117();
+  saveRank117({ts:Date.now(),wins:Number(S.wins)||0,points:Number(points)||0,overall:Number(overall)||0,gen:currentGen117()});
+  renderRanking117();
+  return scout;
 }
+function shareMeet117(overall,points){
+  return share117(`STAR ATHLETES｜大会 総合${overall}位 ${points}pt｜優勝${Number(S.wins)||0}回｜G${currentGen117()}`);
+}
+window.STAR_META117={afterMeet:afterMeet117,shareMeet:shareMeet117,renderRanking:renderRanking117,share:share117};
 
 // Wrap render so secondary UI stays in sync without changing the base game state logic.
 const renderBefore117=render;
@@ -108,18 +83,8 @@ render=function(){renderBefore117();updateOpening117();renderRanking117()};
 const css=document.createElement('style');css.textContent=`
 .avatar.shinyArt canvas,.avatar.shinyArt img{filter:hue-rotate(145deg) saturate(1.35) brightness(1.08)}
 .avatar.shinyArt:after{content:'✨';position:absolute;right:4px;top:4px;font-size:14px;filter:none;z-index:3;text-shadow:0 1px 2px #fff}
-.rarityEgg{width:82px;height:100px;margin:auto;display:grid;place-items:center;border-radius:50% 50% 46% 46%;background:radial-gradient(circle at 38% 28%,#fff,#eee 42%,#d8d1bf 75%);box-shadow:inset -8px -8px 16px #0001,0 5px 14px #0002;animation:eggBob117 .65s ease-in-out infinite alternate}
-.rarityEgg span{font-size:58px;filter:saturate(.55)}
-.rarityEgg.blue{background:radial-gradient(circle at 38% 28%,#fff,#bde7ff 42%,#5aa6e8 78%);box-shadow:0 0 20px #5fc4ff99}
-.rarityEgg.gold{background:radial-gradient(circle at 38% 28%,#fff9cf,#ffd65a 43%,#df8b17 80%);box-shadow:0 0 24px #ffd65aaa}
-.rarityEgg.ex{background:conic-gradient(from 20deg,#ff8fb7,#ffd65a,#91f0db,#8cc5ff,#d69cff,#ff8fb7);box-shadow:0 0 28px #d69cffaa}
-.rarityEgg.shinyEgg{outline:4px solid #fff6a6;filter:drop-shadow(0 0 9px #fff06a)}
-@keyframes eggBob117{to{transform:translateY(-4px) rotate(1deg)}}
-.meetCutin117{text-align:center;border:3px solid #222;border-radius:18px;background:linear-gradient(#eef8ff,#fff);padding:10px;overflow:hidden;position:relative}
-.meetCutin117 .avatar{height:120px;max-width:220px;margin:4px auto;border:0!important;background:transparent!important}
-.cutinNo117{font-size:9px;font-weight:1000;letter-spacing:.12em;opacity:.55}
-.cheerGauge117{height:7px;background:#ddd;border:1px solid #222;border-radius:999px;margin-top:8px;overflow:hidden}.cheerGauge117 i{display:block;width:100%;height:100%;background:#ffd65a;transition:width 1.1s linear}
-.resultCutin117{animation:cutPop117 .28s ease-out}@keyframes cutPop117{from{transform:scale(.92);opacity:.4}to{transform:scale(1);opacity:1}}
+}
+to{transform:scale(1);opacity:1}}
 .scout117{margin-top:8px;padding:8px;border:2px solid #222;border-radius:12px;background:#fff6bf}
 .rankRow117{display:grid;grid-template-columns:42px 52px 1fr 50px 32px;gap:4px;align-items:center;border-top:1px dashed #bbb;padding:5px 0;font-size:9px}.rankRow117:first-of-type{border-top:0}
 `;
