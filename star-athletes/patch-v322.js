@@ -122,15 +122,48 @@ function addBoost322(boost){
   init322();for(const k of K322)S.missionBoost322[k]=n322(S.missionBoost322[k])+n322(boost?.[k]);
   applyBoostToRoster322();
 }
-function claimLegacy322(id){
-  init322();const m=LEGACY322.find(x=>x.id===id);if(!m||!m.ok()||S.missionClaimed[id])return;
-  S.missionClaimed[id]=true;S.coins=n322(S.coins)+n322(m.coin);save322();sync322();
+function refreshMissionWallet322(){
+  const wallet=document.querySelector('#nestSummary201 .nestWallet201');
+  if(!wallet)return;
+  for(const cell of wallet.querySelectorAll('span')){
+    const label=(cell.querySelector('small')?.textContent||'').trim(),b=cell.querySelector('b');if(!b)continue;
+    if(label==='COIN')b.textContent='🪙 '+n322(S.coins);
+    if(label==='FAME')b.textContent='⭐ '+n322(S.fame);
+    if(label==='BADGE')b.textContent='🏅 '+(S.emblems?.length||0);
+  }
 }
-function claim322(id){
+function feedback322(text,button){
+  const card=button?.closest?.('.missionCard322');
+  if(card){
+    card.classList.add('claimed322','done322','missionFlash322');
+    setTimeout(()=>card.classList.remove('missionFlash322'),700);
+    const b=card.querySelector('button');if(b){b.disabled=true;b.textContent='受取済'}
+  }
+  const box=document.getElementById('mission200');
+  if(box){box.classList.remove('missionReceived322');void box.offsetWidth;box.classList.add('missionReceived322')}
+  let toast=document.getElementById('missionToast322');
+  if(!toast){toast=document.createElement('div');toast.id='missionToast322';document.body.appendChild(toast)}
+  toast.innerHTML='<b>✓ 報酬を受け取りました</b><span>'+text+'</span>';
+  toast.classList.remove('show322');void toast.offsetWidth;toast.classList.add('show322');
+  clearTimeout(window.__missionToast322);window.__missionToast322=setTimeout(()=>toast.classList.remove('show322'),1600);
+  const hero=document.querySelector('#mission200 .missionHero322>strong');
+  if(hero)hero.textContent=M322.filter(m=>S.missionClaimed322[m.id]).length+'/'+M322.length;
+  const boost=document.querySelector('#mission200 .missionBoost322>div:last-child');
+  if(boost)boost.innerHTML=boostSummary322();
+  const legacyCount=document.querySelector('#mission200 .missionLegacy322 summary b');
+  if(legacyCount)legacyCount.textContent=LEGACY322.filter(m=>S.missionClaimed[m.id]).length+'/'+LEGACY322.length;
+  refreshMissionWallet322();
+}
+function claimLegacy322(id,button){
+  init322();const m=LEGACY322.find(x=>x.id===id);if(!m||!m.ok()||S.missionClaimed[id])return;
+  S.missionClaimed[id]=true;S.coins=n322(S.coins)+n322(m.coin);save322();
+  feedback322('🪙 '+n322(m.coin)+' coin',button);
+}
+function claim322(id,button){
   init322();const m=M322.find(x=>x.id===id);if(!m||leagueRank322()<m.tier||!m.ok()||S.missionClaimed322[id])return;
   if(m.boost&&!team322().length)return;
   S.missionClaimed322[id]=true;S.coins=n322(S.coins)+n322(m.coin);if(m.boost)addBoost322(m.boost);save322();
-  try{render()}catch(_){sync322()}
+  feedback322(rewardText322(m),button);
 }
 function boostSummary322(){
   init322();const b=S.missionBoost322;
@@ -165,8 +198,8 @@ function render322(){
 function sync322(){render322();save322()}
 
 document.addEventListener('click',e=>{
-  const a=e.target?.closest?.('[data-mission322]');if(a){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(!a.disabled)claim322(a.dataset.mission322);return}
-  const b=e.target?.closest?.('[data-legacy322]');if(b){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(!b.disabled)claimLegacy322(b.dataset.legacy322)}
+  const a=e.target?.closest?.('[data-mission322]');if(a){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(!a.disabled)claim322(a.dataset.mission322,a);return}
+  const b=e.target?.closest?.('[data-legacy322]');if(b){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(!b.disabled)claimLegacy322(b.dataset.legacy322,b)}
 },true);
 
 try{
@@ -190,6 +223,13 @@ const css=document.createElement('style');css.id='mission322css';css.textContent
 .missionMain322 b{display:block;font-size:9px}.missionMain322 small{display:block;font-size:7px;color:#657484;margin-top:1px}.missionMain322 em{display:block;font-style:normal;font-size:7px;color:#8a6b16;font-weight:900;margin-top:4px}
 .missionCard322 button{min-width:76px;border:0;border-radius:8px;background:#17243a;color:#ffe16a;padding:7px 8px;font-size:7px;font-weight:1000}.missionCard322 button:disabled{opacity:.35}
 @media(max-width:430px){.missionBoost322>div:first-child{display:block}.missionBoost322>div:first-child small{display:block;margin-top:2px}.missionBoost322>div:last-child{grid-template-columns:1fr 1fr}.missionCard322{grid-template-columns:1fr}.missionCard322 button{width:100%}}
+#mission200.missionReceived322{animation:missionReceived322 .34s ease-out}
+.missionCard322.missionFlash322{animation:missionCardFlash322 .7s ease-out}
+#missionToast322{position:fixed;left:50%;bottom:86px;z-index:100001;transform:translate(-50%,18px) scale(.96);opacity:0;pointer-events:none;min-width:220px;max-width:86vw;padding:10px 14px;border-radius:13px;background:#10261d;color:#fff;box-shadow:0 10px 30px #0005;text-align:center;transition:.18s ease}
+#missionToast322 b,#missionToast322 span{display:block}#missionToast322 b{font-size:12px;color:#8ff0b9}#missionToast322 span{font-size:9px;margin-top:2px;color:#e6fff0}
+#missionToast322.show322{opacity:1;transform:translate(-50%,0) scale(1)}
+@keyframes missionReceived322{0%{box-shadow:0 0 0 0 #6bd69a00}35%{box-shadow:0 0 0 4px #6bd69a66}100%{box-shadow:0 0 0 0 #6bd69a00}}
+@keyframes missionCardFlash322{0%{transform:scale(.985);background:#e6fff0}35%{transform:scale(1.01);background:#dff8e9}100%{transform:scale(1);background:#f2fff8}}
 `;document.head.appendChild(css);
 
 init322();applyBoostToRoster322();setTimeout(sync322,0);
