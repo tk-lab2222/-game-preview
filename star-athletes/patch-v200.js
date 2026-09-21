@@ -123,9 +123,8 @@ function ensureHistory200(){
   let box=document.getElementById('history200');if(!box){box=document.createElement('div');box.id='history200';box.className='box history200';dex.appendChild(box)}
   const hist=(S.seasonHistory||[]).slice(-8).reverse();
   const pool=breederPool(),species=[...new Set(pool.map(x=>x.species))].length,shiny=pool.filter(x=>x.shiny).length,bestR=pool.reduce((a,m)=>Math.max(a,R.indexOf(m.rarity)),0);
-  box.innerHTML=`<h3>📚 ネスト記録</h3><div class="dexSummary200"><span>種族 <b>${species}/4</b></span><span>色違い <b>${shiny}</b></span><span>最高レア <b>${R[bestR]||'C'}</b></span><span>配合 <b>${S.breedCount||0}</b></span></div><div class="historyList200">${hist.length?hist.map(h=>`<div><b>S${h.season} ${h.name}</b><span>総合${h.overall}位 / ${h.points}pt</span><em>🪙+${h.coins} ⭐+${h.fame}</em></div>`).join(''):'<small>大会記録はまだありません。</small>'}</div><div class="saveRow200"><button id="saveNow200">💾 セーブ</button><button id="resetSave200">🗑️ セーブ削除</button></div>`;
+  box.innerHTML=`<h3>📚 ネスト記録</h3><div class="dexSummary200"><span>種族 <b>${species}/4</b></span><span>色違い <b>${shiny}</b></span><span>最高レア <b>${R[bestR]||'C'}</b></span><span>配合 <b>${S.breedCount||0}</b></span></div><div class="historyList200">${hist.length?hist.map(h=>`<div><b>S${h.season} ${h.name}</b><span>総合${h.overall}位 / ${h.points}pt</span><em>🪙+${h.coins} ⭐+${h.fame}</em></div>`).join(''):'<small>大会記録はまだありません。</small>'}</div><div class="saveRow200"><button id="saveNow200">💾 セーブ</button></div>`;
   box.querySelector('#saveNow200').onclick=()=>{save200();box.querySelector('#saveNow200').textContent='✅ 保存しました'};
-  box.querySelector('#resetSave200').onclick=()=>{localStorage.removeItem(SAVE200);box.querySelector('#resetSave200').textContent='削除しました'};
 }
 function decorateBreed200(){
   const hero=document.querySelector('.breedHero126');if(!hero)return;
