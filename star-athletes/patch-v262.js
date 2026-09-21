@@ -62,11 +62,12 @@ function render262(){
    const card=document.querySelector(`#cands .card[data-id="${CSS.escape(b.dataset.cmp262)}"]`);card?.click();
  });
  const pick=host.querySelector('#pickTop262');if(pick)pick.onclick=()=>{
-  S.sel=sorted.slice(0,3).map(m=>m.id);
-  // Do not call the global render here: it can collapse the candidate flow.
+  const ids=sorted.slice(0,3).map(m=>m.id);
+  if(window.STAR_CANDIDATE311?.setSelection)window.STAR_CANDIDATE311.setSelection(ids);
+  else S.sel=ids;
   decorateCards262(sorted);
-  host.querySelectorAll('[data-cmp262]').forEach(row=>row.classList.toggle('selected262',S.sel.includes(row.dataset.cmp262)));
-  const adopt=document.getElementById('adopt');if(adopt)adopt.disabled=S.sel.length!==3;
+  host.querySelectorAll('[data-cmp262]').forEach(row=>row.classList.toggle('selected262',(S.sel||[]).includes(row.dataset.cmp262)));
+  const adopt=document.getElementById('adopt');if(adopt)adopt.disabled=(S.sel||[]).length!==3;
   const box=document.getElementById('candBox');if(box){box.classList.remove('hide');box.style.setProperty('display','block','important')}
 };
  decorateCards262(sorted);
