@@ -56,7 +56,7 @@ function ensureNestTab201(){
   if(mission&&missionHost&&mission.parentElement!==missionHost)missionHost.appendChild(mission);
   const cur=typeof currentRank200==='function'?currentRank200():null;
   const summary=document.getElementById('nestSummary201');
-  if(summary)summary.innerHTML=`<div><small>NEST BASE</small><b>${cur?.name||'ビギナーネスト'}</b></div><div class="nestWallet201"><span>🪙 ${S.coins||0}</span><span>⭐ ${S.fame||0}</span><span>🏅 ${S.emblems?.length||0}</span></div>`;
+  if(summary)summary.innerHTML=`<div class="nestIdentity201"><small>NEST BASE</small><b>${cur?.name||'ビギナーネスト'}</b></div><div class="nestWallet201"><span><small>COIN</small><b>🪙 ${S.coins||0}</b></span><span><small>FAME</small><b>⭐ ${S.fame||0}</b></span><span><small>BADGE</small><b>🏅 ${S.emblems?.length||0}</b></span></div>`;
 }
 const renderBefore201=render;
 render=function(){
@@ -72,6 +72,10 @@ render=function(){
 const hatch201=document.getElementById('hatch');
 if(hatch201)hatch201.addEventListener('click',()=>{normalizeState201();if(S.egg){normalizeMonster201(S.egg,999);S.breedCount=(Number(S.breedCount)||0)+1}setTimeout(()=>{normalizeState201();repairBirth201();decorateBreed201();try{save200&&save200()}catch(_){}},1100)},true);
 const css=document.createElement('style');css.textContent=`
+.nestSummary201{display:grid!important;gap:8px!important;padding:12px!important;border-radius:14px!important;background:linear-gradient(145deg,#122038,#21395d)!important;color:#fff!important;box-shadow:0 5px 0 #0002!important}
+.nestIdentity201{display:flex;justify-content:space-between;align-items:end;gap:8px}.nestIdentity201 small{font-size:7px;letter-spacing:.15em;color:#7fe0ff;font-weight:1000}.nestIdentity201 b{font-size:15px}
+.nestWallet201{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:6px!important}.nestWallet201 span{display:block!important;padding:7px!important;border:1px solid #ffffff24!important;border-radius:9px!important;background:#ffffff0c!important}.nestWallet201 small{display:block;font-size:6px;color:#9eb5cc}.nestWallet201 b{display:block;margin-top:2px;font-size:10px;color:#fff}
+
 .birthStage128 .hatchReveal.contrast202 .newbornLabel{color:#241900!important;background:#ffd65a!important}
 .birthStage128 .hatchReveal.contrast202 .hatchStats div{color:#171717!important;background:#fffdf7!important}
 .birthStage128 .hatchReveal.contrast202 .hatchStats span,.birthStage128 .hatchReveal.contrast202 .hatchStats b{color:#171717!important}
