@@ -54,7 +54,7 @@ function panel260(){
   const adopt=document.getElementById('adopt');if(adopt)adopt.disabled=(S.sel||[]).length!==3;
 }
 function sync260(){try{counters260();panel260()}catch(e){console.warn('sync260',e)}}
-function late260(){sync260();[50,150,360,700].forEach(ms=>setTimeout(sync260,ms))}
+function late260(){sync260();[80,220].forEach(ms=>setTimeout(sync260,ms))}
 try{const prev260=render;render=function(){const out=prev260();late260();return out}}catch(e){console.warn('render260',e)}
 window.addEventListener('click',e=>{if(e.target?.closest?.('[data-mode="p"],[data-mode="c"],#hatch,#adopt,.tab[data-v="breed"]'))late260()},true);
 const css=document.createElement('style');css.textContent=`
