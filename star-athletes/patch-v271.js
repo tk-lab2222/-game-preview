@@ -55,7 +55,7 @@ function parentExtras271(){
    const m=pool.find(x=>x.id===card.dataset.id);if(!m)return;award271(m);
    const host=card.querySelector('.bd')||card;
    let box=host.querySelector('.parentLineage271');if(!box){box=document.createElement('div');box.className='parentLineage271';host.appendChild(box)}
-   box.innerHTML=badge271(m)+hiddenBlock271(m);
+   box.innerHTML=badge271(m);
  });
 }
 function render271(){
