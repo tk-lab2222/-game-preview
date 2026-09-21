@@ -245,7 +245,7 @@ async function runPlanetRepresentative233(){
  if(won){S.planetRepresentativeWon233=true;S.planetRepresentativeWonAt233=Date.now()}
  const learned=acquireSkills233(won),r=document.getElementById('result');
  if(r)r.innerHTML=`<div class="notice leagueResult225 ${won?'win225':'lose225'} planetResult233"><b>🌍 惑星代表戦</b><br>${rows.join('<br>')}<hr><strong>${won?'🏆 惑星代表を撃破！ LIMIT RELEASEへ':'代表の壁は厚かった…'}</strong><br>総合${overall}位 / ${tot[0]}pt${learned.length?`<div class="skillLearn233"><b>✨ スキル習得！</b><br>${learned.join('<br>')}</div>`:''}<small>${won?'STAR ATHLETES本編クリア。次段階が解禁されます。':'次世代でさらに血統を鍛え、再びギャラクシー年間1位を目指そう。'}</small></div>`;
- save233();run.classList.add('hide');run.disabled=false;nextGen233();
+ save233();if(won)setTimeout(()=>{try{window.STAR_LIMIT278?.refresh?.()}catch(_){}},0);run.classList.add('hide');run.disabled=false;nextGen233();
 }
 function restoreAnnualAction233(){
  const result=document.getElementById('result');if(!result)return;
