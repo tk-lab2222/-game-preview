@@ -62,18 +62,7 @@ $('toMeet').onclick=()=>{
  show('meet');
 };
 
-$('run').onclick=()=>{
- let pts=0,lines=[];
- S.schedule.forEach((e,i)=>{
-   const ps=(TEAM_EVENTS.has(e)?teamScore(e):score(S.nest.find(x=>x.id===S.assign[i])||best(e),e))*(.94+Math.random()*.12);
-   const op=Array.from({length:7},()=>95+S.wins*5+Math.random()*70),rank=1+op.filter(x=>x>ps).length;
-   pts+=[0,8,6,5,4,3,2,1,0][rank];
-   lines.push(`${e}${TEAM_EVENTS.has(e)?'［チーム］':''}：${rank}位`);
- });
- const o=pts>=25?1:pts>=20?2:pts>=16?3:4;if(o===1)S.wins++;
- $('result').innerHTML=`<div class="notice">${lines.join('<br>')}<br><b>総合${o}位</b>${o===1?'<br>★次世代候補枠+1':''}</div>`;
- $('run').classList.add('hide');$('next').classList.remove('hide');render();
-};
+// Tournament execution is owned by patch-v225/patch-v233.
 
 $('reloadBtn').onclick=()=>location.replace('../star-athletes/?v=097-'+Date.now());
 render();
