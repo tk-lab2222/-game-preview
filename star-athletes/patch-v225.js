@@ -134,7 +134,6 @@ function beginPromo225(){
  document.getElementById('result').innerHTML='';document.getElementById('events').innerHTML='';renderRivals225(true);
 }
 function installNext225(){
- const old=document.getElementById('next');if(old)old.style.display='none';
  const p=document.querySelector('#meet .box p');if(!p)return;
  let b=document.getElementById('next225');if(!b){b=document.createElement('button');b.id='next225';b.type='button';b.className='btn yl';p.appendChild(b)}
  b.style.display='inline-block';
