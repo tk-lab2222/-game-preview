@@ -157,6 +157,23 @@ function compatibility321(){
 }
 function archive321(){
   const host=document.getElementById('lineagePool');if(!host)return;
+  const box=host.closest('.box'),cand=document.getElementById('candBox'),breed=document.getElementById('breed');
+  if(box){
+    const h=box.querySelector('h3');
+    if(h&&!box.dataset.archiveNamed){
+      const count=h.querySelector('.sm');
+      h.innerHTML='📚 血統アーカイブ ';
+      if(count)h.appendChild(count);
+      box.dataset.archiveNamed='1';
+    }
+    const desc=box.querySelector('.sm:last-child');
+    if(desc&&!box.dataset.archiveDesc){
+      desc.textContent='過去世代の採用個体を保管する場所です。必要な個体だけ残し、親候補としていつでも呼び戻せます。';
+      box.dataset.archiveDesc='1';
+    }
+    box.classList.add('lineageArchive118');
+    if(breed&&cand&&cand.nextElementSibling!==box)breed.insertBefore(box,cand.nextSibling);
+  }
   const list=Array.isArray(S.lineage)?S.lineage:[];
   const buttons=[...host.querySelectorAll('[data-release]')];
   buttons.forEach(btn=>{
@@ -240,6 +257,7 @@ css.textContent=`
 .compatHead321 b{font-size:20px;line-height:1;color:#0877ad}.compatHead321 b em{font-size:9px;font-style:normal;color:#667789}.compatHead321 strong{font-size:9px;background:#fff0b5;border:1px solid #d5b84b;border-radius:999px;padding:5px 8px;white-space:nowrap}
 .compatBar321{height:7px;margin:8px 0 7px;border-radius:99px;background:#dce7ee;overflow:hidden}.compatBar321 i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#56b8da,#5ec48c)}
 .compatBreak321{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.compatBreak321 span{display:flex;justify-content:space-between;gap:4px;padding:4px 5px;border:1px solid #d8e2ea;border-radius:7px;background:#fff;font-size:6px}.compatBreak321 b{font-size:7px}
+.lineageArchive118{margin-top:12px;background:#fbfaf6}.lineageArchive118>h3{display:flex;align-items:center;justify-content:space-between;gap:8px}.lineageArchive118:before{content:'SUB';display:inline-block;font-size:8px;font-weight:1000;letter-spacing:.12em;background:#222;color:#fff;border-radius:999px;padding:2px 6px;margin-bottom:6px}
 #pa,#pb{position:relative!important;min-height:168px!important;display:block!important;padding:0!important;overflow:hidden!important;background:#f7fbff!important;color:#142033!important}
 .slotFilled321{height:100%;min-height:168px;display:grid;grid-template-rows:112px auto;background:linear-gradient(180deg,#f7fbff,#eef5ff)}
 .slotFilled321 .avatar{height:112px!important;width:100%!important;border:0!important;border-bottom:1px solid #c7d9ea!important;background:linear-gradient(#fff8ea,#eef8ff)!important}
