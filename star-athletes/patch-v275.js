@@ -34,8 +34,6 @@ function sync275(){
  const nest=Array.isArray(S.nest)?S.nest:[];if(nest.length!==3)return;
  document.querySelectorAll('.train210[data-athlete210]').forEach(card=>{
   const m=nest.find(x=>x.id===card.dataset.athlete210);if(!m)return;
-  // v275 owns the visible intensity block. Keep old block hidden to prevent duplicate controls.
-  const old=card.querySelector('.decision263');if(old)old.style.display='none';
   let box=card.querySelector('.training275');
   if(!box){box=document.createElement('div');box.className='training275';card.appendChild(box)}
   const st=st275(),mode=MODES275[st.intensity[m.id]]?st.intensity[m.id]:'normal';st.intensity[m.id]=mode;
