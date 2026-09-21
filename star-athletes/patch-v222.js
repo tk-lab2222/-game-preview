@@ -9,7 +9,8 @@ function sync222(){
   if(b){
     b.disabled=!done;
     b.setAttribute('aria-disabled',done?'false':'true');
-    b.textContent=done?`S${Number(S?.season)||1} 大会へ`:`大会へ（育成 ${t}/3）`;
+    try{window.STAR_MEET290?.sync?.()}catch(_){}
+    if(!window.STAR_MEET290)b.textContent=done?'大会へ':`大会へ（育成 ${t}/3）`;
   }
   const tab=document.querySelector('.tab[data-v="meet"]');
   if(tab){
