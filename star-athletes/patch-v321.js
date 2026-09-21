@@ -155,6 +155,29 @@ function compatibility321(){
       <span>血統 <b>${info.blood}</b></span><span>特徴 <b>${info.visual}</b></span><span>遺伝相性 <b>${info.chemistry}</b></span>
     </div>`;
 }
+function archive321(){
+  const host=document.getElementById('lineagePool');if(!host)return;
+  const list=Array.isArray(S.lineage)?S.lineage:[];
+  const buttons=[...host.querySelectorAll('[data-release]')];
+  buttons.forEach(btn=>{
+    const id=btn.dataset.release;
+    const card=btn.closest('.card');
+    if(card&&id)card.dataset.id=id;
+    btn.onclick=e=>{
+      e?.preventDefault?.();
+      e?.stopPropagation?.();
+      if(!id)return;
+      const m=list.find(x=>x?.id===id);
+      if(!m)return;
+      S.lineage=S.lineage.filter(x=>x?.id!==id);
+      S.released=Array.isArray(S.released)?S.released:[];
+      if(!S.released.some(x=>x?.id===id))S.released.push(m);
+      S.dex=S.dex||{};S.dex.rel=(Number(S.dex.rel)||0)+1;
+      try{typeof save200==='function'&&save200()}catch(_){}
+      try{render()}catch(_){late321()}
+    };
+  });
+}
 function cleanupCompatHelp321(){
   const breed=document.getElementById('breed');if(!breed)return;
   const obsolete='親を2体選ぶと相性が表示されます';
@@ -170,6 +193,7 @@ function sync321(){
     cleanupCompatHelp321();
     breeders321();
     compatibility321();
+    archive321();
     try{window.STAR_LINEAGE271?.sync?.()}catch(_){}
     try{window.STAR_RARE273?.sync?.()}catch(_){}
     try{window.STAR_ULTRA274?.sync?.()}catch(_){}
@@ -238,5 +262,5 @@ css.textContent=`
 document.head.appendChild(css);
 
 late321();
-window.STAR_BREEDING321={sync:sync321,pool:pool321,pristine:pristine321,compatibility:compatibility321};
+window.STAR_BREEDING321={sync:sync321,pool:pool321,pristine:pristine321,compatibility:compatibility321,archive:archive321};
 })();
