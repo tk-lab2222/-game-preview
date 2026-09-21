@@ -66,7 +66,15 @@ function ensureMission200(){
   if(!box){box=document.createElement('div');box.id='mission200';box.className='box mission200';const shop=document.getElementById('shop122');shop?shop.after(box):train.appendChild(box)}
   const ms=missionDefs200();
   box.innerHTML=`<div class="head200"><div><small>NEST MISSIONS</small><h3>🎯 ミッション</h3></div><b>${ms.filter(x=>x.ok).length}/${ms.length}</b></div><div class="missionGrid200">${ms.map(m=>{const claimed=!!S.missionClaimed[m.id];return `<div class="missionCard200 ${m.ok?'done':''}"><div><b>${m.name}</b><small>${m.desc}</small></div><button data-mission200="${m.id}" ${!m.ok||claimed?'disabled':''}>${claimed?'受取済':m.ok?`🪙 ${m.reward} 受取`:'未達成'}</button></div>`}).join('')}</div>`;
-  box.querySelectorAll('[data-mission200]').forEach(b=>b.onclick=()=>claim200(b.dataset.mission200));
+}
+function installMissionClaim200(){
+  if(document.documentElement.dataset.missionClaim200)return;
+  document.documentElement.dataset.missionClaim200='1';
+  document.addEventListener('click',e=>{
+    const b=e.target?.closest?.('[data-mission200]');if(!b)return;
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+    claim200(b.dataset.mission200);
+  },true);
 }
 function ensureSpecialShop200(){
   const shop=document.getElementById('shop122');if(!shop)return;
@@ -115,9 +123,8 @@ function ensureHistory200(){
   let box=document.getElementById('history200');if(!box){box=document.createElement('div');box.id='history200';box.className='box history200';dex.appendChild(box)}
   const hist=(S.seasonHistory||[]).slice(-8).reverse();
   const pool=breederPool(),species=[...new Set(pool.map(x=>x.species))].length,shiny=pool.filter(x=>x.shiny).length,bestR=pool.reduce((a,m)=>Math.max(a,R.indexOf(m.rarity)),0);
-  box.innerHTML=`<h3>📚 ネスト記録</h3><div class="dexSummary200"><span>種族 <b>${species}/4</b></span><span>色違い <b>${shiny}</b></span><span>最高レア <b>${R[bestR]||'C'}</b></span><span>配合 <b>${S.breedCount||0}</b></span></div><div class="historyList200">${hist.length?hist.map(h=>`<div><b>S${h.season} ${h.name}</b><span>総合${h.overall}位 / ${h.points}pt</span><em>🪙+${h.coins} ⭐+${h.fame}</em></div>`).join(''):'<small>大会記録はまだありません。</small>'}</div><div class="saveRow200"><button id="saveNow200">💾 セーブ</button><button id="resetSave200">🗑️ セーブ削除</button></div>`;
+  box.innerHTML=`<h3>📚 ネスト記録</h3><div class="dexSummary200"><span>種族 <b>${species}/4</b></span><span>色違い <b>${shiny}</b></span><span>最高レア <b>${R[bestR]||'C'}</b></span><span>配合 <b>${S.breedCount||0}</b></span></div><div class="historyList200">${hist.length?hist.map(h=>`<div><b>S${h.season} ${h.name}</b><span>総合${h.overall}位 / ${h.points}pt</span><em>🪙+${h.coins} ⭐+${h.fame}</em></div>`).join(''):'<small>大会記録はまだありません。</small>'}</div><div class="saveRow200"><button id="saveNow200">💾 セーブ</button></div>`;
   box.querySelector('#saveNow200').onclick=()=>{save200();box.querySelector('#saveNow200').textContent='✅ 保存しました'};
-  box.querySelector('#resetSave200').onclick=()=>{localStorage.removeItem(SAVE200);box.querySelector('#resetSave200').textContent='削除しました'};
 }
 function decorateBreed200(){
   const hero=document.querySelector('.breedHero126');if(!hero)return;
@@ -131,7 +138,9 @@ function decorate200(){
 const renderBefore200=render;
 render=function(){const out=renderBefore200();decorate200();save200();return out};
 // Restore only saves created by this milestone, then redraw once.
-if(load200()){try{render()}catch(e){console.error('v200 restore',e)}}else setTimeout(()=>{try{decorate200();save200()}catch(e){}},0);
+if(load200()){try{render()}catch(e){console.error('v200 restore',e)}}
+installMissionClaim200();
+setTimeout(()=>{try{decorate200();save200()}catch(e){}},0);
 const css=document.createElement('style');css.textContent=`
 .head200{display:flex;justify-content:space-between;align-items:center;gap:10px}.head200 small{display:block;font-size:7px;font-weight:1000;letter-spacing:.14em;color:#667}.head200 h3{margin:1px 0}.head200>b{border-radius:999px;background:#182033;color:#ffe071;padding:6px 10px;font-size:10px}.mission200{background:linear-gradient(180deg,#f8fbff,#edf5ff)!important}.missionGrid200{display:grid;gap:6px}.missionCard200{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid #cbd8e8;border-radius:10px;background:#fff;padding:8px}.missionCard200.done{background:#effff7;border-color:#74dba5}.missionCard200 b{display:block;font-size:10px}.missionCard200 small{font-size:8px;color:#667}.missionCard200 button{border:0;border-radius:8px;padding:7px 8px;background:#172033;color:#ffe174;font-weight:1000;font-size:8px}.missionCard200 button:disabled{opacity:.4}.specialShop200{margin-top:10px;padding-top:9px;border-top:1px dashed #cda94d}.specialTitle200{display:flex;justify-content:space-between;font-size:9px;margin-bottom:6px}.specialTitle200 b{color:#9b6a00}.specialGrid200{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.specialGrid200 button{display:flex;flex-direction:column;text-align:left;gap:3px;border:1px solid #d7bd74;border-radius:10px;background:#fff;padding:7px}.specialGrid200 button b{font-size:8px}.specialGrid200 button small{font-size:7px;color:#666;min-height:28px}.specialGrid200 button em{font-style:normal;font-size:8px;font-weight:1000;color:#875c00}.specialGrid200 button:disabled{opacity:.38}.specialStock200{font-size:8px;font-weight:900;margin-top:6px}.meta200{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}.meta200 span{font-size:7px;background:#eaf1f8;border-radius:999px;padding:3px 5px}.meta200 .open200{background:#ddf9e8;color:#08703a;font-weight:1000}.progress200{background:linear-gradient(145deg,#f4f7ff,#fff8dc)!important}.rankBar200{height:9px;background:#dbe2ee;border-radius:999px;overflow:hidden;margin:10px 0 5px}.rankBar200 i{display:block;height:100%;background:linear-gradient(90deg,#53d4ff,#8a72ff,#ffca55);border-radius:999px}.rankMeta200{display:flex;justify-content:space-between;gap:8px;font-size:8px;color:#556}.dexSummary200{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:9px}.dexSummary200 span{text-align:center;background:#f3f6fa;border-radius:9px;padding:7px 2px;font-size:7px}.dexSummary200 b{display:block;font-size:12px}.historyList200{display:grid;gap:5px}.historyList200>div{display:grid;grid-template-columns:1fr auto;gap:2px 8px;border-bottom:1px solid #eee;padding:5px 0}.historyList200 b{font-size:9px}.historyList200 span{font-size:8px}.historyList200 em{grid-column:1/3;font-style:normal;font-size:7px;color:#8b6a18}.saveRow200{display:flex;gap:6px;margin-top:10px}.saveRow200 button{flex:1;border:1px solid #bbb;border-radius:8px;background:#fff;padding:7px;font-size:8px;font-weight:900}.breedGoal200{margin-top:10px;padding:8px;border:1px solid #ffffff22;border-radius:10px;background:#06101c88}.breedGoal200>div:first-child{display:grid;grid-template-columns:auto 1fr auto;gap:6px;align-items:center}.breedGoal200 b{font-size:7px;color:#80e7ff;letter-spacing:.1em}.breedGoal200 span{font-size:7px;opacity:.7}.breedGoal200 em{font-style:normal;font-size:8px;color:#ffe174;font-weight:1000}.breedGoal200>div:last-child{height:5px;background:#ffffff18;border-radius:999px;margin-top:5px;overflow:hidden}.breedGoal200 i{display:block;height:100%;background:linear-gradient(90deg,#5ce5ff,#8d73ff,#ff6fb8);border-radius:999px}
 @media(max-width:430px){.specialGrid200{grid-template-columns:1fr}.dexSummary200{grid-template-columns:1fr 1fr}}

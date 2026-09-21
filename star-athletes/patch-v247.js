@@ -16,22 +16,7 @@ function skills247(){
  document.querySelectorAll('.train210').forEach(card=>{const id=card.dataset.athlete210||card.querySelector('[data-m210]')?.dataset.m210;put247(card,byId247(id),card.querySelector('header>div')||card)});
  document.querySelectorAll('.entries210>[data-m210]').forEach(card=>put247(card,byId247(card.dataset.m210),card));
 }
-function norm247(el){return (el?.textContent||'').replace(/\s+/g,' ').trim()}
-function affinity247(){
- const breed=document.getElementById('breed');if(!breed)return;
- const authoritative=e=>!!e.closest?.('#compatScore236,#compat233,.compatScore235,.compatScore234');
- // Locate the old BREED AFFINITY block and remove only its grade/star verdict, keeping the useful reasons and inheritance hints.
- [...breed.querySelectorAll('*')].forEach(panel=>{
-   if(authoritative(panel)||!norm247(panel).includes('BREED AFFINITY'))return;
-   [...panel.querySelectorAll('*')].forEach(el=>{
-     if(authoritative(el))return;
-     const t=norm247(el);
-     if(!el.children.length&&(/^(良い|とても良い|普通|やや悪い|悪い)$/.test(t)||/^[★☆]{2,5}$/.test(t)))el.style.display='none';
-     if(el.children.length>0&&el.children.length<=5){const a=[...el.children].map(norm247);if(a.some(x=>/^(良い|とても良い|普通|やや悪い|悪い)$/.test(x))&&a.some(x=>/^[★☆]{2,5}$/.test(x)))el.style.display='none'}
-   });
- });
-}
-function sync247(){try{skills247();affinity247()}catch(e){console.warn('sync247',e)}}
+function sync247(){try{skills247()}catch(e){console.warn('sync247',e)}}
 function late247(){sync247();[30,120,320,700].forEach(ms=>setTimeout(sync247,ms))}
 try{const prev247=render;render=function(){const out=prev247();late247();return out}}catch(e){console.warn('render247',e)}
 window.addEventListener('click',e=>{if(e.target?.closest?.('.tab,#doTrain,#run,#next225,#adopt,#breedBtn,#hatch,[data-p210],[data-e210],[data-mode="p"],[data-mode="c"]'))late247()},true);

@@ -49,7 +49,9 @@ function showReward302(list){
  });
 }
 function battleCard302(){
- const old=document.getElementById('nemesisCard268');if(!old)return;
+ const host=document.getElementById('rival');if(!host)return;
+ let old=document.getElementById('nemesisCard268');
+ if(!old){old=document.createElement('div');old.id='nemesisCard268';host.prepend(old)}
  const rank=Math.max(0,Math.min(5,Number(S.leagueRank)||0)),n=NEM302[rank],st=st302(),def=!!st.defeated[rank],rw=REW302[rank];
  old.innerHTML=`<div class="nem302 ${def?'def302':''}">
    <header>
@@ -83,7 +85,6 @@ if(result){new MutationObserver(()=>[0,80,250].forEach(ms=>setTimeout(sync302,ms
 try{const prev=render;render=function(){const out=prev();[0,50,160].forEach(ms=>setTimeout(sync302,ms));return out}}catch(e){console.warn('render302',e)}
 document.addEventListener('click',e=>{if(e.target?.closest?.('.tab,#run,#toMeet'))[0,80,250].forEach(ms=>setTimeout(sync302,ms))},true);
 const css=document.createElement('style');css.id='nemesis302Style';css.textContent=`
-#nemesisCard268 .nem268{display:none!important}
 .nem302{margin:0 0 9px;padding:10px;border:2px solid #8f3946;border-radius:14px;background:linear-gradient(145deg,#fff7f8,#fff);box-shadow:0 4px 0 #0001}
 .nem302.def302{border-color:#5c9a70;background:linear-gradient(145deg,#f2fff6,#fff)}
 .nem302 header{display:grid;grid-template-columns:46px 1fr auto;gap:8px;align-items:center}

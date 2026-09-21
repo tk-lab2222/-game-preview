@@ -1,5 +1,18 @@
 (()=>{
 // v0.31.25: keep candidate selection flow alive after lineage archive release.
+function setSelection311(ids){
+ const valid=new Set((S.cands||[]).map(m=>m?.id).filter(Boolean));
+ S.sel=[...new Set((Array.isArray(ids)?ids:[]).filter(id=>valid.has(id)))].slice(0,3);
+ restore311();
+}
+function select311(id){
+ const cands=Array.isArray(S?.cands)?S.cands:[];
+ if(!cands.some(m=>m?.id===id))return;
+ const sel=Array.isArray(S.sel)?S.sel.filter(x=>cands.some(m=>m?.id===x)):[];
+ if(sel.includes(id))S.sel=sel.filter(x=>x!==id);
+ else if(sel.length<3)S.sel=[...sel,id];
+ restore311();
+}
 function restore311(){
  const cands=Array.isArray(S?.cands)?S.cands:[];
  const box=document.getElementById('candBox');
@@ -26,18 +39,7 @@ function restore311(){
    el.onclick=e=>{
      e?.preventDefault?.();
      e?.stopPropagation?.();
-     const sel=Array.isArray(S.sel)?S.sel:[];
-     if(sel.includes(id)){
-       S.sel=sel.filter(x=>x!==id);
-       restore311();
-       return;
-     }
-     if(sel.length>=3){
-       // Selection is already full. Do not render/toggle/rebuild: this prevents mobile jitter.
-       return;
-     }
-     S.sel=[...sel,id];
-     restore311();
+     select311(id);
    };
  });
 
@@ -58,6 +60,7 @@ function restore311(){
  try{window.STAR_ULTRA274?.sync?.()}catch(_){}
  try{window.STAR_RARE273?.sync?.()}catch(_){}
  try{window.STAR_LINEAGE271?.sync?.()}catch(_){}
+ try{window.STAR_SKILL254?.sync?.()}catch(_){}
 }
 function late311(){[0,40,120,300,650].forEach(ms=>setTimeout(restore311,ms))}
 document.addEventListener('click',e=>{
@@ -76,5 +79,5 @@ css.textContent=`
 `;
 document.head.appendChild(css);
 late311();
-window.STAR_CANDIDATE311={sync:restore311};
+window.STAR_CANDIDATE311={sync:restore311,select:select311,setSelection:setSelection311};
 })();

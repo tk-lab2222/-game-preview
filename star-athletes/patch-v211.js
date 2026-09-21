@@ -45,17 +45,6 @@ document.addEventListener('click',e=>{
     if(Array.isArray(S.nest)&&S.nest.length===3){S.generationActive=true;saveLock211();syncLock211();showTrain211();}
   },0);
 },false);
-// patch-v119 handles season progression. Unlock only after the final S6 "next generation" action.
-document.addEventListener('click',e=>{
-  const next=e.target.closest?.('#next');if(!next)return;
-  const final=(S.season||1)>=6 || /次世代/.test(next.textContent||'');
-  if(!final)return;
-  setTimeout(()=>{
-    S.generationActive=false;
-    saveLock211();syncLock211();
-    try{typeof window.show==='function'&&window.show('breed')}catch(_){ }
-  },0);
-},false);
 const renderBefore211=render;
 render=function(){
   const out=renderBefore211();syncLock211();

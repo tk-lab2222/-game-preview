@@ -1,5 +1,6 @@
 (()=>{
 // v0.20.1: stabilize breeding/hatch data and move shop+missions to their own Nest tab.
+S.breedCount??=0;
 const DEFAULT_STATS201={power:90,speed:90,stamina:90,agility:90,tech:90,guts:90};
 function normalizeMonster201(m,index=0){
   if(!m||typeof m!=='object')return m;
@@ -26,30 +27,13 @@ function normalizeState201(){
   if(!Array.isArray(S.parents))S.parents=[];
   S.parents=S.parents.filter(id=>breederPool().some(m=>m.id===id)).slice(0,2);
 }
-function syncParents201(){
-  normalizeState201();
-  const pool=breederPool();
-  const a=pool.find(x=>x.id===S.parents[0]),b=pool.find(x=>x.id===S.parents[1]);
-  const pa=document.getElementById('pa'),pb=document.getElementById('pb');
-  if(pa)pa.innerHTML=a?`${avatar(a)}<b>${a.name}/${a.rarity}</b>`:'①親';
-  if(pb)pb.innerHTML=b?`${avatar(b)}<b>${b.name}/${b.rarity}</b>`:'②親';
-  document.querySelectorAll('#breeders [data-mode="p"]').forEach(card=>{
-    card.classList.toggle('sel',S.parents.includes(card.dataset.id));
-    card.onclick=e=>{
-      e.preventDefault();e.stopPropagation();
-      const id=card.dataset.id;
-      if(S.parents.includes(id))S.parents=S.parents.filter(x=>x!==id);
-      else if(S.parents.length<2)S.parents.push(id);
-      else S.parents=[S.parents[1],id];
-      syncParents201();
-      const btn=document.getElementById('breedBtn');
-      if(btn){btn.disabled=S.parents.length!==2||!!S.egg||S.cands.length>=cap();btn.textContent=S.parents.length===2?'✦ スター配合を開始':'親を2体選ぶ'}
-      try{window.paintSpecies&&window.paintSpecies()}catch(_){}
-    };
-  });
-  const btn=document.getElementById('breedBtn');
-  if(btn){btn.disabled=S.parents.length!==2||!!S.egg||S.cands.length>=cap();btn.textContent=S.parents.length===2?'✦ スター配合を開始':'親を2体選ぶ'}
-  try{window.paintSpecies&&window.paintSpecies()}catch(_){}
+function decorateBreed201(){
+  const hero=document.querySelector('.breedHero126');if(hero){
+    let strip=hero.querySelector('.breedStrip128');
+    if(!strip){strip=document.createElement('div');strip.className='breedStrip128';hero.insertBefore(strip,hero.children[1]||null)}
+    const af=S.parents?.length===2?'PAIR READY':'SELECT PARENTS';
+    strip.innerHTML=`<span>${af}</span><b>配合 ${S.breedCount||0} 回</b><em>高レア・色違い・理想個体を狙おう</em>`;
+  }
 }
 function repairBirth201(){
   normalizeState201();
@@ -61,7 +45,7 @@ function repairBirth201(){
   m=normalizeMonster201(m,777);
   const statHtml=Object.entries(m.stats).map(([k,v])=>`<div><span>${SL[k]||k}</span><b>${v}</b></div>`).join('');
   reveal.innerHTML=`<div class="resultBadge128">${['SSR','UR','EX'].includes(m.rarity)?'★ SPECIAL BIRTH ★':'NEW ATHLETE'}</div><div class="newbornLabel">NEW ATHLETE!</div>${avatar(m,true)}<div class="hatchName"><b>${m.name}</b><span>${m.rarity}</span></div><div class="hatchMeta">${SP[m.species][0]} ・ G${m.gen} ・ ${m.personality}</div><div class="traitRow hatchTraits"><span>${m.visual.pattern}</span><span>${m.visual.part}</span></div><div class="hatchStats">${statHtml}</div><div class="inheritBox"><b>継承</b><br>親：${m.origin}<br>見た目：${m.visual.color} / ${m.visual.pattern} / ${m.visual.part}${m.visual.acc!=='なし'?' / '+m.visual.acc:''}</div>`;
-  birth.classList.add('birthStage128');birth.dataset.rarity=m.rarity;
+  birth.classList.add('birthStage128');reveal.classList.add('contrast202');birth.dataset.rarity=m.rarity;
   try{window.paintSpecies&&window.paintSpecies()}catch(_){}
 }
 function ensureNestTab201(){
@@ -79,17 +63,26 @@ render=function(){
   normalizeState201();
   let out;
   try{out=renderBefore201()}catch(e){console.error('render before v201',e)}
-  ensureBreedCounters129?.();
-  syncParents201();
   ensureNestTab201();
-  setTimeout(()=>{syncParents201();repairBirth201();ensureNestTab201()},0);
+  decorateBreed201();
+  setTimeout(()=>{repairBirth201();ensureNestTab201();decorateBreed201()},0);
   return out;
 };
 // Normalize before hatch handlers run, then repair result after the existing animation chain.
 const hatch201=document.getElementById('hatch');
-if(hatch201)hatch201.addEventListener('click',()=>{normalizeState201();if(S.egg)normalizeMonster201(S.egg,999);setTimeout(()=>{normalizeState201();repairBirth201();try{save200&&save200()}catch(_){}},1100)},true);
+if(hatch201)hatch201.addEventListener('click',()=>{normalizeState201();if(S.egg){normalizeMonster201(S.egg,999);S.breedCount=(Number(S.breedCount)||0)+1}setTimeout(()=>{normalizeState201();repairBirth201();decorateBreed201();try{save200&&save200()}catch(_){}},1100)},true);
 const css=document.createElement('style');css.textContent=`
-#nest201{padding-bottom:90px}.nestSummary201{display:flex;justify-content:space-between;align-items:center;gap:10px;background:linear-gradient(145deg,#111c31,#243d61);color:#fff;border-radius:16px;padding:12px;margin-bottom:10px;box-shadow:0 6px 0 #0002}.nestSummary201 small{display:block;font-size:7px;letter-spacing:.14em;color:#8bdcff}.nestSummary201 b{font-size:15px}.nestWallet201{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.nestWallet201 span{font-size:8px;font-weight:1000;background:#ffffff14;border:1px solid #ffffff25;border-radius:999px;padding:5px 7px}.nestHost201>.box{margin:0 0 10px!important}.parentsHero126 .par.sel{outline:3px solid #68e4ff}.breedHero126 #pa,.breedHero126 #pb{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}.breedHero126 #pa b,.breedHero126 #pb b{font-size:9px;padding:3px 4px}.tabs{overflow-x:auto;justify-content:flex-start}.tabs .tab{min-width:64px;flex:1 0 64px}
+.birthStage128 .hatchReveal.contrast202 .newbornLabel{color:#241900!important;background:#ffd65a!important}
+.birthStage128 .hatchReveal.contrast202 .hatchStats div{color:#171717!important;background:#fffdf7!important}
+.birthStage128 .hatchReveal.contrast202 .hatchStats span,.birthStage128 .hatchReveal.contrast202 .hatchStats b{color:#171717!important}
+.birthStage128 .hatchReveal.contrast202 .inheritBox{color:#171717!important;background:#fff4c8!important}
+.birthStage128 .hatchReveal.contrast202 .inheritBox b{color:#171717!important}
+.birthStage128 .hatchReveal.contrast202 .hatchTraits span{color:#171717!important;background:#fff3bf!important}
+.birthStage128 .hatchReveal.contrast202 .hatchName b{color:#fff!important}
+.birthStage128 .hatchReveal.contrast202 .hatchMeta{color:#dceaff!important;opacity:.9!important}
+.breedStrip128{display:grid;grid-template-columns:auto auto 1fr;gap:6px;align-items:center;margin:0 0 9px;padding:7px 9px;border-radius:10px;background:#ffffff0d;border:1px solid #ffffff1c}.breedStrip128 span{font-size:7px;font-weight:1000;letter-spacing:.12em;color:#7ee8ff}.breedStrip128 b{font-size:10px;color:#ffe17a}.breedStrip128 em{font-style:normal;text-align:right;font-size:7px;opacity:.65}
+.birthStage128{margin-top:10px}.birthStage128 .hatchReveal{position:relative;overflow:hidden;border-radius:18px!important;background:radial-gradient(circle at 50% 25%,#29496d,#101a2c 52%,#080c16)!important;color:#fff!important;border:1px solid #75dfff55!important;box-shadow:0 12px 35px #0005,0 0 24px #52cfff33!important;padding:14px!important}.birthStage128 .hatchReveal:before{content:'';position:absolute;inset:-40%;background:conic-gradient(transparent,#6fe9ff18,transparent,#ff74cc18,transparent);animation:spin128 9s linear infinite;pointer-events:none}@keyframes spin128{to{transform:rotate(360deg)}}.birthStage128 .hatchReveal>*{position:relative;z-index:1}.birthStage128 .bigArt{height:180px!important;background:transparent!important;border:0!important}.birthStage128 .hatchName{display:flex!important;justify-content:center!important;align-items:center!important;gap:8px!important}.birthStage128 .hatchName b{font-size:20px!important}.birthStage128 .hatchName span{background:#ffd96b;color:#211600;border-radius:999px;padding:4px 8px;font-weight:1000}.resultBadge128{text-align:center;font-size:8px;letter-spacing:.16em;font-weight:1000;color:#8eeaff;margin-bottom:5px}.birthStage128[data-rarity='SSR'] .hatchReveal,.birthStage128[data-rarity='UR'] .hatchReveal,.birthStage128[data-rarity='EX'] .hatchReveal{box-shadow:0 12px 35px #0005,0 0 36px #ffd65c66!important}.birthStage128[data-rarity='EX'] .resultBadge128{color:#fff;text-shadow:0 0 10px #7df7ff,0 0 18px #ff7de8}
+#nest201{padding-bottom:90px}.nestSummary201{display:flex;justify-content:space-between;align-items:center;gap:10px;background:linear-gradient(145deg,#111c31,#243d61);color:#fff;border-radius:16px;padding:12px;margin-bottom:10px;box-shadow:0 6px 0 #0002}.nestSummary201 small{display:block;font-size:7px;letter-spacing:.14em;color:#8bdcff}.nestSummary201 b{font-size:15px}.nestWallet201{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.nestWallet201 span{font-size:8px;font-weight:1000;background:#ffffff14;border:1px solid #ffffff25;border-radius:999px;padding:5px 7px}.nestHost201>.box{margin:0 0 10px!important}.tabs{overflow-x:auto;justify-content:flex-start}.tabs .tab{min-width:64px;flex:1 0 64px}
 `;document.head.appendChild(css);
 setTimeout(()=>{try{render()}catch(e){console.error('v0.20.1 init',e)}},0);
 })();

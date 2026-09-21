@@ -27,3 +27,24 @@
 @media (max-width:340px){
  .tabs .tab{font-size:8px;letter-spacing:-.02em}
 }
+
+/* Consolidated shop presentation from retired patch-v122/v306 */
+.shop122{background:linear-gradient(180deg,#fffdf5,#fff7d9);border:2px solid #e1b94f!important}
+.shopHead122{display:flex;align-items:center;justify-content:space-between;gap:10px}.shopHead122 small{font-size:7px;letter-spacing:.15em;color:#9b6a00;font-weight:1000}.shopHead122 h3{margin:1px 0 0}.shopHead122>b{background:#221a06;color:#ffd966;border-radius:999px;padding:6px 10px;font-size:11px;white-space:nowrap}
+.shopNote122{font-size:9px;color:#66552a;margin:5px 0 9px}.shopGrid122{display:grid;grid-template-columns:1fr 1fr;gap:7px}.shopItem122{display:grid;grid-template-columns:34px 1fr;gap:4px 7px;align-items:center;border:1px solid #d6ba69;background:#fff;border-radius:12px;padding:7px;box-shadow:0 2px 0 #0001}.shopIcon122{font-size:26px;text-align:center}.shopText122{min-width:0}.shopText122 b{display:block;font-size:10px}.shopText122 small{display:block;font-size:7px;color:#666;line-height:1.35}.shopItem122 select{grid-column:1/3;width:100%;font-size:9px;padding:5px}.shopItem122 button{grid-column:1/3;border:0;border-radius:8px;background:#222;color:#ffd966;font-weight:1000;padding:7px;font-size:9px}.shopItem122 button:disabled{opacity:.35}.shopMsg122{min-height:16px;font-size:9px;font-weight:1000;color:#a04e00;margin-top:7px}
+#shop122 [data-buy122],#shop122 [data-special200]{pointer-events:auto!important;touch-action:manipulation!important}
+#shop122 select{pointer-events:auto!important;touch-action:auto!important;position:relative;z-index:3;min-height:38px}
+#shop122 button{min-height:42px}
+@media(max-width:430px){.shopGrid122{grid-template-columns:1fr}}
+
+
+/* Consolidated tournament card compatibility from retired patch-v125 */
+.meetChoice119{display:grid!important;gap:8px!important}
+.tier125{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:3px}
+.tier125 b{font-size:8px!important}.tier125 strong{font-size:7px;color:#6a7480}
+.meetChoiceCard125{display:grid!important;gap:4px!important;text-align:left!important;border:2px solid #26364e!important;border-radius:14px!important;background:linear-gradient(145deg,#fff,#edf5ff)!important;padding:10px!important;box-shadow:0 4px 0 #0001!important}
+.meetChoiceCard125 b{font-size:12px}.meetChoiceCard125 span{font-size:9px;color:#445}.meetChoiceCard125 small{font-size:8px;color:#667}.meetChoiceCard125 em{font-style:normal;font-size:8px;font-weight:1000;color:#0870a8}.meetChoiceCard125.sel{background:linear-gradient(145deg,#e6f8ff,#fff7d4)!important;outline:3px solid #58cfff!important}
+
+
+/* Consolidated hatch safe area from v104 */
+.hatchReveal .bigArt .dracoCanvas{transform:scale(.90);transform-origin:center center}

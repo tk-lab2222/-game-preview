@@ -24,10 +24,11 @@ function sync264(){
   }
 }
 window.addEventListener('click',e=>{
-  const b=e.target?.closest?.('.tab[data-v="breed"]');
+  const b=e.target?.closest?.('.tab[data-v="breed"],#breedBtn');
   if(!b||!active264())return;
   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
   try{typeof show==='function'&&show(target264())}catch(_){}
+  if(b.id==='breedBtn'){b.disabled=true;b.textContent='育成・大会中は配合不可'}
   sync264();
 },true);
 function late264(){sync264();[40,120,300,650].forEach(ms=>setTimeout(sync264,ms))}

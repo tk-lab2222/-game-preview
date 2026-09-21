@@ -32,25 +32,17 @@ function inject268(){
  r.nemesis268=true;r.bloodline268=n.blood;r.skill268=n.skill;r.weak268=n.weak;
  state268().seen[rank]=true;save268();
 }
-function render268(){
- const host=document.getElementById('rival');if(!host)return;
- inject268();
- const rank=rank268(),n=nem268(rank),st=state268(),def=!!st.defeated[rank];
- let card=document.getElementById('nemesisCard268');if(!card){card=document.createElement('div');card.id='nemesisCard268';host.prepend(card)}
- card.innerHTML=`<div class="nem268 ${def?'def268':''}"><div class="nemHead268"><div><small>RIVAL BLOODLINE</small><b>⚔️ ${n.name}</b><em>${n.blood}</em></div><span>${def?'撃破済':'宿敵血統'}</span></div><div class="nemGrid268"><p><small>得意</small><b>${LABEL268[n.strong]}</b></p><p><small>SKILL</small><b>${n.skill}</b></p><p><small>弱点</small><b>${LABEL268[n.weak]}</b></p></div><div class="nemNote268">${n.note}</div><small class="nemHint268">この宿敵血統は同じリーグで再登場。得意・弱点を見て、次世代の配合と育成で対策しよう。</small></div>`;
-}
 function mark268(){
  const result=document.getElementById('result');if(!result)return;
  const txt=result.textContent||'';
  if(!txt.includes('総合1位')&&!txt.includes('昇格成功'))return;
  const rank=rank268(),st=state268();if(st.defeated[rank])return;
- st.defeated[rank]={season:Number(S.season)||1,at:Date.now()};save268();render268();
+ st.defeated[rank]={season:Number(S.season)||1,at:Date.now()};save268();try{window.STAR_NEMESIS302?.sync?.()}catch(_){}
 }
 window.addEventListener('click',e=>{
- if(e.target?.closest?.('.tab[data-v="meet"],#toMeet'))setTimeout(()=>{inject268();render268()},60);
+ if(e.target?.closest?.('.tab[data-v="meet"],#toMeet'))setTimeout(inject268,60);
  if(e.target?.closest?.('#run')){setTimeout(mark268,900);setTimeout(mark268,1800);setTimeout(mark268,3200)}
 },true);
-function late268(){if(!document.getElementById('meet')?.classList.contains('hide')){inject268();render268()}[100,300].forEach(ms=>setTimeout(()=>{if(!document.getElementById('meet')?.classList.contains('hide'))render268()},ms))}
-try{const prev268=render;render=function(){const out=prev268();late268();return out}}catch(e){console.warn('render268',e)}
-const css=document.createElement('style');css.textContent=`.nem268{margin:0 0 9px;padding:9px;border:2px solid #9b3e48;border-radius:12px;background:linear-gradient(145deg,#fff5f5,#fff)}.nem268.def268{border-color:#71967c;background:#f5fff7}.nemHead268{display:flex;justify-content:space-between;align-items:center;gap:8px}.nemHead268 small{display:block;font-size:6px;color:#9b3e48;font-weight:1000}.nemHead268 b{display:block;font-size:11px}.nemHead268 em{font-size:7px;font-style:normal;color:#72565a}.nemHead268>span{font-size:7px;font-weight:1000;border:1px solid #9b3e48;border-radius:999px;padding:3px 7px}.nemGrid268{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:7px 0}.nemGrid268 p{margin:0;padding:5px;border:1px solid #d8c2c5;border-radius:8px;background:#fff}.nemGrid268 small{display:block;font-size:6px;color:#806b6e}.nemGrid268 b{font-size:8px}.nemNote268{font-size:8px;font-weight:900}.nemHint268{display:block;margin-top:4px;font-size:6px;color:#76676a}`;document.head.appendChild(css);late268();
+try{const prev268=render;render=function(){const out=prev268();if(!document.getElementById('meet')?.classList.contains('hide'))inject268();return out}}catch(e){console.warn('render268',e)}
+inject268();
 })();
