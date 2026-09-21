@@ -12,7 +12,10 @@ function select262(id){
  const sel=Array.isArray(S.sel)?S.sel.filter(x=>(S.cands||[]).some(m=>m?.id===x)):[];
  if(sel.includes(id))S.sel=sel.filter(x=>x!==id);
  else if(sel.length<3)S.sel=[...sel,id];
+ else return;
+ try{typeof save200==='function'&&save200()}catch(_){}
  refreshSelection262();
+ try{window.syncAdopt210?.()}catch(_){}
 }
 function restoreFlow262(){
  const cands=Array.isArray(S?.cands)?S.cands:[];
@@ -104,13 +107,18 @@ function render262(){
 };
  decorateCards262(sorted);
  refreshSelection262();
- grid.querySelectorAll('[data-mode="c"]').forEach(card=>{
-   card.onclick=e=>{e?.preventDefault?.();e?.stopPropagation?.();select262(card.dataset.id)};
- });
 }
 function late262(){render262();[60,180,420].forEach(ms=>setTimeout(render262,ms))}
 try{const prev262=render;render=function(){const out=prev262();late262();return out}}catch(e){console.warn('render262',e)}
-window.addEventListener('click',e=>{if(e.target?.closest?.('#batchGo260,#hatch,#adopt,#lineagePool [data-release],.tab[data-v="breed"]'))late262()},true);
+window.addEventListener('click',e=>{
+ const card=e.target?.closest?.('#cands [data-mode="c"][data-id]');
+ if(card){
+   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   select262(card.dataset.id);
+   return;
+ }
+ if(e.target?.closest?.('#batchGo260,#hatch,#adopt,#lineagePool [data-release],.tab[data-v="breed"]'))late262();
+},true);
 window.STAR_CANDIDATE262={sync:render262,select:select262,setSelection:setSelection262,restore:restoreFlow262};
 const css=document.createElement('style');css.textContent=`
 .candidateCompare262{margin:0 0 10px;padding:10px;border:2px solid #667b91;border-radius:13px;background:linear-gradient(145deg,#f8fbff,#eef4f8)}.candidateCompare262.hide{display:none}
