@@ -146,9 +146,6 @@ function breeders321(){
     let mx=3;try{mx=typeof cap==='function'?cap():3}catch(_){}
     btn.disabled=S.parents.length!==2||!!S.egg||(S.cands||[]).length>=mx;
   }
-
-  // v271's duplicate hidden block is legacy. Keep titles, but one genetics block only.
-  host.querySelectorAll('.parentLineage271>.hidden271').forEach(x=>x.style.setProperty('display','none','important'));
 }
 function compatibility321(){
   const section=document.getElementById('breed');if(!section)return;
@@ -236,8 +233,6 @@ function sync321(){
     try{window.STAR_RARE273?.sync?.()}catch(_){}
     try{window.STAR_ULTRA274?.sync?.()}catch(_){}
     try{window.STAR_SKILL254?.sync?.()}catch(_){}
-    // v271 may recreate its legacy hidden block after sync; keep it suppressed.
-    document.querySelectorAll('#breeders .parentLineage271>.hidden271').forEach(x=>x.style.setProperty('display','none','important'));
   }finally{syncing321=false}
 }
 function late321(){[0,30,90,220,500,900].forEach(ms=>setTimeout(sync321,ms))}
