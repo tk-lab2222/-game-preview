@@ -136,10 +136,16 @@ function beginPromo225(){
  document.getElementById('result').innerHTML='';document.getElementById('events').innerHTML='';renderRivals225(true);
 }
 function installNext225(){
- const p=document.querySelector('#meet .box p');if(!p)return;
+ const p=document.getElementById('meetNext303')||document.querySelector('#meet .box p');if(!p)return;
  let b=document.getElementById('next225');if(!b){b=document.createElement('button');b.id='next225';b.type='button';b.className='btn yl';p.appendChild(b)}
+ else if(b.parentElement!==p)p.appendChild(b);
  b.style.display='inline-block';
  b.textContent=(Number(S.season)||1)<6?'次シーズンへ':'年間結果へ';b.onclick=nextSeason225
+}
+function restoreNext225(){
+ const result=document.getElementById('result'),season=Math.max(1,Math.min(6,Number(S?.season)||1));
+ if(!result?.textContent?.trim()||S?.promotion233||season>=6)return;
+ if(/総合\d+位|昇格/.test(result.textContent))installNext225();
 }
 function wire225(){
  init225();renderLeague225();
@@ -147,7 +153,7 @@ function wire225(){
  const meetTab=document.querySelector('.tab[data-v="meet"]');if(meetTab&&!meetTab.dataset.rival225){meetTab.dataset.rival225='1';meetTab.addEventListener('click',()=>setTimeout(()=>renderRivals225(false),0))}
  const to=document.getElementById('toMeet');if(to&&!to.dataset.rival225){to.dataset.rival225='1';to.addEventListener('click',()=>setTimeout(()=>renderRivals225(false),0))}
  if(!document.getElementById('meet')?.classList.contains('hide'))renderRivals225(false);
- if(document.getElementById('result')?.textContent.trim())installNext225();
+ if(document.getElementById('result')?.textContent.trim())restoreNext225();
 }
 
 window.STAR_TOUR225={
@@ -155,6 +161,7 @@ window.STAR_TOUR225={
  generateRivals:(promo=false)=>mkRivals225(!!promo),
  buildRivals:(tier='standard',promo=false)=>buildRivals225(tier,!!promo),
  ensureRivals:(promo=false)=>ensureRivals225(!!promo),
+ ensureNext:restoreNext225,
  score:score225,
  comparePower:comparePower225
 };
@@ -162,5 +169,6 @@ const css=document.createElement('style');css.textContent=`
 .league225{background:linear-gradient(145deg,#0e1b31,#142a49)!important;color:#fff;border:1px solid #65d8ff55!important}.leagueHead225{display:flex;justify-content:space-between;align-items:center}.leagueHead225 small{display:block;font-size:7px;color:#72dcff;font-weight:1000;letter-spacing:.14em}.leagueHead225 b{font-size:16px}.leagueHead225>span{background:#ffffff17;border:1px solid #ffffff22;border-radius:999px;padding:5px 8px;font-size:9px;font-weight:1000}.leagueTrack225{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin:9px 0}.leagueTrack225 i{font-style:normal;text-align:center;opacity:.35;font-size:15px}.leagueTrack225 i small{display:block;font-size:5px}.leagueTrack225 .done225,.leagueTrack225 .now225{opacity:1}.leagueTrack225 .now225{background:#ffffff15;border-radius:8px;padding:3px}.leagueRule225{font-size:8px;color:#dcecff}.rivalPanel225{margin:8px 0;padding:10px;border:2px solid #273d5d;border-radius:15px;background:linear-gradient(145deg,#f8fbff,#eaf3ff);color:#172033}.rivalPanel225.promo225{border-color:#e5a800;background:linear-gradient(145deg,#fff9df,#fff1b9)}.rivalTop225{display:flex;justify-content:space-between;gap:8px}.rivalTop225 small{display:block;font-size:7px;letter-spacing:.14em;color:#607998}.rivalTop225 b{font-size:13px}.chance225{text-align:right}.chance225 span,.chance225 em{display:block;font-size:6px;font-style:normal}.chance225 strong{font-size:20px}.powerCompare225{display:grid;grid-template-columns:1fr 34px 1fr;align-items:center;gap:6px;margin:8px 0;font-size:8px}.powerCompare225 i{height:4px;background:linear-gradient(90deg,#2ca8ff,#ff774d);border-radius:99px}.powerCompare225 span:last-child{text-align:right}.rivalCards225{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.rivalCards225 article{border:1px solid #bac9db;border-radius:10px;background:#fff;padding:6px}.rivalCards225 header{display:flex;justify-content:space-between;align-items:center;gap:3px}.rivalCards225 header b{font-size:9px}.rivalCards225 header em{font-size:5px;font-style:normal;background:#fff0b3;border-radius:999px;padding:2px 4px}.rivalCards225 article>div{margin-top:4px}.rivalCards225 article span{display:flex;justify-content:space-between;font-size:5.5px;border-top:1px dotted #d4deea;padding:1px}.rivalCards225 .hot225{background:#fff1dd;color:#a94900;font-weight:1000}.rivalNote225{display:block;margin-top:6px;color:#65758a;font-size:6px}.tourSelect225{border:2px solid #496984!important;background:linear-gradient(145deg,#f8fbff,#edf6ff)!important}.tourHead225{display:flex;justify-content:space-between;align-items:center}.tourHead225 small{display:block;font-size:6px;color:#63798e;font-weight:1000;letter-spacing:.12em}.tourHead225 b{font-size:13px}.tourHead225>span{font-size:7px;border:1px solid #9aabba;border-radius:999px;padding:4px 7px;background:#fff}.tourSelect225>p{margin:7px 0;font-size:7px;color:#607182}.tourChoices225{display:grid;gap:6px}.tourChoices225 button{border:1px solid #b7c6d3;border-radius:10px;background:#fff;padding:8px;text-align:left;color:#23364a}.tourChoices225 button.on225{border:2px solid #2f79ad;background:#eef8ff}.tourChoices225 header{display:flex;justify-content:space-between;align-items:center}.tourChoices225 header b{font-size:9px}.tourChoices225 header strong{font-size:13px}.tourChoices225 small{display:block;font-size:6px;color:#687a8b}.tourChoices225 button>div{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}.tourChoices225 button>div span{font-size:6px;border-radius:999px;padding:3px 5px;background:#eef2f5}.tourNote225{display:block;margin-top:6px;font-size:6px;color:#697b89}
 .battleEvent225{padding:12px;border-radius:12px;background:#13233c;color:#fff;text-align:center}.battleEvent225 b,.battleEvent225 span,.battleEvent225 small{display:block}.battleEvent225 strong{display:block;font-size:26px;color:#ffe36e}.leagueResult225 em{font-style:normal;color:#ffd65a;font-weight:1000}.leagueResult225.win225 strong{color:#69f2a9}.leagueResult225.lose225 strong{color:#ffb184}
 `;document.head.appendChild(css);
+document.addEventListener('click',e=>{if(e.target?.closest?.('.tab,#run,#next225,#annualNext233'))setTimeout(restoreNext225,0)},true);
 setTimeout(wire225,0);
 })();
