@@ -30,7 +30,7 @@ function applyPolicy266(k){
   persistPlans266();
 }
 function choose266(k){
-  if(!POL266[k]||Number(S.turn)>0)return;
+  if(!POL266[k]||Number(S.turn)>=3)return;
   state266().policy266=k;applyPolicy266(k);persist266();
   try{window.renderRoster210Live&&window.renderRoster210Live()}catch(_){}
   setTimeout(()=>{try{window.renderRoster210Live&&window.renderRoster210Live()}catch(_){};render266()},80);
@@ -40,11 +40,11 @@ function render266(){
   const plans=document.getElementById('plans');if(!plans||!Array.isArray(S.nest)||S.nest.length!==3)return;
   let host=document.getElementById('policy266');
   if(!host){host=document.createElement('div');host.id='policy266';host.className='policy266';plans.before(host)}
-  const cur=policy266(),locked=Number(S.turn)>0;
+  const cur=policy266(),locked=Number(S.turn)>=3;
   host.innerHTML=`<div class="policyHead266"><div><small>GENERATION POLICY</small><b>今世代の育成方針</b></div>${cur?`<strong>${POL266[cur].icon} ${POL266[cur].name}</strong>`:'<strong>未選択</strong>'}</div>
     <div class="policyGrid266">${Object.entries(POL266).map(([k,p])=>`<button type="button" data-policy266="${k}" class="${cur===k?'on266':''}" ${locked?'disabled':''}><b>${p.icon} ${p.name}</b><small>${p.desc}</small></button>`).join('')}</div>
-    <div class="policyApplied266">${cur?`自動設定：${(S.nest||[]).map(m=>`${m.name}→${PLAN_NAME266[S.plans?.[m.id]]||S.plans?.[m.id]||'-'} / ${state266().intensity?.[m.id]==='safe'?'安全':state266().intensity?.[m.id]==='high'?'高負荷':'標準'}`).join('　')}`:'方針を選ぶと3体の練習メニューが自動で切り替わります'}</div><div class="policyHint266">${cur?(locked?'この世代は「'+POL266[cur].name+'」で固定中':'育成開始までは変更できます'):'最初の育成前に1つ選択。固定の最強方針ではなく、育て方を変える選択です。'}</div>`;
-  const go=document.getElementById('doTrain263');if(go){go.disabled=Number(S.turn)>=3||!cur;go.title=!cur?'先に今世代の育成方針を選んでください':''}
+    <div class="policyApplied266">${cur?`自動設定：${(S.nest||[]).map(m=>`${m.name}→${PLAN_NAME266[S.plans?.[m.id]]||S.plans?.[m.id]||'-'} / ${state266().intensity?.[m.id]==='safe'?'安全':state266().intensity?.[m.id]==='high'?'高負荷':'標準'}`).join('　')}`:'方針を選ぶと3体の練習メニューが自動で切り替わります'}</div><div class="policyHint266">${cur?(locked?'育成完了':'ラウンドごとに変更できます'):'最初の育成前に1つ選択。固定の最強方針ではなく、育て方を変える選択です。'}</div>`;
+  const go=document.getElementById('doTrain263');if(go){go.disabled=Number(S.turn)>=3;go.title=''}
 }
 // Modify M2.2 outcome multipliers, while leaving click ownership with v263.
 try{
