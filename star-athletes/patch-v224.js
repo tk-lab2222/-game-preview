@@ -45,12 +45,6 @@ function addRename224(){
    const head=c.querySelector('header>div');if(!head)return;
    const b=document.createElement('button');b.type='button';b.className='rename224 renameTrain224';b.dataset.rename224=id;b.textContent='✏️ 名前';head.appendChild(b);
  });
- document.querySelectorAll('.athTrain208').forEach(c=>{
-   if(c.querySelector('.rename224'))return;
-   const id=c.querySelector('[data-mon208]')?.dataset.mon208;if(!id)return;
-   const head=c.querySelector('header>div');if(!head)return;
-   const b=document.createElement('button');b.type='button';b.className='rename224 renameTrain224';b.dataset.rename224=id;b.textContent='✏️ 名前';head.appendChild(b);
- });
 }
 // Capture before parent card tap handlers so rename never selects a breeder/candidate by accident.
 document.addEventListener('click',e=>{
