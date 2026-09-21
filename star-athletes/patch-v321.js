@@ -120,11 +120,19 @@ function breeders321(){
   // v271's duplicate hidden block is legacy. Keep titles, but one genetics block only.
   host.querySelectorAll('.parentLineage271>.hidden271').forEach(x=>x.style.setProperty('display','none','important'));
 }
+function cleanupCompatHelp321(){
+  const breed=document.getElementById('breed');if(!breed)return;
+  const obsolete='親を2体選ぶと相性が表示されます';
+  breed.querySelectorAll('*').forEach(el=>{
+    if(el.children.length===0&&(el.textContent||'').replace(/\s+/g,' ').trim()===obsolete)el.remove();
+  });
+}
 function sync321(){
   if(syncing321)return;
   syncing321=true;
   try{
     copy321();
+    cleanupCompatHelp321();
     breeders321();
     try{window.STAR_LINEAGE271?.sync?.()}catch(_){}
     try{window.STAR_RARE273?.sync?.()}catch(_){}
@@ -155,6 +163,10 @@ const breedersHost=document.getElementById('breeders');
 if(breedersHost){
   new MutationObserver(()=>{if(!syncing321)setTimeout(sync321,0)})
     .observe(breedersHost,{childList:true});
+}
+const breed321=document.getElementById('breed');
+if(breed321){
+  new MutationObserver(()=>cleanupCompatHelp321()).observe(breed321,{childList:true,subtree:true});
 }
 window.addEventListener('pageshow',late321);
 
