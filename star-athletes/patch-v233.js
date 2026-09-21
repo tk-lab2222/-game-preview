@@ -95,9 +95,6 @@ function repairEarlyHidden233(){
 function rankName233(v){return RK233[clamp233(n233(v),0,7)]}
 function topStat233(m){let k=K233[0];for(const x of K233)if(n233(m.stats?.[x])>n233(m.stats?.[k]))k=x;return k}
 function skillEffect233(m,stats){const out={...stats};for(const id of(m.skills233||[])){const sk=SK233[id];if(sk)out[sk.key]=Math.min(999,Math.round(n233(out[sk.key])*sk.mul))}return out}
-function skillPills233(){
- document.querySelectorAll('.skill232,.skills233').forEach(x=>x.remove());
-}
 // ---------- strict parent compatibility / hidden-info disclosure ----------
 const PAIR233={draco:{draco:14,unil:22,grimo:20,puru:18},unil:{draco:22,unil:14,grimo:23,puru:19},grimo:{draco:20,unil:23,grimo:14,puru:22},puru:{draco:18,unil:19,grimo:22,puru:15}};
 const PERS233={熱血:{熱血:8,冷静:20,負けず嫌い:14,お調子者:12,臆病:10,マイペース:16},冷静:{熱血:20,冷静:13,負けず嫌い:17,お調子者:15,臆病:18,マイペース:16},負けず嫌い:{熱血:14,冷静:17,負けず嫌い:9,お調子者:12,臆病:15,マイペース:18},お調子者:{熱血:12,冷静:15,負けず嫌い:12,お調子者:10,臆病:17,マイペース:16},臆病:{熱血:10,冷静:18,負けず嫌い:15,お調子者:17,臆病:11,マイペース:19},マイペース:{熱血:16,冷静:16,負けず嫌い:18,お調子者:16,臆病:19,マイペース:12}};
@@ -115,7 +112,6 @@ function compatibility233(a,b){
 }
 function compatLabel233(s){return s>=90?'✨ 運命的':s>=75?'★ とても良い':s>=60?'◎ 好相性':s>=40?'○ まずまず':'△ かみ合いにくい'}
 function reveal233(a,b,score){const h=(k)=>rankName233(Math.round((n233(a.hidden233[k])+n233(b.hidden233[k]))/2)),arr=[];if(score>=40)arr.push(['成長力',h('growth')]);if(score>=60){arr.push(['遺伝力',h('heredity')],['安定性',h('stability')])}if(score>=75){arr.push(['勝負強さ',h('clutch')],['気性',a.hidden233.temperament+' × '+b.hidden233.temperament])}if(score>=90)arr.push(['変異因子',h('mutation')],['LUCK',h('luck')]);return arr}
-function renderCompat233(){document.getElementById('compat233')?.remove()}
 function rareStrength233(m){
  const s=Number(m?.ultraRare274?.strength274);
  return Number.isFinite(s)?Math.max(.70,Math.min(1.30,s/100)):1;
@@ -204,10 +200,10 @@ window.addEventListener('click',e=>{const run=e.target?.closest?.('#run');if(run
 // no mid-year promotion: own #next225 throughout S1-S6
 window.addEventListener('click',e=>{const b=e.target?.closest?.('#next225');if(!b)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if((n233(S.season)||1)<6)advanceSeason233();else annualFinish233()},true);
 window.addEventListener('click',e=>{if(e.target?.closest?.('#run')&&S.promotion233){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();runPromotion233()}},true);
-const beforeRender233=render;render=function(){const out=beforeRender233();setTimeout(()=>{renderAnnual233();skillPills233();renderCompat233()},0);return out};
+const beforeRender233=render;render=function(){const out=beforeRender233();setTimeout(renderAnnual233,0);return out};
 const css=document.createElement('style');css.textContent=`
 .annual233{border:2px solid #cda631!important;background:linear-gradient(145deg,#fff9dc,#fff)!important}.annualHead233,.compatHead233{display:flex;justify-content:space-between;align-items:center}.annualHead233 small,.compatHead233 small{display:block;font-size:7px;color:#8a6f17}.annualHead233 b,.compatHead233 b{font-size:13px}.annualList233{display:grid;gap:4px;margin:8px 0}.annualList233>div{display:grid;grid-template-columns:22px 1fr auto;gap:5px;padding:5px 7px;border-radius:8px;background:#fff;border:1px solid #eadb9b;font-size:9px}.annualList233 .you233,.annualFinal233 .you233{background:#fff0a6!important}.annualList233 i{font-style:normal;font-weight:1000}.skills233{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}.skills233 span{border:1px solid #b8a4dd;background:#f5efff;border-radius:999px;padding:3px 6px;font-size:7px;font-weight:1000;color:#56436f}.compat233{margin:8px 0 4px;padding:9px;border:2px solid #8fb5d9;border-radius:13px;background:#f5fbff}.compat233.hide{display:none}.compatHead233 strong{font-size:10px}.compatBar233{height:7px;background:#dbe7ef;border-radius:999px;overflow:hidden;margin:7px 0}.compatBar233 i{display:block;height:100%;background:linear-gradient(90deg,#79b7df,#e5bd4f);border-radius:999px}.compatBreak233{font-size:6px;line-height:1.5;color:#65778a}.reveal233{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:7px}.reveal233>small{grid-column:1/3;font-size:7px;color:#52677b}.reveal233 span{display:flex;justify-content:space-between;border:1px solid #cbd9e6;border-radius:7px;background:#fff;padding:4px 6px;font-size:7px}.reveal233 em{font-style:normal;font-weight:1000}.compatHint233{font-size:7px;color:#687b8e;margin-top:6px}.annualFinal233{margin-top:10px;padding:10px;border:2px solid #d9b13e;border-radius:12px;background:#fff7cf;color:#42350d}.annualFinal233>div{display:grid;gap:3px;margin:7px 0}.annualFinal233 span{display:flex;justify-content:space-between;padding:4px 6px;border-radius:6px;background:#fff;font-size:8px}.annualFinal233 em{font-style:normal;font-weight:1000}.skillLearn233{margin:8px 0;padding:7px;border-radius:9px;background:#f2eaff!important;border:1px solid #bea6e5;font-size:9px}.skillNo233{margin:7px 0!important;font-size:7px;color:#786b56}
 `;document.head.appendChild(css);
-setTimeout(()=>{migrate233();repairEarlyHidden233();ensureAnnual233();renderAnnual233();skillPills233();renderCompat233()},0);
+setTimeout(()=>{migrate233();repairEarlyHidden233();ensureAnnual233();renderAnnual233()},0);
 window.STAR_ANNUAL233={showPromotion:showPromotion233,runPromotion:runPromotion233,finishGeneration:finishGen233,annualFinish:annualFinish233,ensureHidden:(m)=>hidden233(m),compatibility:compatibility233,compatLabel:compatLabel233,reveal:reveal233};
 })();
