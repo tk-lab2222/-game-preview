@@ -16,6 +16,7 @@ function cards249(){
 function hatchFx249(){const box=document.querySelector('#birth .hatchReveal');if(!box||!hatch249)return;for(const r of ORDER249)box.classList.remove('hatch-'+r.toLowerCase()+'249');box.classList.add('hatchRarity249','hatch-'+String(hatch249.rarity||'C').toLowerCase()+'249');box.dataset.rarity249=hatch249.rarity||'C';let fx=box.querySelector('.hatchAura249');if(!fx){fx=document.createElement('div');fx.className='hatchAura249';fx.innerHTML='<i></i><i></i><i></i><i></i><b></b>';box.prepend(fx)}let lab=box.querySelector('.hatchRarityLabel249');if(!lab){lab=document.createElement('div');lab.className='hatchRarityLabel249';box.querySelector('.newbornLabel')?.after(lab)}if(lab)lab.textContent=(hatch249.rarity||'C')+(rk249(hatch249.rarity)>=4?' ✦':'')}
 function sync249(){cards249();hatchFx249()}
 function late249(){sync249();[40,120,280,650].forEach(ms=>setTimeout(sync249,ms))}
+window.STAR_RARITY249={sync:sync249};
 window.addEventListener('click',e=>{if(e.target?.closest?.('#hatch'))hatch249=S.egg?{id:S.egg.id,rarity:S.egg.rarity}:null;if(e.target?.closest?.('.tab,#hatch,#adopt,#doTrain,#run,#next225,[data-mode="p"],[data-mode="c"]'))late249()},true);
 try{const prev249=render;render=function(){const out=prev249();late249();return out}}catch(e){console.warn('render249',e)}
 const css=document.createElement('style');css.textContent=`
