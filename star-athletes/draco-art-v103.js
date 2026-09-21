@@ -16,7 +16,31 @@ function tf(slot,v){const q=SLOTS[slot],p=P[slot][v];return {cx:(q[0]+p[0])/100*
 function drawPart(ctx,im,slot,v,extra=1){const t=tf(slot,v),fit=Math.min(t.bw/im.naturalWidth,t.bh/im.naturalHeight)*t.s*extra,w=im.naturalWidth*fit,h=im.naturalHeight*fit;ctx.save();ctx.translate(t.cx,t.cy);ctx.rotate(t.r*Math.PI/180);ctx.scale(t.fx?-1:1,1);ctx.drawImage(im,-w/2,-h/2,w,h);ctx.restore()}
 let winglessPromise=null;
 async function wingless(){if(winglessPromise)return winglessPromise;winglessPromise=(async()=>{const [body,wing]=await Promise.all([img(G+'body_base_clean.png?v='+AV),img(G+'wing_normal_clean.png?v='+AV)]);const c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');x.drawImage(body,0,0,W,H);x.globalCompositeOperation='destination-out';drawPart(x,wing,'wing_left','normal',1.045);drawPart(x,wing,'wing_right','normal',1.045);x.globalCompositeOperation='source-over';return c})();return winglessPromise}
-async function paintOne(c){if(c.dataset.painting==='1')return;c.dataset.painting='1';try{const horn=c.dataset.horn||'normal',wing=c.dataset.wing||'normal',tail=c.dataset.tail||'normal';c.width=W;c.height=H;const ctx=c.getContext('2d');ctx.clearRect(0,0,W,H);const [base,wL,wR]=await Promise.all([wingless(),img(G+`wing_${wing}_clean.png?v=${AV}`),img(G+`wing_${wing}_clean.png?v=${AV}`)]);drawPart(ctx,wL,'wing_left',wing);drawPart(ctx,wR,'wing_right',wing);ctx.drawImage(base,0,0,W,H);if(tail!=='normal'){const t=await img(G+`tail_${tail}_clean.png?v=${AV}`);drawPart(ctx,t,'tail',tail)}if(horn!=='normal'){const [hl,hr]=await Promise.all([img(G+`horn_${horn}_left.png?v=413`),img(G+`horn_${horn}_right.png?v=413`)]);drawPart(ctx,hl,'horn_left',horn);drawPart(ctx,hr,'horn_right',horn)}c.dataset.painting='0';c.dataset.painted='1'}catch(e){c.dataset.painting='0'}}
+const boundsCache={};
+function alphaBounds103(canvas,key){
+ if(boundsCache[key])return boundsCache[key];
+ const x=canvas.getContext('2d'),d=x.getImageData(0,0,W,H).data;
+ let minX=W,minY=H,maxX=-1,maxY=-1;
+ for(let y=0;y<H;y++)for(let x0=0;x0<W;x0++){const a=d[(y*W+x0)*4+3];if(a>10){if(x0<minX)minX=x0;if(x0>maxX)maxX=x0;if(y<minY)minY=y;if(y>maxY)maxY=y}}
+ const b=maxX>=minX&&maxY>=minY?{x:minX,y:minY,w:maxX-minX+1,h:maxY-minY+1}:{x:0,y:0,w:W,h:H};
+ boundsCache[key]=b;return b
+}
+function fitComposite103(ctx,work,key){
+ const b=alphaBounds103(work,key),pad=.08,targetW=W*(1-pad*2),targetH=H*(1-pad*2),s=Math.min(targetW/b.w,targetH/b.h),dw=b.w*s,dh=b.h*s,dx=(W-dw)/2,dy=(H-dh)/2;
+ ctx.clearRect(0,0,W,H);ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+ ctx.drawImage(work,b.x,b.y,b.w,b.h,dx,dy,dw,dh)
+}
+async function paintOne(c){if(c.dataset.painting==='1')return;c.dataset.painting='1';try{
+ const horn=c.dataset.horn||'normal',wing=c.dataset.wing||'normal',tail=c.dataset.tail||'normal',key=horn+'|'+wing+'|'+tail;
+ c.width=W;c.height=H;
+ const work=document.createElement('canvas');work.width=W;work.height=H;const wx=work.getContext('2d');
+ const [base,wL,wR]=await Promise.all([wingless(),img(G+`wing_${wing}_clean.png?v=${AV}`),img(G+`wing_${wing}_clean.png?v=${AV}`)]);
+ drawPart(wx,wL,'wing_left',wing);drawPart(wx,wR,'wing_right',wing);wx.drawImage(base,0,0,W,H);
+ if(tail!=='normal'){const t=await img(G+`tail_${tail}_clean.png?v=${AV}`);drawPart(wx,t,'tail',tail)}
+ if(horn!=='normal'){const [hl,hr]=await Promise.all([img(G+`horn_${horn}_left.png?v=413`),img(G+`horn_${horn}_right.png?v=413`)]);drawPart(wx,hl,'horn_left',horn);drawPart(wx,hr,'horn_right',horn)}
+ fitComposite103(c.getContext('2d'),work,key);
+ c.dataset.painting='0';c.dataset.painted='1'
+ }catch(e){c.dataset.painting='0';console.warn('paintOne103',e)}}
 function paintAll(){document.querySelectorAll('canvas.dracoCanvas').forEach(paintOne)}
 let paintFrame=0;
 function schedulePaint(){if(paintFrame)return;paintFrame=requestAnimationFrame(()=>{paintFrame=0;paintAll()})}
