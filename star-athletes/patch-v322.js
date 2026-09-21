@@ -37,6 +37,11 @@ function hiddenS322(){
 }
 function meets322(){return hist322().length}
 function top3s322(){return hist322().filter(h=>n322(h.overall)<=3).length}
+function allAthletes322(){const out=[],seen=new Set();for(const key of ['starters','nest','lineage','released','cands','foster'])for(const m of(S[key]||[]))if(m?.id&&!seen.has(m.id)){seen.add(m.id);out.push(m)}return out}
+function maxSkills322(){return Math.max(0,...allAthletes322().map(m=>Array.isArray(m.skills233)?m.skills233.length:0))}
+function hasRareSkill322(){return allAthletes322().some(m=>(m.skills233||[]).some(x=>x==='starborn'||x==='miracle'))}
+function rareTitles322(){return Math.max(0,...allAthletes322().map(m=>Array.isArray(m.rareTitles323)?m.rareTitles323.length:0))}
+
 
 const LEGACY322=[
  {id:'breed3',name:'配合研究Ⅰ',desc:'配合を3回行う',ok:()=>breeds322()>=3,coin:500},
@@ -56,6 +61,7 @@ const M322=[
  {id:'l_top3',tier:0,name:'表彰台へ',desc:'大会で3位以内に1回入る',ok:()=>top3s322()>=1,coin:400,boost:{stamina:2,tech:2}},
  {id:'l_win',tier:0,name:'ローカルの星',desc:'ローカル級で1勝する',ok:()=>wins322('ローカル')>=1,coin:600,boost:{power:1,speed:1,stamina:1,agility:1,tech:1,guts:1}},
  {id:'l_avg150',tier:0,name:'基礎体力完成',desc:'育成3体の平均能力150以上',ok:()=>teamAvg322()>=150,coin:500,boost:{stamina:2,guts:2}},
+ {id:'l_skill1',tier:0,name:'最初の才能',desc:'スキルを1個持つ個体を育てる',ok:()=>maxSkills322()>=1,coin:450,boost:{tech:1,guts:1}},
 
  // AREA
  {id:'a_entry',tier:1,name:'エリア進出',desc:'エリア級へ昇格する',ok:()=>leagueRank322()>=1,coin:700,boost:{power:1,speed:1,stamina:1,agility:1,tech:1,guts:1}},
@@ -64,6 +70,7 @@ const M322=[
  {id:'a_stat240',tier:1,name:'一芸240',desc:'いずれかの能力240以上',ok:()=>maxStat322()>=240,coin:900,boost:{speed:2,power:2}},
  {id:'a_win',tier:1,name:'エリア制覇への一歩',desc:'エリア級で1勝する',ok:()=>wins322('エリア')>=1,coin:1100,boost:{power:1,speed:1,stamina:1,agility:1,tech:1,guts:1}},
  {id:'a_avg210',tier:1,name:'エリア基準突破',desc:'育成3体の平均能力210以上',ok:()=>teamAvg322()>=210,coin:1000,boost:{speed:2,agility:2,tech:2}},
+ {id:'a_skill2',tier:1,name:'才能の芽吹き',desc:'スキルを2個持つ個体を育てる',ok:()=>maxSkills322()>=2,coin:950,boost:{tech:2,guts:2}},
 
  // GRAND
  {id:'g_entry',tier:2,name:'グランド進出',desc:'グランド級へ昇格する',ok:()=>leagueRank322()>=2,coin:1300,boost:{power:2,speed:2,stamina:2,agility:2,tech:2,guts:2}},
@@ -72,6 +79,7 @@ const M322=[
  {id:'g_top3x5',tier:2,name:'安定の表彰台',desc:'3位以内を通算5回',ok:()=>top3s322()>=5,coin:1400,boost:{speed:3,agility:3}},
  {id:'g_win',tier:2,name:'グランド勝者',desc:'グランド級で1勝する',ok:()=>wins322('グランド')>=1,coin:1700,boost:{power:2,speed:2,stamina:2,agility:2,tech:2,guts:2}},
  {id:'g_avg300',tier:2,name:'300の壁',desc:'育成3体の平均能力300以上',ok:()=>teamAvg322()>=300,coin:1600,boost:{power:3,stamina:3,tech:3}},
+ {id:'g_skill3',tier:2,name:'三つの武器',desc:'スキルを3個持つ個体を育てる',ok:()=>maxSkills322()>=3,coin:1500,boost:{speed:2,tech:2,guts:2}},
 
  // MAJOR
  {id:'m_entry',tier:3,name:'メジャー進出',desc:'メジャー級へ昇格する',ok:()=>leagueRank322()>=3,coin:2200,boost:{power:2,speed:2,stamina:2,agility:2,tech:2,guts:2}},
@@ -80,6 +88,7 @@ const M322=[
  {id:'m_ssr',tier:3,name:'スターの輝き',desc:'SSR以上を1体保有する',ok:()=>rare322()>=R322.indexOf('SSR'),coin:2300,boost:{power:4,speed:4}},
  {id:'m_win',tier:3,name:'メジャー勝者',desc:'メジャー級で1勝する',ok:()=>wins322('メジャー')>=1,coin:2800,boost:{power:2,speed:2,stamina:2,agility:2,tech:2,guts:2}},
  {id:'m_avg420',tier:3,name:'メジャー基準突破',desc:'育成3体の平均能力420以上',ok:()=>teamAvg322()>=420,coin:2600,boost:{speed:4,agility:4,tech:4}},
+ {id:'m_skill4',tier:3,name:'個性の完成',desc:'スキルを4個持つ個体を育てる',ok:()=>maxSkills322()>=4,coin:2500,boost:{power:2,speed:2,tech:2,guts:2}},
 
  // PLANET
  {id:'p_entry',tier:4,name:'プラネット進出',desc:'プラネット級へ昇格する',ok:()=>leagueRank322()>=4,coin:3500,boost:{power:3,speed:3,stamina:3,agility:3,tech:3,guts:3}},
@@ -88,6 +97,7 @@ const M322=[
  {id:'p_hiddenS',tier:4,name:'S因子の発見',desc:'隠し能力Sを1つ発見する',ok:hiddenS322,coin:3500,boost:{speed:5,agility:5}},
  {id:'p_win',tier:4,name:'惑星級の勝者',desc:'プラネット級で1勝する',ok:()=>wins322('プラネット')>=1,coin:4200,boost:{power:3,speed:3,stamina:3,agility:3,tech:3,guts:3}},
  {id:'p_avg560',tier:4,name:'プラネット基準突破',desc:'育成3体の平均能力560以上',ok:()=>teamAvg322()>=560,coin:4000,boost:{power:5,stamina:5,tech:5}},
+ {id:'p_skill5',tier:4,name:'才能の結晶',desc:'スキルを5個持つ個体を育てる',ok:()=>maxSkills322()>=5,coin:3800,boost:{speed:3,agility:3,tech:3,guts:3}},
 
  // GALAXY
  {id:'x_entry',tier:5,name:'ギャラクシー到達',desc:'ギャラクシー級へ昇格する',ok:()=>leagueRank322()>=5,coin:5500,boost:{power:4,speed:4,stamina:4,agility:4,tech:4,guts:4}},
@@ -95,7 +105,8 @@ const M322=[
  {id:'x_gen20',tier:5,name:'二十世代の伝説',desc:'20世代目に到達する',ok:()=>gen322()>=20,coin:4800,boost:{stamina:6,guts:6}},
  {id:'x_wins15',tier:5,name:'勝者の系譜',desc:'通算15勝する',ok:()=>n322(S.wins)>=15,coin:5200,boost:{power:6,speed:6}},
  {id:'x_win',tier:5,name:'銀河の覇者',desc:'ギャラクシー級で1勝する',ok:()=>wins322('ギャラクシー')>=1,coin:7000,boost:{power:4,speed:4,stamina:4,agility:4,tech:4,guts:4}},
- {id:'x_avg720',tier:5,name:'スターアスリート',desc:'育成3体の平均能力720以上',ok:()=>teamAvg322()>=720,coin:6500,boost:{power:6,speed:6,stamina:6,agility:6,tech:6,guts:6}}
+ {id:'x_avg720',tier:5,name:'スターアスリート',desc:'育成3体の平均能力720以上',ok:()=>teamAvg322()>=720,coin:6500,boost:{power:6,speed:6,stamina:6,agility:6,tech:6,guts:6}},
+ {id:'x_legend',tier:5,name:'伝説を背負う者',desc:'超レアイベント称号または限定スキルを持つ個体を育てる',ok:()=>rareTitles322()>=1||hasRareSkill322(),coin:7500,boost:{power:4,speed:4,stamina:4,agility:4,tech:4,guts:4}}
 ];
 
 function boostText322(b){
