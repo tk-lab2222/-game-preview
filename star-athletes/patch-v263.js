@@ -118,15 +118,10 @@ function ensureGrowthMeta263(m){
 function controls263(){
   if(!Array.isArray(S.nest)||S.nest.length!==3)return;
   const st=state263();
-  document.querySelectorAll('.train210[data-athlete210]').forEach(card=>{
-    const id=card.dataset.athlete210,m=S.nest.find(x=>x.id===id);if(!m)return;
-    let box=card.querySelector('.decision263');
-    if(!box){box=document.createElement('div');box.className='decision263';card.appendChild(box)}
-    const mode=INT263[st.intensity[id]]?st.intensity[id]:'normal';st.intensity[id]=mode;
-    box.innerHTML=`<div class="intensityTitle263"><span>トレーニング強度</span><small>ストーリー中は3体とも1回ずつ育成</small></div>
-      <div class="intensity263">${Object.entries(INT263).map(([k,x])=>`<button type="button" data-int263="${k}" data-ath263="${id}" class="${mode===k?'on263':''}"><strong>${x.icon} ${x.label}</strong><small>${x.desc}</small></button>`).join('')}</div>
-      <div class="risk263">現在：<b>${riskText263(m,mode)}</b></div>`;
-  });
+  for(const m of S.nest){
+    const mode=INT263[st.intensity[m.id]]?st.intensity[m.id]:'normal';
+    st.intensity[m.id]=mode;
+  }
 }
 function panel263(){
   const old=document.getElementById('doTrain');if(!old)return;
@@ -169,7 +164,6 @@ window.addEventListener('click',e=>{
   if(e.target?.closest?.('.tab[data-v="train"],#adopt,#doTrain,#toMeet')){
     setTimeout(late263,0);
   }
-  const it=e.target?.closest?.('[data-int263]');if(it){e.preventDefault();e.stopPropagation();state263().intensity[it.dataset.ath263]=it.dataset.int263;persist263();render263();return}
   const go=e.target?.closest?.('#doTrain263');if(go){e.preventDefault();train263();return}
 },true);
 function late263(){
@@ -185,7 +179,7 @@ try{
   }
 }catch(e){console.warn('roster263',e)}
 const css=document.createElement('style');css.textContent=`
-.decision263{margin-top:9px;padding-top:8px;border-top:1px dashed #bdc9d4}.intensityTitle263{display:flex;justify-content:space-between;align-items:center;gap:8px}.intensityTitle263 span{font-size:8px;font-weight:1000}.intensityTitle263 small{font-size:6px;color:#71808e}.intensity263{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:7px}.intensity263 button{border:1px solid #aebdca;border-radius:9px;background:#fff;padding:6px 3px;color:#223344}.intensity263 button strong{display:block;font-size:8px}.intensity263 button small{display:block;font-size:6px;line-height:1.25;margin-top:2px;color:#71808e}.intensity263 button.on263{border-color:#e18c20;background:#fff0cf;box-shadow:0 0 0 2px #ffd58f}.risk263{margin-top:5px;font-size:7px;color:#637384}.risk263 b{color:#273849}
+
 .trainingDecision263{margin-top:9px;padding:10px;border:2px solid #344b63;border-radius:13px;background:linear-gradient(145deg,#f7fbff,#edf4fa)}.budgetHead263{display:flex;justify-content:space-between;align-items:center}.budgetHead263 small{display:block;font-size:6px;color:#718293;font-weight:1000}.budgetHead263 b{font-size:12px}.budgetHead263 strong{font-size:11px;background:#25384b;color:#fff;padding:4px 8px;border-radius:999px}.budgetHint263{font-size:7px;color:#657585;margin-bottom:7px}.trainingDecision263 .btn{width:100%}.trainGain263{border:2px solid #79c99a!important;background:#effff5!important;color:#173d29!important}.trainGain263 small{font-size:7px;color:#5f7167}
 `;document.head.appendChild(css);late263();
 })();
