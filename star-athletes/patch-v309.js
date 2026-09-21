@@ -34,7 +34,22 @@ function msg309(t){
  if(!toast){toast=document.createElement('div');toast.id='shopToast309';toast.className='shopToast309';document.body.appendChild(toast)}
  toast.textContent=t;toast.classList.add('show309');clearTimeout(window.__shopToast309);window.__shopToast309=setTimeout(()=>toast.classList.remove('show309'),1400);
 }
-function rerender309(){save309();try{render()}catch(_){setTimeout(sync309,0)}}
+function rerender309(){
+ const shop=document.getElementById('shop122');
+ const top=shop?.getBoundingClientRect?.().top;
+ save309();
+ try{render()}catch(_){setTimeout(sync309,0)}
+ if(Number.isFinite(top)){
+   requestAnimationFrame(()=>{
+     requestAnimationFrame(()=>{
+       const next=document.getElementById('shop122');
+       if(!next)return;
+       const now=next.getBoundingClientRect().top,delta=now-top;
+       if(Math.abs(delta)>.5)window.scrollBy(0,delta);
+     });
+   });
+ }
+}
 function buyNormal309(id){
  const item=NORMAL309[id];if(!item)return;
  if(!(S.nest||[]).length){msg309('育成メンバーがいません');return}
