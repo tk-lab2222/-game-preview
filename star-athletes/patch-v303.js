@@ -19,8 +19,6 @@ function move303(){
    const b=document.getElementById(id);
    if(b&&b.parentElement!==h)h.appendChild(b);
  });
- const legacy=document.getElementById('next');
- if(legacy&&legacy.parentElement!==h)h.appendChild(legacy);
 }
 function sync303(){move303();[30,100,250].forEach(ms=>setTimeout(move303,ms))}
 try{
@@ -37,8 +35,7 @@ css.textContent=`
 .meetNext303:empty{display:none}
 .meetNext303 .btn{width:100%;margin:0!important}
 #nemesisCard268 #next225,
-#nemesisCard268 #annualNext233,
-#nemesisCard268 #next{display:none!important}
+#nemesisCard268 #annualNext233{display:none!important}
 `;
 document.head.appendChild(css);
 [0,80,220].forEach(ms=>setTimeout(move303,ms));
