@@ -1,11 +1,11 @@
 (()=>{
 // v0.29.1 / M5: scenario clear -> LIMIT RELEASE.
-// Trigger only after the first overall victory in Galaxy league.
+// Trigger only when the Planet -> Galaxy promotion battle is won.
 const SAVE278='star-athletes-save-v200';
 const ROSTER278='star-athletes-active-roster-v210';
 function n278(v){return Number(v)||0}
 function cleared278(){
-  return n278(S.leagueRank)>=5 && n278(S.leagueWins?.['ギャラクシー'])>=1;
+  return !!S.galaxyPromotionWon233;
 }
 function state278(){
   if(!S.limit278||typeof S.limit278!=='object')S.limit278={released:false,stage:0,shown:false,releasedAt:0};
@@ -69,7 +69,7 @@ window.STAR_LIMIT278={
   isReleased:()=>!!state278().released,
   stage:()=>n278(state278().stage),
   cap:()=>state278().released?3000:999,
-  check:()=>({released:!!state278().released,cleared:cleared278(),leagueRank:n278(S.leagueRank),galaxyWins:n278(S.leagueWins?.['ギャラクシー'])})
+  check:()=>({released:!!state278().released,cleared:cleared278(),leagueRank:n278(S.leagueRank),galaxyPromotionWon:!!S.galaxyPromotionWon233})
 };
 const css=document.createElement('style');css.textContent=`
 .limitBackdrop278{position:fixed;inset:0;z-index:100000;background:#030610ed;display:flex;align-items:center;justify-content:center;padding:18px}
