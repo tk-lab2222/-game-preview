@@ -6,6 +6,10 @@ const PAT243=['なし','縞','斑点','炎','雷','星'];
 const EXP243=['neutral','happy','competitive','sad','tired','excited','proud'];
 const EXPL243={neutral:'🙂',happy:'😊',competitive:'🔥',sad:'😢',tired:'😮‍💨',excited:'🤩',proud:'😤'};
 const PARTS243={draco:['horn','wing','tail','muzzle_mark'],unil:['horn','mane','ear','tail'],grimo:['beak','wing','chest_feather','crest'],puru:['ear_blob','tail_blob','transparency_pattern','inner_core']};
+function shinyLabel243(m){
+ const names={draco:'エメラルド系',unil:'ミント系',grimo:'パープル系',puru:'ピンク系'};
+ return m?.shiny?`✨色違い（${names[m.species]||'特殊色'}）`:'';
+}
 function persist243(){try{localStorage.setItem(SAVE243,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
 function all243(){const a=[],seen=new Set();for(const k of ['starters','nest','lineage','released','cands','foster'])for(const m of(S[k]||[]))if(m&&!seen.has(m.id)){seen.add(m.id);a.push(m)}if(S.egg&&!seen.has(S.egg.id))a.push(S.egg);return a}
 function mut243(m){const n=Number(m?.hidden233?.mutation);if(!Number.isFinite(n))return 0;return [0,0,0,1,2,3,4,5][Math.max(0,Math.min(7,Math.round(n)))]}
