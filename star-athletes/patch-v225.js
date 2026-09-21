@@ -132,11 +132,11 @@ function nextSeason225(){
 function beginPromo225(){
  S.rivals225=[];S.rivalsPromo225=true;mkRivals225(true);save225();
  const run=document.getElementById('run');if(run){run.classList.remove('hide');run.disabled=false;run.textContent='🔥 昇格戦スタート';run.onclick=()=>runBattle225(true)}
- document.getElementById('result').innerHTML='';document.getElementById('events').innerHTML='';renderRivals225(true);hideLegacyNext225();
+ document.getElementById('result').innerHTML='';document.getElementById('events').innerHTML='';renderRivals225(true);
 }
-function hideLegacyNext225(){['next','next217','next216','next215'].forEach(id=>{const x=document.getElementById(id);if(x)x.style.display='none'})}
 function installNext225(){
- hideLegacyNext225();const p=document.querySelector('#meet .box p');if(!p)return;
+ const old=document.getElementById('next');if(old)old.style.display='none';
+ const p=document.querySelector('#meet .box p');if(!p)return;
  let b=document.getElementById('next225');if(!b){b=document.createElement('button');b.id='next225';b.type='button';b.className='btn yl';p.appendChild(b)}
  b.style.display='inline-block';
  b.textContent=(Number(S.season)||1)<6?'次シーズンへ':'年間結果へ';b.onclick=nextSeason225
