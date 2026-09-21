@@ -1,5 +1,10 @@
 (()=>{
 // v0.31.25: keep candidate selection flow alive after lineage archive release.
+function setSelection311(ids){
+ const valid=new Set((S.cands||[]).map(m=>m?.id).filter(Boolean));
+ S.sel=[...new Set((Array.isArray(ids)?ids:[]).filter(id=>valid.has(id)))].slice(0,3);
+ restore311();
+}
 function select311(id){
  const cands=Array.isArray(S?.cands)?S.cands:[];
  if(!cands.some(m=>m?.id===id))return;
@@ -74,5 +79,5 @@ css.textContent=`
 `;
 document.head.appendChild(css);
 late311();
-window.STAR_CANDIDATE311={sync:restore311,select:select311};
+window.STAR_CANDIDATE311={sync:restore311,select:select311,setSelection:setSelection311};
 })();
