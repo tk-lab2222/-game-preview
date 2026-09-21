@@ -235,7 +235,7 @@ function sync321(){
     try{window.STAR_SKILL254?.sync?.()}catch(_){}
   }finally{syncing321=false}
 }
-function late321(){[0,30,90,220,500,900].forEach(ms=>setTimeout(sync321,ms))}
+function late321(){[30,90,220,500,900].forEach(ms=>setTimeout(sync321,ms))}
 
 try{
   const prev=render;
