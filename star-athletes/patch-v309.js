@@ -8,6 +8,23 @@ const NORMAL309={
  power:{cost:450,msg:'🍖 パワーミート',target:true,apply(m){m.stats.power=(Number(m.stats.power)||0)+5;m.stats.guts=(Number(m.stats.guts)||0)+5}},
  tech:{cost:600,msg:'⭐ スタークッキー',target:true,apply(m){m.stats.tech=(Number(m.stats.tech)||0)+6;m.stats.agility=(Number(m.stats.agility)||0)+6}}
 };
+const LIMIT309={berry:3,speed:3,power:3,tech:3,condition:2,lucky:1,scout:1};
+function generation309(){
+ const fromState=Number(S.generation233)||0;
+ const fromNest=Math.max(0,...(S.nest||[]).map(m=>Number(m?.gen)||0));
+ return Math.max(1,fromState,fromNest);
+}
+function usage309(){
+ S.shopUsage309=S.shopUsage309&&typeof S.shopUsage309==='object'?S.shopUsage309:{};
+ const g=String(generation309());
+ if(!S.shopUsage309[g]||typeof S.shopUsage309[g]!=='object')S.shopUsage309[g]={};
+ return S.shopUsage309[g];
+}
+function used309(id){return Number(usage309()[id])||0}
+function left309(id){return Math.max(0,(LIMIT309[id]||0)-used309(id))}
+function consume309(id){const u=usage309();u[id]=used309(id)+1}
+function limitText309(id){return '今世代 '+used309(id)+'/'+LIMIT309[id]}
+
 function save309(){
  try{localStorage.setItem(SAVE309,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}
  try{
@@ -60,6 +77,7 @@ function rerender309(){
 }
 function buyNormal309(id){
  const item=NORMAL309[id];if(!item)return;
+ if(left309(id)<=0){msg309('今世代の購入上限です');return}
  if(!(S.nest||[]).length){msg309('育成メンバーがいません');return}
  if((Number(S.coins)||0)<item.cost){msg309('コインが足りません');return}
  let target=null;
@@ -70,7 +88,7 @@ function buyNormal309(id){
  }
  S.coins=(Number(S.coins)||0)-item.cost;
  S.totalSpent=(Number(S.totalSpent)||0)+item.cost;
- item.apply(target);
+ item.apply(target);consume309(id);
  rerender309();
  msg309('✨ '+item.msg+'を使用！');
 }
@@ -79,18 +97,21 @@ function buySpecial309(id){
  S.specialShop=S.specialShop||{};
  const coins=Number(S.coins)||0;
  if(id==='lucky'){
+   if(left309('lucky')<=0){msg309('ラッキーチャームは今世代1回までです');return}
    if(coins<900){msg309('コインが足りません');return}
-   S.coins=coins-900;S.totalSpent=(Number(S.totalSpent)||0)+900;S.specialShop.lucky=(Number(S.specialShop.lucky)||0)+1;
+   S.coins=coins-900;S.totalSpent=(Number(S.totalSpent)||0)+900;S.specialShop.lucky=(Number(S.specialShop.lucky)||0)+1;consume309('lucky');
    rerender309();msg309('🍀 ラッキーチャームを購入！');return;
  }
  if(id==='condition'){
+   if(left309('condition')<=0){msg309('コンディションドリンクは今世代2回までです');return}
    const t=(S.nest||[])[0];if(!t){msg309('育成メンバーがいません');return}
    if(coins<500){msg309('コインが足りません');return}
    S.coins=coins-500;S.totalSpent=(Number(S.totalSpent)||0)+500;
-   Object.keys(t.stats||{}).forEach(k=>t.stats[k]=(Number(t.stats[k])||0)+3);
+   Object.keys(t.stats||{}).forEach(k=>t.stats[k]=(Number(t.stats[k])||0)+3);consume309('condition');
    rerender309();msg309('🥤 '+t.name+' 全能力+3');return;
  }
  if(id==='scout'){
+   if(left309('scout')<=0){msg309('スカウトパスは今世代1回までです');return}
    if(coins<700){msg309('コインが足りません');return}
    const all=allSpecies309();if(!all.length)return;
    const pool=typeof breederPool==='function'?breederPool():[...(S.starters||[]),...(S.nest||[]),...(S.lineage||[])];
@@ -101,7 +122,7 @@ function buySpecial309(id){
    if(typeof monster!=='function'){msg309('スカウトを実行できません');return}
    const m=monster(sp,(SP[sp]?.[0]||'SCOUT').slice(0,2)+Math.floor(100+Math.random()*900),gen);
    m.origin='スカウト';S.lineage=S.lineage||[];S.lineage.push(m);
-   S.coins=coins-700;S.totalSpent=(Number(S.totalSpent)||0)+700;
+   S.coins=coins-700;S.totalSpent=(Number(S.totalSpent)||0)+700;consume309('scout');
    rerender309();msg309('🔭 '+(SP[sp]?.[0]||'新種族')+'をスカウト！');return;
  }
 }
@@ -123,16 +144,17 @@ function renderShop309(){
    coins,
    (S.nest||[]).map(m=>[m.id,m.name]),
    Number(S.specialShop?.lucky)||0,
+   generation309(),usage309(),
    t
  ]);
  if(shop.dataset.renderKey309===renderKey&&shop.querySelector('[data-buy122]'))return;
  shop.dataset.renderKey309=renderKey;
  shop.innerHTML=`<div class="shopHead122"><div><small>NEST SHOP</small><h3>🪙 ネストショップ</h3></div><b>${coins} coin</b></div>
- <div class="shopGrid122">${items.map(([id,ic,n,d,cost,target])=>`<div class="shopItem122"><div class="shopIcon122">${ic}</div><div class="shopText122"><b>${n}</b><small>${d}</small></div>${target?`<select data-shop-target="${id}" ${!has?'disabled':''}>${has?S.nest.map(m=>`<option value="${m.id}" ${targetId309(id)===m.id?'selected':''}>${m.name}</option>`).join(''):'<option>育成メンバーなし</option>'}</select>`:''}<button type="button" data-buy122="${id}" ${!has||coins<cost?'disabled':''}>🪙 ${cost}</button></div>`).join('')}</div>
+ <div class="shopGrid122">${items.map(([id,ic,n,d,cost,target])=>`<div class="shopItem122"><div class="shopIcon122">${ic}</div><div class="shopText122"><b>${n}</b><small>${d}</small><em class="shopLimit309">${limitText309(id)}</em></div>${target?`<select data-shop-target="${id}" ${!has?'disabled':''}>${has?S.nest.map(m=>`<option value="${m.id}" ${targetId309(id)===m.id?'selected':''}>${m.name}</option>`).join(''):'<option>育成メンバーなし</option>'}</select>`:''}<button type="button" data-buy122="${id}" ${!has||coins<cost||left309(id)<=0?'disabled':''}>${left309(id)<=0?'上限到達':'🪙 '+cost}</button></div>`).join('')}</div>
  <div class="specialShop200 shopSpecial309"><div class="specialTitle200"><b>✨ SPECIAL</b><span>大会後のもう一手</span></div><div class="specialStock200">所持効果：🍀 ${S.specialShop?.lucky||0}</div><div class="shopGrid122 specialGrid309">
- <div class="shopItem122 specialItem309"><div class="shopIcon122">🍀</div><div class="shopText122"><b>ラッキーチャーム</b><small>次の子のレア度を1段階UP</small></div><button type="button" data-special200="lucky" ${coins<900?'disabled':''}>🪙 900</button></div>
- <div class="shopItem122 specialItem309"><div class="shopIcon122">🥤</div><div class="shopText122"><b>コンディションドリンク</b><small>${has?S.nest[0].name:'育成メンバー'} 全能力+3</small></div><button type="button" data-special200="condition" ${coins<500||!has?'disabled':''}>🪙 500</button></div>
- <div class="shopItem122 specialItem309"><div class="shopIcon122">🔭</div><div class="shopText122"><b>スカウトパス</b><small>血統候補を1体スカウト</small></div><button type="button" data-special200="scout" ${coins<700?'disabled':''}>🪙 700</button></div>
+ <div class="shopItem122 specialItem309"><div class="shopIcon122">🍀</div><div class="shopText122"><b>ラッキーチャーム</b><small>次の子のレア度を1段階UP</small><em class="shopLimit309">${limitText309('lucky')}</em></div><button type="button" data-special200="lucky" ${coins<900||left309('lucky')<=0?'disabled':''}>${left309('lucky')<=0?'上限到達':'🪙 900'}</button></div>
+ <div class="shopItem122 specialItem309"><div class="shopIcon122">🥤</div><div class="shopText122"><b>コンディションドリンク</b><small>${has?S.nest[0].name:'育成メンバー'} 全能力+3</small><em class="shopLimit309">${limitText309('condition')}</em></div><button type="button" data-special200="condition" ${coins<500||!has||left309('condition')<=0?'disabled':''}>${left309('condition')<=0?'上限到達':'🪙 500'}</button></div>
+ <div class="shopItem122 specialItem309"><div class="shopIcon122">🔭</div><div class="shopText122"><b>スカウトパス</b><small>血統候補を1体スカウト</small><em class="shopLimit309">${limitText309('scout')}</em></div><button type="button" data-special200="scout" ${coins<700||left309('scout')<=0?'disabled':''}>${left309('scout')<=0?'上限到達':'🪙 700'}</button></div>
  </div></div><div id="shopMsg122" class="shopMsg122"></div>`;
  // Interaction is owned by the delegated handlers below; keep render side-effect free.
 }
@@ -171,6 +193,7 @@ const css309=document.createElement('style');css309.id='shopVisual309';css309.te
 #shop122 .shopSpecial309 .specialTitle200 b{font-size:9px;color:#9b6a00}
 #shop122 .shopSpecial309 .specialTitle200 span{font-size:8px;color:#7b6a3a}
 #shop122 .shopSpecial309 .specialStock200{font-size:8px;font-weight:900;color:#715a1c;margin:0 0 8px}
+#shop122 .shopLimit309{display:block;margin-top:3px;font-size:7px;font-style:normal;font-weight:900;color:#7a6b45}
 #shop122 .specialGrid309{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 #shop122 .specialItem309 button{grid-column:1/3;border:0;border-radius:8px;background:#222;color:#ffd966;font-weight:1000;padding:7px;font-size:9px}
 #shop122 .specialItem309 button:disabled{opacity:.35}
