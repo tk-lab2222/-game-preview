@@ -40,7 +40,7 @@ function sync275(){
   const f=fatigue275(m),pct=Math.round(rate275(m,mode)*100);
   box.innerHTML=`<div class="condition275"><span>コンディション</span><b class="f${f}">${condition275(m)}</b><strong>ケガ率 ${pct}%</strong></div>
    <div class="modeTitle275">負荷設定 <small>個体ごとに選択</small></div>
-   <div class="modes275">${Object.entries(MODES275).map(([k,v])=>`<button type="button" data-int275="${k}" data-ath275="${m.id}" class="${mode===k?'on275':''}"><b>${v.icon} ${v.name}</b><small>${v.desc}</small></button>`).join('')}</div>`;
+   <div class="modes275">${Object.entries(MODES275).map(([k,v])=>`<button type="button" data-int275="${k}" data-ath275="${m.id}" class="${mode===k?'on275':''}" ${Number(S.turn)>=3?'disabled':''}><b>${v.icon} ${v.name}</b><small>${v.desc}</small></button>`).join('')}</div>`;
  });
 }
 window.addEventListener('click',e=>{
