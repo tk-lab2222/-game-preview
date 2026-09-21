@@ -173,6 +173,7 @@ function sync321(){
     try{window.STAR_LINEAGE271?.sync?.()}catch(_){}
     try{window.STAR_RARE273?.sync?.()}catch(_){}
     try{window.STAR_ULTRA274?.sync?.()}catch(_){}
+    try{window.STAR_SKILL254?.sync?.()}catch(_){}
     // v271 may recreate its legacy hidden block after sync; keep it suppressed.
     document.querySelectorAll('#breeders .parentLineage271>.hidden271').forEach(x=>x.style.setProperty('display','none','important'));
   }finally{syncing321=false}
