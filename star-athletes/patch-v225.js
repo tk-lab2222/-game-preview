@@ -79,7 +79,6 @@ function renderLeague225(){
  const title=train.querySelector('.box h3');
 }
 
-function renderTournamentSelect225(){document.getElementById('tourSelect225')?.remove();}
 function renderRivals225(promo=false){
  const host=document.getElementById('rival');if(!host)return;
  const rivals=ensureRivals225(promo),actual=comparePower225(rivals),target=LEAGUES225[Math.min(LEAGUES225.length-1,S.leagueRank+(promo?1:0))],tour=promo?null:(TOURS225.find(x=>x.id===S.meetChoice225)||TOURS225[1]);
@@ -142,7 +141,7 @@ function installNext225(){
  b.textContent=(Number(S.season)||1)<6?'次シーズンへ':'年間結果へ';b.onclick=nextSeason225
 }
 function wire225(){
- init225();renderLeague225();renderTournamentSelect225();
+ init225();renderLeague225();
  const run=document.getElementById('run');if(run&&!S.promotion233){run.onclick=()=>runBattle225(false)}
  const meetTab=document.querySelector('.tab[data-v="meet"]');if(meetTab&&!meetTab.dataset.rival225){meetTab.dataset.rival225='1';meetTab.addEventListener('click',()=>setTimeout(()=>renderRivals225(false),0))}
  const to=document.getElementById('toMeet');if(to&&!to.dataset.rival225){to.dataset.rival225='1';to.addEventListener('click',()=>setTimeout(()=>renderRivals225(false),0))}
