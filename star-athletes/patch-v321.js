@@ -69,7 +69,6 @@ function visualShell321(){
     btn.textContent=S.parents?.length===2?'✦ スター配合を開始':'親を2体選ぶ';
     btn.classList.add('breedMain126');
   }
-  pair.querySelector('#affinity126')?.remove();
 }
 function copy321(){
   const section=document.getElementById('breed');
