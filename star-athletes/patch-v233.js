@@ -200,30 +200,90 @@ function showPromotion233(){if(n233(S.leagueRank)===0)S.localPromotionEnteredCap
 function variance233(m){return [.15,.135,.12,.105,.09,.07,.05,.03][clamp233(n233(hidden233(m).stability),0,7)]}
 function strategyMul233(m,s){const t=hidden233(m).temperament,want=t==='大胆'?'先行':t==='冷静'?'バランス':t==='慎重'?'温存':'追込';return s===want?1.02:1}
 function acquireSkills233(won){const logs=[];for(const m of(S.nest||[])){hidden233(m);if(m.skills233.length>=6)continue;const h=m.hidden233;let p=(won?.38:.20)+[0,.003,.007,.012,.020,.032,.050,.080][clamp233(n233(h.luck),0,7)]+[0,.001,.003,.006,.010,.016,.025,.040][clamp233(n233(h.mutation),0,7)]+[0,.001,.002,.004,.007,.012,.020,.032][clamp233(n233(h.clutch),0,7)];p=Math.min(.62,p);if(Math.random()>=p)continue;let id=Math.random()<.72?topStat233(m):K233[rnd233(0,5)];if(m.skills233.includes(id)){const open=K233.filter(x=>!m.skills233.includes(x));if(!open.length)continue;id=open[rnd233(0,open.length-1)]}m.skills233.push(id);logs.push(`${m.name}：${SK233[id].icon}${SK233[id].name}`)}return logs}
-async function runPromotion233(){const run=document.getElementById('run');if(!run||run.disabled)return;run.disabled=true;run.textContent='昇格戦中…';const rivals=S.rivals225?.length?S.rivals225:promoRivals233(),events=(S.schedule&&S.schedule.length)?S.schedule:['50m走','障害物競走','的当て','リレー'],tot=[0,0,0,0,0,0,0,0],rows=[];for(let i=0;i<events.length;i++){const e=events[i],m=(S.nest||[]).find(x=>x.id===S.assign?.[i])||[...(S.nest||[])].sort((a,b)=>score233(b.stats,e)-score233(a.stats,e))[0];if(!m)continue;const h=hidden233(m),eff=skillEffect233(m,m.stats),clutch=[.95,.965,.98,1,1.018,1.04,1.07,1.11][clamp233(n233(h.clutch),0,7)],luck=1+[0,.0005,.001,.002,.0035,.006,.009,.014][clamp233(n233(h.luck),0,7)]*Math.random(),sm=strategyMul233(m,S.strat?.[i]||'バランス'),vw=variance233(m),ours=score233(eff,e)*clutch*luck*sm*(1-vw/2+Math.random()*vw),scores=[ours,...rivals.map(x=>score233(x.stats,e)*(.95+Math.random()*.10))],ord=scores.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v);ord.forEach((x,rank)=>tot[x.idx]+=PTS233[rank]||0);const rank=ord.findIndex(x=>x.idx===0)+1;rows.push(`${e}：${rank}位`);const ev=document.getElementById('events');if(ev)ev.innerHTML=`<div class="battleEvent225"><b>${e}</b><span>${m.name}${m.skills233.length?' / '+m.skills233.map(x=>SK233[x]?.icon||'').join(''):''}</span><strong>${rank}位</strong></div>`;await new Promise(r=>setTimeout(r,300))}const ord=tot.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v),overall=ord.findIndex(x=>x.idx===0)+1,won=overall===1;const beforeLeague233=n233(S.leagueRank);if(won&&beforeLeague233<5){S.leagueRank++;if(beforeLeague233===4&&n233(S.leagueRank)===5){S.galaxyPromotionWon233=true;S.galaxyPromotionWonAt233=Date.now()}}const learned=acquireSkills233(won);S.promotion233=false;const r=document.getElementById('result');if(r)r.innerHTML=`<div class="notice leagueResult225 ${won?'win225':'lose225'}"><b>🔥 昇格戦</b><br>${rows.join('<br>')}<hr><strong>${won?'🎉 昇格成功！ '+LEAGUE233[n233(S.leagueRank)].name+'級へ':'昇格失敗… 現ランク残留'}</strong><br>総合${overall}位 / ${tot[0]}pt${learned.length?`<div class="skillLearn233"><b>✨ スキル習得！</b><br>${learned.join('<br>')}</div>`:'<div class="skillNo233">今回は新しいスキル習得なし</div>'}<small>勝敗に関係なく、この世代は終了します。</small></div>`;save233();run.classList.add('hide');run.disabled=false;nextGen233()}
+async function runPromotion233(){const run=document.getElementById('run');if(!run||run.disabled)return;run.disabled=true;run.textContent='昇格戦中…';const rivals=S.rivals225?.length?S.rivals225:promoRivals233(),events=(S.schedule&&S.schedule.length)?S.schedule:['50m走','障害物競走','的当て','リレー'],tot=[0,0,0,0,0,0,0,0],rows=[];for(let i=0;i<events.length;i++){const e=events[i],m=(S.nest||[]).find(x=>x.id===S.assign?.[i])||[...(S.nest||[])].sort((a,b)=>score233(b.stats,e)-score233(a.stats,e))[0];if(!m)continue;const h=hidden233(m),eff=skillEffect233(m,m.stats),clutch=[.95,.965,.98,1,1.018,1.04,1.07,1.11][clamp233(n233(h.clutch),0,7)],luck=1+[0,.0005,.001,.002,.0035,.006,.009,.014][clamp233(n233(h.luck),0,7)]*Math.random(),sm=strategyMul233(m,S.strat?.[i]||'バランス'),vw=variance233(m),ours=score233(eff,e)*clutch*luck*sm*(1-vw/2+Math.random()*vw),scores=[ours,...rivals.map(x=>score233(x.stats,e)*(.95+Math.random()*.10))],ord=scores.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v);ord.forEach((x,rank)=>tot[x.idx]+=PTS233[rank]||0);const rank=ord.findIndex(x=>x.idx===0)+1;rows.push(`${e}：${rank}位`);const ev=document.getElementById('events');if(ev)ev.innerHTML=`<div class="battleEvent225"><b>${e}</b><span>${m.name}${m.skills233.length?' / '+m.skills233.map(x=>SK233[x]?.icon||'').join(''):''}</span><strong>${rank}位</strong></div>`;await new Promise(r=>setTimeout(r,300))}const ord=tot.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v),overall=ord.findIndex(x=>x.idx===0)+1,won=overall===1;const beforeLeague233=n233(S.leagueRank);if(won&&beforeLeague233<5)S.leagueRank++;const learned=acquireSkills233(won);S.promotion233=false;const r=document.getElementById('result');if(r)r.innerHTML=`<div class="notice leagueResult225 ${won?'win225':'lose225'}"><b>🔥 昇格戦</b><br>${rows.join('<br>')}<hr><strong>${won?'🎉 昇格成功！ '+LEAGUE233[n233(S.leagueRank)].name+'級へ':'昇格失敗… 現ランク残留'}</strong><br>総合${overall}位 / ${tot[0]}pt${learned.length?`<div class="skillLearn233"><b>✨ スキル習得！</b><br>${learned.join('<br>')}</div>`:'<div class="skillNo233">今回は新しいスキル習得なし</div>'}<small>勝敗に関係なく、この世代は終了します。</small></div>`;save233();run.classList.add('hide');run.disabled=false;nextGen233()}
+function planetRivals233(){
+ const names=['地球代表・アストラ','火星代表・ヴァルカン','木星代表・ゼウス','土星代表・クロノス','金星代表・ルミナ','水星代表・メルクリ','海王星代表・ネレイド'];
+ return names.map((name,i)=>{
+   const stats={},bias=930+(i-3)*10+rnd233(-18,18);
+   for(const k of K233)stats[k]=clamp233(Math.round(bias+rnd233(-28,28)),760,1100);
+   const strong=K233[i%K233.length];
+   stats[strong]=clamp233(stats[strong]+rnd233(45,75),760,1150);
+   return{id:'planet'+i,name,stats,strong};
+ });
+}
+function showPlanetRepresentative233(){
+ S.planetRepresentative233=true;
+ S.promotion233=false;
+ S.planetRivals233=planetRivals233();
+ save233();
+ const r=document.getElementById('result'),rh=document.getElementById('rival');
+ if(r)r.innerHTML='<div class="notice planetIntro233"><b>🌍 惑星代表戦</b><br>ギャラクシー級の頂点だけが挑める最終決戦。<br><strong>推奨：主力能力 900+</strong><br>勝利するとLIMIT RELEASE。</div>';
+ if(rh)rh.innerHTML=`<div class="rivalPanel225 promo225 planetPanel233"><div class="rivalTop225"><div><small>PLANET REPRESENTATIVE BATTLE</small><b>🌍 惑星代表戦</b></div><div class="chance225"><span>最終決戦</span><strong>900+</strong><em>推奨能力</em></div></div><div class="powerCompare225"><span>自軍平均 <b>${Math.round((S.nest||[]).reduce((a,m)=>a+K233.reduce((x,k)=>x+n233(m.stats?.[k]),0)/K233.length,0)/Math.max(1,(S.nest||[]).length))}</b></span><i></i><span>代表平均 <b>${Math.round(S.planetRivals233.reduce((a,m)=>a+K233.reduce((x,k)=>x+n233(m.stats[k]),0)/K233.length,0)/S.planetRivals233.length)}</b></span></div><div class="rivalCards225">${S.planetRivals233.slice(0,3).map(x=>`<article><header><b>${x.name}</b><em>${L233[x.strong]}型</em></header><div>${K233.map(k=>`<span class="${k===x.strong?'hot225':''}">${L233[k]} <b>${x.stats[k]}</b></span>`).join('')}</div></article>`).join('')}</div></div>`;
+ const run=document.getElementById('run');
+ if(run){run.classList.remove('hide');run.disabled=false;run.textContent='🌍 惑星代表戦スタート';run.onclick=null}
+ document.getElementById('annualNext233')?.remove();
+ document.getElementById('next225')?.style.setProperty('display','none','important');
+}
+async function runPlanetRepresentative233(){
+ const run=document.getElementById('run');if(!run||run.disabled||!S.planetRepresentative233)return;
+ run.disabled=true;run.textContent='惑星代表戦中…';
+ const rivals=Array.isArray(S.planetRivals233)&&S.planetRivals233.length===7?S.planetRivals233:planetRivals233();
+ const events=(S.schedule&&S.schedule.length)?S.schedule:['50m走','障害物競走','10000m走','リレー'];
+ const tot=[0,0,0,0,0,0,0,0],rows=[];
+ for(let i=0;i<events.length;i++){
+   const e=events[i],m=(S.nest||[]).find(x=>x.id===S.assign?.[i])||[...(S.nest||[])].sort((a,b)=>score233(b.stats,e)-score233(a.stats,e))[0];
+   if(!m)continue;
+   const h=hidden233(m),eff=skillEffect233(m,m.stats),clutch=[.95,.965,.98,1,1.018,1.04,1.07,1.11][clamp233(n233(h.clutch),0,7)],luck=1+[0,.0005,.001,.002,.0035,.006,.009,.014][clamp233(n233(h.luck),0,7)]*Math.random(),sm=strategyMul233(m,S.strat?.[i]||'バランス'),vw=variance233(m),ours=score233(eff,e)*clutch*luck*sm*(1-vw/2+Math.random()*vw);
+   const scores=[ours,...rivals.map(x=>score233(x.stats,e)*(.965+Math.random()*.07))],ord=scores.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v);
+   ord.forEach((x,rank)=>tot[x.idx]+=PTS233[rank]||0);
+   const rank=ord.findIndex(x=>x.idx===0)+1;rows.push(`${e}：${rank}位`);
+   const ev=document.getElementById('events');if(ev)ev.innerHTML=`<div class="battleEvent225 planetEvent233"><b>${e}</b><span>${m.name}</span><strong>${rank}位</strong></div>`;
+   await new Promise(r=>setTimeout(r,340));
+ }
+ const ord=tot.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v),overall=ord.findIndex(x=>x.idx===0)+1,won=overall===1;
+ S.planetRepresentative233=false;
+ if(won){S.planetRepresentativeWon233=true;S.planetRepresentativeWonAt233=Date.now()}
+ const learned=acquireSkills233(won),r=document.getElementById('result');
+ if(r)r.innerHTML=`<div class="notice leagueResult225 ${won?'win225':'lose225'} planetResult233"><b>🌍 惑星代表戦</b><br>${rows.join('<br>')}<hr><strong>${won?'🏆 惑星代表を撃破！ LIMIT RELEASEへ':'代表の壁は厚かった…'}</strong><br>総合${overall}位 / ${tot[0]}pt${learned.length?`<div class="skillLearn233"><b>✨ スキル習得！</b><br>${learned.join('<br>')}</div>`:''}<small>${won?'STAR ATHLETES本編クリア。次段階が解禁されます。':'次世代でさらに血統を鍛え、再びギャラクシー年間1位を目指そう。'}</small></div>`;
+ save233();run.classList.add('hide');run.disabled=false;nextGen233();
+}
 function restoreAnnualAction233(){
  const result=document.getElementById('result');if(!result)return;
  const txt=result.textContent||'',isAnnual=/年間ランキング確定/.test(txt),isChampion=/あなた：年間1位/.test(txt);
  if(!isAnnual)return;
- const eligible=isChampion&&n233(S.leagueRank)<5&&!S.promotion233;
+ const rank=n233(S.leagueRank),eligiblePromo=isChampion&&rank<5&&!S.promotion233,eligiblePlanet=isChampion&&rank===5&&!S.planetRepresentativeWon233&&!S.planetRepresentative233;
  let b=document.getElementById('annualNext233');
- if(eligible){
+ if(eligiblePromo||eligiblePlanet){
    document.getElementById('next225')?.style.setProperty('display','none','important');
    const host=document.getElementById('meetNext303')||document.querySelector('#meet .box p');if(!host)return;
    if(!b){b=document.createElement('button');b.id='annualNext233';b.className='btn yl';b.type='button';host.appendChild(b)}
    else if(b.parentElement!==host)host.appendChild(b);
-   b.textContent='🔥 年間王者・昇格戦へ';b.onclick=showPromotion233;b.style.setProperty('display','inline-block','important');
+   if(eligiblePlanet){b.textContent='🌍 惑星代表戦へ';b.onclick=showPlanetRepresentative233}
+   else{b.textContent='🔥 年間王者・昇格戦へ';b.onclick=showPromotion233}
+   b.style.setProperty('display','inline-block','important');
  }
 }
-function annualFinish233(){recordSeason233();const st=standings233(),rk=annualRank233(),r=document.getElementById('result');if(r)r.insertAdjacentHTML('beforeend',`<div class="annualFinal233"><b>🏆 年間ランキング確定</b><div>${st.slice(0,5).map((x,i)=>`<span class="${x.id==='you'?'you233':''}">${i+1}位 ${x.name}<strong>${x.pts}pt</strong></span>`).join('')}</div><em>あなた：年間${rk}位</em></div>`);S.promotionPending=false;save233();document.getElementById('next225')?.style.setProperty('display','none','important');if(rk===1&&n233(S.leagueRank)<5){const p=document.querySelector('#meet .box p');let b=document.getElementById('annualNext233');if(!b){b=document.createElement('button');b.id='annualNext233';b.className='btn yl';b.type='button';p?.appendChild(b)}b.textContent='🔥 年間王者・昇格戦へ';b.onclick=showPromotion233;b.style.display='inline-block'}else nextGen233(rk===1?'🥚 最高ランク・次世代配合へ':'🥚 次世代配合へ')}
+function annualFinish233(){
+ recordSeason233();const st=standings233(),rk=annualRank233(),r=document.getElementById('result');
+ if(r)r.insertAdjacentHTML('beforeend',`<div class="annualFinal233"><b>🏆 年間ランキング確定</b><div>${st.slice(0,5).map((x,i)=>`<span class="${x.id==='you'?'you233':''}">${i+1}位 ${x.name}<strong>${x.pts}pt</strong></span>`).join('')}</div><em>あなた：年間${rk}位</em></div>`);
+ S.promotionPending=false;save233();document.getElementById('next225')?.style.setProperty('display','none','important');
+ const rank=n233(S.leagueRank);
+ if(rk===1&&rank<5){
+   const p=document.querySelector('#meet .box p');let b=document.getElementById('annualNext233');if(!b){b=document.createElement('button');b.id='annualNext233';b.className='btn yl';b.type='button';p?.appendChild(b)}
+   b.textContent='🔥 年間王者・昇格戦へ';b.onclick=showPromotion233;b.style.display='inline-block';
+ }else if(rk===1&&rank===5&&!S.planetRepresentativeWon233){
+   const p=document.querySelector('#meet .box p');let b=document.getElementById('annualNext233');if(!b){b=document.createElement('button');b.id='annualNext233';b.className='btn yl';b.type='button';p?.appendChild(b)}
+   b.textContent='🌍 惑星代表戦へ';b.onclick=showPlanetRepresentative233;b.style.display='inline-block';
+ }else nextGen233(rk===1?'🥚 最高ランク・次世代配合へ':'🥚 次世代配合へ');
+}
 // normal tournament temporary modifiers
-window.addEventListener('click',e=>{const run=e.target?.closest?.('#run');if(run&&!run.disabled&&!S.promotion233){const before=document.getElementById('result')?.textContent||'';applyNormalMods233();watchNormal233(before)}},true);
+window.addEventListener('click',e=>{const run=e.target?.closest?.('#run');if(run&&!run.disabled&&!S.promotion233&&!S.planetRepresentative233){const before=document.getElementById('result')?.textContent||'';applyNormalMods233();watchNormal233(before)}},true);
 // no mid-year promotion: own #next225 throughout S1-S6
 window.addEventListener('click',e=>{const b=e.target?.closest?.('#next225');if(!b)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if((n233(S.season)||1)<6)advanceSeason233();else annualFinish233()},true);
-window.addEventListener('click',e=>{if(e.target?.closest?.('#run')&&S.promotion233){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();runPromotion233()}},true);
+window.addEventListener('click',e=>{if(e.target?.closest?.('#run')&&S.planetRepresentative233){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();runPlanetRepresentative233();return}if(e.target?.closest?.('#run')&&S.promotion233){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();runPromotion233()}},true);
 const beforeRender233=render;render=function(){const out=beforeRender233();setTimeout(()=>{renderAnnual233();restoreAnnualAction233()},0);return out};
 const css=document.createElement('style');css.textContent=`
-.annual233{border:2px solid #cda631!important;background:linear-gradient(145deg,#fff9dc,#fff)!important}.annualHead233,.compatHead233{display:flex;justify-content:space-between;align-items:center}.annualHead233 small,.compatHead233 small{display:block;font-size:7px;color:#8a6f17}.annualHead233 b,.compatHead233 b{font-size:13px}.annualList233{display:grid;gap:4px;margin:8px 0}.annualList233>div{display:grid;grid-template-columns:22px 1fr auto;gap:5px;padding:5px 7px;border-radius:8px;background:#fff;border:1px solid #eadb9b;font-size:9px}.annualList233 .you233,.annualFinal233 .you233{background:#fff0a6!important}.annualList233 i{font-style:normal;font-weight:1000}.compat233{margin:8px 0 4px;padding:9px;border:2px solid #8fb5d9;border-radius:13px;background:#f5fbff}.compat233.hide{display:none}.compatHead233 strong{font-size:10px}.compatBar233{height:7px;background:#dbe7ef;border-radius:999px;overflow:hidden;margin:7px 0}.compatBar233 i{display:block;height:100%;background:linear-gradient(90deg,#79b7df,#e5bd4f);border-radius:999px}.compatBreak233{font-size:6px;line-height:1.5;color:#65778a}.reveal233{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:7px}.reveal233>small{grid-column:1/3;font-size:7px;color:#52677b}.reveal233 span{display:flex;justify-content:space-between;border:1px solid #cbd9e6;border-radius:7px;background:#fff;padding:4px 6px;font-size:7px}.reveal233 em{font-style:normal;font-weight:1000}.compatHint233{font-size:7px;color:#687b8e;margin-top:6px}.annualFinal233{margin-top:10px;padding:10px;border:2px solid #d9b13e;border-radius:12px;background:#fff7cf;color:#42350d}.annualFinal233>div{display:grid;gap:3px;margin:7px 0}.annualFinal233 span{display:flex;justify-content:space-between;padding:4px 6px;border-radius:6px;background:#fff;font-size:8px}.annualFinal233 em{font-style:normal;font-weight:1000}.skillLearn233{margin:8px 0;padding:7px;border-radius:9px;background:#f2eaff!important;border:1px solid #bea6e5;font-size:9px}.skillNo233{margin:7px 0!important;font-size:7px;color:#786b56}
+.annual233{border:2px solid #cda631!important;background:linear-gradient(145deg,#fff9dc,#fff)!important}.annualHead233,.compatHead233{display:flex;justify-content:space-between;align-items:center}.annualHead233 small,.compatHead233 small{display:block;font-size:7px;color:#8a6f17}.annualHead233 b,.compatHead233 b{font-size:13px}.annualList233{display:grid;gap:4px;margin:8px 0}.annualList233>div{display:grid;grid-template-columns:22px 1fr auto;gap:5px;padding:5px 7px;border-radius:8px;background:#fff;border:1px solid #eadb9b;font-size:9px}.annualList233 .you233,.annualFinal233 .you233{background:#fff0a6!important}.annualList233 i{font-style:normal;font-weight:1000}.compat233{margin:8px 0 4px;padding:9px;border:2px solid #8fb5d9;border-radius:13px;background:#f5fbff}.compat233.hide{display:none}.compatHead233 strong{font-size:10px}.compatBar233{height:7px;background:#dbe7ef;border-radius:999px;overflow:hidden;margin:7px 0}.compatBar233 i{display:block;height:100%;background:linear-gradient(90deg,#79b7df,#e5bd4f);border-radius:999px}.compatBreak233{font-size:6px;line-height:1.5;color:#65778a}.reveal233{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:7px}.reveal233>small{grid-column:1/3;font-size:7px;color:#52677b}.reveal233 span{display:flex;justify-content:space-between;border:1px solid #cbd9e6;border-radius:7px;background:#fff;padding:4px 6px;font-size:7px}.reveal233 em{font-style:normal;font-weight:1000}.compatHint233{font-size:7px;color:#687b8e;margin-top:6px}.annualFinal233{margin-top:10px;padding:10px;border:2px solid #d9b13e;border-radius:12px;background:#fff7cf;color:#42350d}.annualFinal233>div{display:grid;gap:3px;margin:7px 0}.annualFinal233 span{display:flex;justify-content:space-between;padding:4px 6px;border-radius:6px;background:#fff;font-size:8px}.annualFinal233 em{font-style:normal;font-weight:1000}.skillLearn233{margin:8px 0;padding:7px;border-radius:9px;background:#f2eaff!important;border:1px solid #bea6e5;font-size:9px}.skillNo233{margin:7px 0!important;font-size:7px;color:#786b56}.planetIntro233{border:2px solid #6652a8!important;background:linear-gradient(145deg,#f3efff,#eefaff)!important;color:#2b2448}.planetIntro233 strong{color:#5c3fa1}.planetPanel233{border-color:#7456b6!important;box-shadow:0 0 0 2px #d8cbff inset}.planetEvent233{border-color:#7259af!important}.planetResult233.win225{box-shadow:0 0 0 2px #7c66c7 inset}
 `;document.head.appendChild(css);
 setTimeout(()=>{migrate233();repairEarlyHidden233();ensureAnnual233();renderAnnual233()},0);
 window.STAR_ANNUAL233={showPromotion:showPromotion233,runPromotion:runPromotion233,finishGeneration:finishGen233,annualFinish:annualFinish233,ensureHidden:(m)=>hidden233(m),compatibility:compatibility233,compatLabel:compatLabel233,reveal:reveal233,restoreAction:restoreAnnualAction233};
