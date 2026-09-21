@@ -64,12 +64,17 @@ function copy321(){
     sm.textContent='親候補から2体を選択。能力だけでなく、遺伝力・変異因子・LUCKなどの遺伝情報も確認しよう。';
   }
 }
+function slot321(m,label){
+  if(!m)return `<div class="slotEmpty321"><b>${label}</b><span>アスリートを選択</span></div>`;
+  const sp=(typeof SP!=='undefined'&&SP[m.species])?SP[m.species][0]:(m.species||'');
+  return `<div class="slotFilled321">${typeof avatar==='function'?avatar(m):''}<div class="slotMeta321"><small>${label}</small><b>${m.name||'NO NAME'}</b><span>${sp} ・ ${m.rarity||'C'}</span><em>${m.personality||''}</em></div></div>`;
+}
 function bindParent321(card,id){
   card.onclick=e=>{
     if(e?.target?.closest?.('button,select,a'))return;
     e?.preventDefault?.();
     try{
-      if(typeof pickParent==='function'){pickParent(id);return}
+      if(typeof pickParent==='function'){pickParent(id);try{typeof save200==='function'&&save200()}catch(_){};return}
     }catch(_){}
     S.parents=Array.isArray(S.parents)?S.parents:[];
     if(S.parents.includes(id))S.parents=S.parents.filter(x=>x!==id);
@@ -103,13 +108,18 @@ function breeders321(){
   });
 
   const bp=pool;
-  for(const [i,id] of (S.parents||[]).entries()){
-    const slot=document.getElementById(i?'pb':'pa'),m=bp.find(x=>x.id===id);
-    if(slot&&m&&typeof avatar==='function')slot.innerHTML=`${avatar(m)}<b>${m.name}/${m.rarity}</b>`;
-  }
   const pa=document.getElementById('pa'),pb=document.getElementById('pb');
-  if(pa&&!S.parents[0])pa.textContent='①親';
-  if(pb&&!S.parents[1])pb.textContent='②親';
+  const a=bp.find(x=>x.id===S.parents[0]),b=bp.find(x=>x.id===S.parents[1]);
+  if(pa){pa.innerHTML=slot321(a,'親①');pa.classList.toggle('filled321',!!a)}
+  if(pb){pb.innerHTML=slot321(b,'親②');pb.classList.toggle('filled321',!!b)}
+  host.querySelectorAll(':scope > .card[data-id]').forEach(el=>{
+    const idx=S.parents.indexOf(el.dataset.id);
+    let tag=el.querySelector('.pairTag321');
+    if(idx>=0){
+      if(!tag){tag=document.createElement('div');tag.className='pairTag321';el.appendChild(tag)}
+      tag.textContent=idx===0?'親①':'親②';
+    }else tag?.remove();
+  });
 
   const btn=document.getElementById('breedBtn');
   if(btn){
@@ -173,6 +183,14 @@ window.addEventListener('pageshow',late321);
 const css=document.createElement('style');
 css.id='breedingOwner321';
 css.textContent=`
+#pa,#pb{position:relative!important;min-height:168px!important;display:block!important;padding:0!important;overflow:hidden!important;background:#f7fbff!important;color:#142033!important}
+.slotFilled321{height:100%;min-height:168px;display:grid;grid-template-rows:112px auto;background:linear-gradient(180deg,#f7fbff,#eef5ff)}
+.slotFilled321 .avatar{height:112px!important;width:100%!important;border:0!important;border-bottom:1px solid #c7d9ea!important;background:linear-gradient(#fff8ea,#eef8ff)!important}
+.slotMeta321{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px;color:#142033!important;background:#fff}
+.slotMeta321 small{font-size:7px;font-weight:1000;color:#1688b8}.slotMeta321 b{font-size:12px;line-height:1.1}.slotMeta321 span,.slotMeta321 em{font-size:7px;font-style:normal;color:#5d6d7e}
+.slotEmpty321{min-height:168px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#6c7d8e}.slotEmpty321 b{font-size:12px}.slotEmpty321 span{font-size:8px}
+.pairTag321{position:absolute;left:6px;top:6px;z-index:12;background:#0aa9d8;color:white;border:2px solid white;border-radius:999px;padding:3px 8px;font-size:8px;font-weight:1000;box-shadow:0 2px 8px #0004}
+#breeders .card.sel{outline:4px solid #5bd8ff!important;box-shadow:0 0 0 3px #dff8ff!important}
 #breeders .parentLineage271>.hidden271{display:none!important}
 .parentGenetics321{margin-top:7px;padding-top:7px;border-top:1px dashed #b8c5d0}
 .pgHead321{display:flex;justify-content:space-between;align-items:center;gap:6px}
