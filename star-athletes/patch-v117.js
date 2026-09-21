@@ -25,32 +25,12 @@ card=function(m,mode){
   return h;
 };
 
-// --- Rarity egg presentation. C/U stay normal, higher groups get clear color cues. ---
-function eggTier(r){
-  if(r==='EX')return'ex';
-  if(r==='SSR'||r==='UR')return'gold';
-  if(r==='R'||r==='SR')return'blue';
-  return'normal';
-}
-function decorateEgg117(){
-  if(!S.egg)return;
-  const el=$('egg'),tier=eggTier(S.egg.rarity),sh=S.egg.shiny?' shinyEgg':'';
-  el.innerHTML=`<div class="rarityEgg ${tier}${sh}"><span>🥚</span></div><div class="sparkRing">✦　✦　✦</div>`;
-  $('birth').innerHTML=`<div class="sm hatchHint">${tier==='normal'?'卵が動いている…！':'いつもと違う気配がする…！'}</div>`;
-}
-const breedClickBefore117=$('breedBtn').onclick;
-$('breedBtn').onclick=function(e){breedClickBefore117&&breedClickBefore117.call(this,e);decorateEgg117()};
 
 // --- First gift copy only belongs to the opening. Keep breeder cards, change framing later. ---
 function updateOpening117(){
   const progressed=S.dex.a>0||S.nest.length>0||S.lineage.length>0;
   const banner=document.querySelector('.a>.b');
-  if(banner) banner.style.display=progressed?'none':'';
-  const first=document.querySelector('#breed>.box');
-  if(first){
-    const h=first.querySelector('h3'),d=first.querySelector('.sm');
-    if(progressed){if(h)h.textContent='親を2体選ぼう';if(d)d.textContent='血統プールから親を2体選んで、次の世代を誕生させよう。'}
-  }
+  if(banner)banner.style.display=progressed?'none':'';
 }
 
 // --- Local ranking / share ---
@@ -127,11 +107,10 @@ async function runMeet117(){
   run.classList.add('hide');run.disabled=false;run.textContent='大会スタート';$('next').classList.remove('hide');
   render();renderRanking117();
 }
-$('run').onclick=runMeet117;
 
 // Wrap render so secondary UI stays in sync without changing the base game state logic.
 const renderBefore117=render;
-render=function(){renderBefore117();updateOpening117();if(S.egg)decorateEgg117();renderRanking117()};
+render=function(){renderBefore117();updateOpening117();renderRanking117()};
 
 const css=document.createElement('style');css.textContent=`
 .avatar.shinyArt canvas,.avatar.shinyArt img{filter:hue-rotate(145deg) saturate(1.35) brightness(1.08)}
