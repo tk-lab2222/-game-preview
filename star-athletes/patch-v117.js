@@ -18,13 +18,6 @@ avatar=function(m,big=false){
   if(m&&m.shiny&&!h.includes('shinyArt')) h=h.replace('class="avatar ','class="avatar shinyArt ');
   return h;
 };
-const cardBefore117=card;
-card=function(m,mode){
-  let h=cardBefore117(m,mode);
-  if(m&&m.shiny) h=h.replace('<div class="nm">','<div class="nm"><span class="shinyBadge">✨色違い</span>');
-  return h;
-};
-
 
 // --- First gift copy only belongs to the opening. Keep breeder cards, change framing later. ---
 function updateOpening117(){
@@ -115,7 +108,6 @@ render=function(){renderBefore117();updateOpening117();renderRanking117()};
 const css=document.createElement('style');css.textContent=`
 .avatar.shinyArt canvas,.avatar.shinyArt img{filter:hue-rotate(145deg) saturate(1.35) brightness(1.08)}
 .avatar.shinyArt:after{content:'✨';position:absolute;right:4px;top:4px;font-size:14px;filter:none;z-index:3;text-shadow:0 1px 2px #fff}
-.shinyBadge{font-size:7px;background:#ffe36b;border:1px solid #222;border-radius:999px;padding:1px 4px;margin-right:3px;white-space:nowrap}
 .rarityEgg{width:82px;height:100px;margin:auto;display:grid;place-items:center;border-radius:50% 50% 46% 46%;background:radial-gradient(circle at 38% 28%,#fff,#eee 42%,#d8d1bf 75%);box-shadow:inset -8px -8px 16px #0001,0 5px 14px #0002;animation:eggBob117 .65s ease-in-out infinite alternate}
 .rarityEgg span{font-size:58px;filter:saturate(.55)}
 .rarityEgg.blue{background:radial-gradient(circle at 38% 28%,#fff,#bde7ff 42%,#5aa6e8 78%);box-shadow:0 0 20px #5fc4ff99}
