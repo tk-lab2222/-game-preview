@@ -63,7 +63,6 @@ function visualShell321(){
       parents.insertBefore(core,parents.children[1]||null);
     }
   }
-  pair.querySelector('.x')?.style.setProperty('display','none');
   const btn=pair.querySelector('#breedBtn');
   if(btn){
     btn.textContent=S.parents?.length===2?'✦ スター配合を開始':'親を2体選ぶ';
@@ -212,20 +211,12 @@ function archive321(){
     };
   });
 }
-function cleanupCompatHelp321(){
-  const breed=document.getElementById('breed');if(!breed)return;
-  const obsolete='親を2体選ぶと相性が表示されます';
-  breed.querySelectorAll('*').forEach(el=>{
-    if(el.children.length===0&&(el.textContent||'').replace(/\s+/g,' ').trim()===obsolete)el.remove();
-  });
-}
 function sync321(){
   if(syncing321)return;
   syncing321=true;
   try{
     visualShell321();
     copy321();
-    cleanupCompatHelp321();
     breeders321();
     compatibility321();
     archive321();
@@ -257,10 +248,6 @@ const breedersHost=document.getElementById('breeders');
 if(breedersHost){
   new MutationObserver(()=>{if(!syncing321)setTimeout(sync321,0)})
     .observe(breedersHost,{childList:true});
-}
-const breed321=document.getElementById('breed');
-if(breed321){
-  new MutationObserver(()=>cleanupCompatHelp321()).observe(breed321,{childList:true,subtree:true});
 }
 window.addEventListener('pageshow',late321);
 
