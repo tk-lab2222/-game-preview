@@ -130,6 +130,31 @@ function breeders321(){
   // v271's duplicate hidden block is legacy. Keep titles, but one genetics block only.
   host.querySelectorAll('.parentLineage271>.hidden271').forEach(x=>x.style.setProperty('display','none','important'));
 }
+function compatibility321(){
+  const section=document.getElementById('breed');if(!section)return;
+  let box=document.getElementById('compat321');
+  if(!box){
+    box=document.createElement('div');box.id='compat321';box.className='compat321';
+    const parents=section.querySelector('.parents');
+    (parents||section.querySelector(':scope>.box'))?.after(box);
+  }
+  if(!box)return;
+  const pool=pool321(),a=pool.find(x=>x.id===S.parents?.[0]),b=pool.find(x=>x.id===S.parents?.[1]);
+  if(!a||!b){
+    box.innerHTML='<div class="compatEmpty321"><b>配合相性</b><span>親を2体選ぶと相性と継承期待を表示します</span></div>';
+    return;
+  }
+  let info=null;
+  try{info=window.STAR_ANNUAL233?.compatibility?.(a,b)||null}catch(_){}
+  if(!info)return;
+  let label='';try{label=window.STAR_ANNUAL233?.compatLabel?.(info.total)||''}catch(_){}
+  box.innerHTML=`<div class="compatHead321"><div><small>BREEDING CHEMISTRY</small><b>配合相性 ${info.total}<em>/100</em></b></div><strong>${label}</strong></div>
+    <div class="compatBar321"><i style="width:${info.total}%"></i></div>
+    <div class="compatBreak321">
+      <span>種族 <b>${info.species}</b></span><span>性格 <b>${info.personality}</b></span><span>能力補完 <b>${info.ability}</b></span>
+      <span>血統 <b>${info.blood}</b></span><span>特徴 <b>${info.visual}</b></span><span>遺伝相性 <b>${info.chemistry}</b></span>
+    </div>`;
+}
 function cleanupCompatHelp321(){
   const breed=document.getElementById('breed');if(!breed)return;
   const obsolete='親を2体選ぶと相性が表示されます';
@@ -144,6 +169,7 @@ function sync321(){
     copy321();
     cleanupCompatHelp321();
     breeders321();
+    compatibility321();
     try{window.STAR_LINEAGE271?.sync?.()}catch(_){}
     try{window.STAR_RARE273?.sync?.()}catch(_){}
     try{window.STAR_ULTRA274?.sync?.()}catch(_){}
@@ -183,6 +209,12 @@ window.addEventListener('pageshow',late321);
 const css=document.createElement('style');
 css.id='breedingOwner321';
 css.textContent=`
+.compat321{margin:9px 0 11px;padding:11px 12px;border:2px solid #263e5c;border-radius:13px;background:linear-gradient(135deg,#eef7ff,#fff);color:#172033}
+.compatEmpty321{display:flex;flex-direction:column;gap:2px}.compatEmpty321 b{font-size:11px}.compatEmpty321 span{font-size:8px;color:#607287}
+.compatHead321{display:flex;justify-content:space-between;gap:10px;align-items:center}.compatHead321 small{display:block;font-size:6px;letter-spacing:.12em;color:#5e7c8f;font-weight:1000}
+.compatHead321 b{font-size:20px;line-height:1;color:#0877ad}.compatHead321 b em{font-size:9px;font-style:normal;color:#667789}.compatHead321 strong{font-size:9px;background:#fff0b5;border:1px solid #d5b84b;border-radius:999px;padding:5px 8px;white-space:nowrap}
+.compatBar321{height:7px;margin:8px 0 7px;border-radius:99px;background:#dce7ee;overflow:hidden}.compatBar321 i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#56b8da,#5ec48c)}
+.compatBreak321{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.compatBreak321 span{display:flex;justify-content:space-between;gap:4px;padding:4px 5px;border:1px solid #d8e2ea;border-radius:7px;background:#fff;font-size:6px}.compatBreak321 b{font-size:7px}
 #pa,#pb{position:relative!important;min-height:168px!important;display:block!important;padding:0!important;overflow:hidden!important;background:#f7fbff!important;color:#142033!important}
 .slotFilled321{height:100%;min-height:168px;display:grid;grid-template-rows:112px auto;background:linear-gradient(180deg,#f7fbff,#eef5ff)}
 .slotFilled321 .avatar{height:112px!important;width:100%!important;border:0!important;border-bottom:1px solid #c7d9ea!important;background:linear-gradient(#fff8ea,#eef8ff)!important}
@@ -205,5 +237,5 @@ css.textContent=`
 document.head.appendChild(css);
 
 late321();
-window.STAR_BREEDING321={sync:sync321,pool:pool321,pristine:pristine321};
+window.STAR_BREEDING321={sync:sync321,pool:pool321,pristine:pristine321,compatibility:compatibility321};
 })();
