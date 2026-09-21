@@ -69,7 +69,8 @@ window.STAR_LIMIT278={
   isReleased:()=>!!state278().released,
   stage:()=>n278(state278().stage),
   cap:()=>state278().released?3000:999,
-  check:()=>({released:!!state278().released,cleared:cleared278(),leagueRank:n278(S.leagueRank),planetRepresentativeWon:!!S.planetRepresentativeWon233})
+  check:()=>({released:!!state278().released,cleared:cleared278(),leagueRank:n278(S.leagueRank),planetRepresentativeWon:!!S.planetRepresentativeWon233}),
+  refresh:()=>{release278();render278()}
 };
 const css=document.createElement('style');css.textContent=`
 .limitBackdrop278{position:fixed;inset:0;z-index:100000;background:#030610ed;display:flex;align-items:center;justify-content:center;padding:18px}
