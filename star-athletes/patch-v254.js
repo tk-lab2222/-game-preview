@@ -31,8 +31,6 @@ function cardSkills254(){
  document.querySelectorAll('.entries210>[data-m210]').forEach(card=>{
    const m=byId254(card.dataset.m210);if(!m)return;putSkill254(card,m,card);
  });
- // Hide all historical skill renderers. v254 is the only visible skill owner.
- document.querySelectorAll('.skillCard235,.skillCard241,.skillStable247,.skillCore210,.skillLine246,.coreMeta243>div>strong.skillHost246').forEach(el=>el.style.display='none');
 }
 function selected254(){const ids=Array.isArray(S.parents)?S.parents:[];return [byId254(ids[0]),byId254(ids[1])]}
 function score254(a,b){try{return window.STAR_ANNUAL233?.compatibility?.(a,b)?.total??null}catch(_){return null}}
