@@ -1,11 +1,11 @@
 (()=>{
 // v0.29.1 / M5: scenario clear -> LIMIT RELEASE.
-// Trigger only when the Planet -> Galaxy promotion battle is won.
+// Trigger only after defeating the Planet Representative final battle.
 const SAVE278='star-athletes-save-v200';
 const ROSTER278='star-athletes-active-roster-v210';
 function n278(v){return Number(v)||0}
 function cleared278(){
-  return !!S.galaxyPromotionWon233;
+  return !!S.planetRepresentativeWon233;
 }
 function state278(){
   if(!S.limit278||typeof S.limit278!=='object')S.limit278={released:false,stage:0,shown:false,releasedAt:0};
@@ -32,7 +32,7 @@ function overlay278(){
     <section class="limitModal278">
       <small>SCENARIO COMPLETE</small>
       <div class="limitBurst278">LIMIT<br>RELEASE</div>
-      <h2>ギャラクシー級 制覇</h2>
+      <h2>惑星代表戦 制覇</h2>
       <p>ここまでがプロローグ。<br><b>STAR ATHLETESへようこそ。</b></p>
       <div class="unlock278"><span>解禁</span><strong>LIMIT 1</strong><em>能力成長の次段階へ</em></div>
       <div class="cap278"><span>シナリオ基準</span><b>999</b><i>→</i><span>LIMIT 1 目標上限</span><b>3,000</b></div>
@@ -69,7 +69,7 @@ window.STAR_LIMIT278={
   isReleased:()=>!!state278().released,
   stage:()=>n278(state278().stage),
   cap:()=>state278().released?3000:999,
-  check:()=>({released:!!state278().released,cleared:cleared278(),leagueRank:n278(S.leagueRank),galaxyPromotionWon:!!S.galaxyPromotionWon233})
+  check:()=>({released:!!state278().released,cleared:cleared278(),leagueRank:n278(S.leagueRank),planetRepresentativeWon:!!S.planetRepresentativeWon233})
 };
 const css=document.createElement('style');css.textContent=`
 .limitBackdrop278{position:fixed;inset:0;z-index:100000;background:#030610ed;display:flex;align-items:center;justify-content:center;padding:18px}
