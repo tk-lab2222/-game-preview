@@ -14,6 +14,20 @@ function select262(id){
  else if(sel.length<3)S.sel=[...sel,id];
  refreshSelection262();
 }
+function restoreFlow262(){
+ const cands=Array.isArray(S?.cands)?S.cands:[];
+ const box=document.getElementById('candBox'),grid=document.getElementById('cands');
+ if(!box||!grid||!cands.length)return;
+ box.classList.remove('hide');
+ box.style.setProperty('display','block','important');
+ const lineageBox=document.getElementById('lineagePool')?.closest('.box');
+ if(lineageBox&&box.parentElement===lineageBox.parentElement&&box.nextElementSibling!==lineageBox){
+   lineageBox.parentElement.insertBefore(box,lineageBox);
+ }
+ if(grid.children.length!==cands.length&&typeof card==='function'){
+   grid.innerHTML=cands.map(m=>card(m,'c')).join('');
+ }
+}
 function refreshSelection262(){
  const box=document.getElementById('candBox'),grid=document.getElementById('cands');
  if(box&&(S.cands||[]).length){box.classList.remove('hide');box.style.setProperty('display','block','important')}
@@ -60,6 +74,7 @@ function decorateCards262(sorted){
  });
 }
 function render262(){
+ restoreFlow262();
  const host=ensurePanel262();if(!host)return;
  const cands=S.cands||[];
  if(!cands.length){host.innerHTML='';host.classList.add('hide');return}
@@ -95,8 +110,8 @@ function render262(){
 }
 function late262(){render262();[60,180,420].forEach(ms=>setTimeout(render262,ms))}
 try{const prev262=render;render=function(){const out=prev262();late262();return out}}catch(e){console.warn('render262',e)}
-window.addEventListener('click',e=>{if(e.target?.closest?.('#batchGo260,#hatch,#adopt,.tab[data-v="breed"]'))late262()},true);
-window.STAR_CANDIDATE262={sync:render262,select:select262,setSelection:setSelection262};
+window.addEventListener('click',e=>{if(e.target?.closest?.('#batchGo260,#hatch,#adopt,#lineagePool [data-release],.tab[data-v="breed"]'))late262()},true);
+window.STAR_CANDIDATE262={sync:render262,select:select262,setSelection:setSelection262,restore:restoreFlow262};
 const css=document.createElement('style');css.textContent=`
 .candidateCompare262{margin:0 0 10px;padding:10px;border:2px solid #667b91;border-radius:13px;background:linear-gradient(145deg,#f8fbff,#eef4f8)}.candidateCompare262.hide{display:none}
 .cmpHead262{display:flex;align-items:center;justify-content:space-between}.cmpHead262 small{display:block;font-size:6px;font-weight:1000;color:#7a8999;letter-spacing:.09em}.cmpHead262 b{font-size:12px}.cmpHead262 strong{font-size:9px;background:#283c50;color:#fff;padding:4px 7px;border-radius:999px}
