@@ -190,25 +190,9 @@ function archive321(){
     box.classList.add('lineageArchive118');
     if(breed&&cand&&cand.nextElementSibling!==box)breed.insertBefore(box,cand.nextSibling);
   }
-  const list=Array.isArray(S.lineage)?S.lineage:[];
-  const buttons=[...host.querySelectorAll('[data-release]')];
-  buttons.forEach(btn=>{
-    const id=btn.dataset.release;
-    const card=btn.closest('.card');
+  host.querySelectorAll('[data-release]').forEach(btn=>{
+    const id=btn.dataset.release,card=btn.closest('.card');
     if(card&&id)card.dataset.id=id;
-    btn.onclick=e=>{
-      e?.preventDefault?.();
-      e?.stopPropagation?.();
-      if(!id)return;
-      const m=list.find(x=>x?.id===id);
-      if(!m)return;
-      S.lineage=S.lineage.filter(x=>x?.id!==id);
-      S.released=Array.isArray(S.released)?S.released:[];
-      if(!S.released.some(x=>x?.id===id))S.released.push(m);
-      S.dex=S.dex||{};S.dex.rel=(Number(S.dex.rel)||0)+1;
-      try{typeof save200==='function'&&save200()}catch(_){}
-      try{render()}catch(_){late321()}
-    };
   });
 }
 function sync321(){
