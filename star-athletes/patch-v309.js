@@ -29,10 +29,15 @@ function targetId309(id){
  return t[id]||'';
 }
 function msg309(t){
- const e=document.getElementById('shopMsg122');if(e)e.textContent=t;
+ const e=document.getElementById('shopMsg122');
+ if(e){e.textContent='✓ '+t;e.classList.remove('flash309');void e.offsetWidth;e.classList.add('flash309')}
+ const shop=document.getElementById('shop122');
+ if(shop){shop.classList.remove('bought309');void shop.offsetWidth;shop.classList.add('bought309')}
  let toast=document.getElementById('shopToast309');
  if(!toast){toast=document.createElement('div');toast.id='shopToast309';toast.className='shopToast309';document.body.appendChild(toast)}
- toast.textContent=t;toast.classList.add('show309');clearTimeout(window.__shopToast309);window.__shopToast309=setTimeout(()=>toast.classList.remove('show309'),1400);
+ toast.innerHTML='<b>✓ 購入完了</b><span>'+t+'</span>';
+ toast.classList.remove('show309');void toast.offsetWidth;toast.classList.add('show309');
+ clearTimeout(window.__shopToast309);window.__shopToast309=setTimeout(()=>toast.classList.remove('show309'),1600);
 }
 function refreshNestWallet309(){
  const wallet=document.querySelector('#nestSummary201 .nestWallet201');
@@ -170,6 +175,13 @@ const css309=document.createElement('style');css309.id='shopVisual309';css309.te
 #shop122 .specialItem309 button{grid-column:1/3;border:0;border-radius:8px;background:#222;color:#ffd966;font-weight:1000;padding:7px;font-size:9px}
 #shop122 .specialItem309 button:disabled{opacity:.35}
 @media(max-width:430px){#shop122 .specialGrid309{grid-template-columns:1fr}}
+#shop122.bought309{animation:shopBought309 .34s ease-out}
+#shop122 .shopMsg122.flash309{animation:shopMsg309 .9s ease-out;color:#176b43;background:#eefbf3;border:1px solid #8bd0aa;border-radius:8px;padding:6px 8px}
+#shopToast309{position:fixed;left:50%;bottom:86px;z-index:100001;transform:translate(-50%,18px) scale(.96);opacity:0;pointer-events:none;min-width:210px;max-width:86vw;padding:10px 14px;border-radius:13px;background:#10261d;color:#fff;box-shadow:0 10px 30px #0005;text-align:center;transition:.18s ease}
+#shopToast309 b,#shopToast309 span{display:block}#shopToast309 b{font-size:12px;color:#8ff0b9}#shopToast309 span{font-size:9px;margin-top:2px;color:#e6fff0}
+#shopToast309.show309{opacity:1;transform:translate(-50%,0) scale(1)}
+@keyframes shopBought309{0%{box-shadow:0 0 0 0 #6bd69a00}35%{box-shadow:0 0 0 4px #6bd69a66}100%{box-shadow:0 0 0 0 #6bd69a00}}
+@keyframes shopMsg309{0%{transform:scale(.97);opacity:.4}35%{transform:scale(1.02);opacity:1}100%{transform:scale(1)}}
 `;document.head.appendChild(css309);
 
 })();
