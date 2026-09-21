@@ -53,7 +53,7 @@ window.addEventListener('click',e=>{
   [0,60,160,360].forEach(ms=>setTimeout(sync275,ms));
  }
 },true);
-function late275(){sync275();[80,220,500,900].forEach(ms=>setTimeout(sync275,ms))}
+function late275(){sync275();[80,220].forEach(ms=>setTimeout(sync275,ms))}
 try{const prev275=render;render=function(){const out=prev275();setTimeout(late275,0);return out}}catch(e){console.warn('render275',e)}
 try{
  const prevRoster275=window.renderRoster210Live;
