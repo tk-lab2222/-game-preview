@@ -22,6 +22,11 @@ function init225(){
  S.leagueRank=Number.isInteger(S.leagueRank)?Math.max(0,Math.min(LEAGUES225.length-1,S.leagueRank)):0;
  S.promotionPending=!!S.promotionPending;
  S.promotionFromSeason=Number(S.promotionFromSeason)||0;
+ if((Number(S.season)||1)<6){
+   S.promotionPending=false;
+   S.promotionFromSeason=0;
+   S.promotion233=false;
+ }
  S.leagueWins=S.leagueWins||{};
  S.rivals225=Array.isArray(S.rivals225)?S.rivals225:[];S.meetChoice225=TOURS225.some(x=>x.id===S.meetChoice225)?S.meetChoice225:'standard';
 }
