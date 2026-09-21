@@ -5,9 +5,9 @@ const LEAGUES225=[
  {name:'ローカル',icon:'🏘️',base:102,reward:1.0},
  {name:'エリア',icon:'🗺️',base:120,reward:1.25},
  {name:'グランド',icon:'🏟️',base:140,reward:1.55},
- {name:'メジャー',icon:'🌟',base:163,reward:1.9},
- {name:'プラネット',icon:'🪐',base:190,reward:2.35},
- {name:'ギャラクシー',icon:'🌌',base:222,reward:3.0}
+ {name:'メジャー',icon:'🌟',base:430,reward:1.9},
+ {name:'プラネット',icon:'🪐',base:580,reward:2.35},
+ {name:'ギャラクシー',icon:'🌌',base:760,reward:3.0}
 ];
 const PTS225=[8,6,5,4,3,2,1,0];
 const TOURS225=[
@@ -78,7 +78,7 @@ function renderLeague225(){
  const train=document.getElementById('train');if(!train)return;
  let el=document.getElementById('league225');if(!el){el=document.createElement('div');el.id='league225';el.className='box league225';train.prepend(el)}
  const lg=league225(),max=S.leagueRank===LEAGUES225.length-1;
- el.innerHTML=`<div class="leagueHead225"><div><small>LEAGUE CLASS</small><b>${lg.icon} ${lg.name}級</b></div><span>S${Number(S.season)||1}/6</span></div><div class="leagueTrack225">${LEAGUES225.map((x,i)=>`<i class="${i<S.leagueRank?'done225':''} ${i===S.leagueRank?'now225':''}">${x.icon}<small>${x.name}</small></i>`).join('')}</div><div class="leagueRule225">${max?'最高ランク。ここからはギャラクシー級で勝利数を伸ばそう。':'S1〜S6の年間ランキング1位 → 昇格戦へ'}</div>`;
+ el.innerHTML=`<div class="leagueHead225"><div><small>LEAGUE CLASS</small><b>${lg.icon} ${lg.name}級</b></div><span>S${Number(S.season)||1}/6</span></div><div class="leagueTrack225">${LEAGUES225.map((x,i)=>`<i class="${i<S.leagueRank?'done225':''} ${i===S.leagueRank?'now225':''}">${x.icon}<small>${x.name}</small></i>`).join('')}</div><div class="leagueRule225">${max?'最高ランク。年間1位になると最終イベント「惑星代表戦」へ。':'S1〜S6の年間ランキング1位 → 昇格戦へ'}</div>`;
  // overwrite legacy season labels so S no longer implies league class.
  document.querySelectorAll('#season119 .seasonHead119 b,.seasonHead125 b').forEach(x=>x.textContent=`S${Number(S.season)||1}/6　${lg.name}級シーズン`);
  const title=train.querySelector('.box h3');
