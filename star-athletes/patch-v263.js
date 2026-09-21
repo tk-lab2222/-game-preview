@@ -166,10 +166,7 @@ window.addEventListener('click',e=>{
   }
   const go=e.target?.closest?.('#doTrain263');if(go){e.preventDefault();train263();return}
 },true);
-function late263(){
-  render263();
-  [40,100,220,450,800,1300,2100,3200].forEach(ms=>setTimeout(render263,ms));
-}
+function late263(){render263();[80,220].forEach(ms=>setTimeout(render263,ms))}
 try{const prev263=render;render=function(){const out=prev263();late263();return out}}catch(e){console.warn('wrap263',e)}
 try{
   if(typeof window.renderRoster210Live==='function'&&!window.renderRoster210Live263){
