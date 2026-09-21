@@ -34,21 +34,24 @@ function msg309(t){
  if(!toast){toast=document.createElement('div');toast.id='shopToast309';toast.className='shopToast309';document.body.appendChild(toast)}
  toast.textContent=t;toast.classList.add('show309');clearTimeout(window.__shopToast309);window.__shopToast309=setTimeout(()=>toast.classList.remove('show309'),1400);
 }
-function rerender309(){
- const shop=document.getElementById('shop122');
- const top=shop?.getBoundingClientRect?.().top;
- save309();
- try{render()}catch(_){setTimeout(sync309,0)}
- if(Number.isFinite(top)){
-   requestAnimationFrame(()=>{
-     requestAnimationFrame(()=>{
-       const next=document.getElementById('shop122');
-       if(!next)return;
-       const now=next.getBoundingClientRect().top,delta=now-top;
-       if(Math.abs(delta)>.5)window.scrollBy(0,delta);
-     });
-   });
+function refreshNestWallet309(){
+ const wallet=document.querySelector('#nestSummary201 .nestWallet201');
+ if(!wallet)return;
+ const cells=[...wallet.querySelectorAll('span')];
+ for(const cell of cells){
+   const label=(cell.querySelector('small')?.textContent||'').trim();
+   const b=cell.querySelector('b');if(!b)continue;
+   if(label==='COIN')b.textContent='🪙 '+(Number(S.coins)||0);
+   if(label==='FAME')b.textContent='⭐ '+(Number(S.fame)||0);
+   if(label==='BADGE')b.textContent='🏅 '+(S.emblems?.length||0);
  }
+}
+function rerender309(){
+ // Purchase feedback must not redraw the whole app. A full render() rebuilds
+ // multiple hidden sections and causes Safari scroll anchoring / visible jank.
+ save309();
+ renderShop309();
+ refreshNestWallet309();
 }
 function buyNormal309(id){
  const item=NORMAL309[id];if(!item)return;
