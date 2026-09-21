@@ -37,9 +37,9 @@ function migrate226(){
  save226();
 }
 function acquired226(m,k){meta226(m);return n226(m.trainingGain226[k])+n226(m.matchGain226[k])}
-function inherited226(m,k){meta226(m);return n226(m.geneticBase226[k])+acquired226(m,k)*.25}
+function inherited226(m,k){meta226(m);return n226(m.geneticBase226[k])+acquired226(m,k)*.35}
 
-// Children inherit the stable bloodline plus 25% of the parents' earned growth.
+// Children inherit the stable bloodline plus 35% of the parents' earned growth.
 // The old baby() still owns species, rarity, looks and cute-name wrappers.
 try{
  const beforeBaby226=baby;
