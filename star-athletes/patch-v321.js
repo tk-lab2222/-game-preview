@@ -50,11 +50,16 @@ function pristine321(){
     && !(S?.cands||[]).length
     && (S?.starters||[]).length===2;
 }
+function placePair321(){
+  const breed=document.getElementById('breed');if(!breed)return;
+  const parentBox=[...breed.querySelectorAll(':scope>.box')].find(x=>x.querySelector('#breeders'));
+  const pair=[...breed.querySelectorAll(':scope>.box')].find(x=>x.querySelector('#breedBtn'));
+  if(parentBox&&pair&&parentBox.nextElementSibling!==pair)parentBox.insertAdjacentElement('afterend',pair);
+}
 function visualShell321(){
   const breed=document.getElementById('breed');if(!breed)return;
   const pair=[...breed.querySelectorAll(':scope>.box')].find(x=>x.querySelector('#breedBtn'));if(!pair)return;
-  const parentBox=[...breed.querySelectorAll(':scope>.box')].find(x=>x.querySelector('#breeders'));
-  if(parentBox&&parentBox.nextElementSibling!==pair)parentBox.after(pair);
+  placePair321();
   pair.classList.add('breedHero126');
   const title=pair.querySelector('h3');if(title)title.innerHTML='✨ スター配合 <span class="sm">2体の個性を次世代へ</span>';
   const parents=pair.querySelector('.parents');
@@ -234,6 +239,7 @@ function sync321(){
     try{window.STAR_RARE273?.sync?.()}catch(_){}
     try{window.STAR_ULTRA274?.sync?.()}catch(_){}
     try{window.STAR_SKILL254?.sync?.()}catch(_){}
+    placePair321();
   }finally{syncing321=false}
 }
 function late321(){[60,180,500].forEach(ms=>setTimeout(sync321,ms))}
@@ -254,6 +260,11 @@ document.addEventListener('click',e=>{
   }
 },true);
 
+const breedRoot321=document.getElementById('breed');
+if(breedRoot321){
+  new MutationObserver(()=>{if(!syncing321)requestAnimationFrame(placePair321)})
+    .observe(breedRoot321,{childList:true});
+}
 const breedersHost=document.getElementById('breeders');
 if(breedersHost){
   new MutationObserver(()=>{if(!syncing321)setTimeout(sync321,0)})
