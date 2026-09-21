@@ -104,6 +104,29 @@ function bindParent321(card,id){
     sync321();
   };
 }
+function singleBreed321(){
+  if(S.egg||!Array.isArray(S.parents)||S.parents.length!==2)return;
+  const pool=pool321(),a=pool.find(x=>x?.id===S.parents[0]),b=pool.find(x=>x?.id===S.parents[1]);
+  if(!a||!b||typeof baby!=='function')return;
+  S.egg=baby(a,b);
+  const egg=document.getElementById('egg'),birth=document.getElementById('birth'),hatch=document.getElementById('hatch');
+  if(egg)egg.innerHTML='<div class="eggPulse">🥚</div><div class="sparkRing">✦　✦　✦</div>';
+  if(birth)birth.innerHTML='<div class="sm hatchHint">卵が動いている…！</div>';
+  if(hatch)hatch.disabled=false;
+  try{typeof save200==='function'&&save200()}catch(_){}
+  try{render()}catch(_){sync321()}
+  requestAnimationFrame(()=>{const h=document.getElementById('hatch');if(h&&S.egg)h.disabled=false});
+}
+function bindSingleBreed321(){
+  const btn=document.getElementById('breedBtn');if(!btn)return;
+  if(btn.dataset.singleBreed321==='1')return;
+  btn.dataset.singleBreed321='1';
+  btn.addEventListener('click',e=>{
+    if(btn.disabled)return;
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+    singleBreed321();
+  },true);
+}
 function breeders321(){
   const host=document.getElementById('breeders');
   if(!host)return;
@@ -204,6 +227,7 @@ function sync321(){
     visualShell321();
     copy321();
     breeders321();
+    bindSingleBreed321();
     compatibility321();
     archive321();
     try{window.STAR_LINEAGE271?.sync?.()}catch(_){}
@@ -270,5 +294,5 @@ css.textContent=`
 document.head.appendChild(css);
 
 late321();
-window.STAR_BREEDING321={sync:sync321,pool:pool321,pristine:pristine321,compatibility:compatibility321,archive:archive321};
+window.STAR_BREEDING321={sync:sync321,pool:pool321,pristine:pristine321,compatibility:compatibility321,archive:archive321,singleBreed:singleBreed321};
 })();
