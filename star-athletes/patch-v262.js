@@ -2,6 +2,26 @@
 // v0.26.2: M1.2 candidate shortlist + comparison. Uses only visible candidate information.
 const R262=['C','U','R','SR','SSR','UR','EX'];
 let mode262='battle';
+function setSelection262(ids){
+ const valid=new Set((S.cands||[]).map(m=>m?.id).filter(Boolean));
+ S.sel=[...new Set((Array.isArray(ids)?ids:[]).filter(id=>valid.has(id)))].slice(0,3);
+ refreshSelection262();
+}
+function select262(id){
+ const valid=(S.cands||[]).some(m=>m?.id===id);if(!valid)return;
+ const sel=Array.isArray(S.sel)?S.sel.filter(x=>(S.cands||[]).some(m=>m?.id===x)):[];
+ if(sel.includes(id))S.sel=sel.filter(x=>x!==id);
+ else if(sel.length<3)S.sel=[...sel,id];
+ refreshSelection262();
+}
+function refreshSelection262(){
+ const box=document.getElementById('candBox'),grid=document.getElementById('cands');
+ if(box&&(S.cands||[]).length){box.classList.remove('hide');box.style.setProperty('display','block','important')}
+ grid?.querySelectorAll('.card[data-id]').forEach(card=>card.classList.toggle('sel',(S.sel||[]).includes(card.dataset.id)));
+ document.querySelectorAll('#candidateCompare262 [data-cmp262]').forEach(row=>row.classList.toggle('selected262',(S.sel||[]).includes(row.dataset.cmp262)));
+ const adopt=document.getElementById('adopt');if(adopt){adopt.disabled=(S.sel||[]).length!==3;adopt.style.removeProperty('display')}
+ try{window.STAR_SKILL254?.sync?.()}catch(_){}
+}
 function n262(v){return Number(v)||0}
 function avg262(m){const vals=Object.values(m?.stats||{}).map(n262);return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:0}
 function max262(m){const e=Object.entries(m?.stats||{}).sort((a,b)=>n262(b[1])-n262(a[1]));return e[0]||['-',0]}
@@ -58,23 +78,25 @@ function render262(){
  <button type="button" id="pickTop262" class="btn tiny pickTop262" ${cands.length<3?'disabled':''}>おすすめ3体を仮選択</button>
  <div class="cmpList262">${rows}</div>`;
  host.querySelectorAll('[data-mode262]').forEach(b=>b.onclick=()=>{mode262=b.dataset.mode262;render262()});
- host.querySelectorAll('[data-cmp262]').forEach(b=>b.onclick=()=>{
-   const card=document.querySelector(`#cands .card[data-id="${CSS.escape(b.dataset.cmp262)}"]`);card?.click();
- });
+ host.querySelectorAll('[data-cmp262]').forEach(b=>b.onclick=()=>select262(b.dataset.cmp262));
  const pick=host.querySelector('#pickTop262');if(pick)pick.onclick=()=>{
   const ids=sorted.slice(0,3).map(m=>m.id);
-  if(window.STAR_CANDIDATE311?.setSelection)window.STAR_CANDIDATE311.setSelection(ids);
-  else S.sel=ids;
+  setSelection262(ids);
   decorateCards262(sorted);
   host.querySelectorAll('[data-cmp262]').forEach(row=>row.classList.toggle('selected262',(S.sel||[]).includes(row.dataset.cmp262)));
   const adopt=document.getElementById('adopt');if(adopt)adopt.disabled=(S.sel||[]).length!==3;
   const box=document.getElementById('candBox');if(box){box.classList.remove('hide');box.style.setProperty('display','block','important')}
 };
  decorateCards262(sorted);
+ refreshSelection262();
+ grid.querySelectorAll('[data-mode="c"]').forEach(card=>{
+   card.onclick=e=>{e?.preventDefault?.();e?.stopPropagation?.();select262(card.dataset.id)};
+ });
 }
 function late262(){render262();[60,180,420].forEach(ms=>setTimeout(render262,ms))}
 try{const prev262=render;render=function(){const out=prev262();late262();return out}}catch(e){console.warn('render262',e)}
-window.addEventListener('click',e=>{if(e.target?.closest?.('#batchGo260,#hatch,#adopt,#cands .card,.tab[data-v="breed"]'))late262()},true);
+window.addEventListener('click',e=>{if(e.target?.closest?.('#batchGo260,#hatch,#adopt,.tab[data-v="breed"]'))late262()},true);
+window.STAR_CANDIDATE262={sync:render262,select:select262,setSelection:setSelection262};
 const css=document.createElement('style');css.textContent=`
 .candidateCompare262{margin:0 0 10px;padding:10px;border:2px solid #667b91;border-radius:13px;background:linear-gradient(145deg,#f8fbff,#eef4f8)}.candidateCompare262.hide{display:none}
 .cmpHead262{display:flex;align-items:center;justify-content:space-between}.cmpHead262 small{display:block;font-size:6px;font-weight:1000;color:#7a8999;letter-spacing:.09em}.cmpHead262 b{font-size:12px}.cmpHead262 strong{font-size:9px;background:#283c50;color:#fff;padding:4px 7px;border-radius:999px}
