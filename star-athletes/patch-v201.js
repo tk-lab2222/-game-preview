@@ -36,7 +36,7 @@ function repairBirth201(){
   m=normalizeMonster201(m,777);
   const statHtml=Object.entries(m.stats).map(([k,v])=>`<div><span>${SL[k]||k}</span><b>${v}</b></div>`).join('');
   reveal.innerHTML=`<div class="resultBadge128">${['SSR','UR','EX'].includes(m.rarity)?'★ SPECIAL BIRTH ★':'NEW ATHLETE'}</div><div class="newbornLabel">NEW ATHLETE!</div>${avatar(m,true)}<div class="hatchName"><b>${m.name}</b><span>${m.rarity}</span></div><div class="hatchMeta">${SP[m.species][0]} ・ G${m.gen} ・ ${m.personality}</div><div class="traitRow hatchTraits"><span>${m.visual.pattern}</span><span>${m.visual.part}</span></div><div class="hatchStats">${statHtml}</div><div class="inheritBox"><b>継承</b><br>親：${m.origin}<br>見た目：${m.visual.color} / ${m.visual.pattern} / ${m.visual.part}${m.visual.acc!=='なし'?' / '+m.visual.acc:''}</div>`;
-  birth.classList.add('birthStage128');birth.dataset.rarity=m.rarity;
+  birth.classList.add('birthStage128');reveal.classList.add('contrast202');birth.dataset.rarity=m.rarity;
   try{window.paintSpecies&&window.paintSpecies()}catch(_){}
 }
 function ensureNestTab201(){
@@ -63,6 +63,14 @@ render=function(){
 const hatch201=document.getElementById('hatch');
 if(hatch201)hatch201.addEventListener('click',()=>{normalizeState201();if(S.egg)normalizeMonster201(S.egg,999);setTimeout(()=>{normalizeState201();repairBirth201();try{save200&&save200()}catch(_){}},1100)},true);
 const css=document.createElement('style');css.textContent=`
+.birthStage128 .hatchReveal.contrast202 .newbornLabel{color:#241900!important;background:#ffd65a!important}
+.birthStage128 .hatchReveal.contrast202 .hatchStats div{color:#171717!important;background:#fffdf7!important}
+.birthStage128 .hatchReveal.contrast202 .hatchStats span,.birthStage128 .hatchReveal.contrast202 .hatchStats b{color:#171717!important}
+.birthStage128 .hatchReveal.contrast202 .inheritBox{color:#171717!important;background:#fff4c8!important}
+.birthStage128 .hatchReveal.contrast202 .inheritBox b{color:#171717!important}
+.birthStage128 .hatchReveal.contrast202 .hatchTraits span{color:#171717!important;background:#fff3bf!important}
+.birthStage128 .hatchReveal.contrast202 .hatchName b{color:#fff!important}
+.birthStage128 .hatchReveal.contrast202 .hatchMeta{color:#dceaff!important;opacity:.9!important}
 #nest201{padding-bottom:90px}.nestSummary201{display:flex;justify-content:space-between;align-items:center;gap:10px;background:linear-gradient(145deg,#111c31,#243d61);color:#fff;border-radius:16px;padding:12px;margin-bottom:10px;box-shadow:0 6px 0 #0002}.nestSummary201 small{display:block;font-size:7px;letter-spacing:.14em;color:#8bdcff}.nestSummary201 b{font-size:15px}.nestWallet201{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.nestWallet201 span{font-size:8px;font-weight:1000;background:#ffffff14;border:1px solid #ffffff25;border-radius:999px;padding:5px 7px}.nestHost201>.box{margin:0 0 10px!important}.tabs{overflow-x:auto;justify-content:flex-start}.tabs .tab{min-width:64px;flex:1 0 64px}
 `;document.head.appendChild(css);
 setTimeout(()=>{try{render()}catch(e){console.error('v0.20.1 init',e)}},0);
