@@ -34,6 +34,8 @@ function renderRoster210(){
  requestAnimationFrame(()=>{
   try{window.paintSpecies&&window.paintSpecies()}catch(_){}
   try{window.STAR_SKILL254?.sync?.()}catch(_){}
+  try{window.STAR_RARITY249?.sync?.()}catch(_){}
+  try{window.STAR_VISUAL243?.sync?.()}catch(_){}
  })
 }
 window.renderRoster210Live=renderRoster210;
