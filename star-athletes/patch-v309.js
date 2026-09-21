@@ -8,7 +8,8 @@ const NORMAL309={
  power:{cost:450,msg:'🍖 パワーミート',target:true,apply(m){m.stats.power=(Number(m.stats.power)||0)+5;m.stats.guts=(Number(m.stats.guts)||0)+5}},
  tech:{cost:600,msg:'⭐ スタークッキー',target:true,apply(m){m.stats.tech=(Number(m.stats.tech)||0)+6;m.stats.agility=(Number(m.stats.agility)||0)+6}}
 };
-const LIMIT309={berry:3,speed:3,power:3,tech:3,condition:2,lucky:1,scout:1};
+const LIMIT309={boost:20,condition:5,lucky:1,scout:1};
+const BOOST_IDS309=new Set(['berry','speed','power','tech']);
 function generation309(){
  const fromState=Number(S.generation233)||0;
  const fromNest=Math.max(0,...(S.nest||[]).map(m=>Number(m?.gen)||0));
@@ -77,7 +78,7 @@ function rerender309(){
 }
 function buyNormal309(id){
  const item=NORMAL309[id];if(!item)return;
- if(left309(id)<=0){msg309('今世代の購入上限です');return}
+ if(left309(id)<=0){msg309('今世代の強化アイテム購入枠20回を使い切りました');return}
  if(!(S.nest||[]).length){msg309('育成メンバーがいません');return}
  if((Number(S.coins)||0)<item.cost){msg309('コインが足りません');return}
  let target=null;
@@ -103,7 +104,7 @@ function buySpecial309(id){
    rerender309();msg309('🍀 ラッキーチャームを購入！');return;
  }
  if(id==='condition'){
-   if(left309('condition')<=0){msg309('コンディションドリンクは今世代2回までです');return}
+   if(left309('condition')<=0){msg309('コンディションドリンクは今世代5回までです');return}
    const t=(S.nest||[])[0];if(!t){msg309('育成メンバーがいません');return}
    if(coins<500){msg309('コインが足りません');return}
    S.coins=coins-500;S.totalSpent=(Number(S.totalSpent)||0)+500;
