@@ -20,7 +20,7 @@ function cardSkills254(){
  document.querySelectorAll('#breeders .skillStable247,#cands .skillStable247,#breeders .coreMeta243>div,#cands .coreMeta243>div').forEach(el=>el.style.display='none');
 }
 function selected254(){const ids=Array.isArray(S.parents)?S.parents:[];return [byId254(ids[0]),byId254(ids[1])]}
-function score254(box){const t=box?.textContent||'';let m=t.match(/相性\s*(\d{1,3})/);return m?Math.max(0,Math.min(100,Number(m[1]))):null}
+function score254(a,b){try{return window.STAR_ANNUAL233?.compatibility?.(a,b)?.total??null}catch(_){return null}}
 function skillChance254(id,a,b){const aa=(a?.skills233||[]).includes(id),bb=(b?.skills233||[]).includes(id);if(!aa&&!bb)return 0;let p=aa&&bb?35:18;const hr=Math.max(n254(a?.hidden233?.heredity),n254(b?.hidden233?.heredity));if(hr>=6)p+=hr===7?8:5;return p}
 function scoutRows254(a,b,score){
  const h1=a?.hidden233||{},h2=b?.hidden233||{},avg=k=>rank254((n254(h1[k])+n254(h2[k]))/2),rows=[];
@@ -31,9 +31,9 @@ function scoutRows254(a,b,score){
  return rows;
 }
 function compat254(){
- const box=document.getElementById('compat233');if(!box||box.classList.contains('hide'))return;
- const [a,b]=selected254();if(!a||!b)return;const score=score254(box);if(score==null)return;
- box.querySelector('.reveal233')?.classList.add('hiddenBy254');
+ const box=document.getElementById('compat321');if(!box)return;
+ const [a,b]=selected254();if(!a||!b){box.querySelector('.breedIntel254')?.remove();return}
+ const score=score254(a,b);if(score==null)return;
  let panel=box.querySelector('.breedIntel254');if(!panel){panel=document.createElement('div');panel.className='breedIntel254';box.appendChild(panel)}
  const rows=scoutRows254(a,b,score);
  const candidates=[...new Set([...(a.skills233||[]),...(b.skills233||[])])].filter(x=>SK254[x]);
