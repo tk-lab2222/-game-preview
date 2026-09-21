@@ -12,7 +12,7 @@ function rank254(v){return RK254[Math.max(0,Math.min(7,Math.round(n254(v))))]}
 function skillBadges254(m){const ids=Array.isArray(m?.skills233)?m.skills233.filter(x=>SK254[x]):[];return ids.length?ids.map(id=>{const s=SK254[id];return `<span class="breedSkillBadge254 ${s.cls}">${s.icon} ${s.name}</span>`}).join(''):'<span class="breedSkillBadge254 none254">未修得</span>'}
 function putSkill254(card,m,host){
  if(!card||!m||!host)return;
- card.querySelectorAll('.skillCard235,.skillCard241,.skillStable247,.skillUnified254').forEach(x=>x.remove());
+ card.querySelectorAll('.skillUnified254').forEach(x=>x.remove());
  const row=document.createElement('div');row.className='skillUnified254';
  row.innerHTML=`<span class="skillLabelUnified254">SKILL</span><div>${skillBadges254(m)}</div>`;
  host.appendChild(row);
