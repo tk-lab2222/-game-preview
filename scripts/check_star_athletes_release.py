@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+"""Static release guard for STAR ATHLETES.
+Checks the public shell without changing game state.
+"""
+from pathlib import Path
+import re
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+SHELL = ROOT / "star-athletes-v112" / "index.html"
+GAME = ROOT / "star-athletes"
+
+errors = []
+text = SHELL.read_text(encoding="utf-8")
+refs = re.findall(r'(?:src|href)="\.\./star-athletes/([^"?]+)(?:\?v=([^"&]+))?', text)
+if not refs:
+    errors.append("release shell has no STAR ATHLETES assets")
+
+keys = {v for _, v in refs if v}
+if len(keys) != 1:
+    errors.append(f"mixed cache keys: {sorted(keys)}")
+
+for rel, _ in refs:
+    if not (GAME / rel).is_file():
+        errors.append(f"missing asset: star-athletes/{rel}")
+
+# Guard against the freeze pattern that previously caused self-trigger loops.
+for js in GAME.glob("*.js"):
+    src = js.read_text(encoding="utf-8", errors="replace")
+    if re.search(r'new\s+MutationObserver[\s\S]{0,1200}observe\s*\(\s*document\.(?:body|documentElement)', src):
+        errors.append(f"broad MutationObserver: {js.name}")
+
+# Critical B-004 recovery layer must stay connected to the release shell.
+if "patch-v326.js" not in text:
+    errors.append("save recovery guard patch-v326.js is not loaded")
+
+if errors:
+    print("STAR ATHLETES release guard: FAIL")
+    for e in errors:
+        print(f"- {e}")
+    sys.exit(1)
+
+print(f"STAR ATHLETES release guard: OK ({len(refs)} assets, cache key {next(iter(keys), 'none')})")
