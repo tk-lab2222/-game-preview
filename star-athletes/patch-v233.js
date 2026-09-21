@@ -6,12 +6,30 @@ const K233=['power','speed','stamina','agility','tech','guts'];
 const L233={power:'ちから',speed:'スピード',stamina:'スタミナ',agility:'すばやさ',tech:'テクニック',guts:'こんじょう'};
 const RK233=['G','F','E','D','C','B','A','S'];
 const SK233={
- power:{name:'豪腕',icon:'💥',desc:'ちから+6%',key:'power',mul:1.06},
- speed:{name:'疾風',icon:'💨',desc:'スピード+6%',key:'speed',mul:1.06},
- stamina:{name:'鉄肺',icon:'🔥',desc:'スタミナ+6%',key:'stamina',mul:1.06},
- agility:{name:'軽業',icon:'✨',desc:'すばやさ+6%',key:'agility',mul:1.06},
- tech:{name:'精密',icon:'🎯',desc:'テクニック+6%',key:'tech',mul:1.06},
- guts:{name:'勝負魂',icon:'❤️‍🔥',desc:'こんじょう+6%',key:'guts',mul:1.06}
+ power:{name:'豪腕',icon:'💥',desc:'ちから+6%',mods:{power:1.06},group:'basic'},
+ speed:{name:'疾風',icon:'💨',desc:'スピード+6%',mods:{speed:1.06},group:'basic'},
+ stamina:{name:'鉄肺',icon:'🔥',desc:'スタミナ+6%',mods:{stamina:1.06},group:'basic'},
+ agility:{name:'軽業',icon:'✨',desc:'すばやさ+6%',mods:{agility:1.06},group:'basic'},
+ tech:{name:'精密',icon:'🎯',desc:'テクニック+6%',mods:{tech:1.06},group:'basic'},
+ guts:{name:'勝負魂',icon:'❤️‍🔥',desc:'こんじょう+6%',mods:{guts:1.06},group:'basic'},
+ sprinter:{name:'電光石火',icon:'⚡',desc:'スピード・すばやさ+4%',mods:{speed:1.04,agility:1.04},group:'competition'},
+ hurdler:{name:'空中感覚',icon:'🪽',desc:'テクニック・すばやさ+4%',mods:{tech:1.04,agility:1.04},group:'competition'},
+ titan:{name:'怪力',icon:'🦬',desc:'ちから・スタミナ+4%',mods:{power:1.04,stamina:1.04},group:'competition'},
+ climber:{name:'登坂王',icon:'⛰️',desc:'ちから・こんじょう+4%',mods:{power:1.04,guts:1.04},group:'competition'},
+ endless:{name:'不屈',icon:'♾️',desc:'スタミナ・こんじょう+4%',mods:{stamina:1.04,guts:1.04},group:'competition'},
+ marksman:{name:'神射',icon:'🏹',desc:'テクニック・すばやさ+4%',mods:{tech:1.04,agility:1.04},group:'competition'},
+ relay:{name:'阿吽の呼吸',icon:'🤝',desc:'スピード・テクニック+4%',mods:{speed:1.04,tech:1.04},group:'competition'},
+ champion:{name:'王者の風格',icon:'👑',desc:'全能力+2%',all:1.02,group:'battle'},
+ comeback:{name:'逆境魂',icon:'🔥',desc:'こんじょう+7%・スタミナ+3%',mods:{guts:1.07,stamina:1.03},group:'battle'},
+ calm:{name:'冷静沈着',icon:'🧊',desc:'テクニック+5%・すばやさ+3%',mods:{tech:1.05,agility:1.03},group:'battle'},
+ fortune:{name:'強運',icon:'🍀',desc:'全能力+1%・LUCK型',all:1.01,group:'battle'},
+ clutch:{name:'大舞台',icon:'🌟',desc:'こんじょう・テクニック+5%',mods:{guts:1.05,tech:1.05},group:'battle'},
+ prodigy:{name:'英才教育',icon:'🌱',desc:'主要能力+4%',mods:{tech:1.02,guts:1.02},group:'lineage'},
+ heredity:{name:'強遺伝',icon:'🧬',desc:'子へのスキル継承率UP',inherit:0.10,group:'lineage'},
+ mutation:{name:'覚醒因子',icon:'✨',desc:'子の新規スキル獲得率UP',newSkill:0.10,group:'lineage'},
+ late:{name:'晩成',icon:'📈',desc:'高世代ほど伸びる素質',all:1.015,group:'lineage'},
+ starborn:{name:'星を継ぐ者',icon:'🌌',desc:'全能力+3%',all:1.03,group:'rare',rare:true},
+ miracle:{name:'奇跡の軌跡',icon:'🌠',desc:'全能力+4%',all:1.04,group:'rare',rare:true}
 };
 const LEAGUE233=[{name:'ローカル',base:135},{name:'エリア',base:225},{name:'グランド',base:335},{name:'メジャー',base:455},{name:'プラネット',base:590},{name:'ギャラクシー',base:740}];
 const NPC233=['ガルド','ミーティア','ルーチェ','ノクス','フィオ','セナ','アルト'];
@@ -94,7 +112,8 @@ function repairEarlyHidden233(){
 
 function rankName233(v){return RK233[clamp233(n233(v),0,7)]}
 function topStat233(m){let k=K233[0];for(const x of K233)if(n233(m.stats?.[x])>n233(m.stats?.[k]))k=x;return k}
-function skillEffect233(m,stats){const out={...stats};for(const id of(m.skills233||[])){const sk=SK233[id];if(sk)out[sk.key]=Math.min(999,Math.round(n233(out[sk.key])*sk.mul))}return out}
+function skillCap233(){try{return Math.max(999,n233(window.STAR_LIMIT278?.cap?.()))}catch(_){return 999}}
+function skillEffect233(m,stats){const out={...stats},cap=skillCap233();for(const id of(m.skills233||[])){const sk=SK233[id];if(!sk)continue;if(sk.all)for(const k of K233)out[k]=Math.min(cap,Math.round(n233(out[k])*sk.all));for(const [k,mul] of Object.entries(sk.mods||{}))if(K233.includes(k))out[k]=Math.min(cap,Math.round(n233(out[k])*mul))}return out}
 // ---------- strict parent compatibility / hidden-info disclosure ----------
 const PAIR233={draco:{draco:14,unil:22,grimo:20,puru:18},unil:{draco:22,unil:14,grimo:23,puru:19},grimo:{draco:20,unil:23,grimo:14,puru:22},puru:{draco:18,unil:19,grimo:22,puru:15}};
 const PERS233={熱血:{熱血:8,冷静:20,負けず嫌い:14,お調子者:12,臆病:10,マイペース:16},冷静:{熱血:20,冷静:13,負けず嫌い:17,お調子者:15,臆病:18,マイペース:16},負けず嫌い:{熱血:14,冷静:17,負けず嫌い:9,お調子者:12,臆病:15,マイペース:18},お調子者:{熱血:12,冷静:15,負けず嫌い:12,お調子者:10,臆病:17,マイペース:16},臆病:{熱血:10,冷静:18,負けず嫌い:15,お調子者:17,臆病:11,マイペース:19},マイペース:{熱血:16,冷静:16,負けず嫌い:18,お調子者:16,臆病:19,マイペース:12}};
@@ -168,7 +187,9 @@ try{
      hc[k]=clamp233(v,0,7)
    }
    hc.temperament=Math.random()<.45?ha.temperament:Math.random()<.82?hb.temperament:TEMPER233[rnd233(0,3)];
-   const candidates=new Set([...(a.skills233||[]),...(b.skills233||[])]);c.skills233=[];for(const sk of candidates){const both=(a.skills233||[]).includes(sk)&&(b.skills233||[]).includes(sk);let p=both?.35:.18;const hr=Math.max(n233(ha.heredity),n233(hb.heredity));if(hr>=6)p+=hr===7?.08:.05;if(Math.random()<p)c.skills233.push(sk);if(c.skills233.length>=2)break}
+   const candidates=new Set([...(a.skills233||[]),...(b.skills233||[])]);c.skills233=[];const inheritBonus=[...(a.skills233||[]),...(b.skills233||[])].some(x=>SK233[x]?.inherit)?0.10:0;for(const sk of candidates){const both=(a.skills233||[]).includes(sk)&&(b.skills233||[]).includes(sk);let p=(both?.35:.18)+inheritBonus;const hr=Math.max(n233(ha.heredity),n233(hb.heredity));if(hr>=6)p+=hr===7?.08:.05;if(Math.random()<p)c.skills233.push(sk);if(c.skills233.length>=2)break}
+   const mutationBonus=[...(a.skills233||[]),...(b.skills233||[])].some(x=>SK233[x]?.newSkill)?0.10:0;
+   if(c.skills233.length<2&&Math.random()<(.05+mutationBonus+rareUp)){const pool=Object.keys(SK233).filter(x=>!SK233[x].rare&&!c.skills233.includes(x));if(pool.length)c.skills233.push(pool[rnd233(0,pool.length-1)])}
    return c
  };
 }catch(e){console.warn('baby233',e)}
@@ -199,7 +220,12 @@ function promoRivals233(){
 function showPromotion233(){if(n233(S.leagueRank)===0)S.localPromotionEnteredCap=true;S.promotion233=true;S.promotionPending=false;S.rivals225=promoRivals233();save233();const lg=LEAGUE233[clamp233(n233(S.leagueRank)+1,0,5)],r=document.getElementById('result'),rh=document.getElementById('rival');if(r)r.innerHTML='<div class="notice annualFinal233"><b>🔥 年間王者・昇格戦</b><br>勝っても負けても、この一戦で世代終了。特別な経験からスキルを得ることがあります。</div>';if(rh)rh.innerHTML=`<div class="rivalPanel225 promo225"><div class="rivalTop225"><div><small>PROMOTION BATTLE</small><b>🔥 ${lg.name}級 昇格戦</b></div></div><div class="rivalCards225">${S.rivals225.slice(0,3).map(x=>`<article><header><b>${x.name}</b><em>${L233[x.strong]}型</em></header><div>${K233.map(k=>`<span class="${k===x.strong?'hot225':''}">${L233[k]} <b>${x.stats[k]}</b></span>`).join('')}</div></article>`).join('')}</div></div>`;const run=document.getElementById('run');if(run){run.classList.remove('hide');run.disabled=false;run.textContent='🔥 昇格戦スタート';run.onclick=null}document.getElementById('annualNext233')?.remove();document.getElementById('next225')?.style.setProperty('display','none','important')}
 function variance233(m){return [.15,.135,.12,.105,.09,.07,.05,.03][clamp233(n233(hidden233(m).stability),0,7)]}
 function strategyMul233(m,s){const t=hidden233(m).temperament,want=t==='大胆'?'先行':t==='冷静'?'バランス':t==='慎重'?'温存':'追込';return s===want?1.02:1}
-function acquireSkills233(won){const logs=[];for(const m of(S.nest||[])){hidden233(m);if(m.skills233.length>=6)continue;const h=m.hidden233;let p=(won?.38:.20)+[0,.003,.007,.012,.020,.032,.050,.080][clamp233(n233(h.luck),0,7)]+[0,.001,.003,.006,.010,.016,.025,.040][clamp233(n233(h.mutation),0,7)]+[0,.001,.002,.004,.007,.012,.020,.032][clamp233(n233(h.clutch),0,7)];p=Math.min(.62,p);if(Math.random()>=p)continue;let id=Math.random()<.72?topStat233(m):K233[rnd233(0,5)];if(m.skills233.includes(id)){const open=K233.filter(x=>!m.skills233.includes(x));if(!open.length)continue;id=open[rnd233(0,open.length-1)]}m.skills233.push(id);logs.push(`${m.name}：${SK233[id].icon}${SK233[id].name}`)}return logs}
+function weightedSkillPool233(m){
+ const top=topStat233(m),base=[top,'champion','clutch','calm','fortune','prodigy','heredity','mutation','late'];
+ const map={power:['titan','climber'],speed:['sprinter','relay'],stamina:['endless','titan'],agility:['hurdler','sprinter'],tech:['marksman','hurdler','relay'],guts:['comeback','clutch','climber']};
+ return [...new Set([...(map[top]||[]),...base,...Object.keys(SK233).filter(x=>!SK233[x].rare)])].filter(x=>SK233[x]);
+}
+function acquireSkills233(won){const logs=[];for(const m of(S.nest||[])){hidden233(m);if(m.skills233.length>=6)continue;const h=m.hidden233;let p=(won?.38:.20)+[0,.003,.007,.012,.020,.032,.050,.080][clamp233(n233(h.luck),0,7)]+[0,.001,.003,.006,.010,.016,.025,.040][clamp233(n233(h.mutation),0,7)]+[0,.001,.002,.004,.007,.012,.020,.032][clamp233(n233(h.clutch),0,7)];p=Math.min(.62,p);if(Math.random()>=p)continue;const open=weightedSkillPool233(m).filter(x=>!m.skills233.includes(x));if(!open.length)continue;let id=open[rnd233(0,Math.min(open.length-1,Math.max(2,Math.floor(open.length*.65))))];if(!id)id=open[rnd233(0,open.length-1)];m.skills233.push(id);const sk=SK233[id];logs.push(`${m.name}：${sk.icon}${sk.name}`)}return logs}
 async function runPromotion233(){const run=document.getElementById('run');if(!run||run.disabled)return;run.disabled=true;run.textContent='昇格戦中…';const rivals=S.rivals225?.length?S.rivals225:promoRivals233(),events=(S.schedule&&S.schedule.length)?S.schedule:['50m走','障害物競走','的当て','リレー'],tot=[0,0,0,0,0,0,0,0],rows=[];for(let i=0;i<events.length;i++){const e=events[i],m=(S.nest||[]).find(x=>x.id===S.assign?.[i])||[...(S.nest||[])].sort((a,b)=>score233(b.stats,e)-score233(a.stats,e))[0];if(!m)continue;const h=hidden233(m),eff=skillEffect233(m,m.stats),clutch=[.95,.965,.98,1,1.018,1.04,1.07,1.11][clamp233(n233(h.clutch),0,7)],luck=1+[0,.0005,.001,.002,.0035,.006,.009,.014][clamp233(n233(h.luck),0,7)]*Math.random(),sm=strategyMul233(m,S.strat?.[i]||'バランス'),vw=variance233(m),ours=score233(eff,e)*clutch*luck*sm*(1-vw/2+Math.random()*vw),scores=[ours,...rivals.map(x=>score233(x.stats,e)*(.95+Math.random()*.10))],ord=scores.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v);ord.forEach((x,rank)=>tot[x.idx]+=PTS233[rank]||0);const rank=ord.findIndex(x=>x.idx===0)+1;rows.push(`${e}：${rank}位`);const ev=document.getElementById('events');if(ev)ev.innerHTML=`<div class="battleEvent225"><b>${e}</b><span>${m.name}${m.skills233.length?' / '+m.skills233.map(x=>SK233[x]?.icon||'').join(''):''}</span><strong>${rank}位</strong></div>`;await new Promise(r=>setTimeout(r,300))}const ord=tot.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v),overall=ord.findIndex(x=>x.idx===0)+1,won=overall===1;const beforeLeague233=n233(S.leagueRank);if(won&&beforeLeague233<5)S.leagueRank++;const learned=acquireSkills233(won);S.promotion233=false;const r=document.getElementById('result');if(r)r.innerHTML=`<div class="notice leagueResult225 ${won?'win225':'lose225'}"><b>🔥 昇格戦</b><br>${rows.join('<br>')}<hr><strong>${won?'🎉 昇格成功！ '+LEAGUE233[n233(S.leagueRank)].name+'級へ':'昇格失敗… 現ランク残留'}</strong><br>総合${overall}位 / ${tot[0]}pt${learned.length?`<div class="skillLearn233"><b>✨ スキル習得！</b><br>${learned.join('<br>')}</div>`:'<div class="skillNo233">今回は新しいスキル習得なし</div>'}<small>勝敗に関係なく、この世代は終了します。</small></div>`;save233();run.classList.add('hide');run.disabled=false;nextGen233()}
 function planetRivals233(){
  const names=['地球代表・アストラ','火星代表・ヴァルカン','木星代表・ゼウス','土星代表・クロノス','金星代表・ルミナ','水星代表・メルクリ','海王星代表・ネレイド'];
