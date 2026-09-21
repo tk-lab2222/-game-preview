@@ -68,9 +68,7 @@ render=function(){
   setTimeout(()=>{repairBirth201();ensureNestTab201();decorateBreed201()},0);
   return out;
 };
-// Normalize before hatch handlers run, then repair result after the existing animation chain.
-const hatch201=document.getElementById('hatch');
-if(hatch201)hatch201.addEventListener('click',()=>{normalizeState201();if(S.egg){normalizeMonster201(S.egg,999);S.breedCount=(Number(S.breedCount)||0)+1}setTimeout(()=>{normalizeState201();repairBirth201();decorateBreed201();try{save200&&save200()}catch(_){}},1100)},true);
+// Hatch execution is owned exclusively by v127.
 const css=document.createElement('style');css.textContent=`
 .nestSummary201{display:grid!important;gap:8px!important;padding:12px!important;border-radius:14px!important;background:linear-gradient(145deg,#122038,#21395d)!important;color:#fff!important;box-shadow:0 5px 0 #0002!important}
 .nestIdentity201{display:flex;justify-content:space-between;align-items:end;gap:8px}.nestIdentity201 small{font-size:7px;letter-spacing:.15em;color:#7fe0ff;font-weight:1000}.nestIdentity201 b{font-size:15px}
