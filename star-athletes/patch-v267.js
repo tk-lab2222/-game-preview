@@ -6,7 +6,7 @@ const EV267={
   rival:{icon:'🤝',name:'ライバル合同練習',text:'ライバルチームから合同練習の誘いが来た。',a:'参加する',b:'見学する'},
   condition:{icon:'🩹',name:'体調不良',text:'少し動きが重い。このまま練習を続ける？',a:'休養する',b:'強行する'}
 };
-function st267(){if(!S.training263||typeof S.training263!=='object')S.training263={};if(!S.training263.event267)S.training263.event267={count:0,pending:null,resolved:[]};return S.training263.event267}
+function st267(){if(!S.training263||typeof S.training263!=='object')S.training263={};if(!S.training263.event267)S.training263.event267={count:0,pending:null,resolved:[],lastResult:''};if(!Array.isArray(S.training263.event267.resolved))S.training263.event267.resolved=[];return S.training263.event267}
 function save267(){try{localStorage.setItem(SAVE267,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
 function fatigue267(id,d){if(!S.training263.fatigue)S.training263.fatigue={};S.training263.fatigue[id]=Math.max(0,Math.min(2,(Number(S.training263.fatigue[id])||0)+d))}
 function pick267(){const a=S.nest||[];return a[Math.floor(Math.random()*a.length)]}
@@ -16,7 +16,7 @@ function maybe267(){
   const chance=st.count===0?(Number(S.turn)>=1?.62:.34):.28;
   if(Math.random()>chance)return;
   const keys=Object.keys(EV267),type=keys[Math.floor(Math.random()*keys.length)],m=pick267();if(!m)return;
-  st.pending={type,id:m.id,name:m.name};st.count++;save267();render267();
+  st.pending={type,id:m.id,name:m.name};st.lastResult='';st.count++;save267();render267();
 }
 function resolve267(choice){
   const st=st267(),p=st.pending;if(!p)return;const m=(S.nest||[]).find(x=>x.id===p.id);if(!m){st.pending=null;save267();render267();return}
@@ -35,13 +35,14 @@ function resolve267(choice){
     if(choice==='a'){fatigue267(m.id,-2);msg='しっかり休んでコンディション回復'}
     else{const success=Math.random()<.48;if(success){const g=5;m.stats.guts=Math.min(999,(Number(m.stats.guts)||0)+g);msg=`強行が実った！ ${SL?.guts||'勝負強さ'}+${g}`}else{fatigue267(m.id,1);msg='無理が響いた。疲労が増えた'}}
   }
-  st.resolved.push({type:p.type,id:p.id,choice,result:msg});if(st.resolved.length>6)st.resolved=st.resolved.slice(-6);st.pending=null;save267();
-  try{render();window.renderRoster210Live&&window.renderRoster210Live()}catch(_){}render267(msg);
+  st.resolved.push({type:p.type,id:p.id,choice,result:msg});if(st.resolved.length>6)st.resolved=st.resolved.slice(-6);st.pending=null;st.lastResult=msg;save267();
+  try{render();window.renderRoster210Live&&window.renderRoster210Live()}catch(_){}render267();
 }
 function render267(result=''){
   const plans=document.getElementById('plans');if(!plans)return;
   let host=document.getElementById('event267');if(!host){host=document.createElement('div');host.id='event267'}if(plans.nextElementSibling!==host)plans.insertAdjacentElement('afterend',host)
-  const p=st267().pending;if(!p){host.innerHTML=result?`<div class="eventResult267">${result}</div>`:'';return}
+  const st=st267(),p=st.pending,last=result||st.lastResult||'';
+  if(!p){host.innerHTML=last?`<div class="eventResult267"><b>イベント結果</b><span>${last}</span></div>`:'';return}
   const e=EV267[p.type];host.innerHTML=`<div class="eventCutin267">育成イベント</div><div class="eventCard267"><div class="eventTitle267"><b>${e.icon} ${e.name}</b><span>${p.name}</span></div><p>${e.text}</p><div class="eventActions267"><button type="button" data-event267="a">${e.a}</button><button type="button" data-event267="b">${e.b}</button></div><small>イベントの発生は運。結果は選択で変わります。</small></div>`;
   const go=document.getElementById('doTrain263');if(go){go.disabled=true;go.title='先にイベントの選択を決めてください'}
 }
