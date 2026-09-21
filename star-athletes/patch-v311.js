@@ -1,5 +1,13 @@
 (()=>{
 // v0.31.25: keep candidate selection flow alive after lineage archive release.
+function select311(id){
+ const cands=Array.isArray(S?.cands)?S.cands:[];
+ if(!cands.some(m=>m?.id===id))return;
+ const sel=Array.isArray(S.sel)?S.sel.filter(x=>cands.some(m=>m?.id===x)):[];
+ if(sel.includes(id))S.sel=sel.filter(x=>x!==id);
+ else if(sel.length<3)S.sel=[...sel,id];
+ restore311();
+}
 function restore311(){
  const cands=Array.isArray(S?.cands)?S.cands:[];
  const box=document.getElementById('candBox');
@@ -26,18 +34,7 @@ function restore311(){
    el.onclick=e=>{
      e?.preventDefault?.();
      e?.stopPropagation?.();
-     const sel=Array.isArray(S.sel)?S.sel:[];
-     if(sel.includes(id)){
-       S.sel=sel.filter(x=>x!==id);
-       restore311();
-       return;
-     }
-     if(sel.length>=3){
-       // Selection is already full. Do not render/toggle/rebuild: this prevents mobile jitter.
-       return;
-     }
-     S.sel=[...sel,id];
-     restore311();
+     select311(id);
    };
  });
 
@@ -77,5 +74,5 @@ css.textContent=`
 `;
 document.head.appendChild(css);
 late311();
-window.STAR_CANDIDATE311={sync:restore311};
+window.STAR_CANDIDATE311={sync:restore311,select:select311};
 })();
