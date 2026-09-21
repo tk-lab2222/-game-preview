@@ -2,12 +2,12 @@
 // v0.22.5: league progression independent from S1-S6 + visible rivals + promotion battles.
 const SAVE225='star-athletes-save-v200';
 const LEAGUES225=[
- {name:'ローカル',icon:'🏘️',base:102,reward:1.0},
- {name:'エリア',icon:'🗺️',base:120,reward:1.25},
- {name:'グランド',icon:'🏟️',base:140,reward:1.55},
- {name:'メジャー',icon:'🌟',base:430,reward:1.9},
- {name:'プラネット',icon:'🪐',base:580,reward:2.35},
- {name:'ギャラクシー',icon:'🌌',base:760,reward:3.0}
+ {name:'ローカル',icon:'🏘️',base:150,reward:1.0},
+ {name:'エリア',icon:'🗺️',base:230,reward:1.25},
+ {name:'グランド',icon:'🏟️',base:330,reward:1.55},
+ {name:'メジャー',icon:'🌟',base:460,reward:1.9},
+ {name:'プラネット',icon:'🪐',base:620,reward:2.35},
+ {name:'ギャラクシー',icon:'🌌',base:780,reward:3.0}
 ];
 const PTS225=[8,6,5,4,3,2,1,0];
 const TOURS225=[
