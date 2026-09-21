@@ -28,6 +28,19 @@ function batch260(){
   }
   try{render()}catch(e){console.warn('batch260 render',e)}
 }
+function counters260(){
+  const pair=[...document.querySelectorAll('#breed>.box')].find(x=>x.querySelector('#breedBtn'));if(!pair)return;
+  const h=pair.querySelector('h3');if(!h)return;
+  let cnt=document.getElementById('cnt'),mx=document.getElementById('mx');
+  if(!cnt||!mx){
+    const meta=document.createElement('span');meta.className='sm breedCount129';
+    meta.innerHTML='<span id="cnt">0</span>/<span id="mx">3</span>体';
+    h.appendChild(document.createTextNode(' '));h.appendChild(meta);
+    cnt=document.getElementById('cnt');mx=document.getElementById('mx');
+  }
+  if(cnt)cnt.textContent=(S.cands||[]).length;
+  if(mx)mx.textContent=limit260();
+}
 function panel260(){
   const breed=document.getElementById('breedBtn');if(!breed)return;
   let box=document.getElementById('batchBreed260');
@@ -40,7 +53,7 @@ function panel260(){
   const cand=document.getElementById('candBox');if(cand&&n>=1)cand.classList.remove('hide');
   const adopt=document.getElementById('adopt');if(adopt)adopt.disabled=(S.sel||[]).length!==3;
 }
-function sync260(){try{panel260()}catch(e){console.warn('sync260',e)}}
+function sync260(){try{counters260();panel260()}catch(e){console.warn('sync260',e)}}
 function late260(){sync260();[50,150,360,700].forEach(ms=>setTimeout(sync260,ms))}
 try{const prev260=render;render=function(){const out=prev260();late260();return out}}catch(e){console.warn('render260',e)}
 window.addEventListener('click',e=>{if(e.target?.closest?.('[data-mode="p"],[data-mode="c"],#hatch,#adopt,.tab[data-v="breed"]'))late260()},true);
