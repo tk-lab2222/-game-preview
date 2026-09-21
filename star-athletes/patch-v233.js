@@ -96,8 +96,7 @@ function rankName233(v){return RK233[clamp233(n233(v),0,7)]}
 function topStat233(m){let k=K233[0];for(const x of K233)if(n233(m.stats?.[x])>n233(m.stats?.[k]))k=x;return k}
 function skillEffect233(m,stats){const out={...stats};for(const id of(m.skills233||[])){const sk=SK233[id];if(sk)out[sk.key]=Math.min(999,Math.round(n233(out[sk.key])*sk.mul))}return out}
 function skillPills233(){
- document.querySelectorAll('.skill232').forEach(x=>x.remove());
- document.querySelectorAll('.train210').forEach(c=>{const id=c.querySelector('[data-m210]')?.dataset.m210,m=(S.nest||[]).find(x=>x.id===id);if(!m)return;hidden233(m);c.querySelector('.skills233')?.remove();if(!m.skills233.length)return;const host=c.querySelector('header>div')||c;const d=document.createElement('div');d.className='skills233';d.innerHTML=m.skills233.slice(0,3).map(id=>SK233[id]?`<span title="${SK233[id].desc}">${SK233[id].icon} ${SK233[id].name}</span>`:'').join('');host.appendChild(d)})
+ document.querySelectorAll('.skill232,.skills233').forEach(x=>x.remove());
 }
 // ---------- strict parent compatibility / hidden-info disclosure ----------
 const PAIR233={draco:{draco:14,unil:22,grimo:20,puru:18},unil:{draco:22,unil:14,grimo:23,puru:19},grimo:{draco:20,unil:23,grimo:14,puru:22},puru:{draco:18,unil:19,grimo:22,puru:15}};
