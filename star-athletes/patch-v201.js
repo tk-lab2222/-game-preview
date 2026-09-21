@@ -63,7 +63,6 @@ render=function(){
   normalizeState201();
   let out;
   try{out=renderBefore201()}catch(e){console.error('render before v201',e)}
-  ensureBreedCounters129?.();
   ensureNestTab201();
   decorateBreed201();
   setTimeout(()=>{repairBirth201();ensureNestTab201();decorateBreed201()},0);
