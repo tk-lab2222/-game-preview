@@ -50,7 +50,7 @@ function hash343(s){
 function archetype343(m){
  const set=BODY343[m?.species]||BODY343.draco;
  const parts=m?.parts243||{};
- const raw=Object.entries(parts).sort().map(([k,v])=>k+':'+v).join('|')+'|'+(m?.visual?.part||'')+'|'+(m?.id||'');
+ const raw=(m?.species||'')+'|'+Object.entries(parts).sort().map(([k,v])=>k+':'+v).join('|')+'|'+(m?.visual?.part||'');
  return set[hash343(raw)%set.length];
 }
 function hidden343(m,k){
@@ -93,8 +93,8 @@ function roll343(c,a,b){
   {tier:'phantom',grade:4,base:.0005,name:ar.phantom},
   {tier:'shine',grade:3,base:.006,name:ar.shine}
  ].map(r=>({...r,chance:Math.min(.08,r.base*boost.mult)}));
- const u=Math.random();
- const won=rows.find(r=>u<r.chance);
+ const u=Math.random();let acc=0,won=null;
+ for(const r of rows){acc+=r.chance;if(u<acc){won=r;break}}
  c.starBodyOdds343=rows.map(r=>({tier:r.tier,base:r.base,mult:boost.mult,chance:r.chance,reasons:boost.reasons}));
  if(!won){c.starBody343={id:ar.id,role:ar.role,stats:ar.stats,grade:1,name:ar.base,effect:ar.effect,tier:'base'};return c}
  c.starBody343={id:ar.id,role:ar.role,stats:ar.stats,grade:won.grade,name:won.name,effect:ar.effect,tier:won.tier,chance:won.chance,mult:boost.mult,reasons:boost.reasons,at:Date.now()};
