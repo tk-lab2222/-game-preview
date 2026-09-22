@@ -7,12 +7,14 @@ on:
       - 'star-athletes/**'
       - 'star-athletes-v112/index.html'
       - 'scripts/check_star_athletes_release.py'
+      - 'scripts/check_star_athletes_save_contract.py'
       - '.github/workflows/check-star-athletes-release.yml'
   pull_request:
     paths:
       - 'star-athletes/**'
       - 'star-athletes-v112/index.html'
       - 'scripts/check_star_athletes_release.py'
+      - 'scripts/check_star_athletes_save_contract.py'
       - '.github/workflows/check-star-athletes-release.yml'
   workflow_dispatch:
 
@@ -29,3 +31,5 @@ jobs:
           python-version: '3.12'
       - name: Check release shell and safety guards
         run: python scripts/check_star_athletes_release.py
+      - name: Check core save recovery contract
+        run: python scripts/check_star_athletes_save_contract.py
