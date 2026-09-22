@@ -155,7 +155,8 @@ function train263(){
     for(const [k,base] of Object.entries(TRAIN263[plan].gain)){
       const cur=n263(m.stats[k]),soft=highStatMul263(cur),jitter=o.injury?0:(Math.random()<.35?1:0);
       const patternMul=Number(window.STAR_PATTERN342?.trainingMul?.(m,plan,mode,k)||1);
-      const raw=(base*o.mul*leagueMul263()*patternMul+jitter)*soft;
+      const bodyMul=Number(window.STAR_BODY343?.trainingMul?.(m,plan,mode,k)||1);
+      const raw=(base*o.mul*leagueMul263()*patternMul*bodyMul+jitter)*soft;
       const gain=Math.max(0,Math.round(raw));
       m.stats[k]=Math.min(cap263(),cur+gain);
       const actual=m.stats[k]-cur;
