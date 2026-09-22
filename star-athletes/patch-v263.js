@@ -18,6 +18,7 @@ const INT263={
 };
 function n263(v){return Number(v)||0}
 function clamp263(v,a,b){return Math.max(a,Math.min(b,v))}
+function cap263(){try{return Math.max(999,Number(window.STAR_LIMIT278?.cap?.())||999)}catch(_){return 999}}
 function hidden263(m,k,d=3){const v=Number(m?.hidden233?.[k]);return Number.isFinite(v)?clamp263(v,0,7):d}
 function avg263(m){const a=KEYS263.map(k=>n263(m?.stats?.[k]));return a.reduce((x,y)=>x+y,0)/(a.length||1)}
 function best263(){return [...(S.nest||[])].sort((a,b)=>avg263(b)-avg263(a))[0]?.id}
@@ -146,7 +147,7 @@ function train263(){
       const cur=n263(m.stats[k]),soft=highStatMul263(cur),jitter=o.injury?0:(Math.random()<.35?1:0);
       const raw=(base*o.mul+jitter)*soft;
       const gain=Math.max(0,Math.round(raw));
-      m.stats[k]=Math.min(999,cur+gain);
+      m.stats[k]=Math.min(cap263(),cur+gain);
       const actual=m.stats[k]-cur;
       m.trainingGain226[k]=n263(m.trainingGain226[k])+actual;
       ups.push(`${SL[k]}+${actual}`);
