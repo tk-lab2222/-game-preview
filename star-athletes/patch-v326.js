@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-// v0.31.81: keep one valid previous save so malformed primary JSON does not erase progress.
+// v0.31.95: recover malformed primary save early enough that the legacy loader cannot overwrite it.
 if(window.STAR_SAVE_RECOVERY326)return;
 const PRIMARY326='star-athletes-save-v200',BACKUP326='star-athletes-save-v200-backup';
 function parse326(raw){
@@ -25,6 +25,8 @@ function recover326(){
     return true;
   }catch(_){return false}
 }
+// patch-v200 has already run by the time this patch loads. If its loader rejected a malformed
+// primary, restore the valid backup and runtime state immediately; never restore when primary is absent.
 const recovered326=recover326();
 try{
   const prev326=window.render;
