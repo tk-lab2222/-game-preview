@@ -81,7 +81,12 @@ try{
 
 // Legacy rival scaling removed. Tournament rivals are owned by patch-v290/v225.
 function eventKeys226(e){return e==='50m走'?['speed','agility','tech']:e==='障害物競走'?['tech','agility','speed']:e==='大玉ころがし'?['power','stamina','guts']:e==='坂道かけあがり'?['power','stamina','guts']:e==='10000m走'?['stamina','guts','speed']:e==='的当て'?['tech','power','agility']:e==='リレー'?['speed','tech','agility']:['power','stamina','guts']}
-function highMul226(v){return v>=990?.2:v>=950?.4:v>=850?.65:v>=700?.85:1}
+function highMul226(v){
+ const cap=cap226();
+ if(cap<=999)return v>=990?.2:v>=950?.4:v>=850?.65:v>=700?.85:1;
+ const r=n226(v)/cap;
+ return r>=.90?.25:r>=.75?.45:r>=.60?.65:r>=.45?.82:1;
+}
 function addMatch226(m,k,raw){
  meta226(m);const cur=n226(m.stats[k]),gain=Math.max(0,Math.round(raw*highMul226(cur))),next=Math.min(cap226(),cur+gain),actual=next-cur;
  m.stats[k]=next;m.matchGain226[k]=n226(m.matchGain226[k])+actual;return actual;
