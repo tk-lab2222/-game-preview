@@ -146,6 +146,33 @@ function rareRecipeMul342(m){
  return g>=5?1.35:1.10;
 }
 
+function directStats342(m){
+ const x=info342(m),g=grade342(m);
+ if(g<4)return[];
+ const map={
+  stream:['speed','agility'],speck:['tech','agility'],flame:['power','guts'],
+  thunder:['speed','agility'],star:['tech','guts'],plain:['stamina','guts']
+ };
+ return map[x.base]||[];
+}
+function applyDirect342(m){
+ if(!m||m.starPatternStatApplied342)return false;
+ const g=grade342(m);if(g<4)return false;
+ const keys=directStats342(m),pct=g>=5?.10:.05;
+ if(!keys.length)return false;
+ m.stats=m.stats||{};
+ for(const k of keys){
+  const cur=Number(m.stats[k])||0;
+  if(cur>0)m.stats[k]=Math.max(cur+1,Math.round(cur*(1+pct)));
+  if(m.geneticBase226&&Number.isFinite(Number(m.geneticBase226[k]))){
+   const b=Number(m.geneticBase226[k])||0;
+   m.geneticBase226[k]=Math.max(b+1,Math.round(b*(1+pct)));
+  }
+ }
+ m.starPatternStatApplied342={grade:g,pct,keys,at:Date.now()};
+ return true;
+}
+
 function decorate342(){
  const byId=new Map(all342().map(m=>[m.id,m]));
  document.querySelectorAll('#cands .card[data-id],#breeders .card[data-id],#lineagePool .card[data-id]').forEach(card=>{
@@ -168,12 +195,12 @@ function decorate342(){
  }
 }
 
-function sync342(){migrate342();decorate342();try{window.STAR_GRADE340?.sync?.()}catch(_){}}
+function sync342(){migrate342();let changed=false;for(const m of all342())changed=applyDirect342(m)||changed;if(changed)persist342();decorate342();try{window.STAR_GRADE340?.sync?.()}catch(_){}}
 try{const prevRender342=render;render=function(){const out=prevRender342();setTimeout(sync342,0);return out}}catch(e){console.warn('pattern342 render',e)}
 document.addEventListener('click',e=>{if(e.target?.closest?.('#hatch,#breedBtn,#adopt,.tab'))setTimeout(sync342,20)},true);
 
 window.STAR_PATTERN342={
- info:info342,grade:grade342,label:label342,effect:effect342,
+ info:info342,grade:grade342,label:label342,effect:effect342,applyDirect:applyDirect342,
  trainingMul:trainingMul342,injuryAdd:injuryAdd342,successBonus:successBonus342,
  competitionMul:competitionMul342,skillChance:skillChance342,rareRecipeMul:rareRecipeMul342,
  sync:sync342
