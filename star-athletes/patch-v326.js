@@ -5,7 +5,7 @@ if(window.STAR_SAVE_RECOVERY326)return;
 const PRIMARY326='star-athletes-save-v200',BACKUP326='star-athletes-save-v200-backup';
 function parse326(raw){
   if(!raw)return null;
-  try{const d=JSON.parse(raw);return d&&d.S&&typeof d.S==='object'?d:null}catch(_){return null}
+  try{const d=JSON.parse(raw);return d&&d.S&&typeof d.S==='object'&&!Array.isArray(d.S)?d:null}catch(_){return null}
 }
 function backup326(){
   try{
