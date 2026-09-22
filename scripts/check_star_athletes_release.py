@@ -24,11 +24,17 @@ for rel, _ in refs:
     if not (GAME / rel).is_file():
         errors.append(f"missing asset: star-athletes/{rel}")
 
-# Guard against the freeze pattern that previously caused self-trigger loops.
-for js in GAME.glob("*.js"):
+# Guard only the JavaScript actually loaded by the public release shell.
+# Historical/unreferenced patch files intentionally remain in the repository and
+# must not make a current release fail merely because they contain an old pattern.
+loaded_js = sorted({rel for rel, _ in refs if rel.endswith(".js")})
+for rel in loaded_js:
+    js = GAME / rel
+    if not js.is_file():
+        continue
     src = js.read_text(encoding="utf-8", errors="replace")
     if re.search(r'new\s+MutationObserver[\s\S]{0,1200}observe\s*\(\s*document\.(?:body|documentElement)', src):
-        errors.append(f"broad MutationObserver: {js.name}")
+        errors.append(f"broad MutationObserver in loaded asset: {rel}")
 
 # Critical B-004 recovery layer must stay connected to the release shell.
 if "patch-v326.js" not in text:
@@ -40,4 +46,7 @@ if errors:
         print(f"- {e}")
     sys.exit(1)
 
-print(f"STAR ATHLETES release guard: OK ({len(refs)} assets, cache key {next(iter(keys), 'none')})")
+print(
+    "STAR ATHLETES release guard: OK "
+    f"({len(refs)} assets, {len(loaded_js)} loaded JS, cache key {next(iter(keys), 'none')})"
+)
