@@ -42,6 +42,8 @@ require("localStorage.setItem(PRIMARY326,back)" in recovery,
         'recovery must restore a valid backup into the primary key')
 require("window.S=d.S" in recovery,
         'recovery must restore runtime state as well as localStorage')
+require("typeof d.S==='object'&&!Array.isArray(d.S)" in recovery,
+        'recovery must reject array-shaped state instead of treating it as a valid save object')
 
 # Core select changes do not necessarily render; they must persist independently.
 selector = 'select[data-plan],select[data-a],select[data-s]'
