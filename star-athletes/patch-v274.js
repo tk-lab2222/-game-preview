@@ -64,10 +64,13 @@ function multiplier274(m,a=null,b=null){
 }
 function evaluate274(m,roll=true,a=null,b=null){
  const boost=multiplier274(m,a,b),u=roll?Math.random():null;
- const rows=TIERS274.map(t=>({...t,mult:boost.mult,chance:Math.min(.02,t.base*boost.mult),reasons:boost.reasons}));
+ const rows=TIERS274.map(t=>({...t,mult:boost.mult,threshold:Math.min(.02,t.base*boost.mult),reasons:boost.reasons}));
+ const rareFirst=[...rows].reverse();
+ let prev=0;
+ for(const x of rareFirst){x.chance=Math.max(0,x.threshold-prev);prev=Math.max(prev,x.threshold)}
  if(!roll)return rows;
- // One roll, rarest qualifying tier wins. This prevents stacked independent jackpots.
- const won=[...rows].reverse().find(x=>u<x.chance)||null;
+ // One roll, rarest qualifying tier wins. "chance" is the exact exclusive tier probability.
+ const won=rareFirst.find(x=>u<x.threshold)||null;
  return {rows,won,roll:u};
 }
 function apply274(m,a=null,b=null){
