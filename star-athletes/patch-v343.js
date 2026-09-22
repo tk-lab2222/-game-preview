@@ -1,0 +1,200 @@
+(()=>{
+// v0.32.06: Star Body system.
+// Converts inherited part combinations into species-specific body traits with upper tiers,
+// meaningful permanent stats, training/competition identity, and rarity UI.
+if(window.STAR_BODY343)return;
+
+const SAVE343='star-athletes-save-v200';
+const GRADE343={1:['★','通常'],2:['★★','希少'],3:['★★★','輝星'],4:['★★★★','幻星'],5:['★★★★★','神星']};
+
+const BODY343={
+ draco:[
+  {id:'horn',base:'竜角体',shine:'王角体',phantom:'天角体',god:'神角体',role:'power',stats:['power','guts'],effect:'ちから・こんじょう型'},
+  {id:'wing',base:'翼竜体',shine:'光翼体',phantom:'天翼体',god:'神翼体',role:'speed',stats:['speed','agility'],effect:'スピード・すばやさ型'},
+  {id:'tail',base:'星尾体',shine:'彗尾体',phantom:'天尾体',god:'神尾体',role:'tech',stats:['tech','agility'],effect:'テクニック・すばやさ型'},
+  {id:'scale',base:'晶鱗体',shine:'輝鱗体',phantom:'幻晶体',god:'神晶体',role:'stamina',stats:['stamina','guts'],effect:'スタミナ・こんじょう型'}
+ ],
+ unil:[
+  {id:'horn',base:'俊角体',shine:'光角体',phantom:'天角体',god:'神角体',role:'power',stats:['power','tech'],effect:'ちから・テクニック型'},
+  {id:'mane',base:'風鬣体',shine:'疾鬣体',phantom:'天鬣体',god:'神鬣体',role:'speed',stats:['speed','agility'],effect:'スピード・すばやさ型'},
+  {id:'ear',base:'聴星体',shine:'星耳体',phantom:'天聴体',god:'神聴体',role:'tech',stats:['tech','agility'],effect:'テクニック・すばやさ型'},
+  {id:'tail',base:'流尾体',shine:'光尾体',phantom:'天尾体',god:'神尾体',role:'stamina',stats:['stamina','guts'],effect:'スタミナ・こんじょう型'}
+ ],
+ grimo:[
+  {id:'beak',base:'鋭嘴体',shine:'王嘴体',phantom:'天嘴体',god:'神嘴体',role:'tech',stats:['tech','power'],effect:'テクニック・ちから型'},
+  {id:'wing',base:'翼書体',shine:'光翼体',phantom:'天翼体',god:'神翼体',role:'speed',stats:['speed','agility'],effect:'スピード・すばやさ型'},
+  {id:'chest',base:'星羽体',shine:'輝羽体',phantom:'天羽体',god:'神羽体',role:'stamina',stats:['stamina','guts'],effect:'スタミナ・こんじょう型'},
+  {id:'crest',base:'冠羽体',shine:'王冠羽体',phantom:'天冠体',god:'神冠体',role:'power',stats:['power','guts'],effect:'ちから・こんじょう型'}
+ ],
+ puru:[
+  {id:'ear',base:'伸耳体',shine:'光耳体',phantom:'天耳体',god:'神耳体',role:'speed',stats:['speed','agility'],effect:'スピード・すばやさ型'},
+  {id:'tail',base:'流尾体',shine:'光尾体',phantom:'天尾体',god:'神尾体',role:'power',stats:['power','guts'],effect:'ちから・こんじょう型'},
+  {id:'clear',base:'透晶体',shine:'輝晶体',phantom:'幻晶体',god:'神晶体',role:'stamina',stats:['stamina','tech'],effect:'スタミナ・テクニック型'},
+  {id:'core',base:'星核体',shine:'輝核体',phantom:'天核体',god:'神核体',role:'tech',stats:['tech','guts'],effect:'テクニック・こんじょう型'}
+ ]
+};
+
+function all343(){
+ const out=[],seen=new Set();
+ for(const key of ['starters','nest','lineage','released','cands','foster']){
+  for(const m of(S?.[key]||[]))if(m&&!seen.has(m.id)){seen.add(m.id);out.push(m)}
+ }
+ if(S?.egg&&!seen.has(S.egg.id))out.push(S.egg);
+ return out;
+}
+function hash343(s){
+ let h=2166136261;
+ for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}
+ return Math.abs(h>>>0);
+}
+function archetype343(m){
+ const set=BODY343[m?.species]||BODY343.draco;
+ const parts=m?.parts243||{};
+ const raw=Object.entries(parts).sort().map(([k,v])=>k+':'+v).join('|')+'|'+(m?.visual?.part||'')+'|'+(m?.id||'');
+ return set[hash343(raw)%set.length];
+}
+function hidden343(m,k){
+ const n=Number(m?.hidden233?.[k]);
+ return Number.isFinite(n)?Math.max(0,Math.min(7,n)):0;
+}
+function base343(m){
+ const a=archetype343(m);
+ return{id:a.id,role:a.role,stats:a.stats,grade:1,name:a.base,effect:a.effect,tier:'base'};
+}
+function info343(m){return m?.starBody343?.name?m.starBody343:base343(m)}
+function grade343(m){return Math.max(1,Math.min(5,Number(info343(m).grade)||1))}
+function label343(m){const x=info343(m),g=GRADE343[grade343(m)];return `${g[0]} ${g[1]}・${x.name}`}
+function statPct343(g){return g>=5?.12:g===4?.06:g===3?.03:0}
+function fullEffect343(m){
+ const x=info343(m),g=grade343(m),pct=Math.round(statPct343(g)*100);
+ const role=x.effect||'身体特性';
+ if(g>=3)return `${role}／得意能力 +${pct}%${g>=4?'／育成・競技にも補正':''}`;
+ return role;
+}
+function persist343(){try{localStorage.setItem(SAVE343,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
+
+function lineage343(a,b,target){
+ let mult=1,reasons=[];
+ const aa=info343(a),bb=info343(b);
+ if(aa.id===target.id&&bb.id===target.id){mult*=6;reasons.push('同系星体の両親×6')}
+ else if(aa.id===target.id||bb.id===target.id){mult*=2;reasons.push('同系星体の親×2')}
+ const upper=Math.max(grade343(a),grade343(b));
+ if(upper>=3){const x=1+(upper-2)*.6;mult*=x;reasons.push(`上位星体血統×${x.toFixed(1)}`)}
+ const hered=Math.max(hidden343(a,'heredity'),hidden343(b,'heredity'));
+ const mut=Math.max(hidden343(a,'mutation'),hidden343(b,'mutation'));
+ if(hered>=6){const x=hered>=7?2.2:1.5;mult*=x;reasons.push(`遺伝力${hered>=7?'S':'A'}×${x}`)}
+ if(mut>=6){const x=mut>=7?2.5:1.6;mult*=x;reasons.push(`変異因子${mut>=7?'S':'A'}×${x}`)}
+ return{mult:Math.min(100,mult),reasons};
+}
+function roll343(c,a,b){
+ const ar=archetype343(c),boost=lineage343(a,b,ar);
+ const rows=[
+  {tier:'god',grade:5,base:.00002,name:ar.god},
+  {tier:'phantom',grade:4,base:.0005,name:ar.phantom},
+  {tier:'shine',grade:3,base:.006,name:ar.shine}
+ ].map(r=>({...r,chance:Math.min(.08,r.base*boost.mult)}));
+ const u=Math.random();
+ const won=rows.find(r=>u<r.chance);
+ c.starBodyOdds343=rows.map(r=>({tier:r.tier,base:r.base,mult:boost.mult,chance:r.chance,reasons:boost.reasons}));
+ if(!won){c.starBody343={id:ar.id,role:ar.role,stats:ar.stats,grade:1,name:ar.base,effect:ar.effect,tier:'base'};return c}
+ c.starBody343={id:ar.id,role:ar.role,stats:ar.stats,grade:won.grade,name:won.name,effect:ar.effect,tier:won.tier,chance:won.chance,mult:boost.mult,reasons:boost.reasons,at:Date.now()};
+ return c;
+}
+try{
+ const prevBaby343=baby;
+ baby=function(a,b){
+  const c=prevBaby343(a,b);
+  return roll343(c,a,b);
+ };
+}catch(e){console.warn('body343 baby',e)}
+
+function migrate343(){
+ let changed=false;
+ for(const m of all343()){
+  if(!m.starBody343){m.starBody343=base343(m);changed=true}
+ }
+ if(changed)persist343();
+}
+function applyDirect343(m){
+ if(!m||m.starBodyStatApplied343)return false;
+ const x=info343(m),g=grade343(m),pct=statPct343(g);
+ if(!pct||!Array.isArray(x.stats))return false;
+ m.stats=m.stats||{};
+ for(const k of x.stats){
+  const cur=Number(m.stats[k])||0;
+  if(cur>0)m.stats[k]=Math.max(cur+1,Math.round(cur*(1+pct)));
+  if(m.geneticBase226&&Number.isFinite(Number(m.geneticBase226[k]))){
+   const b=Number(m.geneticBase226[k])||0;
+   m.geneticBase226[k]=Math.max(b+1,Math.round(b*(1+pct)));
+  }
+ }
+ m.starBodyStatApplied343={grade:g,pct,keys:[...x.stats],at:Date.now()};
+ return true;
+}
+function trainingMul343(m,plan,mode,k){
+ const x=info343(m),g=grade343(m);
+ if(g<3||!x.stats?.includes(k))return 1;
+ return g>=5?1.10:g===4?1.06:1.03;
+}
+function competitionMul343(m,e){
+ const x=info343(m),g=grade343(m);
+ if(g<3)return 1;
+ const roleEvents={
+  speed:['50m走','リレー','障害物競走'],
+  power:['大玉ころがし','坂道かけあがり','的当て'],
+  tech:['的当て','障害物競走','リレー'],
+  stamina:['10000m走','坂道かけあがり','大玉ころがし']
+ };
+ if(!(roleEvents[x.role]||[]).includes(e))return 1;
+ return g>=5?1.08:g===4?1.04:1.02;
+}
+
+function decorate343(){
+ const byId=new Map(all343().map(m=>[m.id,m]));
+ document.querySelectorAll('#cands .card[data-id],#breeders .card[data-id],#lineagePool .card[data-id]').forEach(card=>{
+  const m=byId.get(card.dataset.id);if(!m)return;
+  card.querySelector('.bodyBadge343')?.remove();
+  const g=grade343(m),tag=document.createElement('div');
+  tag.className='bodyBadge343 bodyGrade343-'+g;
+  tag.innerHTML=`<b>${label343(m)}</b><small>${fullEffect343(m)}</small>`;
+  (card.querySelector('.patternBadge342')||card.querySelector('.coreMeta243')||card.querySelector('.bd')||card).appendChild(tag);
+ });
+ const birth=document.querySelector('#birth .hatchReveal'),latest=(S?.cands||[])[(S?.cands||[]).length-1];
+ if(birth){
+  birth.querySelector('.birthBody343')?.remove();
+  if(latest&&grade343(latest)>=3){
+   const tag=document.createElement('div');tag.className='birthBody343 bodyGrade343-'+grade343(latest);
+   tag.innerHTML=`<b>${label343(latest)}</b><small>${fullEffect343(latest)}</small>`;
+   (birth.querySelector('.birthPattern342')||birth.querySelector('.birthColor341')||birth.querySelector('.hatchName'))?.after(tag);
+  }
+ }
+}
+function sync343(){
+ migrate343();
+ let changed=false;for(const m of all343())changed=applyDirect343(m)||changed;
+ if(changed)persist343();
+ decorate343();
+ try{window.STAR_GRADE340?.sync?.()}catch(_){}
+}
+try{const prevRender343=render;render=function(){const out=prevRender343();setTimeout(sync343,0);return out}}catch(e){console.warn('body343 render',e)}
+document.addEventListener('click',e=>{if(e.target?.closest?.('#hatch,#breedBtn,#adopt,.tab'))setTimeout(sync343,20)},true);
+
+window.STAR_BODY343={
+ info:info343,grade:grade343,label:label343,effect:fullEffect343,
+ trainingMul:trainingMul343,competitionMul:competitionMul343,applyDirect:applyDirect343,sync:sync343
+};
+
+const css=document.createElement('style');
+css.id='starBody343css';
+css.textContent=`
+.bodyBadge343{margin-top:5px;padding:5px 6px;border-radius:8px;background:#f7f7f4;border:1px solid #d7d7cf}
+.bodyBadge343 b,.bodyBadge343 small{display:block}.bodyBadge343 b{font-size:7px}.bodyBadge343 small{margin-top:2px;font-size:6px;color:#68737d}
+.bodyGrade343-3{background:#fff5ca;border-color:#d5b64c}
+.bodyGrade343-4{background:linear-gradient(90deg,#eefaff,#f2eaff);border-color:#a68cca;box-shadow:0 0 8px #9c7bd533}
+.bodyGrade343-5{background:linear-gradient(90deg,#fff0aa,#eee4ff,#dffaff);border-color:#b48b43;box-shadow:0 0 11px #9275d95c}
+.birthBody343{width:min(300px,90%);margin:6px auto;padding:7px 9px;border-radius:10px;text-align:center}
+.birthBody343 b,.birthBody343 small{display:block}.birthBody343 b{font-size:10px}.birthBody343 small{margin-top:2px;font-size:6px;color:#5d6875}
+`;
+document.head.appendChild(css);
+migrate343();setTimeout(sync343,0);
+})();
