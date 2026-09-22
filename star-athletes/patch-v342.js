@@ -14,12 +14,12 @@ const BASE342={
  '星':{id:'star',name:'星紋',grade:2,effect:'スキル習得率 +2pt'}
 };
 const UPPER342={
- stream:{shine:{id:'lightstream',name:'光流紋',grade:3,effect:'スピード・すばやさ育成 +5%'},phantom:{id:'comet',name:'彗星紋',grade:4,effect:'スピード・すばやさ育成 +7%／50m走適性 +2%'},god:{id:'godstream',name:'神駆紋',grade:5,effect:'高速系育成 +8%／瞬発競技 +3%'}},
- speck:{shine:{id:'brightspeck',name:'煌斑紋',grade:3,effect:'大成功・超成功率 上昇'},phantom:{id:'moon',name:'月輪紋',grade:4,effect:'大成功・超成功率 大幅上昇'},god:{id:'godmoon',name:'神月紋',grade:5,effect:'育成上振れ判定を大きく強化'}},
- flame:{shine:{id:'hellflame',name:'獄炎紋',grade:3,effect:'高負荷成功時 +8%／ケガ率 +1pt'},phantom:{id:'sun',name:'日輪紋',grade:4,effect:'高負荷成功時 +10%／大成功率UP'},god:{id:'godsun',name:'神陽紋',grade:5,effect:'高負荷成功時 +12%／超成功率UP'}},
- thunder:{shine:{id:'heaventhunder',name:'天雷紋',grade:3,effect:'50m走・リレー適性 +3%'},phantom:{id:'storm',name:'天嵐紋',grade:4,effect:'瞬発競技適性 +4%'},god:{id:'godthunder',name:'神雷紋',grade:5,effect:'瞬発競技適性 +5%'}},
- star:{shine:{id:'heavenstar',name:'天星紋',grade:3,effect:'スキル習得率 +4pt'},phantom:{id:'galaxy',name:'銀河紋',grade:4,effect:'スキル習得率 +6pt／特殊血統に好影響'},god:{id:'godstar',name:'神紋',grade:5,effect:'スキル習得率 +8pt／特殊血統に好影響'}},
- plain:{shine:{id:'clear',name:'澄紋',grade:3,effect:'育成失敗・ケガをわずかに抑制'},phantom:{id:'void',name:'空輪紋',grade:4,effect:'安定性特化の希少紋'},god:{id:'godplain',name:'無極紋',grade:5,effect:'安定性を大きく強化'}}
+ stream:{shine:{id:'lightstream',name:'光流紋',grade:3,effect:'スピード・すばやさ育成 +5%'},phantom:{id:'comet',name:'彗星紋',grade:4,effect:'スピード・すばやさ育成 +7%／50m走適性 +2%'},god:{id:'godstream',name:'神駆紋',grade:5,effect:'高速系育成 +15%／瞬発競技 +8%'}},
+ speck:{shine:{id:'brightspeck',name:'煌斑紋',grade:3,effect:'大成功・超成功率 上昇'},phantom:{id:'moon',name:'月輪紋',grade:4,effect:'大成功・超成功率 大幅上昇'},god:{id:'godmoon',name:'神月紋',grade:5,effect:'大成功 +8pt／超成功 +5pt'}},
+ flame:{shine:{id:'hellflame',name:'獄炎紋',grade:3,effect:'高負荷成功時 +8%／ケガ率 +1pt'},phantom:{id:'sun',name:'日輪紋',grade:4,effect:'高負荷成功時 +10%／大成功率UP'},god:{id:'godsun',name:'神陽紋',grade:5,effect:'高負荷育成 +18%／超成功 +4pt'}},
+ thunder:{shine:{id:'heaventhunder',name:'天雷紋',grade:3,effect:'50m走・リレー適性 +3%'},phantom:{id:'storm',name:'天嵐紋',grade:4,effect:'瞬発競技適性 +4%'},god:{id:'godthunder',name:'神雷紋',grade:5,effect:'50m走・リレー適性 +10%'}},
+ star:{shine:{id:'heavenstar',name:'天星紋',grade:3,effect:'スキル習得率 +4pt'},phantom:{id:'galaxy',name:'銀河紋',grade:4,effect:'スキル習得率 +6pt／特殊血統に好影響'},god:{id:'godstar',name:'神紋',grade:5,effect:'スキル習得率 +15pt／特殊血統 ×1.35'}},
+ plain:{shine:{id:'clear',name:'澄紋',grade:3,effect:'育成失敗・ケガをわずかに抑制'},phantom:{id:'void',name:'空輪紋',grade:4,effect:'安定性特化の希少紋'},god:{id:'godplain',name:'無極紋',grade:5,effect:'ケガ率 -5pt／育成 +8%'}}
 };
 const GRADE342={1:['★','通常'],2:['★★','希少'],3:['★★★','輝星'],4:['★★★★','幻星'],5:['★★★★★','神星']};
 const LEGACY_BY_NAME342={};
@@ -111,38 +111,39 @@ try{
 
 function trainingMul342(m,plan,mode,k){
  const x=info342(m),g=grade342(m);
- if(x.base==='stream'&&(plan==='speed'||k==='speed'||k==='agility'))return g>=5?1.08:g===4?1.07:g===3?1.05:1.03;
- if(x.base==='flame'&&mode==='high')return g>=5?1.12:g===4?1.10:g===3?1.08:1.05;
+ if(x.base==='stream'&&(plan==='speed'||k==='speed'||k==='agility'))return g>=5?1.15:g===4?1.07:g===3?1.05:1.03;
+ if(x.base==='flame'&&mode==='high')return g>=5?1.18:g===4?1.10:g===3?1.08:1.05;
+ if(x.base==='plain'&&g>=5)return 1.08;
  return 1;
 }
 function injuryAdd342(m,mode){
  const x=info342(m),g=grade342(m);
  if(mode==='high'&&x.base==='flame'&&g<=3)return .01;
- if(x.base==='plain'&&g>=3)return g>=5?-.02:g===4?-.015:-.008;
+ if(x.base==='plain'&&g>=3)return g>=5?-.05:g===4?-.015:-.008;
  return 0;
 }
 function successBonus342(m,mode,kind){
  const x=info342(m),g=grade342(m);
- if(x.base==='speck')return kind==='ultra'?(g>=5?.018:g===4?.012:g===3?.007:.003):(g>=5?.035:g===4?.025:g===3?.015:.007);
- if(x.base==='flame'&&mode==='high'&&g>=4)return kind==='ultra'?(g>=5?.012:.006):(g>=5?.025:.015);
+ if(x.base==='speck')return kind==='ultra'?(g>=5?.05:g===4?.012:g===3?.007:.003):(g>=5?.08:g===4?.025:g===3?.015:.007);
+ if(x.base==='flame'&&mode==='high'&&g>=4)return kind==='ultra'?(g>=5?.04:.006):(g>=5?.04:.015);
  return 0;
 }
 function competitionMul342(m,e){
  const x=info342(m),g=grade342(m);
- if(x.base==='thunder'&&(e==='50m走'||e==='リレー'))return g>=5?1.05:g===4?1.04:g===3?1.03:1.02;
+ if(x.base==='thunder'&&(e==='50m走'||e==='リレー'))return g>=5?1.10:g===4?1.04:g===3?1.03:1.02;
  if(x.id==='comet'&&e==='50m走')return 1.02;
- if(x.id==='godstream'&&(e==='50m走'||e==='リレー'))return 1.03;
+ if(x.id==='godstream'&&(e==='50m走'||e==='リレー'))return 1.08;
  return 1;
 }
 function skillChance342(m){
  const x=info342(m),g=grade342(m);
  if(x.base!=='star')return 0;
- return g>=5?.08:g===4?.06:g===3?.04:.02;
+ return g>=5?.15:g===4?.06:g===3?.04:.02;
 }
 function rareRecipeMul342(m){
  const x=info342(m),g=grade342(m);
  if(x.base!=='star'||g<4)return 1;
- return g>=5?1.20:1.10;
+ return g>=5?1.35:1.10;
 }
 
 function decorate342(){
