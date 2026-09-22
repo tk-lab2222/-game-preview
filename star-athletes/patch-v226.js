@@ -50,7 +50,9 @@ function heritageRate226(a,b){
   let bonus=0;
   try{
     const skills=[...(a?.skills233||[]),...(b?.skills233||[])];
-    if(skills.includes('heredity'))bonus=.03;
+    if(skills.includes('heredity'))bonus+=.03;
+    const goldParents=[a,b].filter(p=>p?.rareVisual243==='gold'||p?.visual?.color==='金').length;
+    bonus+=goldParents*.01;
   }catch(_){}
   return Math.min(.45,base+bonus);
 }
