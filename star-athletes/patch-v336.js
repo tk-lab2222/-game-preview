@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-// v0.31.95: authoritative "load latest" handler + immediate persistence for core selects.
+// v0.32.03: authoritative "load latest" handler + immediate persistence for core selects.
 // Older patch-v097 rewrites the button to the legacy entry path; override it last.
 if(window.STAR_RELOAD336)return;
 const SAVE336='star-athletes-save-v200';
@@ -19,7 +19,7 @@ function install336(){
     e?.stopPropagation?.();
     save336();
     const stamp=Date.now();
-    location.replace('../star-athletes-v112/?v=3195-'+stamp);
+    location.replace('../star-athletes-v112/?t='+stamp);
   };
   b.dataset.latest336='1';
 }
