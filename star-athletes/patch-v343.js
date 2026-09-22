@@ -81,8 +81,6 @@ function lineage343(a,b,target){
  else if(aa.id===target.id||bb.id===target.id){mult*=2;reasons.push('同系星体の親×2')}
  const upper=Math.max(grade343(a),grade343(b));
  if(upper>=3){const x=1+(upper-2)*.6;mult*=x;reasons.push(`上位星体血統×${x.toFixed(1)}`)}
- const godParents=[a,b].filter(p=>grade343(p)>=5).length;
- if(godParents){const x=godParents===2?1.5:1.25;mult*=x;reasons.push(`神星体親${godParents}体×${x}`)}
  const hered=Math.max(hidden343(a,'heredity'),hidden343(b,'heredity'));
  const mut=Math.max(hidden343(a,'mutation'),hidden343(b,'mutation'));
  if(hered>=6){const x=hered>=7?2.2:1.5;mult*=x;reasons.push(`遺伝力${hered>=7?'S':'A'}×${x}`)}
@@ -92,22 +90,25 @@ function lineage343(a,b,target){
 function roll343(c,a,b){
  const ar=archetype343(c),boost=lineage343(a,b,ar);
  const resonanceGod=Number(window.STAR_PATTERN342?.grade?.(c)||1)>=5;
+ const godParents=[a,b].filter(p=>grade343(p)>=5).length;
+ const godCarry=godParents===2?5:godParents===1?2:1;
  const rows=[
   {tier:'god',grade:5,base:.00002,name:ar.god},
   {tier:'phantom',grade:4,base:.0005,name:ar.phantom},
   {tier:'shine',grade:3,base:.006,name:ar.shine}
  ].map(r=>{
-   let chance=Math.min(.08,r.base*boost.mult);
-   if(r.tier==='god'&&resonanceGod){
-     chance=Math.min(.025,chance*50);
-   }
-   return {...r,chance,resonanceBoost:resonanceGod&&r.tier==='god'?50:1};
+   let chance=Math.min(.08,r.base*boost.mult*(r.tier==='god'?godCarry:1));
+   if(r.tier==='god'&&resonanceGod){chance=Math.min(.025,chance*50)}
+   const reasons=[...boost.reasons];
+   if(r.tier==='god'&&godParents)reasons.push(`神星体親${godParents}体×${godCarry}`);
+   if(r.tier==='god'&&resonanceGod)reasons.push('神星紋共鳴×50');
+   return {...r,chance,reasons,godCarry:r.tier==='god'?godCarry:1,resonanceBoost:resonanceGod&&r.tier==='god'?50:1};
  });
  const u=Math.random();let acc=0,won=null;
  for(const r of rows){acc+=r.chance;if(u<acc){won=r;break}}
- c.starBodyOdds343=rows.map(r=>({tier:r.tier,base:r.base,mult:boost.mult,chance:r.chance,reasons:boost.reasons}));
+ c.starBodyOdds343=rows.map(r=>({tier:r.tier,base:r.base,mult:boost.mult,chance:r.chance,reasons:r.reasons,godCarry:r.godCarry,resonanceBoost:r.resonanceBoost}));
  if(!won){c.starBody343={id:ar.id,role:ar.role,stats:ar.stats,grade:1,name:ar.base,effect:ar.effect,tier:'base'};return c}
- c.starBody343={id:ar.id,role:ar.role,stats:ar.stats,grade:won.grade,name:won.name,effect:ar.effect,tier:won.tier,chance:won.chance,mult:boost.mult,reasons:boost.reasons,at:Date.now()};
+ c.starBody343={id:ar.id,role:ar.role,stats:ar.stats,grade:won.grade,name:won.name,effect:ar.effect,tier:won.tier,chance:won.chance,mult:boost.mult,reasons:won.reasons,godCarry:won.godCarry,resonanceBoost:won.resonanceBoost,at:Date.now()};
  return c;
 }
 try{
