@@ -39,4 +39,14 @@ for token in ('const prevBaby347=baby', 'baby=function(a,b){return ensure347(pre
 if p347.count('m.skills233.length<6') < 2:
     fail('patch-v347 must preserve the six-skill cap for both upper-rarity skill routes')
 
+# Migration must cover every athlete pool used by the resonance system. Otherwise an
+# eligible archived/released/foster athlete can skip the one-time roll after reload.
+for pool in ('starters', 'nest', 'lineage', 'released', 'cands', 'foster'):
+    if f"'{pool}'" not in p347:
+        fail(f'patch-v347 migration must cover {pool}')
+if 'S?.egg' not in p347:
+    fail('patch-v347 migration must cover the current egg')
+if 'seen=new Set()' not in p347:
+    fail('patch-v347 migration must deduplicate athletes before one-time rolls')
+
 print('OK: STAR ATHLETES upper-rarity inheritance/save contract is intact')
