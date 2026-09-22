@@ -9,7 +9,7 @@ const SK254={
  relay:{icon:'🤝',name:'阿吽の呼吸',desc:'スピード・テクニック+4%',cls:'speed254'},champion:{icon:'👑',name:'王者の風格',desc:'全能力+2%',cls:'rare254'},
  comeback:{icon:'🔥',name:'逆境魂',desc:'こんじょう+7%・スタミナ+3%',cls:'guts254'},calm:{icon:'🧊',name:'冷静沈着',desc:'テクニック+5%・すばやさ+3%',cls:'tech254'},
  fortune:{icon:'🍀',name:'強運',desc:'全能力+1%',cls:'rare254'},clutch:{icon:'🌟',name:'大舞台',desc:'こんじょう・テクニック+5%',cls:'guts254'},
- prodigy:{icon:'🌱',name:'英才教育',desc:'育成型の複合補正',cls:'lineage254'},heredity:{icon:'🧬',name:'強遺伝',desc:'子へのスキル継承率UP',cls:'lineage254'},
+ prodigy:{icon:'🌱',name:'英才教育',desc:'育成型の複合補正',cls:'lineage254'},heredity:{icon:'🧬',name:'強遺伝',desc:'子への能力・スキル継承を強化',cls:'lineage254'},
  mutation:{icon:'✨',name:'覚醒因子',desc:'子の新規スキル獲得率UP',cls:'lineage254'},late:{icon:'📈',name:'晩成',desc:'全能力+1.5%',cls:'lineage254'},
  starborn:{icon:'🌌',name:'星を継ぐ者',desc:'全能力+3%',cls:'rare254'},miracle:{icon:'🌠',name:'奇跡の軌跡',desc:'全能力+4%',cls:'rare254'}
 };
@@ -66,7 +66,7 @@ function compat254(){
  let panel=box.querySelector('.breedIntel254');if(!panel){panel=document.createElement('div');panel.className='breedIntel254';box.appendChild(panel)}
  const rows=scoutRows254(a,b,score);
  const candidates=[...new Set([...(a.skills233||[]),...(b.skills233||[])])].filter(x=>SK254[x]);
- const skills=candidates.length?candidates.map(id=>{const s=SK254[id],p=skillChance254(id,a,b);return `<span class="inheritSkill254 ${s.cls}">${s.icon} ${s.name}<b>${p}%</b></span>`}).join(''):'<span class="inheritNone254">親に継承可能スキルなし</span>';
+ const skills=candidates.length?candidates.map(id=>{const s=SK254[id],p=skillChance254(id,a,b);return `<span class="inheritSkill254 ${s.cls}" data-skill254="${id}">${s.icon} ${s.name}<b>${p}%</b></span>`}).join(''):'<span class="inheritNone254">親に継承可能スキルなし</span>';
  let hint=score<40?'相性40以上で成長力が見える':score<60?'相性60以上で遺伝力・安定性が見える':score<75?'相性75以上で勝負強さ・気性が見える':score<90?'相性90以上で変異因子・LUCKが見える':'隠れ素質をすべて読み取り済み';
  panel.innerHTML=`<div class="intelHead254"><b>🧬 配合スカウト</b><span>相性 ${score}/100</span></div>${rows.length?`<div class="hiddenRows254">${rows.map(([k,v])=>`<span><small>${k}</small><b>${v}</b></span>`).join('')}</div>`:''}<div class="intelHint254">${hint}</div><div class="inheritBlock254"><small>スキル継承候補</small><div>${skills}</div><em>※表示％はこの配合で子に継承する確率。両親が同じスキルを持つと上昇。</em></div>`;
 }
