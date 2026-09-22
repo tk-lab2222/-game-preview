@@ -46,6 +46,8 @@ function rareRecipeParentMult273(a,b,m){
  const hasShiny=parents.some(p=>p?.rareVisual243==='shiny'||p?.shiny);
  if(hasPrism){mult*=1.25;reasons.push('虹色血統×1.25')}
  else if(hasShiny){mult*=1.10;reasons.push('色違い血統×1.10')}
+ const patternMult=Math.max(Number(window.STAR_PATTERN342?.rareRecipeMul?.(a)||1),Number(window.STAR_PATTERN342?.rareRecipeMul?.(b)||1));
+ if(patternMult>1){mult*=patternMult;reasons.push(`上位星紋×${patternMult.toFixed(2)}`)}
  if(m?.miracleFactor274){const x=1+.15*Math.max(1,Number(m.miracleFactor274.strength)||1);mult*=x;reasons.push(`奇跡因子×${x.toFixed(2)}`)}
  return{mult:Math.min(3,mult),reasons};
 }
