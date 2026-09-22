@@ -46,17 +46,18 @@ function athlete295(e,i,mode='actual'){
  return nest.slice().sort((a,b)=>score295(b?.stats,e)-score295(a?.stats,e))[0]||null;
 }
 function rank295(v){return Math.max(0,Math.min(7,Number(v??3)||0))}
+function cap295(){try{return Math.max(999,Number(window.STAR_LIMIT278?.cap?.())||999)}catch(_){return 999}}
 function effectiveStats295(m,rand){
  const out={...m?.stats};
  const skillSet=new Set(Array.isArray(m?.skills233)?m.skills233:[]);
- for(const k of KEYS295)if(skillSet.has(k))out[k]=Math.min(999,Math.round((Number(out[k])||0)*1.06));
+ for(const k of KEYS295)if(skillSet.has(k))out[k]=Math.min(cap295(),Math.round((Number(out[k])||0)*1.06));
  const h=m?.hidden233||{};
  const st=[-.010,-.008,-.005,0,.004,.009,.015,.022][rank295(h.stability)];
  const luckMax=[0,.0005,.001,.0018,.003,.005,.008,.012][rank295(h.luck)];
  const clutch=(Math.max(1,Number(S?.season)||1)>=6)?[-.008,-.006,-.003,0,.004,.009,.016,.026][rank295(h.clutch)]:0;
  for(const k of KEYS295){
    const luck=rand()*luckMax;
-   out[k]=Math.min(999,Math.round((Number(out[k])||0)*(1+st+luck+clutch)));
+   out[k]=Math.min(cap295(),Math.round((Number(out[k])||0)*(1+st+luck+clutch)));
  }
  return out;
 }
