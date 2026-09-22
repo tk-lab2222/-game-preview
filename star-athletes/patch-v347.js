@@ -29,7 +29,14 @@ try{
  const prevBaby347=baby;
  baby=function(a,b){return ensure347(prevBaby347(a,b))};
 }catch(e){console.warn('rare skill347 baby',e)}
-function all347(){return [...(S?.cands||[]),...(S?.nest||[]),...(S?.lineage||[]),...(S?.starters||[])].filter(Boolean)}
+function all347(){
+ const out=[],seen=new Set();
+ for(const key of ['starters','nest','lineage','released','cands','foster']){
+  for(const m of(S?.[key]||[]))if(m&&!seen.has(m.id)){seen.add(m.id);out.push(m)}
+ }
+ if(S?.egg&&!seen.has(S.egg.id))out.push(S.egg);
+ return out;
+}
 function migrate347(){
  let changed=false;
  for(const m of all347()){
