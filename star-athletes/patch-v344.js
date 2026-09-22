@@ -63,6 +63,9 @@ function ensureTitle344(m){
  const prev=m.starResonance344;
  const next={grade:g,name:title,effect:effect344(m),at:prev?.at||Date.now(),parts:{color:colorTier344(m),pattern:pattern344(m).name,body:body344(m).name}};
  m.starResonance344=next;
+ if(!S.starResonanceDiscoveries344||typeof S.starResonanceDiscoveries344!=='object')S.starResonanceDiscoveries344={};
+ const seen=S.starResonanceDiscoveries344[title];
+ if(!seen||g>Number(seen.grade||0))S.starResonanceDiscoveries344[title]={grade:g,firstAt:seen?.firstAt||Date.now(),latestAt:Date.now(),athleteId:m.id};
  m.rareTitles323=Array.isArray(m.rareTitles323)?m.rareTitles323:[];
  const idx=m.rareTitles323.findIndex(x=>x?.id==='star-resonance344');
  const badge={id:'star-resonance344',icon:g>=5?'✦':g===4?'🌌':'✨',name:title,grade:g,source:'starResonance344'};
