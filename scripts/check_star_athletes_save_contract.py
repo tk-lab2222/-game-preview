@@ -13,15 +13,16 @@ def require(ok, message):
     if not ok:
         errors.append(message)
 
-# B-004: recovery must be loaded before the final immediate-save patch.
+# B-004: recovery must run before the legacy/core loader so malformed primary
+# state is repaired before patch-v200 can hydrate runtime S. Immediate-save stays last.
 pos200 = shell.find('patch-v200.js')
 pos326 = shell.find('patch-v326.js')
 pos336 = shell.find('patch-v336.js')
 require(pos200 >= 0, 'release shell is missing patch-v200.js authoritative save layer')
 require(pos326 >= 0, 'release shell is missing patch-v326.js save recovery')
 require(pos336 >= 0, 'release shell is missing patch-v336.js immediate persistence')
-require(pos200 >= 0 and pos326 >= 0 and pos336 >= 0 and pos200 < pos326 < pos336,
-        'authoritative save, recovery, and immediate persistence must load in that order')
+require(pos200 >= 0 and pos326 >= 0 and pos336 >= 0 and pos326 < pos200 < pos336,
+        'save recovery must load before authoritative hydration, with immediate persistence last')
 
 # Authoritative save contract: persist and restore the complete runtime S object.
 # This intentionally protects nest/lineage/stats/skills/hidden traits/season/league/
