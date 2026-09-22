@@ -66,9 +66,8 @@ css.textContent=`
 `;
 document.head.appendChild(css);
 
-const mo329=new MutationObserver(()=>requestAnimationFrame(sync329));
-mo329.observe(document.body,{childList:true,subtree:true});
-
+// Do not observe document.body. Stable Draco rendering is synchronized only at
+// known render boundaries plus a few finite startup passes.
 try{
   const prevRender329=window.render;
   if(typeof prevRender329==='function'){
