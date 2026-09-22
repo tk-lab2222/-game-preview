@@ -55,14 +55,22 @@ require('pagehide' in immediate and 'save336' in immediate,
 require("const SAVE336='star-athletes-save-v200'" in immediate,
         'immediate persistence must use the authoritative v200 save key')
 
-# "Load latest" must not point at an older cache generation than the release shell.
+# "Load latest" may be either version-agnostic (preferred) or cache-generation pinned.
+# If pinned, it must match the release shell. A bare v112 path intentionally follows
+# the current release and must not be rejected just because the cache generation changed.
 shell_cache = re.search(r'patch-v336\.js\?v=(\d+)', shell)
-reload_cache = re.search(r"star-athletes-v112/\?v=(\d+)-", immediate)
+reload_target = re.search(r"location\.replace\(['\"]([^'\"]+)['\"]\)", immediate)
 require(shell_cache is not None, 'release shell cache generation for patch-v336.js is missing')
-require(reload_cache is not None, 'latest reload target cache generation is missing')
-if shell_cache and reload_cache:
-    require(shell_cache.group(1) == reload_cache.group(1),
-            f'latest reload cache generation {reload_cache.group(1)} does not match release {shell_cache.group(1)}')
+require(reload_target is not None, 'latest reload target is missing')
+if reload_target:
+    target = reload_target.group(1)
+    pinned = re.search(r'[?&]v=(\d+)', target)
+    if pinned and shell_cache:
+        require(pinned.group(1) == shell_cache.group(1),
+                f'latest reload cache generation {pinned.group(1)} does not match release {shell_cache.group(1)}')
+    else:
+        require('star-athletes-v112/' in target,
+                'version-agnostic latest reload must target the current STAR ATHLETES release path')
 
 # Keep the no-broad-observer rule explicit in the save path too.
 for name, text in [('patch-v200.js', core_save), ('patch-v326.js', recovery), ('patch-v336.js', immediate)]:
