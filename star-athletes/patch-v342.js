@@ -1,0 +1,196 @@
+(()=>{
+// v0.32.05: Star Pattern system.
+// Converts legacy visual patterns into Japanese game-facing traits, adds upper pattern tiers,
+// breeding discovery odds, gameplay hooks, and compact/detail UI.
+if(window.STAR_PATTERN342)return;
+
+const SAVE342='star-athletes-save-v200';
+const BASE342={
+ 'なし':{id:'plain',name:'無紋',grade:1,effect:'安定型・補正なし'},
+ '縞':{id:'stream',name:'流線紋',grade:1,effect:'スピード・すばやさ育成 +3%'},
+ '斑点':{id:'speck',name:'斑星紋',grade:2,effect:'大成功・超成功率 微増'},
+ '炎':{id:'flame',name:'炎紋',grade:2,effect:'高負荷育成 成功時 +5%／ケガ率 +1pt'},
+ '雷':{id:'thunder',name:'雷紋',grade:2,effect:'50m走・リレー適性 +2%'},
+ '星':{id:'star',name:'星紋',grade:2,effect:'スキル習得率 +2pt'}
+};
+const UPPER342={
+ stream:{shine:{id:'lightstream',name:'光流紋',grade:3,effect:'スピード・すばやさ育成 +5%'},phantom:{id:'comet',name:'彗星紋',grade:4,effect:'スピード・すばやさ育成 +7%／50m走適性 +2%'},god:{id:'godstream',name:'神駆紋',grade:5,effect:'高速系育成 +8%／瞬発競技 +3%'}},
+ speck:{shine:{id:'brightspeck',name:'煌斑紋',grade:3,effect:'大成功・超成功率 上昇'},phantom:{id:'moon',name:'月輪紋',grade:4,effect:'大成功・超成功率 大幅上昇'},god:{id:'godmoon',name:'神月紋',grade:5,effect:'育成上振れ判定を大きく強化'}},
+ flame:{shine:{id:'hellflame',name:'獄炎紋',grade:3,effect:'高負荷成功時 +8%／ケガ率 +1pt'},phantom:{id:'sun',name:'日輪紋',grade:4,effect:'高負荷成功時 +10%／大成功率UP'},god:{id:'godsun',name:'神陽紋',grade:5,effect:'高負荷成功時 +12%／超成功率UP'}},
+ thunder:{shine:{id:'heaventhunder',name:'天雷紋',grade:3,effect:'50m走・リレー適性 +3%'},phantom:{id:'storm',name:'天嵐紋',grade:4,effect:'瞬発競技適性 +4%'},god:{id:'godthunder',name:'神雷紋',grade:5,effect:'瞬発競技適性 +5%'}},
+ star:{shine:{id:'heavenstar',name:'天星紋',grade:3,effect:'スキル習得率 +4pt'},phantom:{id:'galaxy',name:'銀河紋',grade:4,effect:'スキル習得率 +6pt／特殊血統に好影響'},god:{id:'godstar',name:'神紋',grade:5,effect:'スキル習得率 +8pt／特殊血統に好影響'}},
+ plain:{shine:{id:'clear',name:'澄紋',grade:3,effect:'育成失敗・ケガをわずかに抑制'},phantom:{id:'void',name:'空輪紋',grade:4,effect:'安定性特化の希少紋'},god:{id:'godplain',name:'無極紋',grade:5,effect:'安定性を大きく強化'}}
+};
+const GRADE342={1:['★','通常'],2:['★★','希少'],3:['★★★','輝星'],4:['★★★★','幻星'],5:['★★★★★','神星']};
+const LEGACY_BY_NAME342={};
+for(const [legacy,b] of Object.entries(BASE342))LEGACY_BY_NAME342[b.name]={legacy,base:b.id,grade:b.grade,name:b.name,effect:b.effect};
+for(const [base,tiers] of Object.entries(UPPER342))for(const t of Object.values(tiers))LEGACY_BY_NAME342[t.name]={legacy:null,base,grade:t.grade,name:t.name,effect:t.effect,id:t.id};
+
+function all342(){
+ const out=[],seen=new Set();
+ for(const key of ['starters','nest','lineage','released','cands','foster']){
+  for(const m of(S?.[key]||[]))if(m&&!seen.has(m.id)){seen.add(m.id);out.push(m)}
+ }
+ if(S?.egg&&!seen.has(S.egg.id))out.push(S.egg);
+ return out;
+}
+function hidden342(m,k){const n=Number(m?.hidden233?.[k]);return Number.isFinite(n)?Math.max(0,Math.min(7,n)):0}
+function baseInfo342(m){
+ const p=m?.visual?.pattern||'なし';
+ if(LEGACY_BY_NAME342[p])return LEGACY_BY_NAME342[p];
+ const b=BASE342[p]||BASE342['なし'];
+ return{legacy:p,base:b.id,grade:b.grade,name:b.name,effect:b.effect};
+}
+function info342(m){
+ if(m?.starPattern342&&m.starPattern342.name)return m.starPattern342;
+ const b=baseInfo342(m);
+ return{id:b.id||b.base,base:b.base||b.id,grade:b.grade,name:b.name,effect:b.effect,tier:b.grade>=3?'upper':'base'};
+}
+function persist342(){try{localStorage.setItem(SAVE342,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
+function migrate342(){
+ let changed=false;
+ for(const m of all342()){
+  if(!m?.visual)continue;
+  if(!m.starPattern342){
+   const b=baseInfo342(m);
+   m.starPattern342={id:b.id||b.base,base:b.base||b.id,grade:b.grade,name:b.name,effect:b.effect,tier:b.grade>=3?'upper':'base'};
+   changed=true;
+  }
+ }
+ if(changed)persist342();
+}
+
+function grade342(m){return Math.max(1,Math.min(5,Number(info342(m).grade)||1))}
+function label342(m){const x=info342(m),g=GRADE342[grade342(m)];return `${g[0]} ${g[1]}・${x.name}`}
+function effect342(m){return info342(m).effect||''}
+
+function lineageMult342(a,b,base){
+ let mult=1,reasons=[];
+ const ia=info342(a),ib=info342(b);
+ if(ia.base===base&&ib.base===base){mult*=6;reasons.push('同系紋の両親×6')}
+ else if(ia.base===base||ib.base===base){mult*=2;reasons.push('同系紋の親×2')}
+ const upper=Math.max(grade342(a),grade342(b));
+ if(upper>=3){mult*=1+(upper-2)*.5;reasons.push(`上位紋血統×${(1+(upper-2)*.5).toFixed(1)}`)}
+ const mut=Math.max(hidden342(a,'mutation'),hidden342(b,'mutation'));
+ const luck=Math.max(hidden342(a,'luck'),hidden342(b,'luck'));
+ if(mut>=6){const x=mut>=7?3:1.8;mult*=x;reasons.push(`変異因子${mut>=7?'S':'A'}×${x}`)}
+ if(luck>=6){const x=luck>=7?1.8:1.35;mult*=x;reasons.push(`LUCK ${luck>=7?'S':'A'}×${x}`)}
+ return{mult:Math.min(100,mult),reasons};
+}
+function rollUpper342(c,a,b){
+ const base=info342(c).base;
+ const set=UPPER342[base]||UPPER342.plain;
+ const boost=lineageMult342(a,b,base);
+ // Deliberately tiny raw rates. Bloodline design raises them into a realistically targetable range.
+ const rows=[
+  {tier:'god',base:.00002},
+  {tier:'phantom',base:.0005},
+  {tier:'shine',base:.006}
+ ].map(r=>({...r,chance:Math.min(.08,r.base*boost.mult)}));
+ const u=Math.random();
+ const won=rows.find(r=>u<r.chance);
+ c.starPatternOdds342=rows.map(r=>({tier:r.tier,base:r.base,mult:boost.mult,chance:r.chance,reasons:boost.reasons}));
+ if(!won)return c;
+ const x=set[won.tier];
+ c.starPattern342={id:x.id,base,grade:x.grade,name:x.name,effect:x.effect,tier:won.tier,chance:won.chance,mult:boost.mult,reasons:boost.reasons,at:Date.now()};
+ c.visual.pattern=x.name;
+ return c;
+}
+try{
+ const prevBaby342=baby;
+ baby=function(a,b){
+  const c=prevBaby342(a,b);
+  if(!c?.visual)return c;
+  if(!c.starPattern342){
+   const bi=baseInfo342(c);
+   c.starPattern342={id:bi.id||bi.base,base:bi.base||bi.id,grade:bi.grade,name:bi.name,effect:bi.effect,tier:'base'};
+  }
+  return rollUpper342(c,a,b);
+ };
+}catch(e){console.warn('pattern342 baby',e)}
+
+function trainingMul342(m,plan,mode,k){
+ const x=info342(m),g=grade342(m);
+ if(x.base==='stream'&&(plan==='speed'||k==='speed'||k==='agility'))return g>=5?1.08:g===4?1.07:g===3?1.05:1.03;
+ if(x.base==='flame'&&mode==='high')return g>=5?1.12:g===4?1.10:g===3?1.08:1.05;
+ return 1;
+}
+function injuryAdd342(m,mode){
+ const x=info342(m),g=grade342(m);
+ if(mode==='high'&&x.base==='flame'&&g<=3)return .01;
+ if(x.base==='plain'&&g>=3)return g>=5?-.02:g===4?-.015:-.008;
+ return 0;
+}
+function successBonus342(m,mode,kind){
+ const x=info342(m),g=grade342(m);
+ if(x.base==='speck')return kind==='ultra'?(g>=5?.018:g===4?.012:g===3?.007:.003):(g>=5?.035:g===4?.025:g===3?.015:.007);
+ if(x.base==='flame'&&mode==='high'&&g>=4)return kind==='ultra'?(g>=5?.012:.006):(g>=5?.025:.015);
+ return 0;
+}
+function competitionMul342(m,e){
+ const x=info342(m),g=grade342(m);
+ if(x.base==='thunder'&&(e==='50m走'||e==='リレー'))return g>=5?1.05:g===4?1.04:g===3?1.03:1.02;
+ if(x.id==='comet'&&e==='50m走')return 1.02;
+ if(x.id==='godstream'&&(e==='50m走'||e==='リレー'))return 1.03;
+ return 1;
+}
+function skillChance342(m){
+ const x=info342(m),g=grade342(m);
+ if(x.base!=='star')return 0;
+ return g>=5?.08:g===4?.06:g===3?.04:.02;
+}
+function rareRecipeMul342(m){
+ const x=info342(m),g=grade342(m);
+ if(x.base!=='star'||g<4)return 1;
+ return g>=5?1.20:1.10;
+}
+
+function decorate342(){
+ const byId=new Map(all342().map(m=>[m.id,m]));
+ document.querySelectorAll('#cands .card[data-id],#breeders .card[data-id],#lineagePool .card[data-id]').forEach(card=>{
+  const m=byId.get(card.dataset.id);if(!m)return;
+  card.querySelector('.patternBadge342')?.remove();
+  const x=info342(m),g=grade342(m);
+  const tag=document.createElement('div');
+  tag.className='patternBadge342 patternGrade342-'+g;
+  tag.innerHTML=`<b>${label342(m)}</b><small>${effect342(m)}</small>`;
+  (card.querySelector('.coreMeta243')||card.querySelector('.bd')||card).appendChild(tag);
+ });
+ const birth=document.querySelector('#birth .hatchReveal'),latest=(S?.cands||[])[(S?.cands||[]).length-1];
+ if(birth){
+  birth.querySelector('.birthPattern342')?.remove();
+  if(latest&&grade342(latest)>=3){
+   const tag=document.createElement('div');tag.className='birthPattern342 patternGrade342-'+grade342(latest);
+   tag.innerHTML=`<b>${label342(latest)}</b><small>${effect342(latest)}</small>`;
+   (birth.querySelector('.birthColor341')||birth.querySelector('.hatchName'))?.after(tag);
+  }
+ }
+}
+
+function sync342(){migrate342();decorate342();try{window.STAR_GRADE340?.sync?.()}catch(_){}}
+try{const prevRender342=render;render=function(){const out=prevRender342();setTimeout(sync342,0);return out}}catch(e){console.warn('pattern342 render',e)}
+document.addEventListener('click',e=>{if(e.target?.closest?.('#hatch,#breedBtn,#adopt,.tab'))setTimeout(sync342,20)},true);
+
+window.STAR_PATTERN342={
+ info:info342,grade:grade342,label:label342,effect:effect342,
+ trainingMul:trainingMul342,injuryAdd:injuryAdd342,successBonus:successBonus342,
+ competitionMul:competitionMul342,skillChance:skillChance342,rareRecipeMul:rareRecipeMul342,
+ sync:sync342
+};
+
+const css=document.createElement('style');
+css.id='starPattern342css';
+css.textContent=`
+.patternBadge342{margin-top:5px;padding:5px 6px;border-radius:8px;background:#f6f7f8;border:1px solid #d5dce3}
+.patternBadge342 b,.patternBadge342 small{display:block}.patternBadge342 b{font-size:7px}.patternBadge342 small{margin-top:2px;font-size:6px;color:#6c7784}
+.patternGrade342-2{background:#f4f7ff;border-color:#b9c6da}
+.patternGrade342-3{background:#fff6cf;border-color:#d8ba4c}
+.patternGrade342-4{background:linear-gradient(90deg,#e9f8ff,#f2e8ff);border-color:#a88bc9;box-shadow:0 0 8px #9d80cc33}
+.patternGrade342-5{background:linear-gradient(90deg,#fff0ad,#eee4ff,#dffaff);border-color:#b68d44;box-shadow:0 0 10px #9274d955}
+.birthPattern342{width:min(300px,90%);margin:6px auto;padding:7px 9px;border-radius:10px;text-align:center}
+.birthPattern342 b,.birthPattern342 small{display:block}.birthPattern342 b{font-size:10px}.birthPattern342 small{margin-top:2px;font-size:6px;color:#5f6d7b}
+`;
+document.head.appendChild(css);
+
+migrate342();setTimeout(sync342,0);
+})();
