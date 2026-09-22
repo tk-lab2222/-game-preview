@@ -9,6 +9,7 @@ const FLOOR253={C:0,U:95,R:105,SR:118,SSR:132,UR:148,EX:165};
 const HOT253={C:0,U:0,R:0,SR:1,SSR:3,UR:5,EX:8};
 function n253(v){return Number(v)||0}
 function clamp253(v,a,b){return Math.max(a,Math.min(b,v))}
+function cap253(){try{return Math.max(999,Number(window.STAR_LIMIT278?.cap?.())||999)}catch(_){return 999}}
 function all253(){const out=[],seen=new Set();for(const key of ['starters','nest','lineage','released','cands','foster'])for(const m of(S[key]||[]))if(m&&!seen.has(m.id)){seen.add(m.id);out.push(m)}if(S.egg&&!seen.has(S.egg.id))out.push(S.egg);return out}
 function avg253(m){return K253.reduce((a,k)=>a+n253(m?.stats?.[k]),0)/K253.length}
 function top2avg253(m){return K253.map(k=>n253(m?.stats?.[k])).sort((a,b)=>b-a).slice(0,2).reduce((a,b)=>a+b,0)/2}
@@ -53,7 +54,7 @@ function floor253(m){
  if(!m?.stats)return false;
  const floor=FLOOR253[m.rarity]??0,hot=HOT253[m.rarity]??0;if(!floor&&!hot)return false;
  const av=avg253(m),need=Math.max(0,Math.ceil(floor-av));const hs=new Set(specialties253(m));let changed=false;
- K253.forEach(k=>{const add=need+(hs.has(k)?hot:0);if(add>0){m.stats[k]=Math.min(999,Math.round(n253(m.stats[k])+add));if(m.geneticBase226&&Object.prototype.hasOwnProperty.call(m.geneticBase226,k))m.geneticBase226[k]=Math.min(999,Math.round(n253(m.geneticBase226[k])+add));changed=true}});
+ K253.forEach(k=>{const add=need+(hs.has(k)?hot:0);if(add>0){m.stats[k]=Math.min(cap253(),Math.round(n253(m.stats[k])+add));if(m.geneticBase226&&Object.prototype.hasOwnProperty.call(m.geneticBase226,k))m.geneticBase226[k]=Math.min(cap253(),Math.round(n253(m.geneticBase226[k])+add));changed=true}});
  return changed;
 }
 function persist253(){try{localStorage.setItem(SAVE253,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}try{if(Array.isArray(S.nest)&&S.nest.length===3)localStorage.setItem(ROSTER253,JSON.stringify(S.nest))}catch(_){}}
