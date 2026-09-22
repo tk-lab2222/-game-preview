@@ -78,7 +78,7 @@ function rerender309(){
 }
 function buyNormal309(id){
  const item=NORMAL309[id];if(!item)return;
- if(left309(id)<=0){msg309('今世代の強化アイテム購入枠20回を使い切りました');return}
+ if(left309('boost')<=0){msg309('今世代の強化アイテム購入枠20回を使い切りました');return}
  if(!(S.nest||[]).length){msg309('育成メンバーがいません');return}
  if((Number(S.coins)||0)<item.cost){msg309('コインが足りません');return}
  let target=null;
@@ -89,7 +89,7 @@ function buyNormal309(id){
  }
  S.coins=(Number(S.coins)||0)-item.cost;
  S.totalSpent=(Number(S.totalSpent)||0)+item.cost;
- item.apply(target);consume309(id);
+ item.apply(target);consume309('boost');
  rerender309();
  msg309('✨ '+item.msg+'を使用！');
 }
@@ -151,7 +151,7 @@ function renderShop309(){
  if(shop.dataset.renderKey309===renderKey&&shop.querySelector('[data-buy122]'))return;
  shop.dataset.renderKey309=renderKey;
  shop.innerHTML=`<div class="shopHead122"><div><small>NEST SHOP</small><h3>🪙 ネストショップ</h3></div><b>${coins} coin</b></div>
- <div class="shopGrid122">${items.map(([id,ic,n,d,cost,target])=>`<div class="shopItem122"><div class="shopIcon122">${ic}</div><div class="shopText122"><b>${n}</b><small>${d}</small><em class="shopLimit309">${limitText309(id)}</em></div>${target?`<select data-shop-target="${id}" ${!has?'disabled':''}>${has?S.nest.map(m=>`<option value="${m.id}" ${targetId309(id)===m.id?'selected':''}>${m.name}</option>`).join(''):'<option>育成メンバーなし</option>'}</select>`:''}<button type="button" data-buy122="${id}" ${!has||coins<cost||left309(id)<=0?'disabled':''}>${left309(id)<=0?'上限到達':'🪙 '+cost}</button></div>`).join('')}</div>
+ <div class="shopGrid122">${items.map(([id,ic,n,d,cost,target])=>`<div class="shopItem122"><div class="shopIcon122">${ic}</div><div class="shopText122"><b>${n}</b><small>${d}</small><em class="shopLimit309">${limitText309('boost')}</em></div>${target?`<select data-shop-target="${id}" ${!has?'disabled':''}>${has?S.nest.map(m=>`<option value="${m.id}" ${targetId309(id)===m.id?'selected':''}>${m.name}</option>`).join(''):'<option>育成メンバーなし</option>'}</select>`:''}<button type="button" data-buy122="${id}" ${!has||coins<cost||left309('boost')<=0?'disabled':''}>${left309('boost')<=0?'上限到達':'🪙 '+cost}</button></div>`).join('')}</div>
  <div class="specialShop200 shopSpecial309"><div class="specialTitle200"><b>✨ SPECIAL</b><span>大会後のもう一手</span></div><div class="specialStock200">所持効果：🍀 ${S.specialShop?.lucky||0}</div><div class="shopGrid122 specialGrid309">
  <div class="shopItem122 specialItem309"><div class="shopIcon122">🍀</div><div class="shopText122"><b>ラッキーチャーム</b><small>次の子のレア度を1段階UP</small><em class="shopLimit309">${limitText309('lucky')}</em></div><button type="button" data-special200="lucky" ${coins<900||left309('lucky')<=0?'disabled':''}>${left309('lucky')<=0?'上限到達':'🪙 900'}</button></div>
  <div class="shopItem122 specialItem309"><div class="shopIcon122">🥤</div><div class="shopText122"><b>コンディションドリンク</b><small>${has?S.nest[0].name:'育成メンバー'} 全能力+3</small><em class="shopLimit309">${limitText309('condition')}</em></div><button type="button" data-special200="condition" ${coins<500||!has||left309('condition')<=0?'disabled':''}>${left309('condition')<=0?'上限到達':'🪙 500'}</button></div>
