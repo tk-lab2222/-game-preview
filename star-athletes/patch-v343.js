@@ -34,6 +34,7 @@ const BODY343={
  ]
 };
 
+function cap343(){try{return Math.max(999,Number(window.STAR_LIMIT278?.cap?.())||999)}catch(_){return 999}}
 function all343(){
  const out=[],seen=new Set();
  for(const key of ['starters','nest','lineage','released','cands','foster']){
@@ -122,10 +123,10 @@ function applyDirect343(m){
  m.stats=m.stats||{};
  for(const k of x.stats){
   const cur=Number(m.stats[k])||0;
-  if(cur>0)m.stats[k]=Math.max(cur+1,Math.round(cur*(1+pct)));
+  if(cur>0)m.stats[k]=Math.min(cap343(),Math.max(cur+1,Math.round(cur*(1+pct))));
   if(m.geneticBase226&&Number.isFinite(Number(m.geneticBase226[k]))){
    const b=Number(m.geneticBase226[k])||0;
-   m.geneticBase226[k]=Math.max(b+1,Math.round(b*(1+pct)));
+   m.geneticBase226[k]=Math.min(cap343(),Math.max(b+1,Math.round(b*(1+pct))));
   }
  }
  m.starBodyStatApplied343={grade:g,pct,keys:[...x.stats],at:Date.now()};
