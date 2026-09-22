@@ -72,11 +72,13 @@ function lineageMult342(a,b,base){
  else if(ia.base===base||ib.base===base){mult*=2;reasons.push('同系紋の親×2')}
  const upper=Math.max(grade342(a),grade342(b));
  if(upper>=3){mult*=1+(upper-2)*.5;reasons.push(`上位紋血統×${(1+(upper-2)*.5).toFixed(1)}`)}
+ const godParents=[a,b].filter(p=>grade342(p)>=5).length;
+ if(godParents){const x=godParents===2?1.5:1.25;mult*=x;reasons.push(`神星紋親${godParents}体×${x}`)}
  const mut=Math.max(hidden342(a,'mutation'),hidden342(b,'mutation'));
  const luck=Math.max(hidden342(a,'luck'),hidden342(b,'luck'));
  if(mut>=6){const x=mut>=7?3:1.8;mult*=x;reasons.push(`変異因子${mut>=7?'S':'A'}×${x}`)}
  if(luck>=6){const x=luck>=7?1.8:1.35;mult*=x;reasons.push(`LUCK ${luck>=7?'S':'A'}×${x}`)}
- return{mult:Math.min(100,mult),reasons};
+ return{mult:Math.min(25,mult),reasons};
 }
 function rollUpper342(c,a,b){
  const base=info342(c).base;
