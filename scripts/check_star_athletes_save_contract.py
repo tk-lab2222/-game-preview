@@ -3,6 +3,7 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 shell = (ROOT / 'star-athletes-v112/index.html').read_text(encoding='utf-8')
+core_save = (ROOT / 'star-athletes/patch-v200.js').read_text(encoding='utf-8')
 recovery = (ROOT / 'star-athletes/patch-v326.js').read_text(encoding='utf-8')
 immediate = (ROOT / 'star-athletes/patch-v336.js').read_text(encoding='utf-8')
 
@@ -13,12 +14,26 @@ def require(ok, message):
         errors.append(message)
 
 # B-004: recovery must be loaded before the final immediate-save patch.
+pos200 = shell.find('patch-v200.js')
 pos326 = shell.find('patch-v326.js')
 pos336 = shell.find('patch-v336.js')
+require(pos200 >= 0, 'release shell is missing patch-v200.js authoritative save layer')
 require(pos326 >= 0, 'release shell is missing patch-v326.js save recovery')
 require(pos336 >= 0, 'release shell is missing patch-v336.js immediate persistence')
-require(pos326 >= 0 and pos336 >= 0 and pos326 < pos336,
-        'save recovery must load before immediate persistence')
+require(pos200 >= 0 and pos326 >= 0 and pos336 >= 0 and pos200 < pos326 < pos336,
+        'authoritative save, recovery, and immediate persistence must load in that order')
+
+# Authoritative save contract: persist and restore the complete runtime S object.
+# This intentionally protects nest/lineage/stats/skills/hidden traits/season/league/
+# next-generation flags together instead of maintaining a fragile field allow-list.
+require("const SAVE200='star-athletes-save-v200'" in core_save,
+        'authoritative save layer must use the v200 save key')
+require('JSON.stringify({savedAt:Date.now(),S})' in core_save,
+        'authoritative save must serialize the complete runtime S object')
+require('S=d.S;init200();return true' in core_save,
+        'authoritative load must restore the complete runtime S object')
+require('render=function(){const out=renderBefore200();decorate200();save200();return out}' in core_save,
+        'core render path must continue to persist runtime state')
 
 # Recovery contract: malformed primary may recover, but an intentionally absent save must not resurrect backup.
 require("if(raw===null||parse326(raw))return false" in recovery,
@@ -47,7 +62,7 @@ if shell_cache and reload_cache:
             f'latest reload cache generation {reload_cache.group(1)} does not match release {shell_cache.group(1)}')
 
 # Keep the no-broad-observer rule explicit in the save path too.
-for name, text in [('patch-v326.js', recovery), ('patch-v336.js', immediate)]:
+for name, text in [('patch-v200.js', core_save), ('patch-v326.js', recovery), ('patch-v336.js', immediate)]:
     require('new MutationObserver' not in text,
             f'{name} must not introduce MutationObserver-based persistence')
 
