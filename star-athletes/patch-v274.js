@@ -48,7 +48,7 @@ function persistStrength274(){
  }
  if(changed){try{localStorage.setItem('star-athletes-save-v200',JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
 }
-function multiplier274(m){
+function multiplier274(m,a=null,b=null){
  let mult=1,reasons=[];
  const rr=Array.isArray(m?.rareRecipeCandidates273)?m.rareRecipeCandidates273:[];
  const recipeMult=rr.reduce((a,x)=>Math.max(a,n274(x?.mult)||1),1);
@@ -58,19 +58,20 @@ function multiplier274(m){
  const luck=hidden274(m,'luck');if(luck==='A'){mult*=2;reasons.push('LUCK A×2')}else if(luck==='S'){mult*=5;reasons.push('LUCK S×5')}
  const heredity=hidden274(m,'heredity');if(heredity==='A'){mult*=1.5;reasons.push('遺伝力A×1.5')}else if(heredity==='S'){mult*=2.5;reasons.push('遺伝力S×2.5')}
  const gen=Math.max(1,n274(m?.gen)||n274(S?.generation233)||1);if(gen>=10){mult*=2;reasons.push('10代継承×2')}else if(gen>=5){mult*=1.5;reasons.push('5代継承×1.5')}
+ if([a,b].some(p=>p?.rareVisual243==='prism'||p?.visual?.color==='プリズム')){mult*=1.25;reasons.push('虹色血統×1.25')}
  return {mult:Math.min(1000,mult),reasons};
 }
-function evaluate274(m,roll=true){
- const boost=multiplier274(m),u=roll?Math.random():null;
+function evaluate274(m,roll=true,a=null,b=null){
+ const boost=multiplier274(m,a,b),u=roll?Math.random():null;
  const rows=TIERS274.map(t=>({...t,mult:boost.mult,chance:Math.min(.02,t.base*boost.mult),reasons:boost.reasons}));
  if(!roll)return rows;
  // One roll, rarest qualifying tier wins. This prevents stacked independent jackpots.
  const won=[...rows].reverse().find(x=>u<x.chance)||null;
  return {rows,won,roll:u};
 }
-function apply274(m){
+function apply274(m,a=null,b=null){
  if(!m||m.ultraRareRolled274)return m;
- const r=evaluate274(m,true);m.ultraRareRolled274=true;
+ const r=evaluate274(m,true,a,b);m.ultraRareRolled274=true;
  m.ultraRareOdds274=r.rows.map(x=>({id:x.id,base:x.base,mult:x.mult,chance:x.chance}));
  if(r.won){
   const benefit={
@@ -83,7 +84,7 @@ function apply274(m){
 }
  return m;
 }
-try{const prevBaby274=baby;baby=function(a,b){return apply274(prevBaby274(a,b))}}catch(e){console.warn('baby274',e)}
+try{const prevBaby274=baby;baby=function(a,b){return apply274(prevBaby274(a,b),a,b)}}catch(e){console.warn('baby274',e)}
 function all274(){return [...(S.cands||[]),...(S.nest||[]),...(S.lineage||[]),...(S.starters||[])]}
 function badge274(){
  document.querySelectorAll('#cands .card[data-id],#breeders .card[data-id],#lineagePool .card[data-id]').forEach(card=>{
