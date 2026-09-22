@@ -59,12 +59,12 @@ function fatigueLabel263(m){const f=fatigue263(m);return f===0?'好調':f===1?'�
 function injuryRate263(m,mode){
   const stability=hidden263(m,'stability',2),luck=hidden263(m,'luck',2),f=fatigue263(m);
   if(mode==='safe')return 0;
-  if(mode==='normal')return clamp263(.04-(stability*5/7)*.004-(luck*5/7)*.002+f*.015,.01,.08);
+  if(mode==='normal'){const base=clamp263(.04-(stability*5/7)*.004-(luck*5/7)*.002+f*.015,.01,.08);return clamp263(base+Number(window.STAR_PATTERN342?.injuryAdd?.(m,mode)||0),0,.50)}
   let r=clamp263(.28-(stability*5/7)*.035-(luck*5/7)*.008,.06,.28);
   if(f===1)r=1-(1-r)*.84;
   if(f===2)r=1-(1-r)*.66;
   if(state263().policy266==='lineage')r=Math.max(.03,r-.04);
-  return clamp263(r,.03,.48);
+  return clamp263(r+Number(window.STAR_PATTERN342?.injuryAdd?.(m,mode)||0),.03,.50);
 }
 function riskText263(m,mode){
   const pct=Math.round(injuryRate263(m,mode)*100);
@@ -92,19 +92,19 @@ function outcome263(m,mode){
   const rr=(r-injury)/(1-injury||1);
 
   if(mode==='safe'){
-    const great=.04+(luck*5/7)*.008;
+    const great=.04+(luck*5/7)*.008+Number(window.STAR_PATTERN342?.successBonus?.(m,mode,'great')||0);
     return {grade:rr<great?'大成功':'成功',mul:gmul*(rr<great?1.12:.88),risk:'safe'};
   }
   if(mode==='high'){
-    const ultra=.025+(luck*5/7)*.008+(growth*5/7)*.004;
-    const great=.15+(luck*5/7)*.012+(growth*5/7)*.008;
+    const ultra=.025+(luck*5/7)*.008+(growth*5/7)*.004+Number(window.STAR_PATTERN342?.successBonus?.(m,mode,'ultra')||0);
+    const great=.15+(luck*5/7)*.012+(growth*5/7)*.008+Number(window.STAR_PATTERN342?.successBonus?.(m,mode,'great')||0);
     if(rr<ultra)return{grade:'超成功',mul:gmul*2.0,risk:'high'};
     if(rr<ultra+great)return{grade:'大成功',mul:gmul*1.55,risk:'high'};
     return{grade:'成功',mul:gmul*1.12,risk:'high'};
   }
   const bad=clamp263(.11-(stability*5/7)*.014-(luck*5/7)*.004,.02,.11);
-  const ultra=.018+(luck*5/7)*.005;
-  const great=.12+(luck*5/7)*.01+(growth*5/7)*.006;
+  const ultra=.018+(luck*5/7)*.005+Number(window.STAR_PATTERN342?.successBonus?.(m,mode,'ultra')||0);
+  const great=.12+(luck*5/7)*.01+(growth*5/7)*.006+Number(window.STAR_PATTERN342?.successBonus?.(m,mode,'great')||0);
   if(rr<bad)return{grade:'伸び悩み',mul:gmul*.40,risk:'normal'};
   if(rr<bad+ultra)return{grade:'超成功',mul:gmul*1.65,risk:'normal'};
   if(rr<bad+ultra+great)return{grade:'大成功',mul:gmul*1.28,risk:'normal'};
@@ -154,7 +154,8 @@ function train263(){
     const o=outcome263(m,mode),ups=[];
     for(const [k,base] of Object.entries(TRAIN263[plan].gain)){
       const cur=n263(m.stats[k]),soft=highStatMul263(cur),jitter=o.injury?0:(Math.random()<.35?1:0);
-      const raw=(base*o.mul*leagueMul263()+jitter)*soft;
+      const patternMul=Number(window.STAR_PATTERN342?.trainingMul?.(m,plan,mode,k)||1);
+      const raw=(base*o.mul*leagueMul263()*patternMul+jitter)*soft;
       const gain=Math.max(0,Math.round(raw));
       m.stats[k]=Math.min(cap263(),cur+gain);
       const actual=m.stats[k]-cur;
