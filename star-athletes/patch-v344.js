@@ -6,6 +6,7 @@ if(window.STAR_RESONANCE344)return;
 const SAVE344='star-athletes-save-v200';
 const GRADE344={3:{name:'輝星共鳴',stars:'★★★'},4:{name:'幻星共鳴',stars:'★★★★'},5:{name:'神星共鳴',stars:'★★★★★'}};
 
+function cap344(){try{return Math.max(999,Number(window.STAR_LIMIT278?.cap?.())||999)}catch(_){return 999}}
 function all344(){
  const out=[],seen=new Set();
  for(const key of ['starters','nest','lineage','released','cands','foster']){
@@ -81,10 +82,10 @@ function directStats344(m){
  m.stats=m.stats||{};
  for(const k of keys){
   const cur=Number(m.stats[k])||0;
-  if(cur>0)m.stats[k]=Math.max(cur+1,Math.round(cur*(1+pct)));
+  if(cur>0)m.stats[k]=Math.min(cap344(),Math.max(cur+1,Math.round(cur*(1+pct))));
   if(m.geneticBase226&&Number.isFinite(Number(m.geneticBase226[k]))){
    const v=Number(m.geneticBase226[k])||0;
-   m.geneticBase226[k]=Math.max(v+1,Math.round(v*(1+pct)));
+   m.geneticBase226[k]=Math.min(cap344(),Math.max(v+1,Math.round(v*(1+pct))));
   }
  }
  m.starResonanceStatApplied344={grade:g,pct,keys:[...keys],at:Date.now()};
