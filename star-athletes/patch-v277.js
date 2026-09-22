@@ -62,13 +62,15 @@ function shown277(){
 }
 function shareText277(m){
  const top=STAT277.slice().sort((a,b)=>n277(m.stats?.[b])-n277(m.stats?.[a]))[0];
+ const resonance=window.STAR_RESONANCE344?.label?.(m)||'';
  return [
    'STAR ATHLETES — 奇跡の誕生',
    `${m.name} / ${m.rarity} / G${n277(m.gen)}`,
    `${rareName277(m)} / 推定出生確率 ${chanceText277(m)}`,
    `得意: ${SL?.[top]||top} ${n277(m.stats?.[top])}`,
    `SKILL: ${skills277(m)}`,
-   `血統: ${lineage277(m)}`
+   `血統: ${lineage277(m)}`,
+   ...(resonance?[`星相共鳴: ${resonance}`]:[])
  ].join('\n');
 }
 async function share277(m,btn){
@@ -88,6 +90,8 @@ function card277(m){
  const sp=typeof SP!=='undefined'&&SP[m.species]?SP[m.species][0]:m.species||'';
  const statHtml=STAT277.map(k=>`<span><small>${SL?.[k]||k}</small><b>${n277(m.stats?.[k])}</b></span>`).join('');
  const ultra=!!m.ultraRare274;
+ const resonance=window.STAR_RESONANCE344?.label?.(m)||'';
+ const resonanceEffect=window.STAR_RESONANCE344?.effect?.(m)||'';
  return `<div class="miracleBackdrop277" id="miracle277"><section class="miracleShell277 ${ultra?'ultra277':'special277'}">
    <button type="button" class="close277" data-close277>×</button>
    <div class="eyebrow277">${ultra?'MIRACLE BIRTH':'SPECIAL BLOODLINE'}</div>
@@ -99,7 +103,7 @@ function card277(m){
      <div class="odds277"><small>SPECIAL BIRTH RATE</small><b>${chanceText277(m)}</b><em>この「特殊誕生ランク」を引く推定確率</em></div>
      <div class="benefit277">${benefit277(m)?`<small>SPECIAL BLOODLINE EFFECT</small><b>✨ ${benefit277(m)}</b><em>血統強度 ${strength277(m)}/130${strengthLabel277(m)?`｜${strengthLabel277(m)}`:''}</em>${effects277(m).length?`<div class="effectRows277">${effects277(m).map(x=>`<span><i>${x.label}</i><strong>${x.value}</strong></span>`).join('')}</div>`:''}`:''}</div><div class="stats277">${statHtml}</div>
      <div class="meta277"><span>SKILL</span><b>${skills277(m)}</b></div>
-     <div class="meta277"><span>血統</span><b>${lineage277(m)}</b></div>
+     <div class="meta277"><span>血統</span><b>${lineage277(m)}</b></div>${resonance?`<div class="meta277 resonanceShare277"><span>星相共鳴</span><b>${resonance}</b>${resonanceEffect?`<em>${resonanceEffect}</em>`:''}</div>`:''}
    </div>
    <div class="actions277"><button type="button" class="btn or" data-share277="${m.id}">共有する</button><button type="button" class="btn" data-close277>閉じる</button></div>
    <small class="privacy277">共有はボタンを押した時だけ実行されます。自動投稿はしません。</small>
