@@ -38,7 +38,23 @@ function migrate226(){
  save226();
 }
 function acquired226(m,k){meta226(m);return n226(m.trainingGain226[k])+n226(m.matchGain226[k])}
-function inherited226(m,k){meta226(m);return n226(m.geneticBase226[k])+acquired226(m,k)*.35}
+function heritageRate226(a,b){
+  try{
+    window.STAR_ANNUAL233?.ensureHidden?.(a);
+    window.STAR_ANNUAL233?.ensureHidden?.(b);
+  }catch(_){}
+  const ha=Math.max(0,Math.min(7,n226(a?.hidden233?.heredity)));
+  const hb=Math.max(0,Math.min(7,n226(b?.hidden233?.heredity)));
+  const avg=(ha+hb)/2;
+  const base=.35+(avg/7)*.07;
+  let bonus=0;
+  try{
+    const skills=[...(a?.skills233||[]),...(b?.skills233||[])];
+    if(skills.includes('heredity'))bonus=.03;
+  }catch(_){}
+  return Math.min(.45,base+bonus);
+}
+function inherited226(m,k,rate=.35){meta226(m);return n226(m.geneticBase226[k])+acquired226(m,k)*rate}
 
 // Children inherit the stable bloodline plus 35% of the parents' earned growth.
 // The old baby() still owns species, rarity, looks and cute-name wrappers.
@@ -47,11 +63,13 @@ try{
  baby=function(a,b){
    meta226(a);meta226(b);
    const c=beforeBaby226(a,b);meta226(c);
+   const rate=heritageRate226(a,b);
+   c.abilityInheritanceRate226=rate;
    const ri=Math.max(0,typeof R!=='undefined'?R.indexOf(c.rarity):0);
    const bias=(typeof SP!=='undefined'&&SP[c.species]&&SP[c.species][2])?SP[c.species][2]:{};
    K226.forEach(k=>{
-     const av=(inherited226(a,k)+inherited226(b,k))/2;
-     const hi=Math.max(inherited226(a,k),inherited226(b,k));
+     const av=(inherited226(a,k,rate)+inherited226(b,k,rate))/2;
+     const hi=Math.max(inherited226(a,k,rate),inherited226(b,k,rate));
      const val=Math.round(av*.75+hi*.25+rnd226(-3,5)+n226(bias[k])*.08+ri*1.5);
      c.stats[k]=clamp226(val,40,cap226());
    });
@@ -118,5 +136,9 @@ function badges226(){
 const oldRender226=render;
 render=function(){const out=oldRender226();setTimeout(badges226,0);return out};
 const css=document.createElement('style');css.textContent=`.growth226{margin-top:7px;padding:5px 7px;border-radius:8px;background:#edf7ff;border:1px solid #acd5ef;color:#35546c;font-size:7px;font-weight:900}.matchGrowth226{margin-top:9px;padding:9px;border:2px solid #e7c454;border-radius:11px;background:#fff8d8;color:#594915;font-size:9px;line-height:1.6}.matchGrowth226 b{font-size:11px}`;document.head.appendChild(css);
+window.STAR_GROWTH226={
+ heritageRate:heritageRate226,
+ inherited:(m,k,rate)=>inherited226(m,k,rate)
+};
 setTimeout(()=>{migrate226();badges226()},0);
 })();
