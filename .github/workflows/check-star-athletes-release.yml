@@ -8,6 +8,7 @@ on:
       - 'star-athletes-v112/index.html'
       - 'scripts/check_star_athletes_release.py'
       - 'scripts/check_star_athletes_save_contract.py'
+      - 'scripts/check_star_athletes_upper_rarity_contract.py'
       - '.github/workflows/check-star-athletes-release.yml'
   pull_request:
     paths:
@@ -15,6 +16,7 @@ on:
       - 'star-athletes-v112/index.html'
       - 'scripts/check_star_athletes_release.py'
       - 'scripts/check_star_athletes_save_contract.py'
+      - 'scripts/check_star_athletes_upper_rarity_contract.py'
       - '.github/workflows/check-star-athletes-release.yml'
   workflow_dispatch:
 
@@ -33,3 +35,5 @@ jobs:
         run: python scripts/check_star_athletes_release.py
       - name: Check core save recovery contract
         run: python scripts/check_star_athletes_save_contract.py
+      - name: Check upper-rarity inheritance and save contract
+        run: python scripts/check_star_athletes_upper_rarity_contract.py
