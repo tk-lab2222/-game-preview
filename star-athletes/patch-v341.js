@@ -9,7 +9,8 @@ const META341={
  shiny:{name:'色違い',stars:'★★',grade:2},
  gold:{name:'黄金',stars:'★★★',grade:3},
  prism:{name:'虹色',stars:'★★★★',grade:4},
- mutation:{name:'異変色',stars:'★★★★',grade:4}
+ mutation:{name:'異変色',stars:'★★★★',grade:4},
+ divine:{name:'神彩',stars:'★★★★★',grade:5}
 };
 const SHINY_NAME341={draco:'エメラルド',unil:'ミント',grimo:'パープル',puru:'ピンク'};
 
@@ -22,6 +23,7 @@ function all341(){
  return out;
 }
 function tier341(m){
+ if(m?.rareVisual243==='divine'||m?.visual?.color==='神彩')return'divine';
  if(m?.rareVisual243==='prism'||m?.visual?.color==='プリズム')return'prism';
  if(m?.rareVisual243==='gold'||m?.visual?.color==='金')return'gold';
  if(m?.rareVisual243==='mutation')return'mutation';
@@ -39,6 +41,7 @@ function effects341(m){
  if(t==='gold')return['親使用時 能力継承率 +1pt'];
  if(t==='prism')return['特殊血統レシピ ×1.25','特殊誕生抽選 ×1.25'];
  if(t==='mutation')return['特殊変異を示す希少外見'];
+ if(t==='divine')return['全能力 +5%','特殊血統レシピ ×1.50','特殊誕生抽選 ×1.50','親使用時 能力継承率 +2pt'];
  return[];
 }
 function persist341(){
