@@ -1,6 +1,6 @@
 (()=>{
-// v0.32.08: hidden-condition Star Resonance missions.
-// Shows discovery targets without exposing the breeding recipe/condition.
+// v0.32.09: true secret Star Resonance missions.
+// Undiscovered targets, names, counts and recipes stay hidden until first discovery.
 if(window.STAR_RESONANCE_MISSION345)return;
 
 const SAVE345='star-athletes-save-v200';
@@ -60,15 +60,15 @@ function render345(){
   const main=document.getElementById('mission200');
   main?.after?main.after(box):host.appendChild(box);
  }
- const ds=defs345(),open=ds.filter(x=>!x.ok||(!x.claimed&&x.ok)),done=ds.filter(x=>x.ok&&x.claimed);
+ const ds=defs345(),revealed=ds.filter(x=>x.ok&&!x.claimed),done=ds.filter(x=>x.ok&&x.claimed);
  box.innerHTML=`
   <div class="resMissionHead345">
-   <div><small>HIDDEN DISCOVERY</small><h3>✦ 星相発見ミッション</h3></div>
-   <b>${ds.filter(x=>x.ok).length}/${ds.length}</b>
+   <div><small>SECRET MISSION</small><h3>✦ シークレットミッション</h3></div>
+   ${revealed.length?'<b>NEW '+revealed.length+'</b>':''}
   </div>
-  <p class="resMissionHint345">組み合わせ条件は非公開。配合を重ねて未知の星相を発見しよう。</p>
-  <div class="resMissionGrid345">${open.map(card345).join('')||'<div class="resMissionAll345">すべての発見ミッションを達成しました</div>'}</div>
-  ${done.length?`<details class="resMissionDone345"><summary>達成済み ${done.length}件</summary><div class="resMissionGrid345">${done.map(card345).join('')}</div></details>`:''}
+  <p class="resMissionHint345">条件・種類・総数は非公開。未知の星相を発見すると、その時初めてミッションが開示されます。</p>
+  ${revealed.length?`<div class="resMissionReveal345"><small>新たなミッションを発見！</small><div class="resMissionGrid345">${revealed.map(card345).join('')}</div></div>`:'<div class="resMissionSecret345"><b>？？？</b><span>まだ見ぬ星相がどこかに眠っている……</span></div>'}
+  ${done.length?`<details class="resMissionDone345"><summary>発見・達成済み ${done.length}件</summary><div class="resMissionGrid345">${done.map(card345).join('')}</div></details>`:''}
  `;
 }
 function claim345(id){
@@ -107,6 +107,8 @@ css.textContent=`
 .resMissionCard345 button:disabled{opacity:.45;color:#c1c7d4}
 .resMissionDone345{margin-top:9px;border-top:1px dashed #ffffff25;padding-top:7px}.resMissionDone345 summary{cursor:pointer;font-size:8px;font-weight:1000;color:#aebbd2;margin-bottom:6px}
 .resMissionAll345{padding:12px;text-align:center;font-size:8px;color:#aef0cf}
+.resMissionReveal345{margin-top:7px;padding:8px;border:1px solid #b894ff55;border-radius:11px;background:#ffffff08}.resMissionReveal345>small{display:block;margin-bottom:5px;font-size:7px;color:#ffe67c;font-weight:1000}
+.resMissionSecret345{margin-top:7px;padding:14px 10px;border:1px dashed #ffffff24;border-radius:11px;text-align:center;background:#05081433}.resMissionSecret345 b,.resMissionSecret345 span{display:block}.resMissionSecret345 b{font-size:17px;letter-spacing:.2em;color:#ffffff55}.resMissionSecret345 span{margin-top:4px;font-size:7px;color:#9ca8bf}
 `;
 document.head.appendChild(css);
 setTimeout(()=>{discoveries345();save345();render345()},0);
