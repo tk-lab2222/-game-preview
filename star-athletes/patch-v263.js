@@ -111,7 +111,16 @@ function outcome263(m,mode){
   return{grade:'成功',mul:gmul,risk:'normal'};
 }
 function gradeLabel263(g){return g==='ケガ・中断'?'🩹 ケガで中断':g==='伸び悩み'?'△ 伸び悩み':g==='超成功'?'💫 超成功':g==='大成功'?'🌟 大成功':'✅ 成功'}
-function highStatMul263(v){return v>=950?.4:v>=850?.65:v>=700?.85:1}
+function leagueMul263(){
+  const r=clamp263(n263(S.leagueRank),0,5);
+  return [1,1.20,1.45,1.75,2.15,2.60][r]||1;
+}
+function highStatMul263(v){
+  const cap=cap263();
+  if(cap<=999)return v>=950?.4:v>=850?.65:v>=700?.85:1;
+  const ratio=n263(v)/cap;
+  return ratio>=.90?.45:ratio>=.75?.62:ratio>=.60?.78:ratio>=.45?.90:1;
+}
 function ensureGrowthMeta263(m){
   if(!m.geneticBase226){m.geneticBase226={};KEYS263.forEach(k=>m.geneticBase226[k]=n263(m.stats?.[k]))}
   if(!m.trainingGain226){m.trainingGain226={};KEYS263.forEach(k=>m.trainingGain226[k]=0)}
@@ -131,7 +140,7 @@ function panel263(){
   if(!host){host=document.createElement('div');host.id='trainingDecision263';host.className='trainingDecision263';old.after(host)}
   const turn=clamp263(n263(S.turn),0,3),left=Math.max(0,3-turn);
   host.innerHTML=`<div class="budgetHead263"><div><small>TRAINING</small><b>第${Math.min(3,turn+1)}ラウンド</b></div><strong>${turn}/3</strong></div>
-   <div class="budgetHint263">3体それぞれの育成種目と強度を決めます。ポイント配分はLIMIT到達後に解禁予定。</div>
+   <div class="budgetHint263">3体それぞれの育成種目と強度を決めます。現在リーグ育成倍率 <b>×${leagueMul263().toFixed(2)}</b>。</div>
    <button type="button" id="doTrain263" class="btn or" ${turn<3?'':'disabled'}>${turn<3?'この内容で練習する':'育成完了'}</button>`;
 }
 function render263(){try{controls263();panel263()}catch(e){console.warn('render263',e)}}
@@ -145,7 +154,7 @@ function train263(){
     const o=outcome263(m,mode),ups=[];
     for(const [k,base] of Object.entries(TRAIN263[plan].gain)){
       const cur=n263(m.stats[k]),soft=highStatMul263(cur),jitter=o.injury?0:(Math.random()<.35?1:0);
-      const raw=(base*o.mul+jitter)*soft;
+      const raw=(base*o.mul*leagueMul263()+jitter)*soft;
       const gain=Math.max(0,Math.round(raw));
       m.stats[k]=Math.min(cap263(),cur+gain);
       const actual=m.stats[k]-cur;
