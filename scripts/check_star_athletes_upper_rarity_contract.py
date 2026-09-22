@@ -40,6 +40,24 @@ for token in ('const prevBaby347=baby', 'baby=function(a,b){return ensure347(pre
 if p347.count('m.skills233.length<6') < 2:
     fail('patch-v347 must preserve the six-skill cap for both upper-rarity skill routes')
 
+# Resonance direct-stat application is a one-time migration. The applied marker must be
+# checked before any stat mutation, set after mutation, and immediately persisted by sync344.
+# Otherwise a save/reload can repeatedly compound the 4%/8% direct-stat bonus.
+direct_start = p344.find('function directStats344')
+direct_guard = p344.find('if(!m||m.starResonanceStatApplied344)return false;', direct_start)
+first_stat_write = p344.find('m.stats[k]=', direct_start)
+res_marker_set = p344.find('m.starResonanceStatApplied344=', direct_start)
+sync_start = p344.find('function sync344')
+res_save = p344.find('if(changed)persist344();', sync_start)
+if min(direct_start, direct_guard, first_stat_write, res_marker_set, sync_start, res_save) < 0:
+    fail('patch-v344 resonance reload-idempotence contract is incomplete')
+if not (direct_start < direct_guard < first_stat_write < res_marker_set):
+    fail('patch-v344 must guard starResonanceStatApplied344 before direct stat mutation')
+if "JSON.stringify({savedAt:Date.now(),S})" not in p344:
+    fail('patch-v344 must persist resonance markers through the full canonical state')
+if not (sync_start < res_save):
+    fail('patch-v344 sync must immediately save one-time resonance stat markers')
+
 # The rolled marker is the reload-idempotence boundary: it must be checked before any
 # RNG and saved inside the canonical full-state payload after migration. This prevents
 # an eligible athlete from receiving a second upper-rarity roll after save/reload.
