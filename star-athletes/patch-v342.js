@@ -26,6 +26,7 @@ const LEGACY_BY_NAME342={};
 for(const [legacy,b] of Object.entries(BASE342))LEGACY_BY_NAME342[b.name]={legacy,base:b.id,grade:b.grade,name:b.name,effect:b.effect};
 for(const [base,tiers] of Object.entries(UPPER342))for(const t of Object.values(tiers))LEGACY_BY_NAME342[t.name]={legacy:null,base,grade:t.grade,name:t.name,effect:t.effect,id:t.id};
 
+function cap342(){try{return Math.max(999,Number(window.STAR_LIMIT278?.cap?.())||999)}catch(_){return 999}}
 function all342(){
  const out=[],seen=new Set();
  for(const key of ['starters','nest','lineage','released','cands','foster']){
@@ -163,10 +164,10 @@ function applyDirect342(m){
  m.stats=m.stats||{};
  for(const k of keys){
   const cur=Number(m.stats[k])||0;
-  if(cur>0)m.stats[k]=Math.max(cur+1,Math.round(cur*(1+pct)));
+  if(cur>0)m.stats[k]=Math.min(cap342(),Math.max(cur+1,Math.round(cur*(1+pct))));
   if(m.geneticBase226&&Number.isFinite(Number(m.geneticBase226[k]))){
    const b=Number(m.geneticBase226[k])||0;
-   m.geneticBase226[k]=Math.max(b+1,Math.round(b*(1+pct)));
+   m.geneticBase226[k]=Math.min(cap342(),Math.max(b+1,Math.round(b*(1+pct))));
   }
  }
  m.starPatternStatApplied342={grade:g,pct,keys,at:Date.now()};
