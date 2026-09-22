@@ -3,13 +3,14 @@
 // Handles purchases directly because legacy shop functions are closure-local.
 const SAVE309='star-athletes-save-v200',ROSTER309='star-athletes-active-roster-v210',ROSTER209='star-athletes-active-roster-v209';
 const NORMAL309={
- berry:{cost:250,msg:'🍓 元気ベリー',apply(){(S.nest||[]).forEach(m=>{m.stats.stamina=(Number(m.stats.stamina)||0)+2;m.stats.guts=(Number(m.stats.guts)||0)+2})}},
- speed:{cost:450,msg:'🍋 スピードフルーツ',target:true,apply(m){m.stats.speed=(Number(m.stats.speed)||0)+5;m.stats.agility=(Number(m.stats.agility)||0)+5}},
- power:{cost:450,msg:'🍖 パワーミート',target:true,apply(m){m.stats.power=(Number(m.stats.power)||0)+5;m.stats.guts=(Number(m.stats.guts)||0)+5}},
- tech:{cost:600,msg:'⭐ スタークッキー',target:true,apply(m){m.stats.tech=(Number(m.stats.tech)||0)+6;m.stats.agility=(Number(m.stats.agility)||0)+6}}
+ berry:{cost:250,msg:'🍓 元気ベリー',apply(){const cap=cap309();(S.nest||[]).forEach(m=>{m.stats.stamina=Math.min(cap,(Number(m.stats.stamina)||0)+2);m.stats.guts=Math.min(cap,(Number(m.stats.guts)||0)+2)})}},
+ speed:{cost:450,msg:'🍋 スピードフルーツ',target:true,apply(m){const cap=cap309();m.stats.speed=Math.min(cap,(Number(m.stats.speed)||0)+5);m.stats.agility=Math.min(cap,(Number(m.stats.agility)||0)+5)}},
+ power:{cost:450,msg:'🍖 パワーミート',target:true,apply(m){const cap=cap309();m.stats.power=Math.min(cap,(Number(m.stats.power)||0)+5);m.stats.guts=Math.min(cap,(Number(m.stats.guts)||0)+5)}},
+ tech:{cost:600,msg:'⭐ スタークッキー',target:true,apply(m){const cap=cap309();m.stats.tech=Math.min(cap,(Number(m.stats.tech)||0)+6);m.stats.agility=Math.min(cap,(Number(m.stats.agility)||0)+6)}}
 };
 const LIMIT309={boost:20,condition:5,lucky:1,scout:1};
 const BOOST_IDS309=new Set(['berry','speed','power','tech']);
+function cap309(){try{return Math.max(999,Number(window.STAR_LIMIT278?.cap?.())||999)}catch(_){return 999}}
 function generation309(){
  const fromState=Number(S.generation233)||0;
  const fromNest=Math.max(0,...(S.nest||[]).map(m=>Number(m?.gen)||0));
@@ -108,7 +109,7 @@ function buySpecial309(id){
    const t=(S.nest||[])[0];if(!t){msg309('育成メンバーがいません');return}
    if(coins<500){msg309('コインが足りません');return}
    S.coins=coins-500;S.totalSpent=(Number(S.totalSpent)||0)+500;
-   Object.keys(t.stats||{}).forEach(k=>t.stats[k]=(Number(t.stats[k])||0)+3);consume309('condition');
+   const cap=cap309();Object.keys(t.stats||{}).forEach(k=>t.stats[k]=Math.min(cap,(Number(t.stats[k])||0)+3));consume309('condition');
    rerender309();msg309('🥤 '+t.name+' 全能力+3');return;
  }
  if(id==='scout'){
