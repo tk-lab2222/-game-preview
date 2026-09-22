@@ -51,8 +51,14 @@ function traitHtml330(m,compact=false){
 
 function upsert330(host,m,compact=false){
   if(!host||!m||m.species!=='draco')return;
-  host.querySelectorAll(':scope > .dracoTraits330').forEach(x=>x.remove());
+  const t=traitObj330(m);
+  const sig=[t.horn,t.wing,t.tail,compact?'1':'0'].join('|');
+  const current=host.querySelector(':scope > .dracoTraits330');
+  if(current?.dataset?.sig330===sig)return;
+  current?.remove();
   host.insertAdjacentHTML('beforeend',traitHtml330(m,compact));
+  const fresh=host.querySelector(':scope > .dracoTraits330:last-child');
+  if(fresh)fresh.dataset.sig330=sig;
 }
 
 function clearOverlay330(root=document){
@@ -136,7 +142,11 @@ try{
   }
 }catch(e){console.warn('draco traits render wrap330',e)}
 
-new MutationObserver(()=>requestAnimationFrame(sync330)).observe(document.body,{childList:true,subtree:true});
+document.addEventListener('click',e=>{
+  if(e.target?.closest?.('.tab,#adopt,#hatch,#breedBtn,#annualNext233,#next225,[data-my-star323],[data-replace-slot325],[data-unregister-slot328]')){
+    setTimeout(sync330,40);
+  }
+},true);
 window.STAR_DRACO_TRAITS330={sync:sync330,traits:traitObj330};
 [0,80,250,700].forEach(ms=>setTimeout(sync330,ms));
 })();
