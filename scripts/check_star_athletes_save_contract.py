@@ -37,6 +37,15 @@ require('pagehide' in immediate and 'save336' in immediate,
 require("const SAVE336='star-athletes-save-v200'" in immediate,
         'immediate persistence must use the authoritative v200 save key')
 
+# "Load latest" must not point at an older cache generation than the release shell.
+shell_cache = re.search(r'patch-v336\.js\?v=(\d+)', shell)
+reload_cache = re.search(r"star-athletes-v112/\?v=(\d+)-", immediate)
+require(shell_cache is not None, 'release shell cache generation for patch-v336.js is missing')
+require(reload_cache is not None, 'latest reload target cache generation is missing')
+if shell_cache and reload_cache:
+    require(shell_cache.group(1) == reload_cache.group(1),
+            f'latest reload cache generation {reload_cache.group(1)} does not match release {shell_cache.group(1)}')
+
 # Keep the no-broad-observer rule explicit in the save path too.
 for name, text in [('patch-v326.js', recovery), ('patch-v336.js', immediate)]:
     require('new MutationObserver' not in text,
