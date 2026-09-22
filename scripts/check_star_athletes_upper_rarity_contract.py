@@ -40,6 +40,22 @@ for token in ('const prevBaby347=baby', 'baby=function(a,b){return ensure347(pre
 if p347.count('m.skills233.length<6') < 2:
     fail('patch-v347 must preserve the six-skill cap for both upper-rarity skill routes')
 
+# The rolled marker is the reload-idempotence boundary: it must be checked before any
+# RNG and saved inside the canonical full-state payload after migration. This prevents
+# an eligible athlete from receiving a second upper-rarity roll after save/reload.
+ensure_start = p347.find('function ensure347')
+marker_guard = p347.find('if(m.rareSkillRolled347)return m;', ensure_start)
+first_rng = p347.find('Math.random()', ensure_start)
+marker_set = p347.find('m.rareSkillRolled347=true;', ensure_start)
+if min(ensure_start, marker_guard, first_rng, marker_set) < 0:
+    fail('patch-v347 reload-idempotence contract is incomplete')
+if not (ensure_start < marker_guard < first_rng < marker_set):
+    fail('patch-v347 must guard rareSkillRolled347 before any upper-rarity RNG')
+if "JSON.stringify({savedAt:Date.now(),S})" not in p347:
+    fail('patch-v347 must persist the rolled marker through the full canonical state')
+if 'if(changed)save347();' not in p347:
+    fail('patch-v347 migration must save immediately after assigning one-time roll markers')
+
 # Migration must cover every athlete pool used by the resonance system. Otherwise an
 # eligible archived/released/foster athlete can skip the one-time roll after reload.
 for pool in ('starters', 'nest', 'lineage', 'released', 'cands', 'foster'):
