@@ -187,7 +187,7 @@ try{
      hc[k]=clamp233(v,0,7)
    }
    hc.temperament=Math.random()<.45?ha.temperament:Math.random()<.82?hb.temperament:TEMPER233[rnd233(0,3)];
-   const candidates=new Set([...(a.skills233||[]),...(b.skills233||[])]);c.skills233=[];const inheritBonus=[...(a.skills233||[]),...(b.skills233||[])].some(x=>SK233[x]?.inherit)?0.10:0;for(const sk of candidates){const both=(a.skills233||[]).includes(sk)&&(b.skills233||[]).includes(sk);let p=(both?.35:.18)+inheritBonus;const hr=Math.max(n233(ha.heredity),n233(hb.heredity));if(hr>=6)p+=hr===7?.08:.05;if(Math.random()<p)c.skills233.push(sk);if(c.skills233.length>=2)break}
+   const candidates=new Set([...(a.skills233||[]),...(b.skills233||[])]);c.skills233=[];const inheritBonus=[...(a.skills233||[]),...(b.skills233||[])].some(x=>SK233[x]?.inherit)?0.10:0;for(const sk of candidates){const both=(a.skills233||[]).includes(sk)&&(b.skills233||[]).includes(sk),rare=!!SK233[sk]?.rare;const hr=Math.max(n233(ha.heredity),n233(hb.heredity));let p;if(sk==='miracle'){p=both?.12:.05;p+=inheritBonus*.35;if(hr>=6)p+=hr===7?.04:.025;p=Math.min(.22,p)}else if(sk==='starborn'){p=both?.22:.10;p+=inheritBonus*.50;if(hr>=6)p+=hr===7?.06:.04;p=Math.min(.35,p)}else{p=(both?.35:.18)+inheritBonus;if(hr>=6)p+=hr===7?.08:.05}if(Math.random()<p)c.skills233.push(sk);if(c.skills233.length>=2)break}
    const mutationBonus=[...(a.skills233||[]),...(b.skills233||[])].some(x=>SK233[x]?.newSkill)?0.10:0;
    if(c.skills233.length<2&&Math.random()<(.05+mutationBonus+rareUp)){const pool=Object.keys(SK233).filter(x=>!SK233[x].rare&&!c.skills233.includes(x));if(pool.length)c.skills233.push(pool[rnd233(0,pool.length-1)])}
    return c
