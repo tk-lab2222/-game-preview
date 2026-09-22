@@ -25,16 +25,16 @@ function parentMult346(a,b){
  const divine=ps.filter(isDivine346).length;
  const prism=ps.filter(p=>p?.rareVisual243==='prism'||p?.visual?.color==='プリズム').length;
  const mutation=ps.filter(p=>p?.rareVisual243==='mutation').length;
- if(divine){const x=divine===2?10:5;mult*=x;reasons.push(`神彩親${divine}体×${x}`)}
- else if(prism){const x=prism===2?4:2;mult*=x;reasons.push(`虹色親${prism}体×${x}`)}
+ if(divine){const x=divine===2?4:2.5;mult*=x;reasons.push(`神彩親${divine}体×${x}`)}
+ else if(prism){const x=prism===2?2.2:1.5;mult*=x;reasons.push(`虹色親${prism}体×${x}`)}
  if(mutation){const x=mutation===2?3:1.5;mult*=x;reasons.push(`異変色親×${x}`)}
  const mut=Math.max(hidden346(a,'mutation'),hidden346(b,'mutation'));
  const luck=Math.max(hidden346(a,'luck'),hidden346(b,'luck'));
  const hered=Math.max(hidden346(a,'heredity'),hidden346(b,'heredity'));
- if(mut>=6){const x=mut>=7?2.5:1.6;mult*=x;reasons.push(`変異因子${mut>=7?'S':'A'}×${x}`)}
- if(luck>=6){const x=luck>=7?1.8:1.35;mult*=x;reasons.push(`LUCK ${luck>=7?'S':'A'}×${x}`)}
- if(hered>=6){const x=hered>=7?1.4:1.2;mult*=x;reasons.push(`遺伝力${hered>=7?'S':'A'}×${x}`)}
- return{mult:Math.min(500,mult),reasons};
+ if(mut>=6){const x=mut>=7?1.6:1.3;mult*=x;reasons.push(`変異因子${mut>=7?'S':'A'}×${x}`)}
+ if(luck>=6){const x=luck>=7?1.35:1.18;mult*=x;reasons.push(`LUCK ${luck>=7?'S':'A'}×${x}`)}
+ if(hered>=6){const x=hered>=7?1.2:1.10;mult*=x;reasons.push(`遺伝力${hered>=7?'S':'A'}×${x}`)}
+ return{mult:Math.min(10,mult),reasons};
 }
 function chance346(a,b){
  const x=parentMult346(a,b);
