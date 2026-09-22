@@ -28,8 +28,8 @@ const SK233={
  heredity:{name:'強遺伝',icon:'🧬',desc:'子へのスキル継承率UP',inherit:0.10,group:'lineage'},
  mutation:{name:'覚醒因子',icon:'✨',desc:'子の新規スキル獲得率UP',newSkill:0.10,group:'lineage'},
  late:{name:'晩成',icon:'📈',desc:'高世代ほど伸びる素質',all:1.015,group:'lineage'},
- starborn:{name:'星を継ぐ者',icon:'🌌',desc:'全能力+3%',all:1.03,group:'rare',rare:true},
- miracle:{name:'奇跡の軌跡',icon:'🌠',desc:'全能力+4%',all:1.04,group:'rare',rare:true}
+ starborn:{name:'星を継ぐ者',icon:'🌌',desc:'全能力+5%',all:1.05,group:'rare',rare:true},
+ miracle:{name:'奇跡の軌跡',icon:'🌠',desc:'全能力+8%',all:1.08,group:'rare',rare:true}
 };
 const LEAGUE233=[{name:'ローカル',base:135},{name:'エリア',base:225},{name:'グランド',base:335},{name:'メジャー',base:455},{name:'プラネット',base:590},{name:'ギャラクシー',base:740}];
 const NPC233=['ガルド','ミーティア','ルーチェ','ノクス','フィオ','セナ','アルト'];
