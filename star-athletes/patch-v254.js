@@ -11,7 +11,7 @@ const SK254={
  fortune:{icon:'🍀',name:'強運',desc:'全能力+1%',cls:'rare254'},clutch:{icon:'🌟',name:'大舞台',desc:'こんじょう・テクニック+5%',cls:'guts254'},
  prodigy:{icon:'🌱',name:'英才教育',desc:'育成型の複合補正',cls:'lineage254'},heredity:{icon:'🧬',name:'強遺伝',desc:'子への能力・スキル継承を強化',cls:'lineage254'},
  mutation:{icon:'✨',name:'覚醒因子',desc:'子の新規スキル獲得率UP',cls:'lineage254'},late:{icon:'📈',name:'晩成',desc:'全能力+1.5%',cls:'lineage254'},
- starborn:{icon:'🌌',name:'星を継ぐ者',desc:'全能力+3%',cls:'rare254'},miracle:{icon:'🌠',name:'奇跡の軌跡',desc:'全能力+4%',cls:'rare254'}
+ starborn:{icon:'🌌',name:'星を継ぐ者',desc:'全能力+5%',cls:'rare254'},miracle:{icon:'🌠',name:'奇跡の軌跡',desc:'全能力+8%',cls:'rare254'}
 };
 const RK254=['G','F','E','D','C','B','A','S'];
 function n254(v){return Number(v)||0}
