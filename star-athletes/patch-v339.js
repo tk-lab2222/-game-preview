@@ -37,9 +37,10 @@ function sync339(){
   const h1=Number(pa?.hidden233?.heredity)||0,h2=Number(pb?.hidden233?.heredity)||0;
   const strong=[...(pa?.skills233||[]),...(pb?.skills233||[])].includes('heredity');
   const goldCount=[pa,pb].filter(p=>p?.rareVisual243==='gold'||p?.visual?.color==='金').length;
+  const divineCount=[pa,pb].filter(p=>p?.rareVisual243==='divine'||p?.visual?.color==='神彩').length;
   host.innerHTML=`
     <div><small>能力継承</small><b>🧬 能力継承率 <strong>${Math.round(rate*100)}%</strong></b></div>
-    <span>遺伝力 ${rank339(h1)} × ${rank339(h2)}${strong?' ／ 強遺伝 +3%':''}${goldCount?` ／ 黄金 +${goldCount}%`:''}</span>
+    <span>遺伝力 ${rank339(h1)} × ${rank339(h2)}${strong?' ／ 強遺伝 +3%':''}${goldCount?` ／ 黄金 +${goldCount}%`:''}${divineCount?` ／ 神彩 +${divineCount*2}%`:''}</span>
     <em>基準35% ／ 遺伝力で最大42% ／ 各種補正込み最大45%</em>
   `;
 }
