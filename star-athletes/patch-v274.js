@@ -60,7 +60,9 @@ function multiplier274(m,a=null,b=null){
  const gen=Math.max(1,n274(m?.gen)||n274(S?.generation233)||1);if(gen>=10){mult*=2;reasons.push('10代継承×2')}else if(gen>=5){mult*=1.5;reasons.push('5代継承×1.5')}
  if([a,b].some(p=>p?.rareVisual243==='divine'||p?.visual?.color==='神彩')){mult*=1.50;reasons.push('神彩血統×1.50')}
  else if([a,b].some(p=>p?.rareVisual243==='prism'||p?.visual?.color==='プリズム')){mult*=1.25;reasons.push('虹色血統×1.25')}
- return {mult:Math.min(1000,mult),reasons};
+ const mythicParents=[a,b].filter(p=>p?.ultraRare274?.id==='mythic').length;
+ if(mythicParents){const x=mythicParents===2?1.5:1.25;mult*=x;reasons.push(`神話級親${mythicParents}体×${x}`)}
+ return {mult:Math.min(150,mult),reasons};
 }
 function evaluate274(m,roll=true,a=null,b=null){
  const boost=multiplier274(m,a,b),u=roll?Math.random():null;
