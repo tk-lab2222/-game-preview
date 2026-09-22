@@ -1,5 +1,5 @@
 (()=>{
-// v0.22.6: 999-cap growth loop.
+// v0.22.6: growth loop; cap follows current LIMIT stage.
 // - Existing saves migrate safely: current stats become genetic base.
 // - Training gains are temporary-to-the-athlete; 25% is inherited by children.
 // - Match performance can add small real-stat growth.
@@ -19,6 +19,7 @@ const LEAGUE226=[
 const RIVAL226=['ガルド','ミーティア','ルーチェ','ノクス','フィオ','セナ','アルト','ミラ','クロウ','ティア','レイン','ベル'];
 function n226(v){return Number(v)||0}
 function clamp226(v,a,b){return Math.max(a,Math.min(b,v))}
+function cap226(){try{return Math.max(999,Number(window.STAR_LIMIT278?.cap?.())||999)}catch(_){return 999}}
 function rnd226(a,b){return Math.floor(Math.random()*(b-a+1))+a}
 function save226(){
  try{localStorage.setItem(SAVE226,JSON.stringify({savedAt:Date.now(),S}))}catch(e){console.warn('save226',e)}
@@ -52,7 +53,7 @@ try{
      const av=(inherited226(a,k)+inherited226(b,k))/2;
      const hi=Math.max(inherited226(a,k),inherited226(b,k));
      const val=Math.round(av*.75+hi*.25+rnd226(-3,5)+n226(bias[k])*.08+ri*1.5);
-     c.stats[k]=clamp226(val,40,999);
+     c.stats[k]=clamp226(val,40,cap226());
    });
    c.geneticBase226={};c.trainingGain226={};c.matchGain226={};
    K226.forEach(k=>{c.geneticBase226[k]=c.stats[k];c.trainingGain226[k]=0;c.matchGain226[k]=0});
@@ -64,7 +65,7 @@ try{
 function eventKeys226(e){return e==='50m走'?['speed','agility','tech']:e==='障害物競走'?['tech','agility','speed']:e==='大玉ころがし'?['power','stamina','guts']:e==='坂道かけあがり'?['power','stamina','guts']:e==='10000m走'?['stamina','guts','speed']:e==='的当て'?['tech','power','agility']:e==='リレー'?['speed','tech','agility']:['power','stamina','guts']}
 function highMul226(v){return v>=990?.2:v>=950?.4:v>=850?.65:v>=700?.85:1}
 function addMatch226(m,k,raw){
- meta226(m);const cur=n226(m.stats[k]),gain=Math.max(0,Math.round(raw*highMul226(cur))),next=Math.min(999,cur+gain),actual=next-cur;
+ meta226(m);const cur=n226(m.stats[k]),gain=Math.max(0,Math.round(raw*highMul226(cur))),next=Math.min(cap226(),cur+gain),actual=next-cur;
  m.stats[k]=next;m.matchGain226[k]=n226(m.matchGain226[k])+actual;return actual;
 }
 function applyMatchGrowth226(text,promo){
