@@ -60,13 +60,17 @@ function multiplier274(m,a=null,b=null){
  const gen=Math.max(1,n274(m?.gen)||n274(S?.generation233)||1);if(gen>=10){mult*=2;reasons.push('10代継承×2')}else if(gen>=5){mult*=1.5;reasons.push('5代継承×1.5')}
  if([a,b].some(p=>p?.rareVisual243==='divine'||p?.visual?.color==='神彩')){mult*=1.50;reasons.push('神彩血統×1.50')}
  else if([a,b].some(p=>p?.rareVisual243==='prism'||p?.visual?.color==='プリズム')){mult*=1.25;reasons.push('虹色血統×1.25')}
- const mythicParents=[a,b].filter(p=>p?.ultraRare274?.id==='mythic').length;
- if(mythicParents){const x=mythicParents===2?1.5:1.25;mult*=x;reasons.push(`神話級親${mythicParents}体×${x}`)}
  return {mult:Math.min(150,mult),reasons};
 }
 function evaluate274(m,roll=true,a=null,b=null){
  const boost=multiplier274(m,a,b),u=roll?Math.random():null;
- const rows=TIERS274.map(t=>({...t,mult:boost.mult,threshold:Math.min(.02,t.base*boost.mult),reasons:boost.reasons}));
+ const mythicParents=[a,b].filter(p=>p?.ultraRare274?.id==='mythic').length;
+ const mythicCarry=mythicParents===2?5:mythicParents===1?2:1;
+ const rows=TIERS274.map(t=>{
+  const reasons=[...boost.reasons];
+  if(t.id==='mythic'&&mythicParents)reasons.push(`神話級親${mythicParents}体×${mythicCarry}`);
+  return {...t,mult:boost.mult,carry:t.id==='mythic'?mythicCarry:1,threshold:Math.min(.02,t.base*boost.mult*(t.id==='mythic'?mythicCarry:1)),reasons};
+ });
  const rareFirst=[...rows].reverse();
  let prev=0;
  for(const x of rareFirst){x.chance=Math.max(0,x.threshold-prev);prev=Math.max(prev,x.threshold)}
