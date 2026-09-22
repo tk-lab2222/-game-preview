@@ -72,8 +72,6 @@ function lineageMult342(a,b,base){
  else if(ia.base===base||ib.base===base){mult*=2;reasons.push('同系紋の親×2')}
  const upper=Math.max(grade342(a),grade342(b));
  if(upper>=3){mult*=1+(upper-2)*.5;reasons.push(`上位紋血統×${(1+(upper-2)*.5).toFixed(1)}`)}
- const godParents=[a,b].filter(p=>grade342(p)>=5).length;
- if(godParents){const x=godParents===2?1.5:1.25;mult*=x;reasons.push(`神星紋親${godParents}体×${x}`)}
  const mut=Math.max(hidden342(a,'mutation'),hidden342(b,'mutation'));
  const luck=Math.max(hidden342(a,'luck'),hidden342(b,'luck'));
  if(mut>=6){const x=mut>=7?3:1.8;mult*=x;reasons.push(`変異因子${mut>=7?'S':'A'}×${x}`)}
@@ -85,17 +83,24 @@ function rollUpper342(c,a,b){
  const set=UPPER342[base]||UPPER342.plain;
  const boost=lineageMult342(a,b,base);
  // Deliberately tiny raw rates. Bloodline design raises them into a realistically targetable range.
+ const godParents=[a,b].filter(p=>grade342(p)>=5).length;
+ const godCarry=godParents===2?5:godParents===1?2:1;
  const rows=[
   {tier:'god',base:.00002},
   {tier:'phantom',base:.0005},
   {tier:'shine',base:.006}
- ].map(r=>({...r,chance:Math.min(.08,r.base*boost.mult)}));
+ ].map(r=>{
+   const chance=Math.min(.08,r.base*boost.mult*(r.tier==='god'?godCarry:1));
+   const reasons=[...boost.reasons];
+   if(r.tier==='god'&&godParents)reasons.push(`神星紋親${godParents}体×${godCarry}`);
+   return {...r,chance,reasons,godCarry:r.tier==='god'?godCarry:1};
+ });
  const u=Math.random();let acc=0,won=null;
  for(const r of rows){acc+=r.chance;if(u<acc){won=r;break}}
- c.starPatternOdds342=rows.map(r=>({tier:r.tier,base:r.base,mult:boost.mult,chance:r.chance,reasons:boost.reasons}));
+ c.starPatternOdds342=rows.map(r=>({tier:r.tier,base:r.base,mult:boost.mult,chance:r.chance,reasons:r.reasons,godCarry:r.godCarry}));
  if(!won)return c;
  const x=set[won.tier];
- c.starPattern342={id:x.id,base,grade:x.grade,name:x.name,effect:x.effect,tier:won.tier,chance:won.chance,mult:boost.mult,reasons:boost.reasons,at:Date.now()};
+ c.starPattern342={id:x.id,base,grade:x.grade,name:x.name,effect:x.effect,tier:won.tier,chance:won.chance,mult:boost.mult,reasons:won.reasons,godCarry:won.godCarry,at:Date.now()};
  c.visual.pattern=x.name;
  return c;
 }
