@@ -32,9 +32,9 @@ try{
 function all347(){
  const out=[],seen=new Set();
  for(const key of ['starters','nest','lineage','released','cands','foster']){
-  for(const m of(S?.[key]||[]))if(m&&!seen.has(m.id)){seen.add(m.id);out.push(m)}
+  for(const m of(S?.[key]||[]))if(m&&(m.id==null||!seen.has(m.id))){if(m.id!=null)seen.add(m.id);out.push(m)}
  }
- if(S?.egg&&!seen.has(S.egg.id))out.push(S.egg);
+ if(S?.egg&&(S.egg.id==null||!seen.has(S.egg.id)))out.push(S.egg);
  return out;
 }
 function migrate347(){
