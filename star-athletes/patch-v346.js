@@ -25,8 +25,7 @@ function parentMult346(a,b){
  const divine=ps.filter(isDivine346).length;
  const prism=ps.filter(p=>p?.rareVisual243==='prism'||p?.visual?.color==='プリズム').length;
  const mutation=ps.filter(p=>p?.rareVisual243==='mutation').length;
- if(divine){const x=divine===2?4:2.5;mult*=x;reasons.push(`神彩親${divine}体×${x}`)}
- else if(prism){const x=prism===2?2.2:1.5;mult*=x;reasons.push(`虹色親${prism}体×${x}`)}
+ if(!divine&&prism){const x=prism===2?2.2:1.5;mult*=x;reasons.push(`虹色親${prism}体×${x}`)}
  if(mutation){const x=mutation===2?3:1.5;mult*=x;reasons.push(`異変色親×${x}`)}
  const mut=Math.max(hidden346(a,'mutation'),hidden346(b,'mutation'));
  const luck=Math.max(hidden346(a,'luck'),hidden346(b,'luck'));
@@ -38,7 +37,11 @@ function parentMult346(a,b){
 }
 function chance346(a,b){
  const x=parentMult346(a,b);
- return{base:BASE346,mult:x.mult,chance:Math.min(.01,BASE346*x.mult),reasons:x.reasons};
+ const divineParents=[a,b].filter(isDivine346).length;
+ const carry=divineParents===2?5:divineParents===1?2:1;
+ const reasons=[...x.reasons];
+ if(divineParents)reasons.push(`神彩親${divineParents}体×${carry}`);
+ return{base:BASE346,mult:x.mult,carry,chance:Math.min(.01,BASE346*x.mult*carry),reasons};
 }
 function cap346(){try{return Math.max(999,Number(window.STAR_LIMIT278?.cap?.())||999)}catch(_){return 999}}
 function applyStats346(m){
