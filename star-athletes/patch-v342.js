@@ -87,8 +87,8 @@ function rollUpper342(c,a,b){
   {tier:'phantom',base:.0005},
   {tier:'shine',base:.006}
  ].map(r=>({...r,chance:Math.min(.08,r.base*boost.mult)}));
- const u=Math.random();
- const won=rows.find(r=>u<r.chance);
+ const u=Math.random();let acc=0,won=null;
+ for(const r of rows){acc+=r.chance;if(u<acc){won=r;break}}
  c.starPatternOdds342=rows.map(r=>({tier:r.tier,base:r.base,mult:boost.mult,chance:r.chance,reasons:boost.reasons}));
  if(!won)return c;
  const x=set[won.tier];
