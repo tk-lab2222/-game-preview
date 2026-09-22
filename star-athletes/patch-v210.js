@@ -3,7 +3,7 @@
 const ROSTER_KEY210='star-athletes-active-roster-v210';
 const MEM210='star-athletes-training-memory-v243';
 const LEGACY_MEM210='star-athletes-training-memory-v239';
-const TRAIN210={speed:{name:'星駆けダッシュ',icon:'💨',gain:{speed:3,agility:1}},power:{name:'メテオクラッシュ',icon:'💥',gain:{power:3,guts:1}},tech:{name:'スタートリック',icon:'✨',gain:{tech:3,agility:1}},stamina:{name:'エンドレスロード',icon:'🔥',gain:{stamina:3,guts:1}},team:{name:'スターリンク',icon:'🤝',gain:{guts:2,tech:2}}};
+const TRAIN210={speed:{name:'星駆けダッシュ',icon:'💨',gain:{speed:4,agility:2}},power:{name:'メテオクラッシュ',icon:'💥',gain:{power:4,guts:2}},tech:{name:'スタートリック',icon:'✨',gain:{tech:4,agility:2}},stamina:{name:'エンドレスロード',icon:'🔥',gain:{stamina:4,guts:2}},team:{name:'スターリンク',icon:'🤝',gain:{guts:3,tech:3}}};
 const STRAT210=['先行','バランス','温存','追込'];
 const SK210={power:['💥','豪腕'],speed:['💨','疾風'],stamina:['🔥','鉄肺'],agility:['✨','軽業'],tech:['🎯','精密'],guts:['❤️‍🔥','勝負魂']};
 function mem210(){try{
@@ -21,7 +21,18 @@ function bestPlan210(m){const s=m?.stats||{},map={power:'power',speed:'speed',st
 function saveRoster210(){try{if(Array.isArray(S.nest)&&S.nest.length===3)localStorage.setItem(ROSTER_KEY210,JSON.stringify(S.nest))}catch(_){}try{typeof save200==='function'&&save200()}catch(_){}}
 function restoreRoster210(){if(Array.isArray(S.nest)&&S.nest.length===3)return true;try{const raw=localStorage.getItem(ROSTER_KEY210);if(raw){const r=JSON.parse(raw);if(Array.isArray(r)&&r.length===3){S.nest=r;return true}}}catch(_){}return false}
 function eventKeys210(e){return e==='50m走'?['speed','agility','tech']:e==='障害物競走'?['tech','agility','speed']:e==='大玉ころがし'?['power','stamina','guts']:e==='坂道かけあがり'?['power','stamina','guts']:e==='10000m走'?['stamina','guts','speed']:e==='的当て'?['tech','power','agility']:e==='リレー'?['speed','tech','agility']:['power','stamina','guts']}
-function gainRows210(m,g){return Object.keys(SL).map(k=>`<span class="${g[k]?'up210':''}" data-stat210="${k}"><i>${SL[k]}</i><b>${m.stats?.[k]??0}${g[k]?` <em>+${g[k]}基準</em>`:''}</b></span>`).join('')}
+function leagueMul210(){
+ const r=Math.max(0,Math.min(5,Number(S?.leagueRank)||0));
+ return [1,1.15,1.30,1.50,1.70,1.90][r]||1;
+}
+function gainRows210(m,g){
+ const lm=leagueMul210();
+ return Object.keys(SL).map(k=>{
+   const base=Number(g[k])||0;
+   const shown=base?Math.max(1,Math.round(base*lm)):0;
+   return `<span class="${base?'up210':''}" data-stat210="${k}"><i>${SL[k]}</i><b>${m.stats?.[k]??0}${base?` <em>+${shown}基準</em>`:''}</b></span>`
+ }).join('')
+}
 function renderRoster210(){
  const plans=document.getElementById('plans'),prep=document.getElementById('prep');if(!plans||!prep)return;
  if(!restoreRoster210()){plans.innerHTML='<div class="empty210"><b>育成メンバー未登録</b><span>配合画面で3体を選び「この3体をネストへ」を押してください。</span></div>';prep.innerHTML='<div class="empty210"><b>出場メンバー未登録</b><span>ネスト登録後にここへ3体表示されます。</span></div>';return}
