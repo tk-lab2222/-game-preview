@@ -57,7 +57,12 @@ css.textContent=`
 `;
 document.head.appendChild(css);
 
-const mo=new MutationObserver(()=>{decorateMeet120();phaseClass120()});
-mo.observe(document.body,{childList:true,subtree:true,characterData:true});
+// Keep this presentation layer bounded to the tournament subtree. A body-wide
+// observer caused every unrelated render to re-enter decoration work.
+const events120=document.getElementById('events');
+if(events120){
+  const mo=new MutationObserver(()=>{decorateMeet120();phaseClass120()});
+  mo.observe(events120,{childList:true,subtree:true,characterData:true});
+}
 setTimeout(decorateMeet120,0);
 })();
