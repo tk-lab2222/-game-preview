@@ -18,6 +18,7 @@ function init322(){
   S.missionBoost322=S.missionBoost322||Object.fromEntries(K322.map(k=>[k,0]));
 }
 function leagueRank322(){return Math.max(0,Math.min(5,n322(S.leagueRank)))}
+function cap322(){try{return Math.max(999,Number(window.STAR_LIMIT278?.cap?.())||999)}catch(_){return 999}}
 function breeds322(){return n322(S.breedCount)}
 function gen322(){return Math.max(1,n322(S.generation233)||n322(S.generation232)||1)}
 function hist322(){return Array.isArray(S.seasonHistory)?S.seasonHistory:[]}
@@ -125,7 +126,7 @@ function applyBoostToRoster322(){
     m.missionApplied322=m.missionApplied322||Object.fromEntries(K322.map(k=>[k,0]));
     for(const k of K322){
       const target=n322(S.missionBoost322[k]),done=n322(m.missionApplied322[k]),delta=target-done;
-      if(delta){m.stats[k]=n322(m.stats[k])+delta;m.missionApplied322[k]=target}
+      if(delta){m.stats[k]=Math.min(cap322(),n322(m.stats[k])+delta);m.missionApplied322[k]=target}
     }
   }
 }
