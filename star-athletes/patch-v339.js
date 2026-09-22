@@ -29,17 +29,18 @@ function sync339(){
     anchor.appendChild(host);
   }
   if(!pa||!pb){
-    host.innerHTML='<small>ABILITY INHERITANCE</small><b>能力継承率 —</b><span>親2体を選ぶと表示</span>';
+    host.innerHTML='<small>能力継承</small><b>能力継承率 —</b><span>親2体を選ぶと表示</span>';
     return;
   }
   try{window.STAR_ANNUAL233?.ensureHidden?.(pa);window.STAR_ANNUAL233?.ensureHidden?.(pb)}catch(_){}
   const rate=Number(window.STAR_GROWTH226?.heritageRate?.(pa,pb)||.35);
   const h1=Number(pa?.hidden233?.heredity)||0,h2=Number(pb?.hidden233?.heredity)||0;
   const strong=[...(pa?.skills233||[]),...(pb?.skills233||[])].includes('heredity');
+  const goldCount=[pa,pb].filter(p=>p?.rareVisual243==='gold'||p?.visual?.color==='金').length;
   host.innerHTML=`
-    <div><small>ABILITY INHERITANCE</small><b>🧬 能力継承率 <strong>${Math.round(rate*100)}%</strong></b></div>
-    <span>遺伝力 ${rank339(h1)} × ${rank339(h2)}${strong?' ／ 強遺伝 +3%':''}</span>
-    <em>基準35% ／ 遺伝力で最大42% ／ 強遺伝込み最大45%</em>
+    <div><small>能力継承</small><b>🧬 能力継承率 <strong>${Math.round(rate*100)}%</strong></b></div>
+    <span>遺伝力 ${rank339(h1)} × ${rank339(h2)}${strong?' ／ 強遺伝 +3%':''}${goldCount?` ／ 黄金 +${goldCount}%`:''}</span>
+    <em>基準35% ／ 遺伝力で最大42% ／ 各種補正込み最大45%</em>
   `;
 }
 try{
