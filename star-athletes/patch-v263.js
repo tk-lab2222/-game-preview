@@ -113,7 +113,7 @@ function outcome263(m,mode){
 function gradeLabel263(g){return g==='ケガ・中断'?'🩹 ケガで中断':g==='伸び悩み'?'△ 伸び悩み':g==='超成功'?'💫 超成功':g==='大成功'?'🌟 大成功':'✅ 成功'}
 function leagueMul263(){
   const r=clamp263(n263(S.leagueRank),0,5);
-  return [1,1.20,1.45,1.75,2.15,2.60][r]||1;
+  return [1,1.15,1.30,1.50,1.70,1.90][r]||1;
 }
 function highStatMul263(v){
   const cap=cap263();
