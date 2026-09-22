@@ -31,6 +31,11 @@ function rareRecipeParentMult273(a,b,m){
    if(x>1){mult*=x;reasons.push(`${p.name||'親'}の特殊誕生血統×${x.toFixed(2)}`)}
  };
  apply(a);apply(b);
+ const parents=[a,b].filter(Boolean);
+ const hasPrism=parents.some(p=>p?.rareVisual243==='prism'||p?.visual?.color==='プリズム');
+ const hasShiny=parents.some(p=>p?.rareVisual243==='shiny'||p?.shiny);
+ if(hasPrism){mult*=1.25;reasons.push('虹色血統×1.25')}
+ else if(hasShiny){mult*=1.10;reasons.push('色違い血統×1.10')}
  if(m?.miracleFactor274){const x=1+.15*Math.max(1,Number(m.miracleFactor274.strength)||1);mult*=x;reasons.push(`奇跡因子×${x.toFixed(2)}`)}
  return{mult:Math.min(3,mult),reasons};
 }
