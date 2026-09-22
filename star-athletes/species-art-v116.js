@@ -67,7 +67,11 @@ const style=document.createElement('style');
 style.textContent=`.avatar.species-live{position:relative;overflow:hidden;background:linear-gradient(#fff9eb,#f4ead6);padding:0}.speciesCanvas{position:absolute;inset:0;width:100%;height:100%;display:block;background:transparent}.avatar.species-live .pattern,.avatar.species-live .accessory{display:none}`;
 document.head.appendChild(style);
 const ro=new ResizeObserver(()=>requestAnimationFrame(paintAll));
-new MutationObserver(()=>{document.querySelectorAll('.avatar.species-live').forEach(e=>ro.observe(e));requestAnimationFrame(paintAll)}).observe(document.body,{childList:true,subtree:true});
+function bindSpeciesArt(){document.querySelectorAll('.avatar.species-live').forEach(e=>ro.observe(e));requestAnimationFrame(paintAll)}
+// Observe only the game application root instead of the whole body. This keeps
+// dynamic cards paintable without waking the renderer for unrelated DOM work.
+const gameRoot=document.querySelector('.a');
+if(gameRoot)new MutationObserver(bindSpeciesArt).observe(gameRoot,{childList:true,subtree:true});
 window.paintSpecies=paintAll;
-setTimeout(()=>{try{render();document.querySelectorAll('.avatar.species-live').forEach(e=>ro.observe(e));paintAll()}catch(e){console.error('species renderer v117 boot failed',e)}},0);
+setTimeout(()=>{try{render();bindSpeciesArt();paintAll()}catch(e){console.error('species renderer v117 boot failed',e)}},0);
 })();
