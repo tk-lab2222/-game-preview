@@ -39,12 +39,35 @@ function repairIdlessPattern359(){
   }
  }catch(e){console.warn('pattern359 legacy repair',e)}
 }
+// v343 has the same legacy-id dedupe shape in all343(): multiple athletes with no id collapse
+// onto undefined and only the first is migrated to starBody343. Repair only missing idless records
+// through v343's public info() so the original archetype/body rules remain the single source of truth.
+function repairIdlessBody359(){
+ try{
+  if(typeof S==='undefined'||!S||!window.STAR_BODY343?.info)return;
+  const seen=new WeakSet();let changed=false;
+  const visit=m=>{
+   if(!m||typeof m!=='object'||seen.has(m))return;seen.add(m);
+   if(m.id!=null||m.starBody343)return;
+   const x=window.STAR_BODY343.info(m);
+   if(!x?.name)return;
+   m.starBody343={...x};changed=true;
+  };
+  for(const key of ['starters','nest','lineage','released','cands','foster'])for(const m of(S[key]||[]))visit(m);
+  visit(S.egg);
+  if(changed){
+   localStorage.setItem('star-athletes-save-v200',JSON.stringify({savedAt:Date.now(),S}));
+   setTimeout(()=>window.STAR_BODY343?.sync?.(),0);
+  }
+ }catch(e){console.warn('body359 legacy repair',e)}
+}
 try{const prev=window.render;if(typeof prev==='function')window.render=function(){const out=prev.apply(this,arguments);setTimeout(clean359,0);return out}}catch(_){}
 document.addEventListener('click',()=>setTimeout(clean359,0),true);
 const css=document.createElement('style');css.textContent=`
 .nm>.legacyRarity340,.nm>.rarityBadge249{display:none!important}
 `;document.head.appendChild(css);
-window.STAR_NAME_CLEAN359={sync:clean359,repairIdlessPattern:repairIdlessPattern359};
-repairIdlessPattern359();setTimeout(repairIdlessPattern359,100);
+window.STAR_NAME_CLEAN359={sync:clean359,repairIdlessPattern:repairIdlessPattern359,repairIdlessBody:repairIdlessBody359};
+repairIdlessPattern359();repairIdlessBody359();
+setTimeout(repairIdlessPattern359,100);setTimeout(repairIdlessBody359,100);
 setTimeout(clean359,100);setTimeout(clean359,500);
 })();
