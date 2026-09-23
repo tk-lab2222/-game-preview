@@ -62,7 +62,9 @@ function abilityRank340(m){
  const avg=vals.reduce((a,b)=>a+b,0)/vals.length,top=[...vals].sort((a,b)=>b-a).slice(0,2).reduce((a,b)=>a+b,0)/Math.min(2,vals.length);
  // Blend all-round strength with specialist value; thresholds target the pre-LIMIT scenario.
  const score=avg*.72+top*.28;
- return score>=520?'EX':score>=430?'UR':score>=350?'SSR':score>=285?'SR':score>=225?'R':score>=170?'U':'C';
+ // Ability rank is a readable proxy for the league level this athlete can realistically contest.
+ // Rival centers: Local 135 / Area 225 / Grand 335 / Major 455 / Planet 590 / Galaxy 740.
+ return score>=710?'EX':score>=565?'UR':score>=435?'SSR':score>=320?'SR':score>=215?'R':score>=130?'U':'C';
 }
 function abilityFinal340(m){return !!(m?.abilityRankFinal340||m?.developmentComplete340)}
 function displayAbilityRank340(m){
