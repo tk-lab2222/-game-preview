@@ -62,5 +62,3 @@ try{const prevRender273=render;render=function(){const out=prevRender273();setTi
 window.STAR_RARE273={recipes:RECIPES273,evaluate:(m,a,b)=>evaluate273(m,a,b,false),tags:tags273,sync:late273};
 const css=document.createElement('style');css.textContent='.rare273{margin-top:6px;padding:5px 7px;border:1px solid #b88a22;border-radius:8px;background:#fff7d6;color:#6f4b00;font-size:7px;font-weight:1000}';document.head.appendChild(css);late273();
 })();
-// v0.28.6 loader: keep M4.2 isolated while the release shell remains stable.
-(()=>{if(window.STAR_ULTRA274||document.querySelector('script[data-star-v274]'))return;const s=document.createElement('script');s.dataset.starV274='1';s.src='../star-athletes/patch-v274.js?v=286';document.head.appendChild(s)})();
