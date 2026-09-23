@@ -1,6 +1,6 @@
 (()=>{
 // v0.26.2: M1.2 candidate shortlist + comparison. Uses only visible candidate information.
-const R262=['C','U','R','SR','SSR','UR','EX'];
+function grade262(m){try{return Math.max(1,Math.min(5,Number(window.STAR_GRADE340?.athleteGrade?.(m)||1)))}catch(_){return 1}} function gradeLabel262(m){const g=grade262(m),z=window.STAR_GRADE340?.grades?.[g];return (z?.stars||'★'.repeat(g))+' '+(z?.name||'通常')}
 let mode262='battle';
 function setSelection262(ids){
  const valid=new Set((S.cands||[]).map(m=>m?.id).filter(Boolean));
@@ -43,11 +43,11 @@ function n262(v){return Number(v)||0}
 function avg262(m){const vals=Object.values(m?.stats||{}).map(n262);return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:0}
 function max262(m){const e=Object.entries(m?.stats||{}).sort((a,b)=>n262(b[1])-n262(a[1]));return e[0]||['-',0]}
 function skills262(m){return Array.isArray(m?.skills233)?m.skills233:[]}
-function battleScore262(m){const [,mx]=max262(m);return avg262(m)*.55+n262(mx)*.30+skills262(m).length*12+Math.max(0,R262.indexOf(m?.rarity))*4}
-function rarityScore262(m){return Math.max(0,R262.indexOf(m?.rarity))*100+avg262(m)}
+function battleScore262(m){const [,mx]=max262(m);return avg262(m)*.55+n262(mx)*.30+skills262(m).length*12+(grade262(m)-1)*4}
+function rarityScore262(m){return grade262(m)*100+avg262(m)}
 function skillScore262(m){return skills262(m).length*100+avg262(m)}
 function score262(m){
- if(mode262==='rarity')return rarityScore262(m);
+ if(mode262==='grade')return rarityScore262(m);
  if(mode262==='skill')return skillScore262(m);
  if(mode262==='avg')return avg262(m);
  return battleScore262(m);
@@ -71,7 +71,7 @@ function decorateCards262(sorted){
    let row=card.querySelector('.shortBadge262');if(!row){row=document.createElement('div');row.className='shortBadge262';(card.querySelector('.bd')||card).prepend(row)}
    const tags=[];
    if(top3.has(m.id))tags.push('<span class="rec262">🏆 おすすめ</span>');
-   if(R262.indexOf(m.rarity)>=3)tags.push('<span>🌟 高レア</span>');
+   if(grade262(m)>=3)tags.push('<span>🌟 高星格</span>');
    if(skills262(m).length)tags.push('<span>✨ スキル</span>');
    row.innerHTML=tags.join('');
  });
@@ -83,11 +83,11 @@ function render262(){
  if(!cands.length){host.innerHTML='';host.classList.add('hide');return}
  host.classList.remove('hide');
  const sorted=top262();
- const modes=[['battle','大会向け'],['rarity','レア度'],['skill','スキル'],['avg','平均能力']];
+ const modes=[['battle','大会向け'],['grade','星格'],['skill','スキル'],['avg','平均能力']];
  const rows=sorted.map((m,i)=>{
    const [mk,mv]=max262(m),selected=(S.sel||[]).includes(m.id);
    return `<button type="button" class="cmpRow262 ${selected?'selected262':''}" data-cmp262="${m.id}">
-     <i>${i+1}</i><b>${m.name}</b><em>${m.rarity}</em><span>平均 ${Math.round(avg262(m))}</span><span>最高 ${typeof SL!=='undefined'?(SL[mk]||mk):mk} ${Math.round(n262(mv))}</span><small>${skillLabel262(m)}</small>
+     <i>${i+1}</i><b>${m.name}</b><em>${gradeLabel262(m)}</em><span>平均 ${Math.round(avg262(m))}</span><span>最高 ${typeof SL!=='undefined'?(SL[mk]||mk):mk} ${Math.round(n262(mv))}</span><small>${skillLabel262(m)}</small>
    </button>`;
  }).join('');
  host.innerHTML=`<div class="cmpHead262"><div><small>CANDIDATE SCOUT</small><b>候補比較</b></div><strong>${cands.length}体</strong></div>
