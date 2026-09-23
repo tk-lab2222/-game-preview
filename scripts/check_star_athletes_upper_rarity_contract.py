@@ -33,6 +33,7 @@ for n in (342, 343, 344, 345, 346, 347):
 
 p344 = (PATCH_DIR / 'patch-v344.js').read_text(encoding='utf-8')
 p347 = (PATCH_DIR / 'patch-v347.js').read_text(encoding='utf-8')
+p350 = (PATCH_DIR / 'patch-v350.js').read_text(encoding='utf-8')
 for token in ('const prevBaby347=baby', 'baby=function(a,b){return ensure347(prevBaby347(a,b))}', 'rareSkillRolled347=true'):
     if token not in p347:
         fail(f'patch-v347 rare-skill birth contract missing: {token}')
@@ -97,5 +98,17 @@ idless_contract = 'm.id==null||!seen.has(m.id)'
 for name, text in (('patch-v344.js', p344), ('patch-v347.js', p347)):
     if idless_contract not in text or 'if(m.id!=null)seen.add(m.id)' not in text:
         fail(f'{name} must process every ID-less athlete while deduplicating normal IDs')
+
+# God-Star hatch playback must not collapse multiple ID-less newborns into one undefined
+# Set key. v350 uses a deterministic fallback key built from athlete data + candidate index,
+# while normal athletes remain deduplicated by their stable id.
+for token in (
+    "if(m?.id)return 'id:'+m.id;",
+    "return 'anon:'+[m?.name||'',m?.species||'',m?.gen||m?.generation||'',m?.bornAt||m?.createdAt||'',st,i].join('|');",
+    'grade350(m)>=5&&!played.has(key350(m,i))',
+    'played.add(key350(x,i))',
+):
+    if token not in p350:
+        fail(f'patch-v350 ID-less God-Star hatch dedupe contract missing: {token}')
 
 print('OK: STAR ATHLETES upper-rarity inheritance/save contract is intact through v351')
