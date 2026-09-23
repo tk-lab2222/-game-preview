@@ -85,10 +85,11 @@ function directStats344(m){
  m.stats=m.stats||{};
  for(const k of keys){
   const cur=Number(m.stats[k])||0;
-  if(cur>0)m.stats[k]=Math.min(cap344(),Math.max(cur+1,Math.round(cur*(1+pct))));
+  if(cur>0){const safeCap=Math.max(cap344(),cur);m.stats[k]=Math.min(safeCap,Math.max(cur+1,Math.round(cur*(1+pct))));}
   if(m.geneticBase226&&Number.isFinite(Number(m.geneticBase226[k]))){
    const v=Number(m.geneticBase226[k])||0;
-   m.geneticBase226[k]=Math.min(cap344(),Math.max(v+1,Math.round(v*(1+pct))));
+   const safeCap=Math.max(cap344(),v);
+   m.geneticBase226[k]=Math.min(safeCap,Math.max(v+1,Math.round(v*(1+pct))));
   }
  }
  m.starResonanceStatApplied344={grade:g,pct,keys:[...keys],at:Date.now()};
