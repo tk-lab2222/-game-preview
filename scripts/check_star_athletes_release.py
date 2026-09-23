@@ -40,6 +40,20 @@ for rel in loaded_js:
 if "patch-v326.js" not in text:
     errors.append("save recovery guard patch-v326.js is not loaded")
 
+# v0.32.42 made ability rank a single explicit chip and removed legacy
+# C/U/R/SR/SSR/UR/EX badges beside athlete names. Keep the cleanup connected so
+# old renderers cannot silently reintroduce duplicate/misleading rank labels.
+if "patch-v359.js" not in text:
+    errors.append("v0.32.42 name-rank cleanup patch-v359.js is not loaded")
+else:
+    cleanup = (GAME / "patch-v359.js")
+    if cleanup.is_file():
+        cleanup_src = cleanup.read_text(encoding="utf-8", errors="replace")
+        if "abilityRank340" not in cleanup_src or "athleteGrade340" not in cleanup_src:
+            errors.append("patch-v359.js no longer preserves explicit ability-rank chips")
+        if not re.search(r'\^\(C\|U\|R\|SR\|SSR\|UR\|EX\)\$', cleanup_src):
+            errors.append("patch-v359.js no longer targets the legacy rank badge set")
+
 if errors:
     print("STAR ATHLETES release guard: FAIL")
     for e in errors:
