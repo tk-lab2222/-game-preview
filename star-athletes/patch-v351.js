@@ -30,7 +30,7 @@ function card(m){
  return `<div class="shareCard351 ${g>=5?'godShare351':''}"><div class="sharePrism351"></div><div class="shareAurora351"></div><div class="shareSweep351"></div>
   <div class="shareStars351">${stars(m)} <span>${g>=5?'GOD STAR':'MY STAR'}</span></div>
   <div class="shareArt351">${art(m)}</div>
-  <div class="shareIdentity351"><small>STAR ATHLETES</small><h2>${m?.name||'MY STAR'}</h2><b>G${n(m?.gen)||n(m?.generation)||0} ・ ${m?.rarity||'C'}</b></div>
+  <div class="shareIdentity351"><small>STAR ATHLETES</small><h2>${m?.name||'MY STAR'}</h2><b>G${n(m?.gen)||n(m?.generation)||0} ・ 能力 ${m?.abilityRankFinal340||'未育成'}</b></div>
   <div class="shareTitles351">${[...ts,...tr].slice(0,5).map(x=>`<span>${x}</span>`).join('')}</div>
   <div class="shareStats351">${top.map(([k,v],i)=>`<div><small>#${i+1} ${k}</small><b>${v}</b></div>`).join('')}</div>
   <div class="shareFooter351"><b>MY STAR</b><span>#STARATHLETES</span></div>
