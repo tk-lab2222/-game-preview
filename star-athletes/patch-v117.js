@@ -59,7 +59,7 @@ function scoutReward117(){
   // First tournament guarantees one missing species; third guarantees the other.
   if(S.meetsDone!==1&&S.meetsDone!==3)return null;
   const sp=missing[Math.floor(Math.random()*missing.length)];
-  const m=monster(sp,SCOUT_NAMES[sp],0);m.origin='大会スカウト';m.rarity=S.meetsDone===1?'U':'R';m.shiny=Math.random()<SHINY_BASE;
+  const m=monster(sp,SCOUT_NAMES[sp],0);m.origin='大会スカウト';m.shiny=Math.random()<SHINY_BASE;
   S.lineage.push(m);
   return m;
 }
