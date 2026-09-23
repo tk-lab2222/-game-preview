@@ -47,7 +47,6 @@ function save233(){
  }catch(_){}
 }
 function all233(){const a=[],seen=new Set();for(const key of ['starters','nest','lineage','released','cands','foster'])for(const m of(S[key]||[]))if(m&&!seen.has(m.id)){seen.add(m.id);a.push(m)}if(S.egg&&!seen.has(S.egg.id))a.push(S.egg);return a}
-function rarityBonus233(m){try{return Math.max(0,R.indexOf(m.rarity))}catch(_){return 0}}
 function traitDist233(gen){
  const g=Math.max(0,Math.min(20,n233(gen)));
  const anchors=[
