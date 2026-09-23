@@ -33,7 +33,12 @@ function meta226(m){
 }
 function migrate226(){
  const seen=new Set();
- ['starters','nest','lineage','released','cands','foster'].forEach(key=>(S[key]||[]).forEach(m=>{if(m&&!seen.has(m.id)){seen.add(m.id);meta226(m)}}));
+ ['starters','nest','lineage','released','cands','foster'].forEach(key=>(S[key]||[]).forEach(m=>{
+   if(!m)return;
+   if(m.id!=null&&seen.has(m.id))return;
+   if(m.id!=null)seen.add(m.id);
+   meta226(m);
+ }));
  if(S.egg)meta226(S.egg);
  save226();
 }
