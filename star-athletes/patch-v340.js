@@ -65,7 +65,9 @@ function decorateSkillBadges340(){
     el.classList.remove('starSkill340','grade340-1','grade340-2','grade340-3','grade340-4','grade340-5');
     el.classList.add('starSkill340','grade340-'+g);
     el.dataset.grade340=meta.name;
-    el.title=`${meta.stars} ${meta.name}・${skillName340(id)}${el.title?'｜'+el.title:''}`;
+    if(el.dataset.baseTitle340===undefined)el.dataset.baseTitle340=el.getAttribute('title')||'';
+    const base=el.dataset.baseTitle340;
+    el.title=`${meta.stars} ${meta.name}・${skillName340(id)}${base?'｜'+base:''}`;
   });
   document.querySelectorAll('.skillLabelUnified254').forEach(el=>el.textContent='スキル');
   document.querySelectorAll('.hatchSkill254>small').forEach(el=>el.textContent='スキル');
