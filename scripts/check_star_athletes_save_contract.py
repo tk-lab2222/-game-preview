@@ -7,6 +7,7 @@ core_save = (ROOT / 'star-athletes/patch-v200.js').read_text(encoding='utf-8')
 recovery = (ROOT / 'star-athletes/patch-v326.js').read_text(encoding='utf-8')
 immediate = (ROOT / 'star-athletes/patch-v336.js').read_text(encoding='utf-8')
 growth = (ROOT / 'star-athletes/patch-v226.js').read_text(encoding='utf-8')
+pretest = (ROOT / 'star-athletes/patch-v352.js').read_text(encoding='utf-8')
 
 errors = []
 
@@ -19,9 +20,11 @@ def require(ok, message):
 pos200 = shell.find('patch-v200.js')
 pos326 = shell.find('patch-v326.js')
 pos336 = shell.find('patch-v336.js')
+pos352 = shell.find('patch-v352.js')
 require(pos200 >= 0, 'release shell is missing patch-v200.js authoritative save layer')
 require(pos326 >= 0, 'release shell is missing patch-v326.js save recovery')
 require(pos336 >= 0, 'release shell is missing patch-v336.js immediate persistence')
+require(pos352 >= 0, 'release shell is missing patch-v352.js playtest save protection')
 require(pos200 >= 0 and pos326 >= 0 and pos336 >= 0 and pos326 < pos200 < pos336,
         'save recovery must load before authoritative hydration, with immediate persistence last')
 
@@ -66,6 +69,20 @@ require('pagehide' in immediate and 'save336' in immediate,
 require("const SAVE336='star-athletes-save-v200'" in immediate,
         'immediate persistence must use the authoritative v200 save key')
 
+# v0.32.34 playtest protection must snapshot the exact authoritative save and restore
+# that exact payload. This protects a user's established lineage while testing the new
+# balance without introducing a second partial-state serialization contract.
+require("const SAVE='star-athletes-save-v200',SNAP='star-athletes-save-v200-prebalance-03234'" in pretest,
+        'playtest protection must snapshot the authoritative v200 save key')
+require("const raw=localStorage.getItem(SAVE);if(!valid352(raw))return false;" in pretest,
+        'playtest protection must reject a missing or malformed primary save')
+require("localStorage.setItem(SNAP,raw)" in pretest,
+        'playtest protection must preserve the complete raw authoritative save')
+require("localStorage.setItem(SAVE,raw);window.S=d.S;location.reload();return true" in pretest,
+        'playtest restore must replace both persistent and runtime state before reload')
+require('JSON.stringify({savedAt:Date.now(),S})' in pretest,
+        'v0.32.34 save helper must continue serializing the complete runtime S object')
+
 # "Load latest" may build a cache-busting URL dynamically (for example ?t=Date.now()).
 # Guard the actual destination path, and only enforce cache-generation equality when
 # the handler explicitly pins a numeric ?v= generation.
@@ -83,7 +100,7 @@ if replace_call:
                 f'latest reload cache generation {pinned.group(1)} does not match release {shell_cache.group(1)}')
 
 # Keep the no-broad-observer rule explicit in the save path too.
-for name, text in [('patch-v200.js', core_save), ('patch-v326.js', recovery), ('patch-v336.js', immediate)]:
+for name, text in [('patch-v200.js', core_save), ('patch-v326.js', recovery), ('patch-v336.js', immediate), ('patch-v352.js', pretest)]:
     require('new MutationObserver' not in text,
             f'{name} must not introduce MutationObserver-based persistence')
 
