@@ -15,7 +15,7 @@ function breedingCap(){
   if(S.localFirstWinCap||Number(S.leagueWins?.['ローカル'])>0)return 4;
   return 3;
 }
-const cap=()=>breedingCap(), poolCap=()=>Math.min(18,8+Math.floor(S.wins/2)), ri=x=>R.indexOf(x);
+const cap=()=>breedingCap(), poolCap=()=>Math.min(18,8+Math.floor(S.wins/2));
 function visual(sp){return{color:COL[rnd(0,6)],pattern:PAT[rnd(0,5)],acc:ACC[rnd(0,5)],part:PART[sp][rnd(0,3)]}}
 function monster(sp,name,gen=0){let st={};for(let k in SL)st[k]=90+rnd(-8,8)+(SP[sp][2][k]||0);return{id:crypto.randomUUID(),name,species:sp,gen,stats:st,personality:P[rnd(0,5)],visual:visual(sp),origin:'プレゼント',rivalCount:0}}
 function baby(a,b){let sp=Math.random()<.5?a.species:b.species,st={};for(let k in SL){let av=(a.stats[k]+b.stats[k])/2,hi=Math.max(a.stats[k],b.stats[k]);st[k]=Math.round(av*.78+hi*.22+rnd(-8,10)+(SP[sp][2][k]||0)*.2)}let v={};for(let k of ['color','pattern','acc','part'])v[k]=Math.random()<.48?a.visual[k]:Math.random()<.96?b.visual[k]:visual(sp)[k];return{id:crypto.randomUUID(),name:SP[sp][0].slice(0,2)+rnd(10,99),species:sp,gen:Math.max(a.gen,b.gen)+1,stats:st,personality:P[rnd(0,5)],visual:v,origin:a.name+'×'+b.name,rivalCount:0}}
