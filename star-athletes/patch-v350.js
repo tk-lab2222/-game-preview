@@ -150,19 +150,26 @@ document.addEventListener('click',e=>{
 // Replace old preview's initial card once it opens.
 let tries=0;const timer=setInterval(()=>{tries++;if(installPreview350()||tries>40)clearInterval(timer)},120);
 
-// Real god birth: after normal hatch/batch flow, detect newest god and play once.
+// Real god birth: snapshot the candidate pool before hatch/batch, then scan every newborn.
+// This also covers a God Star appearing in the middle of a multi-hatch.
 const played=new Set();
-function newestGod350(){
- const arr=S?.cands||[];const m=arr[arr.length-1];if(!m)return null;
- let g=1;try{g=Number(window.STAR_GRADE340?.athleteGrade?.(m)||1)}catch(_){}
- return g>=5?m:null;
-}
+let beforeIds350=new Set();
+function grade350(m){try{return Number(window.STAR_GRADE340?.athleteGrade?.(m)||1)}catch(_){return 1}}
+function snapshot350(){beforeIds350=new Set((S?.cands||[]).map(x=>x?.id).filter(Boolean))}
 function maybeReal350(batch=false){
+ const oldIds=new Set(beforeIds350);
  setTimeout(()=>{
-  const m=newestGod350();if(!m||played.has(m.id))return;
-  played.add(m.id);hatchCinematic350(m,{preview:false,batch});
- },220);
+  const newborn=(S?.cands||[]).filter(m=>m&&!oldIds.has(m.id));
+  const gods=newborn.filter(m=>grade350(m)>=5&&!played.has(m.id));
+  if(!gods.length)return;
+  const m=gods.sort((a,b)=>Math.max(...Object.values(b.stats||{}).map(Number))-Math.max(...Object.values(a.stats||{}).map(Number)))[0];
+  gods.forEach(x=>played.add(x.id));
+  hatchCinematic350(m,{preview:false,batch});
+ },320);
 }
+document.addEventListener('pointerdown',e=>{
+ if(e.target?.closest?.('#hatch,#batchGo260'))snapshot350();
+},true);
 document.addEventListener('click',e=>{
  if(e.target?.closest?.('#hatch'))maybeReal350(false);
  if(e.target?.closest?.('#batchGo260'))maybeReal350(true);
