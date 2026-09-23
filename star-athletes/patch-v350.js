@@ -91,12 +91,12 @@ async function hatchCinematic350(m,{preview=false,batch=false}={}){
  <div class="cinemaAthleteHost350"></div>`;
  document.body.appendChild(el);
  paint350();
- await sleep350(80);el.classList.add('phaseStorm350');
- await sleep350(700);el.classList.add('phaseDragon350');
- await sleep350(900);el.classList.add('phaseCrack350');
- await sleep350(700);el.classList.add('phaseFlash350');
- await sleep350(380);el.classList.add('phaseGod350');
- await sleep350(1050);
+ await sleep350(120);el.classList.add('phaseStorm350');
+ await sleep350(1050);el.classList.add('phaseDragon350');
+ await sleep350(1450);el.classList.add('phaseCrack350');
+ await sleep350(1050);el.classList.add('phaseFlash350');
+ await sleep350(520);el.classList.add('phaseGod350');
+ await sleep350(1550);
  el.querySelector('.cinemaAthleteHost350').innerHTML=athleteView350(m);
  paint350();
  el.classList.add('phaseAthlete350');
