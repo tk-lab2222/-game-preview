@@ -56,6 +56,27 @@ function highestSkill340(m){
   }
   return best;
 }
+function abilityRank340(m){
+ const vals=Object.values(m?.stats||{}).map(Number).filter(Number.isFinite);
+ if(!vals.length)return 'C';
+ const avg=vals.reduce((a,b)=>a+b,0)/vals.length,top=[...vals].sort((a,b)=>b-a).slice(0,2).reduce((a,b)=>a+b,0)/Math.min(2,vals.length);
+ // Blend all-round strength with specialist value; thresholds target the pre-LIMIT scenario.
+ const score=avg*.72+top*.28;
+ return score>=520?'EX':score>=430?'UR':score>=350?'SSR':score>=285?'SR':score>=225?'R':score>=170?'U':'C';
+}
+function abilityFinal340(m){return !!(m?.abilityRankFinal340||m?.developmentComplete340)}
+function displayAbilityRank340(m){
+ if(abilityFinal340(m))return m.abilityRankFinal340||abilityRank340(m);
+ if((S?.nest||[]).some(x=>x===m||x?.id===m?.id))return '育成中';
+ return '未育成';
+}
+function finalizeAbilityRanks340(list){
+ for(const m of(list||[])){
+  if(!m||m.abilityRankFinal340)continue;
+  m.abilityRankFinal340=abilityRank340(m);m.developmentComplete340=true;m.rarity=m.abilityRankFinal340;
+ }
+ try{localStorage.setItem('star-athletes-save-v200',JSON.stringify({savedAt:Date.now(),S}))}catch(_){}
+}
 function all340(){return [...(S?.starters||[]),...(S?.nest||[]),...(S?.lineage||[]),...(S?.cands||[]),...(S?.foster||[]),...(S?.released||[])].filter(Boolean)}
 function byId340(id){return all340().find(m=>m?.id===id)||null}
 
@@ -106,7 +127,10 @@ function decorateAthleteCards340(){
     const nm=card.querySelector('.nm')||card.querySelector('.bd')||card;
     const legacy=nm.querySelector('em');
     if(legacy&&/^(C|U|R|SR|SSR|UR|EX)$/.test((legacy.textContent||'').trim()))legacy.classList.add('legacyRarity340');
-    nm.appendChild(tag);
+    let ability=card.querySelector('.abilityRank340');
+    if(!ability){ability=document.createElement('span');ability.className='abilityRank340';}
+    const ar=displayAbilityRank340(m);ability.classList.toggle('pending340',ar==='育成中'||ar==='未育成');ability.textContent='能力 '+ar;
+    nm.append(tag,ability);
   });
 }
 
@@ -131,6 +155,8 @@ window.STAR_GRADE340={
   visualGrade:visualGrade340,
   specialGrade:specialGrade340,
   highestSkill:highestSkill340,
+  abilityRank:abilityRank340,
+  finalizeAbilityRanks:finalizeAbilityRanks340,
   sync:sync340
 };
 
@@ -161,7 +187,7 @@ css.textContent=`
 .skillSummary340.grade340-5{background:linear-gradient(90deg,#fff4bd,#efe4ff,#e2fbff)!important;border-color:#b49a53!important;box-shadow:0 0 8px #b28cff44!important}
 
 /* General cards only show the highest overall star grade; details stay in detail screens. */
-.legacyRarity340{display:none!important}.athleteGrade340{display:inline-flex;margin-left:auto;padding:3px 7px;border-radius:999px;font-size:6px;font-weight:1000;vertical-align:middle;white-space:nowrap;letter-spacing:.02em}.athleteGrade340.grade340-1{background:#f5f5f5;color:#666;border:1px solid #cfd3d8}.athleteGrade340.grade340-2{background:linear-gradient(90deg,#e8f4ff,#eef0ff);color:#496078;border:1px solid #9fb7cf}
+.legacyRarity340{display:none!important}.abilityRank340{display:inline-flex;margin-left:4px;padding:3px 6px;border-radius:999px;background:#26384b;color:#fff;font-size:6px;font-weight:1000;white-space:nowrap}.abilityRank340.pending340{background:#eef2f5;color:#71808d;border:1px solid #ccd5dd}.athleteGrade340{display:inline-flex;margin-left:auto;padding:3px 7px;border-radius:999px;font-size:6px;font-weight:1000;vertical-align:middle;white-space:nowrap;letter-spacing:.02em}.athleteGrade340.grade340-1{background:#f5f5f5;color:#666;border:1px solid #cfd3d8}.athleteGrade340.grade340-2{background:linear-gradient(90deg,#e8f4ff,#eef0ff);color:#496078;border:1px solid #9fb7cf}
 .athleteGrade340.grade340-3{background:#fff2bd;color:#755600;border:1px solid #d5b444}
 .athleteGrade340.grade340-4{background:linear-gradient(90deg,#e5f7ff,#f1e5ff);color:#59437c;border:1px solid #a98ac8}
 .athleteGrade340.grade340-5{background:linear-gradient(90deg,#fff0a8,#eadfff,#d9faff);color:#422e62;border:1px solid #b38c47;box-shadow:0 0 8px #9b79ff55}
