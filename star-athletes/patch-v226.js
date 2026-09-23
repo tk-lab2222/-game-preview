@@ -57,9 +57,9 @@ function heritageRate226(a,b){
   }catch(_){}
   return Math.min(.45,base+bonus);
 }
-function inherited226(m,k,rate=.35){meta226(m);return n226(m.geneticBase226[k])+acquired226(m,k)*rate}
+function inherited226(m,k,rate=.42){meta226(m);return n226(m.geneticBase226[k])+acquired226(m,k)*rate}
 
-// Children inherit the stable bloodline plus 35% of the parents' earned growth.
+// Children inherit the stable bloodline plus 42% of earned growth so ordinary bloodlines keep advancing without rare rolls.
 // The old baby() still owns species, rarity, looks and cute-name wrappers.
 try{
  const beforeBaby226=baby;
