@@ -26,7 +26,6 @@ for name in required:
     if 'MutationObserver' in text:
         fail(f'{name} must not introduce MutationObserver')
 
-# These systems mutate monster state and therefore must keep using the canonical full-state save.
 for n in (342, 343, 344, 345, 346, 347):
     text = (PATCH_DIR / f'patch-v{n}.js').read_text(encoding='utf-8')
     if 'star-athletes-save-v200' not in text:
@@ -42,7 +41,6 @@ if p347.count('m.skills233.length<6') < 2:
 
 # Resonance direct-stat application is a one-time migration. The applied marker must be
 # checked before any stat mutation, set after mutation, and immediately persisted by sync344.
-# Otherwise a save/reload can repeatedly compound the 4%/8% direct-stat bonus.
 direct_start = p344.find('function directStats344')
 direct_guard = p344.find('if(!m||m.starResonanceStatApplied344)return false;', direct_start)
 first_stat_write = p344.find('m.stats[k]=', direct_start)
@@ -59,21 +57,21 @@ if not (sync_start < res_save):
     fail('patch-v344 sync must immediately save one-time resonance stat markers')
 
 # LIMIT RELEASE can raise the live cap above 999. Resonance must use that dynamic cap for
-# both visible stats and geneticBase; a hard-coded 999 here would silently erase late-game growth.
+# both visible stats and geneticBase. It must also never lower an already-over-cap legacy
+# value when the restored LIMIT RELEASE state temporarily reports a smaller cap.
 if 'Math.max(999,Number(window.STAR_LIMIT278?.cap?.())||999)' not in p344:
     fail('patch-v344 LIMIT RELEASE compatibility missing: dynamic cap resolver')
-visible_ok = ('m.stats[k]=Math.min(cap344()' in p344 or
-              ('const safeCap=Math.max(cap344(),cur);' in p344 and 'm.stats[k]=Math.min(safeCap' in p344))
-genetic_ok = ('m.geneticBase226[k]=Math.min(cap344()' in p344 or
-              ('const safeCap=Math.max(cap344(),v);' in p344 and 'm.geneticBase226[k]=Math.min(safeCap' in p344))
-if not visible_ok:
-    fail('patch-v344 LIMIT RELEASE compatibility missing: visible stats must respect dynamic cap without truncating legacy values')
-if not genetic_ok:
-    fail('patch-v344 LIMIT RELEASE compatibility missing: geneticBase must respect dynamic cap without truncating legacy values')
+for token, label in (
+    ('const safeCap=Math.max(cap344(),cur);', 'visible stats'),
+    ('m.stats[k]=Math.min(safeCap,Math.max(cur+1,Math.round(cur*(1+pct))));', 'visible stats write'),
+    ('const safeCap=Math.max(cap344(),v);', 'geneticBase'),
+    ('m.geneticBase226[k]=Math.min(safeCap,Math.max(v+1,Math.round(v*(1+pct))));', 'geneticBase write'),
+):
+    if token not in p344:
+        fail(f'patch-v344 must preserve existing over-cap {label} during resonance migration')
 
 # The rolled marker is the reload-idempotence boundary: it must be checked before any
-# RNG and saved inside the canonical full-state payload after migration. This prevents
-# an eligible athlete from receiving a second upper-rarity roll after save/reload.
+# RNG and saved inside the canonical full-state payload after migration.
 ensure_start = p347.find('function ensure347')
 marker_guard = p347.find('if(m.rareSkillRolled347)return m;', ensure_start)
 first_rng = p347.find('Math.random()', ensure_start)
@@ -87,8 +85,6 @@ if "JSON.stringify({savedAt:Date.now(),S})" not in p347:
 if 'if(changed)save347();' not in p347:
     fail('patch-v347 migration must save immediately after assigning one-time roll markers')
 
-# Migration must cover every athlete pool used by the resonance system. Otherwise an
-# eligible archived/released/foster athlete can skip the one-time roll after reload.
 for pool in ('starters', 'nest', 'lineage', 'released', 'cands', 'foster'):
     if f"'{pool}'" not in p347:
         fail(f'patch-v347 migration must cover {pool}')
@@ -97,8 +93,6 @@ if 'S?.egg' not in p347:
 if 'seen=new Set()' not in p347:
     fail('patch-v347 migration must deduplicate athletes before one-time rolls')
 
-# Legacy/imported athletes can exist without an id. They must not collapse into the
-# same Set(undefined) entry, or only the first such athlete receives resonance/skill migration.
 idless_contract = 'm.id==null||!seen.has(m.id)'
 for name, text in (('patch-v344.js', p344), ('patch-v347.js', p347)):
     if idless_contract not in text or 'if(m.id!=null)seen.add(m.id)' not in text:
