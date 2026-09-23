@@ -5,11 +5,11 @@
 const SAVE263='star-athletes-save-v200',ROSTER263='star-athletes-active-roster-v210';
 const KEYS263=['power','speed','stamina','agility','tech','guts'];
 const TRAIN263={
-  speed:{name:'星駆けダッシュ',gain:{speed:4,agility:2}},
-  power:{name:'メテオクラッシュ',gain:{power:4,guts:2}},
-  tech:{name:'スタートリック',gain:{tech:4,agility:2}},
-  stamina:{name:'エンドレスロード',gain:{stamina:4,guts:2}},
-  team:{name:'スターリンク',gain:{guts:3,tech:3}}
+  speed:{name:'星駆けダッシュ',gain:{speed:5,agility:3}},
+  power:{name:'メテオクラッシュ',gain:{power:5,guts:3}},
+  tech:{name:'スタートリック',gain:{tech:5,agility:3}},
+  stamina:{name:'エンドレスロード',gain:{stamina:5,guts:3}},
+  team:{name:'スターリンク',gain:{guts:4,tech:4}}
 };
 const INT263={
   safe:{label:'安全',icon:'🛡️',desc:'伸び小・失敗ほぼなし'},
