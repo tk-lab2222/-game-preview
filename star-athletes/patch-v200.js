@@ -81,7 +81,7 @@ function ensureSpecialShop200(){
   let sp=document.getElementById('specialShop200');
   if(!sp){sp=document.createElement('div');sp.id='specialShop200';sp.className='specialShop200';shop.appendChild(sp)}
   const target=S.nest?.[0];
-  sp.innerHTML=`<div class="specialTitle200"><b>✨ SPECIAL</b><span>大会後のもう一手</span></div><div class="specialGrid200"><button data-special200="lucky" ${(S.coins||0)<900?'disabled':''}><b>🍀 ラッキーチャーム</b><small>次の子のレア度を1段階UP</small><em>🪙 900</em></button><button data-special200="condition" ${(S.coins||0)<500||!target?'disabled':''}><b>🥤 コンディションドリンク</b><small>${target?target.name:'育成メンバー'} 全能力+3</small><em>🪙 500</em></button><button data-special200="scout" ${(S.coins||0)<700?'disabled':''}><b>🔭 スカウトパス</b><small>血統候補を1体スカウト</small><em>🪙 700</em></button></div><div class="specialStock200">所持効果：🍀 ${S.specialShop.lucky||0}</div>`;
+  sp.innerHTML=`<div class="specialTitle200"><b>✨ SPECIAL</b><span>大会後のもう一手</span></div><div class="specialGrid200"><button data-special200="lucky" ${(S.coins||0)<900?'disabled':''}><b>🍀 ラッキーチャーム</b><small>次の子の星格抽選を強化</small><em>🪙 900</em></button><button data-special200="condition" ${(S.coins||0)<500||!target?'disabled':''}><b>🥤 コンディションドリンク</b><small>${target?target.name:'育成メンバー'} 全能力+3</small><em>🪙 500</em></button><button data-special200="scout" ${(S.coins||0)<700?'disabled':''}><b>🔭 スカウトパス</b><small>血統候補を1体スカウト</small><em>🪙 700</em></button></div><div class="specialStock200">所持効果：🍀 ${S.specialShop.lucky||0}</div>`;
   sp.querySelectorAll('[data-special200]').forEach(b=>b.onclick=()=>buySpecial200(b.dataset.special200));
 }
 function spend200(n){if((S.coins||0)<n)return false;S.coins-=n;S.totalSpent+=n;return true}
@@ -101,7 +101,7 @@ try{
   const babyBefore200=baby;
   baby=function(a,b){
     const c=babyBefore200(a,b);init200();
-    if((S.specialShop.lucky||0)>0){const i=R.indexOf(c.rarity);c.rarity=R[Math.min(R.length-1,i+1)];S.specialShop.lucky--;}
+    if((S.specialShop.lucky||0)>0){c.starLuck200=(Number(c.starLuck200)||0)+1;S.specialShop.lucky--;}
     return c;
   };
 }catch(e){console.warn('baby wrapper 200',e)}
@@ -122,8 +122,8 @@ function ensureHistory200(){
   const dex=document.getElementById('dex');if(!dex)return;
   let box=document.getElementById('history200');if(!box){box=document.createElement('div');box.id='history200';box.className='box history200';dex.appendChild(box)}
   const hist=(S.seasonHistory||[]).slice(-8).reverse();
-  const pool=breederPool(),species=[...new Set(pool.map(x=>x.species))].length,shiny=pool.filter(x=>x.shiny).length,bestR=pool.reduce((a,m)=>Math.max(a,R.indexOf(m.rarity)),0);
-  box.innerHTML=`<h3>📚 ネスト記録</h3><div class="dexSummary200"><span>種族 <b>${species}/4</b></span><span>色違い <b>${shiny}</b></span><span>最高レア <b>${R[bestR]||'C'}</b></span><span>配合 <b>${S.breedCount||0}</b></span></div><div class="historyList200">${hist.length?hist.map(h=>`<div><b>S${h.season} ${h.name}</b><span>総合${h.overall}位 / ${h.points}pt</span><em>🪙+${h.coins} ⭐+${h.fame}</em></div>`).join(''):'<small>大会記録はまだありません。</small>'}</div><div class="saveRow200"><button id="saveNow200">💾 セーブ</button></div>`;
+  const pool=breederPool(),species=[...new Set(pool.map(x=>x.species))].length,shiny=pool.filter(x=>x.shiny).length,bestR=pool.reduce((a,m)=>Math.max(a,Number(window.STAR_GRADE340?.athleteGrade?.(m)||1)),1),bestG=window.STAR_GRADE340?.grades?.[bestR];
+  box.innerHTML=`<h3>📚 ネスト記録</h3><div class="dexSummary200"><span>種族 <b>${species}/4</b></span><span>色違い <b>${shiny}</b></span><span>最高星格 <b>${bestG?.stars||'★'} ${bestG?.name||'通常'}</b></span><span>配合 <b>${S.breedCount||0}</b></span></div><div class="historyList200">${hist.length?hist.map(h=>`<div><b>S${h.season} ${h.name}</b><span>総合${h.overall}位 / ${h.points}pt</span><em>🪙+${h.coins} ⭐+${h.fame}</em></div>`).join(''):'<small>大会記録はまだありません。</small>'}</div><div class="saveRow200"><button id="saveNow200">💾 セーブ</button></div>`;
   box.querySelector('#saveNow200').onclick=()=>{save200();box.querySelector('#saveNow200').textContent='✅ 保存しました'};
 }
 function decorateBreed200(){
