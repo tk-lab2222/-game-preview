@@ -6,6 +6,7 @@ shell = (ROOT / 'star-athletes-v112/index.html').read_text(encoding='utf-8')
 core_save = (ROOT / 'star-athletes/patch-v200.js').read_text(encoding='utf-8')
 recovery = (ROOT / 'star-athletes/patch-v326.js').read_text(encoding='utf-8')
 immediate = (ROOT / 'star-athletes/patch-v336.js').read_text(encoding='utf-8')
+growth = (ROOT / 'star-athletes/patch-v226.js').read_text(encoding='utf-8')
 
 errors = []
 
@@ -45,6 +46,16 @@ require("window.S=d.S" in recovery,
         'recovery must restore runtime state as well as localStorage')
 require("typeof d.S==='object'&&!Array.isArray(d.S)" in recovery,
         'recovery must reject array-shaped state instead of treating it as a valid save object')
+
+# Growth migration must initialize every legacy ID-less athlete. Using undefined as a
+# Set key would silently skip the second and later ID-less athlete, leaving inheritance
+# metadata absent and making progression depend on roster order.
+require('if(m.id!=null&&seen.has(m.id))return;' in growth,
+        'growth migration must deduplicate only athletes that actually have an id')
+require('if(m.id!=null)seen.add(m.id);' in growth,
+        'growth migration must not add undefined ID-less athletes to the dedupe Set')
+require('meta226(m);' in growth,
+        'growth migration must initialize inheritance metadata after ID-aware dedupe')
 
 # Core select changes do not necessarily render; they must persist independently.
 selector = 'select[data-plan],select[data-a],select[data-s]'
