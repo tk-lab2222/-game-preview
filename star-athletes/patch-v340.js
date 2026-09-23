@@ -74,7 +74,7 @@ function displayAbilityRank340(m){
 function finalizeAbilityRanks340(list){
  for(const m of(list||[])){
   if(!m||m.abilityRankFinal340)continue;
-  m.abilityRankFinal340=abilityRank340(m);m.developmentComplete340=true;m.rarity=m.abilityRankFinal340;
+  m.abilityRankFinal340=abilityRank340(m);m.developmentComplete340=true;
  }
  try{localStorage.setItem('star-athletes-save-v200',JSON.stringify({savedAt:Date.now(),S}))}catch(_){}
 }
