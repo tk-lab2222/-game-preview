@@ -100,7 +100,6 @@ function decorateAthleteCards340(){
     card.querySelector('.athleteGrade340')?.remove();
     if(!m)return;
     const g=athleteGrade340(m);
-    if(g<3)return;
     const meta=grade340(g),tag=document.createElement('div');
     tag.className='athleteGrade340 grade340-'+g;
     tag.textContent=`${meta.stars} ${meta.name}`;
@@ -159,7 +158,7 @@ css.textContent=`
 .skillSummary340.grade340-5{background:linear-gradient(90deg,#fff4bd,#efe4ff,#e2fbff)!important;border-color:#b49a53!important;box-shadow:0 0 8px #b28cff44!important}
 
 /* General cards only show the highest overall star grade; details stay in detail screens. */
-.athleteGrade340{display:inline-flex;margin-left:5px;padding:2px 5px;border-radius:999px;font-size:6px;font-weight:1000;vertical-align:middle;white-space:nowrap}
+.athleteGrade340{display:inline-flex;margin-left:5px;padding:2px 5px;border-radius:999px;font-size:6px;font-weight:1000;vertical-align:middle;white-space:nowrap}.athleteGrade340.grade340-1{background:#f5f5f5;color:#666;border:1px solid #cfd3d8}.athleteGrade340.grade340-2{background:linear-gradient(90deg,#e8f4ff,#eef0ff);color:#496078;border:1px solid #9fb7cf}
 .athleteGrade340.grade340-3{background:#fff2bd;color:#755600;border:1px solid #d5b444}
 .athleteGrade340.grade340-4{background:linear-gradient(90deg,#e5f7ff,#f1e5ff);color:#59437c;border:1px solid #a98ac8}
 .athleteGrade340.grade340-5{background:linear-gradient(90deg,#fff0a8,#eadfff,#d9faff);color:#422e62;border:1px solid #b38c47;box-shadow:0 0 8px #9b79ff55}
