@@ -59,25 +59,21 @@ function floor253(m){
 }
 function persist253(){try{localStorage.setItem(SAVE253,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}try{if(Array.isArray(S.nest)&&S.nest.length===3)localStorage.setItem(ROSTER253,JSON.stringify(S.nest))}catch(_){}}
 function finalizeNewborn253(c){
- if(!c?.stats)return c;
- const q=quality253(c),old=c.rarity;c.rarity=rarityFrom253(q.score,c.gen);
- floor253(c);
- c.rarityPotential253={score:Math.round(q.score),rawAvg:Math.round(q.av),oldRarity:old,model:'potential-v3-gen-curve',thresholds:thresholds253(c.gen)};
- // v0.25.2's old flat-bonus marker is obsolete for newly generated athletes.
- delete c.rarityStat252;
+ // Legacy compatibility only: C/U/R/SR/SSR/UR/EX is no longer a birth rarity.
+ // Ability rank is finalized after development by STAR_GRADE340.
+ if(!c)return c;
+ if(!c.abilityRankFinal340)c.rarity='C';
+ delete c.rarityPotential253;delete c.rarityStat252;
  return c;
 }
 try{const beforeBaby253=baby;baby=function(a,b){const c=beforeBaby253(a,b);return finalizeNewborn253(c)}}catch(e){console.warn('baby253',e)}
 function migrateExisting253(){
  let changed=false;
  for(const m of all253()){
-   if(!m?.stats)continue;
-   const before=avg253(m);
-   if(floor253(m))changed=true;
-   if(!m.rarityPotential253||m.rarityPotential253.model!=='potential-v3-gen-curve'){
-     m.rarityPotential253={...(m.rarityPotential253||{}),score:m.rarityPotential253?.score??null,rawAvg:Math.round(before),legacy:true,model:'potential-v3-gen-curve',thresholds:thresholds253(m.gen)};
-     changed=true;
-   }
+  if(!m)continue;
+  if(m.rarityPotential253){delete m.rarityPotential253;changed=true}
+  if(m.rarityStat252){delete m.rarityStat252;changed=true}
+  if(!m.abilityRankFinal340&&m.rarity!=='C'){m.rarity='C';changed=true}
  }
  if(changed)persist253();
 }
