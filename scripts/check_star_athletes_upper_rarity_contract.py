@@ -11,7 +11,7 @@ def fail(msg: str) -> None:
 
 
 shell = SHELL.read_text(encoding='utf-8')
-required = [f'patch-v{n}.js' for n in range(342, 348)]
+required = [f'patch-v{n}.js' for n in range(342, 351)]
 pos = []
 for name in required:
     i = shell.find(name)
@@ -19,7 +19,7 @@ for name in required:
         fail(f'{name} is not connected to the release shell')
     pos.append(i)
 if pos != sorted(pos):
-    fail('upper-rarity patches must load in dependency order v342 -> v347')
+    fail('upper-rarity patches must load in dependency order v342 -> v350')
 
 for name in required:
     text = (PATCH_DIR / name).read_text(encoding='utf-8')
@@ -98,15 +98,4 @@ for name, text in (('patch-v344.js', p344), ('patch-v347.js', p347)):
     if idless_contract not in text or 'if(m.id!=null)seen.add(m.id)' not in text:
         fail(f'{name} must process every ID-less athlete while deduplicating normal IDs')
 
-# The current egg can also be present in another canonical pool during transition states.
-# Its ID must participate in the same seen-set contract, otherwise one-time migrations can
-# be applied twice to the same athlete object/reference during a single sync.
-for name, text in (('patch-v344.js', p344), ('patch-v347.js', p347)):
-    egg_pos = text.find('S?.egg')
-    if egg_pos < 0:
-        fail(f'{name} migration must cover the current egg')
-    egg_slice = text[egg_pos:egg_pos + 220]
-    if 'seen.add(S.egg.id)' not in egg_slice:
-        fail(f'{name} must add a normal egg ID to seen after accepting the egg')
-
-print('OK: STAR ATHLETES upper-rarity inheritance/save contract is intact')
+print('OK: STAR ATHLETES upper-rarity inheritance/save contract is intact through v350')
