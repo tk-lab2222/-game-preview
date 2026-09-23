@@ -74,7 +74,7 @@ const css=document.createElement('style');
 css.id='starGodStyle349css';
 css.textContent=`
 .godStageHost349{position:relative;overflow:visible;min-height:210px;display:flex;align-items:flex-end;justify-content:center;isolation:isolate}
-.godFigure349{position:relative!important;z-index:6!important;transform:scale(1.12);transform-origin:center bottom;filter:drop-shadow(0 0 8px rgba(255,255,255,.95)) drop-shadow(0 0 18px rgba(255,226,107,.75)) drop-shadow(0 0 30px rgba(169,120,255,.65));animation:godFigureFloat349 3.2s ease-in-out infinite}
+.godFigure349{position:relative!important;z-index:6!important;transform:scale(1.12);transform-origin:center bottom;filter:drop-shadow(0 0 8px rgba(255,255,255,.95)) drop-shadow(0 0 18px rgba(255,226,107,.75)) drop-shadow(0 0 30px rgba(169,120,255,.65))}
 .godBackHalo349,.godOrbitRing349,.godConstellation349,.godPedestal349,.godSparkField349{position:absolute;inset:auto;pointer-events:none}
 .godBackHalo349{z-index:1;width:220px;height:220px;top:8px;left:50%;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,253,200,.95) 0%,rgba(233,249,255,.72) 26%,rgba(240,226,255,.38) 48%,rgba(255,255,255,0) 72%);filter:blur(4px)}
 .godOrbitRing349{z-index:2;width:240px;height:240px;top:0;left:50%;transform:translateX(-50%);border-radius:50%;border:2px solid rgba(255,227,110,.55);box-shadow:0 0 18px rgba(255,227,110,.45),inset 0 0 18px rgba(255,255,255,.28);animation:godRotate349 16s linear infinite}
@@ -92,9 +92,8 @@ css.textContent=`
 .godTraitChip349{display:inline-flex;align-items:center;justify-content:center;min-height:24px;padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:linear-gradient(90deg,rgba(255,240,165,.25),rgba(226,216,255,.22),rgba(219,248,255,.20));color:#fff;font-size:7px;font-weight:900;letter-spacing:.04em;box-shadow:0 0 8px rgba(169,120,255,.18),inset 0 0 10px rgba(255,255,255,.08)}
 .godBirthUpgraded349{position:relative}.godBirthUpgraded349 .avatar,.godBirthUpgraded349 .bigArt,.godMyStarUpgraded349 .myStarAvatar323,.godMyStarUpgraded349 .avatar,.godMyStarUpgraded349 .bigArt{transform:scale(1.12)}
 .godMyStarUpgraded349{overflow:hidden}.godMyStarUpgraded349 .godTraitRail349{margin-top:8px}
-.godMiniStage349{min-height:110px}.godMiniStage349 .godBackHalo349{width:110px;height:110px;top:6px}.godMiniStage349 .godOrbitRing349{width:122px;height:122px;top:2px}.godMiniStage349 .godConstellation349{width:126px;height:126px}.godMiniStage349 .godPedestal349{width:90px;height:24px;bottom:6px}.godMiniStage349 .godFigure349{animation:godMiniFloat349 3.2s ease-in-out infinite}@keyframes godMiniFloat349{0%,100%{transform:translateY(0) scale(1.05)}50%{transform:translateY(-3px) scale(1.05)}}
+.godMiniStage349{min-height:110px}.godMiniStage349 .godBackHalo349{width:110px;height:110px;top:6px}.godMiniStage349 .godOrbitRing349{width:122px;height:122px;top:2px}.godMiniStage349 .godConstellation349{width:126px;height:126px}.godMiniStage349 .godPedestal349{width:90px;height:24px;bottom:6px}.godMiniStage349 .godFigure349{transform:scale(1.05)}
 @keyframes godRotate349{from{transform:translateX(-50%) rotate(0)}to{transform:translateX(-50%) rotate(360deg)}}
-@keyframes godFigureFloat349{0%,100%{transform:translateY(0) scale(1.12)}50%{transform:translateY(-6px) scale(1.12)}}
 @keyframes godPulse349{0%,100%{opacity:.55;transform:translateX(-50%) scale(1)}50%{opacity:.85;transform:translateX(-50%) scale(1.03)}}
 @keyframes godSpark349{from{transform:translateY(0);opacity:.45}50%{opacity:.75}to{transform:translateY(-8px);opacity:.45}}
 @media(max-width:480px){.godHeroCard349 .godPreviewArt348{height:220px!important;min-height:220px!important}.godBackHalo349{width:190px;height:190px}.godOrbitRing349{width:208px;height:208px}.godConstellation349{width:214px;height:214px}.godPedestal349{width:156px}.godCenterName349 b{font-size:18px}}
