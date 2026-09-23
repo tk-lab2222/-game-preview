@@ -103,7 +103,7 @@ function badge274(){
   const u=m.ultraRare274,c=u.chance,p=c<.00001?(c*100).toFixed(5):c<.001?(c*100).toFixed(3):(c*100).toFixed(2);
   const bp=(Number(u.base)||0)*100,bpTxt=bp<.001?bp.toFixed(4):bp<.1?bp.toFixed(3):bp.toFixed(2);
   const mult=Number(u.mult)||1,strength=strength274(m,true),label=strengthLabel274(strength),fx=effects274(m);
-  b.innerHTML=`<b>✧ 特殊誕生 ${u.name}</b><small>基礎 ${bpTxt}% × 補正 ${mult.toFixed(mult%1?2:1)} = ${p}%</small><em>血統強度 ${strength}/130｜${label}</em>${fx.length?`<i>${fx[0].label} ${fx[0].value}</i>`:''}`;
+  b.innerHTML=`<b>✧ 個体特性・${u.name}</b><small>基礎 ${bpTxt}% × 補正 ${mult.toFixed(mult%1?2:1)} = ${p}%</small><em>血統強度 ${strength}/130｜${label}</em>${fx.length?`<i>${fx[0].label} ${fx[0].value}</i>`:''}`;
  });
 }
 function late274(){try{badge274()}catch(e){console.warn('badge274',e)}}
