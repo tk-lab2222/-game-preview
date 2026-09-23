@@ -60,13 +60,16 @@ if not (sync_start < res_save):
 
 # LIMIT RELEASE can raise the live cap above 999. Resonance must use that dynamic cap for
 # both visible stats and geneticBase; a hard-coded 999 here would silently erase late-game growth.
-for token in (
-    'Math.max(999,Number(window.STAR_LIMIT278?.cap?.())||999)',
-    'm.stats[k]=Math.min(cap344()',
-    'm.geneticBase226[k]=Math.min(cap344()',
-):
-    if token not in p344:
-        fail(f'patch-v344 LIMIT RELEASE compatibility missing: {token}')
+if 'Math.max(999,Number(window.STAR_LIMIT278?.cap?.())||999)' not in p344:
+    fail('patch-v344 LIMIT RELEASE compatibility missing: dynamic cap resolver')
+visible_ok = ('m.stats[k]=Math.min(cap344()' in p344 or
+              ('const safeCap=Math.max(cap344(),cur);' in p344 and 'm.stats[k]=Math.min(safeCap' in p344))
+genetic_ok = ('m.geneticBase226[k]=Math.min(cap344()' in p344 or
+              ('const safeCap=Math.max(cap344(),v);' in p344 and 'm.geneticBase226[k]=Math.min(safeCap' in p344))
+if not visible_ok:
+    fail('patch-v344 LIMIT RELEASE compatibility missing: visible stats must respect dynamic cap without truncating legacy values')
+if not genetic_ok:
+    fail('patch-v344 LIMIT RELEASE compatibility missing: geneticBase must respect dynamic cap without truncating legacy values')
 
 # The rolled marker is the reload-idempotence boundary: it must be checked before any
 # RNG and saved inside the canonical full-state payload after migration. This prevents
