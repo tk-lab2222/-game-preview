@@ -153,17 +153,26 @@ let tries=0;const timer=setInterval(()=>{tries++;if(installPreview350()||tries>4
 // Real god birth: snapshot the candidate pool before hatch/batch, then scan every newborn.
 // This also covers a God Star appearing in the middle of a multi-hatch.
 const played=new Set();
-let beforeIds350=new Set();
+let beforeRefs350=new Set(),beforeIds350=new Set(),beforeLen350=0;
 function grade350(m){try{return Number(window.STAR_GRADE340?.athleteGrade?.(m)||1)}catch(_){return 1}}
-function snapshot350(){beforeIds350=new Set((S?.cands||[]).map(x=>x?.id).filter(Boolean))}
+function key350(m,i=0){
+ if(m?.id)return 'id:'+m.id;
+ const st=Object.values(m?.stats||{}).map(v=>Number(v)||0).join(',');
+ return 'anon:'+[m?.name||'',m?.species||'',m?.gen||m?.generation||'',m?.bornAt||m?.createdAt||'',st,i].join('|');
+}
+function snapshot350(){
+ const arr=S?.cands||[];beforeRefs350=new Set(arr);beforeIds350=new Set(arr.map(x=>x?.id).filter(Boolean));beforeLen350=arr.length;
+}
 function maybeReal350(batch=false){
- const oldIds=new Set(beforeIds350);
+ const oldRefs=new Set(beforeRefs350),oldIds=new Set(beforeIds350),oldLen=beforeLen350;
  setTimeout(()=>{
-  const newborn=(S?.cands||[]).filter(m=>m&&!oldIds.has(m.id));
-  const gods=newborn.filter(m=>grade350(m)>=5&&!played.has(m.id));
+  const arr=S?.cands||[];
+  let newborn=arr.filter((m,i)=>m&&!oldRefs.has(m)&&(!m.id||!oldIds.has(m.id)));
+  if(!newborn.length&&arr.length>oldLen)newborn=arr.slice(oldLen);
+  const gods=newborn.filter((m,i)=>grade350(m)>=5&&!played.has(key350(m,i)));
   if(!gods.length)return;
   const m=gods.sort((a,b)=>Math.max(...Object.values(b.stats||{}).map(Number))-Math.max(...Object.values(a.stats||{}).map(Number)))[0];
-  gods.forEach(x=>played.add(x.id));
+  gods.forEach((x,i)=>played.add(key350(x,i)));
   hatchCinematic350(m,{preview:false,batch});
  },320);
 }
