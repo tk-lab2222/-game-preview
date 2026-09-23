@@ -68,12 +68,13 @@ try{
    const c=beforeBaby226(a,b);meta226(c);
    const rate=heritageRate226(a,b);
    c.abilityInheritanceRate226=rate;
-   const ri=Math.max(0,typeof R!=='undefined'?R.indexOf(c.rarity):0);
+   // Ability rank is now an outcome of development, not a birth-stat bonus.
+   // Keep species identity and bloodline inheritance, but remove legacy C–EX stat inflation.
    const bias=(typeof SP!=='undefined'&&SP[c.species]&&SP[c.species][2])?SP[c.species][2]:{};
    K226.forEach(k=>{
      const av=(inherited226(a,k,rate)+inherited226(b,k,rate))/2;
      const hi=Math.max(inherited226(a,k,rate),inherited226(b,k,rate));
-     const val=Math.round(av*.75+hi*.25+rnd226(-3,5)+n226(bias[k])*.08+ri*1.5);
+     const val=Math.round(av*.75+hi*.25+rnd226(-2,6)+n226(bias[k])*.08+2);
      c.stats[k]=clamp226(val,40,cap226());
    });
    c.geneticBase226={};c.trainingGain226={};c.matchGain226={};
