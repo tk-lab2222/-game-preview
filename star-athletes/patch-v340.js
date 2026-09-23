@@ -44,9 +44,8 @@ function specialGrade340(m){
   return 1;
 }
 function athleteGrade340(m){
-  let g=Math.max(visualGrade340(m),specialGrade340(m),Number(window.STAR_PATTERN342?.grade?.(m)||1),Number(window.STAR_BODY343?.grade?.(m)||1),Number(window.STAR_RESONANCE344?.grade?.(m)||1));
-  for(const id of(m?.skills233||[]))g=Math.max(g,skillGrade340(id));
-  return g;
+  // Star grade is an innate birth trait. Acquired skills must never raise it after training.
+  return Math.max(visualGrade340(m),specialGrade340(m),Number(window.STAR_PATTERN342?.grade?.(m)||1),Number(window.STAR_BODY343?.grade?.(m)||1),Number(window.STAR_RESONANCE344?.grade?.(m)||1));
 }
 function highestSkill340(m){
   let best=null;
