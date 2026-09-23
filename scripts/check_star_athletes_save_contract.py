@@ -9,6 +9,7 @@ immediate = (ROOT / 'star-athletes/patch-v336.js').read_text(encoding='utf-8')
 growth = (ROOT / 'star-athletes/patch-v226.js').read_text(encoding='utf-8')
 pretest = (ROOT / 'star-athletes/patch-v352.js').read_text(encoding='utf-8')
 reset = (ROOT / 'star-athletes/patch-v354.js').read_text(encoding='utf-8')
+early_reset = (ROOT / 'star-athletes/patch-v356.js').read_text(encoding='utf-8')
 
 errors = []
 
@@ -16,20 +17,23 @@ def require(ok, message):
     if not ok:
         errors.append(message)
 
-# B-004: recovery must run before the legacy/core loader so malformed primary
-# state is repaired before patch-v200 can hydrate runtime S. Immediate-save stays last.
+# B-004: recovery and the early reset handshake must run before the legacy/core
+# loader so malformed state is repaired, or an intentional reset is completed,
+# before patch-v200 can hydrate runtime S. Immediate-save stays last.
 pos200 = shell.find('patch-v200.js')
 pos326 = shell.find('patch-v326.js')
 pos336 = shell.find('patch-v336.js')
 pos352 = shell.find('patch-v352.js')
 pos354 = shell.find('patch-v354.js')
+pos356 = shell.find('patch-v356.js')
 require(pos200 >= 0, 'release shell is missing patch-v200.js authoritative save layer')
 require(pos326 >= 0, 'release shell is missing patch-v326.js save recovery')
 require(pos336 >= 0, 'release shell is missing patch-v336.js immediate persistence')
 require(pos352 >= 0, 'release shell is missing patch-v352.js playtest save protection')
 require(pos354 >= 0, 'release shell is missing patch-v354.js safe playtest reset')
-require(pos200 >= 0 and pos326 >= 0 and pos336 >= 0 and pos326 < pos200 < pos336,
-        'save recovery must load before authoritative hydration, with immediate persistence last')
+require(pos356 >= 0, 'release shell is missing patch-v356.js early reset handshake')
+require(pos200 >= 0 and pos326 >= 0 and pos356 >= 0 and pos336 >= 0 and pos326 < pos356 < pos200 < pos336,
+        'save recovery and early reset must load before authoritative hydration, with immediate persistence last')
 require(pos352 >= 0 and pos354 >= 0 and pos352 < pos354,
         'safe reset must load after playtest snapshot/restore controls')
 
@@ -94,6 +98,22 @@ require('sessionStorage.clear();' in reset,
 require("u.searchParams.set('reset354','1')" in reset and 'location.replace(u.toString())' in reset,
         'safe reset must reload through a fresh reset URL after storage cleanup')
 
+# v0.32.39: reset completion must execute before patch-v200 can restore stale roster data.
+require("const FLAG='star-athletes-reset-pending-v356',KEEP='star-athletes-save-v200-prebalance-03234'" in early_reset,
+        'early reset must use a dedicated pending flag while preserving the protected snapshot')
+require("k.startsWith('star-athletes-')&&k!==KEEP&&k!==FLAG" in early_reset,
+        'early reset must clear STAR ATHLETES persisted state except the protected snapshot and handshake flag')
+require('sessionStorage.clear();' in early_reset,
+        'early reset must clear transient session state before authoritative hydration')
+require("localStorage.getItem(FLAG)==='1'||new URL(location.href).searchParams.has('fresh356')" in early_reset,
+        'early reset must be gated by the reset handshake or explicit fresh URL')
+require('clear356();localStorage.removeItem(FLAG);' in early_reset,
+        'early reset must clear persisted state before consuming its pending flag')
+require('window.__STAR_FRESH_RESET356=true;' in early_reset,
+        'early reset must expose completion without replacing the genuine empty base runtime state')
+require('window.S={}' not in early_reset and 'S={}' not in early_reset,
+        'early reset must not replace the base runtime state with an incomplete empty object')
+
 # "Load latest" may build a cache-busting URL dynamically.
 shell_cache = re.search(r'patch-v336\.js\?v=(\d+)', shell)
 replace_call = re.search(r'location\.replace\(([^\n;]+)\)', immediate)
@@ -109,7 +129,7 @@ if replace_call:
                 f'latest reload cache generation {pinned.group(1)} does not match release {shell_cache.group(1)}')
 
 # Keep the no-broad-observer rule explicit in the save/reset path too.
-for name, text in [('patch-v200.js', core_save), ('patch-v326.js', recovery), ('patch-v336.js', immediate), ('patch-v352.js', pretest), ('patch-v354.js', reset)]:
+for name, text in [('patch-v200.js', core_save), ('patch-v326.js', recovery), ('patch-v336.js', immediate), ('patch-v352.js', pretest), ('patch-v354.js', reset), ('patch-v356.js', early_reset)]:
     require('new MutationObserver' not in text,
             f'{name} must not introduce MutationObserver-based persistence')
 
