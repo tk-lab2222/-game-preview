@@ -23,8 +23,8 @@ function batch260(){
   const birth=document.getElementById('birth');
   if(birth){
     const order=['C','U','R','SR','SSR','UR','EX'];
-    const best=[...born].sort((x,y)=>order.indexOf(y.rarity)-order.indexOf(x.rarity))[0];
-    birth.innerHTML=`<div class="batchBirth260"><b>🥚 ${count}体誕生！</b><span>最高レア ${best?.rarity||'-'} / ${best?.name||''}</span><small>候補一覧から残したい3体を選ぼう。</small></div>`;
+    const best=[...born].sort((x,y)=>Number(window.STAR_GRADE340?.athleteGrade?.(y)||1)-Number(window.STAR_GRADE340?.athleteGrade?.(x)||1))[0],g=best?Number(window.STAR_GRADE340?.athleteGrade?.(best)||1):1,z=window.STAR_GRADE340?.grades?.[g];
+    birth.innerHTML=`<div class="batchBirth260"><b>🥚 ${count}体誕生！</b><span>最高星格 ${z?.stars||'★'} ${z?.name||'通常'} / ${best?.name||''}</span><small>候補一覧から残したい3体を選ぼう。</small></div>`;
   }
   try{render()}catch(e){console.warn('batch260 render',e)}
 }
