@@ -8,6 +8,7 @@ recovery = (ROOT / 'star-athletes/patch-v326.js').read_text(encoding='utf-8')
 immediate = (ROOT / 'star-athletes/patch-v336.js').read_text(encoding='utf-8')
 growth = (ROOT / 'star-athletes/patch-v226.js').read_text(encoding='utf-8')
 pretest = (ROOT / 'star-athletes/patch-v352.js').read_text(encoding='utf-8')
+reset = (ROOT / 'star-athletes/patch-v354.js').read_text(encoding='utf-8')
 
 errors = []
 
@@ -21,16 +22,18 @@ pos200 = shell.find('patch-v200.js')
 pos326 = shell.find('patch-v326.js')
 pos336 = shell.find('patch-v336.js')
 pos352 = shell.find('patch-v352.js')
+pos354 = shell.find('patch-v354.js')
 require(pos200 >= 0, 'release shell is missing patch-v200.js authoritative save layer')
 require(pos326 >= 0, 'release shell is missing patch-v326.js save recovery')
 require(pos336 >= 0, 'release shell is missing patch-v336.js immediate persistence')
 require(pos352 >= 0, 'release shell is missing patch-v352.js playtest save protection')
+require(pos354 >= 0, 'release shell is missing patch-v354.js safe playtest reset')
 require(pos200 >= 0 and pos326 >= 0 and pos336 >= 0 and pos326 < pos200 < pos336,
         'save recovery must load before authoritative hydration, with immediate persistence last')
+require(pos352 >= 0 and pos354 >= 0 and pos352 < pos354,
+        'safe reset must load after playtest snapshot/restore controls')
 
 # Authoritative save contract: persist and restore the complete runtime S object.
-# This intentionally protects nest/lineage/stats/skills/hidden traits/season/league/
-# next-generation flags together instead of maintaining a fragile field allow-list.
 require("const SAVE200='star-athletes-save-v200'" in core_save,
         'authoritative save layer must use the v200 save key')
 require('JSON.stringify({savedAt:Date.now(),S})' in core_save,
@@ -50,9 +53,7 @@ require("window.S=d.S" in recovery,
 require("typeof d.S==='object'&&!Array.isArray(d.S)" in recovery,
         'recovery must reject array-shaped state instead of treating it as a valid save object')
 
-# Growth migration must initialize every legacy ID-less athlete. Using undefined as a
-# Set key would silently skip the second and later ID-less athlete, leaving inheritance
-# metadata absent and making progression depend on roster order.
+# Growth migration must initialize every legacy ID-less athlete.
 require('if(m.id!=null&&seen.has(m.id))return;' in growth,
         'growth migration must deduplicate only athletes that actually have an id')
 require('if(m.id!=null)seen.add(m.id);' in growth,
@@ -69,9 +70,7 @@ require('pagehide' in immediate and 'save336' in immediate,
 require("const SAVE336='star-athletes-save-v200'" in immediate,
         'immediate persistence must use the authoritative v200 save key')
 
-# v0.32.34 playtest protection must snapshot the exact authoritative save and restore
-# that exact payload. This protects a user's established lineage while testing the new
-# balance without introducing a second partial-state serialization contract.
+# v0.32.34 playtest protection must snapshot the exact authoritative save and restore it exactly.
 require("const SAVE='star-athletes-save-v200',SNAP='star-athletes-save-v200-prebalance-03234'" in pretest,
         'playtest protection must snapshot the authoritative v200 save key')
 require("const raw=localStorage.getItem(SAVE);if(!valid352(raw))return false;" in pretest,
@@ -83,9 +82,19 @@ require("localStorage.setItem(SAVE,raw);window.S=d.S;location.reload();return tr
 require('JSON.stringify({savedAt:Date.now(),S})' in pretest,
         'v0.32.34 save helper must continue serializing the complete runtime S object')
 
-# "Load latest" may build a cache-busting URL dynamically (for example ?t=Date.now()).
-# Guard the actual destination path, and only enforce cache-generation equality when
-# the handler explicitly pins a numeric ?v= generation.
+# v0.32.37 reset must really start from G1 without destroying the explicit protected snapshot.
+require("const PRIMARY='star-athletes-save-v200',BACKUP='star-athletes-save-v200-backup',SNAP='star-athletes-save-v200-prebalance-03234'" in reset,
+        'safe reset must use the authoritative primary/backup keys and protected snapshot key')
+require('localStorage.removeItem(PRIMARY);localStorage.removeItem(BACKUP);' in reset,
+        'safe reset must remove both live primary and automatic backup to prevent roster resurrection')
+require("k!==SNAP" in reset,
+        'safe reset must preserve the explicit pre-balance protected snapshot')
+require('sessionStorage.clear();' in reset,
+        'safe reset must clear transient session state')
+require("u.searchParams.set('reset354','1')" in reset and 'location.replace(u.toString())' in reset,
+        'safe reset must reload through a fresh reset URL after storage cleanup')
+
+# "Load latest" may build a cache-busting URL dynamically.
 shell_cache = re.search(r'patch-v336\.js\?v=(\d+)', shell)
 replace_call = re.search(r'location\.replace\(([^\n;]+)\)', immediate)
 require(shell_cache is not None, 'release shell cache generation for patch-v336.js is missing')
@@ -99,8 +108,8 @@ if replace_call:
         require(pinned.group(1) == shell_cache.group(1),
                 f'latest reload cache generation {pinned.group(1)} does not match release {shell_cache.group(1)}')
 
-# Keep the no-broad-observer rule explicit in the save path too.
-for name, text in [('patch-v200.js', core_save), ('patch-v326.js', recovery), ('patch-v336.js', immediate), ('patch-v352.js', pretest)]:
+# Keep the no-broad-observer rule explicit in the save/reset path too.
+for name, text in [('patch-v200.js', core_save), ('patch-v326.js', recovery), ('patch-v336.js', immediate), ('patch-v352.js', pretest), ('patch-v354.js', reset)]:
     require('new MutationObserver' not in text,
             f'{name} must not introduce MutationObserver-based persistence')
 
