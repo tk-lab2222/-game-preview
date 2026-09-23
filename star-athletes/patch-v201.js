@@ -7,7 +7,6 @@ function normalizeMonster201(m,index=0){
   const species=(m.species&&SP[m.species])?m.species:'draco';
   m.species=species;
   m.name=(typeof m.name==='string'&&m.name.trim())?m.name:`${SP[species][0].slice(0,2)}${100+index}`;
-  m.rarity=R.includes(m.rarity)?m.rarity:'C';
   m.gen=Number.isFinite(+m.gen)?+m.gen:0;
   m.personality=(typeof m.personality==='string'&&m.personality)?m.personality:'マイペース';
   m.origin=(typeof m.origin==='string'&&m.origin)?m.origin:'ネスト';
@@ -32,7 +31,7 @@ function decorateBreed201(){
     let strip=hero.querySelector('.breedStrip128');
     if(!strip){strip=document.createElement('div');strip.className='breedStrip128';hero.insertBefore(strip,hero.children[1]||null)}
     const af=S.parents?.length===2?'PAIR READY':'SELECT PARENTS';
-    strip.innerHTML=`<span>${af}</span><b>配合 ${S.breedCount||0} 回</b><em>高レア・色違い・理想個体を狙おう</em>`;
+    strip.innerHTML=`<span>${af}</span><b>配合 ${S.breedCount||0} 回</b><em>高星格・色違い・理想個体を狙おう</em>`;
   }
 }
 function repairBirth201(){
@@ -44,8 +43,8 @@ function repairBirth201(){
   if(!m)return;
   m=normalizeMonster201(m,777);
   const statHtml=Object.entries(m.stats).map(([k,v])=>`<div><span>${SL[k]||k}</span><b>${v}</b></div>`).join('');
-  reveal.innerHTML=`<div class="resultBadge128">${['SSR','UR','EX'].includes(m.rarity)?'★ SPECIAL BIRTH ★':'NEW ATHLETE'}</div><div class="newbornLabel">NEW ATHLETE!</div>${avatar(m,true)}<div class="hatchName"><b>${m.name}</b><span>${m.rarity}</span></div><div class="hatchMeta">${SP[m.species][0]} ・ G${m.gen} ・ ${m.personality}</div><div class="traitRow hatchTraits"><span>${m.visual.pattern}</span><span>${m.visual.part}</span></div><div class="hatchStats">${statHtml}</div><div class="inheritBox"><b>継承</b><br>親：${m.origin}<br>見た目：${m.visual.color} / ${m.visual.pattern} / ${m.visual.part}${m.visual.acc!=='なし'?' / '+m.visual.acc:''}</div>`;
-  birth.classList.add('birthStage128');reveal.classList.add('contrast202');birth.dataset.rarity=m.rarity;
+  reveal.innerHTML=`<div class="resultBadge128">NEW ATHLETE</div><div class="newbornLabel">NEW ATHLETE!</div>${avatar(m,true)}<div class="hatchName"><b>${m.name}</b></div><div class="hatchMeta">${SP[m.species][0]} ・ G${m.gen} ・ ${m.personality}</div><div class="traitRow hatchTraits"><span>${m.visual.pattern}</span><span>${m.visual.part}</span></div><div class="hatchStats">${statHtml}</div><div class="inheritBox"><b>継承</b><br>親：${m.origin}<br>見た目：${m.visual.color} / ${m.visual.pattern} / ${m.visual.part}${m.visual.acc!=='なし'?' / '+m.visual.acc:''}</div>`;
+  birth.classList.add('birthStage128');reveal.classList.add('contrast202');birth.removeAttribute('data-rarity');
   try{window.paintSpecies&&window.paintSpecies()}catch(_){}
 }
 function ensureNestTab201(){
