@@ -58,7 +58,7 @@ function missionDefs200(){
 }
 function claim200(id){
   const m=missionDefs200().find(x=>x.id===id);if(!m||!m.ok||S.missionClaimed[id])return;
-  S.missionClaimed[id]=true;S.coins=(S.coins||0)+m.reward;save200();render();
+  S.missionClaimed[id]=true;S.coins=(S.coins||0)+m.reward;save200();decorate200();
 }
 function ensureMission200(){
   const train=document.getElementById('train');if(!train)return;
