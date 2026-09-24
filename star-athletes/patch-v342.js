@@ -104,19 +104,6 @@ function rollUpper342(c,a,b){
  c.visual.pattern=x.name;
  return c;
 }
-try{
- const prevBaby342=baby;
- baby=function(a,b){
-  const c=prevBaby342(a,b);
-  if(!c?.visual)return c;
-  if(!c.starPattern342){
-   const bi=baseInfo342(c);
-   c.starPattern342={id:bi.id||bi.base,base:bi.base||bi.id,grade:bi.grade,name:bi.name,effect:bi.effect,tier:'base'};
-  }
-  return rollUpper342(c,a,b);
- };
-}catch(e){console.warn('pattern342 baby',e)}
-
 function trainingMul342(m,plan,mode,k){
  const x=info342(m),g=grade342(m);
  if(x.base==='stream'&&(plan==='speed'||k==='speed'||k==='agility'))return g>=5?1.15:g===4?1.07:g===3?1.05:1.03;
@@ -209,6 +196,7 @@ window.STAR_PATTERN342={
  info:info342,grade:grade342,label:label342,effect:effect342,applyDirect:applyDirect342,
  trainingMul:trainingMul342,injuryAdd:injuryAdd342,successBonus:successBonus342,
  competitionMul:competitionMul342,skillChance:skillChance342,rareRecipeMul:rareRecipeMul342,
+ birth:(c,a,b)=>{if(!c?.visual)return c;if(!c.starPattern342){const bi=baseInfo342(c);c.starPattern342={id:bi.id||bi.base,base:bi.base||bi.id,grade:bi.grade,name:bi.name,effect:bi.effect,tier:'base'}}return rollUpper342(c,a,b)},
  sync:sync342
 };
 
