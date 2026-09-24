@@ -12,7 +12,7 @@ function state278(){
   return S.limit278;
 }
 function persist278(){
-  try{localStorage.setItem(SAVE278,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}
+  try{window.STAR_SAVE_CORE?.save?.('v278')||localStorage.setItem(SAVE278,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}
   try{if(Array.isArray(S.nest)&&S.nest.length===3)localStorage.setItem(ROSTER278,JSON.stringify(S.nest))}catch(_){}
 }
 function release278(){
