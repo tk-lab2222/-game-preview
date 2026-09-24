@@ -30,7 +30,7 @@ function init225(){
  S.leagueWins=S.leagueWins||{};
  S.rivals225=Array.isArray(S.rivals225)?S.rivals225:[];S.meetChoice225=TOURS225.some(x=>x.id===S.meetChoice225)?S.meetChoice225:'standard';
 }
-function save225(){try{localStorage.setItem(SAVE225,JSON.stringify({savedAt:Date.now(),S}))}catch(e){console.warn('save225',e)}}
+function save225(){try{window.STAR_SAVE_CORE?.save?.('v225')||localStorage.setItem(SAVE225,JSON.stringify({savedAt:Date.now(),S}))}catch(e){console.warn('save225',e)}}
 function league225(){init225();return LEAGUES225[S.leagueRank]||LEAGUES225[0]}
 function score225(stats,e){
  const s=stats||{};
