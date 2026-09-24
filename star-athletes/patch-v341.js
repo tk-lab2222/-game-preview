@@ -158,7 +158,7 @@ css.textContent=`
 .color-mutation341{background:#f4ebff!important;border-color:#ad83d7!important}
 
 .birthColor341{width:min(300px,90%);margin:7px auto;padding:7px 9px;border:1px solid #d7dfe7;border-radius:10px;text-align:center;background:#fff}
-.birthColor341 b,.birthColor341 small{display:block}.birthColor341 b{font-size:10px}.birthColor341 small{margin-top:2px;font-size:6px;color:#65758a}
+.birthColor341 b,.birthColor341 small{display:block}.birthColor341 b{font-size:10px;color:#2f3742!important;text-shadow:none!important}.birthColor341 small{margin-top:2px;font-size:6px;color:#65758a!important;text-shadow:none!important}
 `;
 document.head.appendChild(css);
 
