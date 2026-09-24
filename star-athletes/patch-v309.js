@@ -45,7 +45,7 @@ function consume309(id){const u=usage309();u[id]=used309(id)+1}
 function limitText309(id){return '今世代 '+used309(id)+'/'+LIMIT309[id]}
 
 function save309(){
- try{localStorage.setItem(SAVE309,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}
+ try{window.STAR_SAVE_CORE?.save?.('v309')||localStorage.setItem(SAVE309,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}
  try{
    if(Array.isArray(S.nest)&&S.nest.length){
      const raw=JSON.stringify(S.nest);
