@@ -204,8 +204,6 @@ function decorate342(){
 }
 
 function sync342(){migrate342();let changed=false;for(const m of all342())changed=applyDirect342(m)||changed;if(changed)persist342();decorate342();try{window.STAR_GRADE340?.sync?.()}catch(_){}}
-try{const prevRender342=render;render=function(){const out=prevRender342();setTimeout(sync342,0);return out}}catch(e){console.warn('pattern342 render',e)}
-document.addEventListener('click',e=>{if(e.target?.closest?.('#hatch,#breedBtn,#adopt,.tab'))setTimeout(sync342,20)},true);
 
 window.STAR_PATTERN342={
  info:info342,grade:grade342,label:label342,effect:effect342,applyDirect:applyDirect342,
