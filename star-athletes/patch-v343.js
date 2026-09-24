@@ -12,7 +12,7 @@ const BODY343={
   {id:'horn',base:'竜の角',shine:'王者の角',phantom:'天空の角',god:'神角',role:'power',stats:['power','guts'],effect:'ちから・こんじょう型'},
   {id:'wing',base:'風の翼',shine:'光の翼',phantom:'天空の翼',god:'神翼',role:'speed',stats:['speed','agility'],effect:'スピード・すばやさ型'},
   {id:'tail',base:'星の尾',shine:'彗星の尾',phantom:'天空の尾',god:'神尾',role:'tech',stats:['tech','agility'],effect:'テクニック・すばやさ型'},
-  {id:'scale',base:'水晶の鱗',shine:'輝く鱗',phantom:'幻晶ボディ',god:'神晶ボディ',role:'stamina',stats:['stamina','guts'],effect:'スタミナ・こんじょう型'}
+  {id:'scale',base:'水晶の鱗',shine:'輝く鱗',phantom:'幻晶の鱗',god:'神晶の鱗',role:'stamina',stats:['stamina','guts'],effect:'スタミナ・こんじょう型'}
  ],
  unil:[
   {id:'horn',base:'俊敏の角',shine:'光の角',phantom:'天空の角',god:'神角',role:'power',stats:['power','tech'],effect:'ちから・テクニック型'},
@@ -23,7 +23,7 @@ const BODY343={
  grimo:[
   {id:'beak',base:'鋭いくちばし',shine:'王者のくちばし',phantom:'天空のくちばし',god:'神鳥のくちばし',role:'tech',stats:['tech','power'],effect:'テクニック・ちから型'},
   {id:'wing',base:'大きな翼',shine:'光の翼',phantom:'天空の翼',god:'神翼',role:'speed',stats:['speed','agility'],effect:'スピード・すばやさ型'},
-  {id:'chest',base:'星の羽',shine:'輝く羽',phantom:'天羽体',god:'神羽体',role:'stamina',stats:['stamina','guts'],effect:'スタミナ・こんじょう型'},
+  {id:'chest',base:'星の羽',shine:'輝く羽',phantom:'天空の羽',god:'神羽',role:'stamina',stats:['stamina','guts'],effect:'スタミナ・こんじょう型'},
   {id:'crest',base:'冠羽',shine:'王者の冠羽',phantom:'天空の冠羽',god:'神鳥の冠羽',role:'power',stats:['power','guts'],effect:'ちから・こんじょう型'}
  ],
  puru:[
@@ -71,6 +71,10 @@ function fullEffect343(m){
  const role=x.effect||'身体特性';
  if(g>=3)return `${role}／得意能力 +${pct}%${g>=4?'／育成・競技にも補正':''}`;
  return role;
+}
+function rename343(m){
+ const names={'竜角体':'竜の角','王角体':'王者の角','翼竜体':'風の翼','星尾体':'星の尾','彗尾体':'彗星の尾','晶鱗体':'水晶の鱗','輝鱗体':'輝く鱗','幻晶体':'幻晶の鱗','神晶体':'神晶の鱗','俊角体':'俊敏の角','光角体':'光の角','風鬣体':'風のたてがみ','疾鬣体':'疾風のたてがみ','天鬣体':'天空のたてがみ','神鬣体':'神風のたてがみ','聴星体':'星の耳','星耳体':'輝く耳','天聴体':'天空の耳','神聴体':'神聴の耳','流尾体':'流れる尾','光尾体':'光の尾','鋭嘴体':'鋭いくちばし','王嘴体':'王者のくちばし','天嘴体':'天空のくちばし','神嘴体':'神鳥のくちばし','翼書体':'大きな翼','光翼体':'光の翼','天翼体':'天空の翼','神翼体':'神翼','星羽体':'星の羽','輝羽体':'輝く羽','天羽体':'天空の羽','神羽体':'神羽','冠羽体':'冠羽','王冠羽体':'王者の冠羽','天冠体':'天空の冠羽','神冠体':'神鳥の冠羽','伸耳体':'長い耳','光耳体':'光の耳','天耳体':'天空の耳','神耳体':'神速の耳','透晶体':'透明ボディ','星核体':'星のコア','輝核体':'輝くコア','天核体':'天空のコア','神核体':'神星のコア','天角体':'天空の角','神角体':'神角','天尾体':'天空の尾','神尾体':'神尾'};
+ if(m?.starBody343?.name&&names[m.starBody343.name]){m.starBody343.name=names[m.starBody343.name];return true}return false;
 }
 function persist343(){try{localStorage.setItem(SAVE343,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
 
