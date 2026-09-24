@@ -28,9 +28,9 @@ function skillGrade340(id){return clamp340(SKILL_GRADE340[id]||1)}
 function skillName340(id){return SKILL_NAME340[id]||id||'スキル'}
 function visualGrade340(m){
   if(m?.rareVisual243==='divine'||m?.visual?.color==='神彩')return 5;
-  if(m?.rareVisual243==='prism')return 4;
+  if(m?.rareVisual243==='prism'||m?.visual?.color==='プリズム')return 4;
   if(m?.rareVisual243==='mutation')return 4;
-  if(m?.rareVisual243==='gold')return 3;
+  if(m?.rareVisual243==='gold'||m?.visual?.color==='金')return 3;
   if(m?.shiny)return 2;
   return 1;
 }
