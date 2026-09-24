@@ -60,23 +60,6 @@ function applyStats346(m){
 }
 function save346(){try{localStorage.setItem(SAVE346,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
 
-try{
- const prevBaby346=baby;
- baby=function(a,b){
-  const c=prevBaby346(a,b);
-  if(!c)return c;
-  const odds=chance346(a,b);
-  c.divineColorOdds346=odds;
-  if(Math.random()<odds.chance){
-   c.visual=c.visual||{};
-   c.visual.color='神彩';
-   c.rareVisual243='divine';
-  }
-  applyStats346(c);
-  return c;
- };
-}catch(e){console.warn('divine346 baby',e)}
-
 function migrate346(){
  let changed=false;
  for(const m of all346())changed=applyStats346(m)||changed;
@@ -108,6 +91,6 @@ css.textContent=`
 `;
 document.head.appendChild(css);
 
-window.STAR_DIVINE_COLOR346={base:BASE346,isDivine:isDivine346,chance:chance346,parentMult:parentMult346,applyStats:applyStats346,sync:sync346};
+window.STAR_DIVINE_COLOR346={base:BASE346,isDivine:isDivine346,chance:chance346,parentMult:parentMult346,birth:(c,a,b)=>{if(!c)return c;const odds=chance346(a,b);c.divineColorOdds346=odds;if(Math.random()<odds.chance){c.visual=c.visual||{};c.visual.color='神彩';c.rareVisual243='divine'}applyStats346(c);return c},applyStats:applyStats346,sync:sync346};
 setTimeout(sync346,0);
 })();
