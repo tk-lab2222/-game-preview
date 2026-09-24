@@ -11,8 +11,6 @@ const META341={
  mutation:{name:'異変色',stars:'★★★★',grade:4},
  divine:{name:'神彩',stars:'★★★★★',grade:5}
 };
-const SHINY_NAME341={draco:'エメラルド',unil:'ミント',grimo:'パープル',puru:'ピンク'};
-
 function all341(){
  const out=[],seen=new Set();
  for(const key of ['starters','nest','lineage','released','cands','foster']){
