@@ -111,13 +111,6 @@ function roll343(c,a,b){
  c.starBody343={id:ar.id,role:ar.role,stats:ar.stats,grade:won.grade,name:won.name,effect:ar.effect,tier:won.tier,chance:won.chance,mult:boost.mult,reasons:won.reasons,godCarry:won.godCarry,resonanceBoost:won.resonanceBoost,at:Date.now()};
  return c;
 }
-try{
- const prevBaby343=baby;
- baby=function(a,b){
-  const c=prevBaby343(a,b);
-  return roll343(c,a,b);
- };
-}catch(e){console.warn('body343 baby',e)}
 
 function migrate343(){
  let changed=false;
@@ -190,7 +183,7 @@ function sync343(){
 
 window.STAR_BODY343={
  info:info343,grade:grade343,label:label343,effect:fullEffect343,
- trainingMul:trainingMul343,competitionMul:competitionMul343,applyDirect:applyDirect343,sync:sync343
+ birth:roll343,trainingMul:trainingMul343,competitionMul:competitionMul343,applyDirect:applyDirect343,sync:sync343
 };
 
 const css=document.createElement('style');
