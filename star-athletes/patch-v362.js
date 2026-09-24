@@ -19,7 +19,7 @@ function athleteGrade(m){return Math.max(shinyGrade(m),colorGrade(m),specialGrad
 function breakdown(m){return{athlete:athleteGrade(m),shiny:shinyGrade(m),starColor:colorGrade(m),special:specialGrade(m),resonance:resonanceGrade(m),pattern:patternGrade(m),body:bodyGrade(m),accessory:accessoryGrade(m)}}
 function label(g){const z=META[clamp(g)];return z.stars+' '+z.name}
 function migrate(){let changed=false;for(const m of all()){if(m?.rareVisual243==='shiny'){delete m.rareVisual243;changed=true}const t=colorTier(m);if(['prism','gold','divine'].includes(t)&&m.rareVisual243!==t){m.rareVisual243=t;changed=true}const g=athleteGrade(m);if(Number(m.athleteStarGrade362)!==g){m.athleteStarGrade362=g;changed=true}if('birthStarGrade361'in m){delete m.birthStarGrade361;changed=true}}if(changed)try{localStorage.setItem(SAVE,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
-function syncCards(){const map=new Map(all().filter(x=>x?.id).map(x=>[x.id,x]));document.querySelectorAll('.card[data-id],.train210[data-athlete210]').forEach(c=>{const m=map.get(c.dataset.id||c.dataset.athlete210);if(!m)return;const g=athleteGrade(m),tag=c.querySelector('.athleteGrade340');if(tag){tag.className='athleteGrade340 grade340-'+g;tag.textContent=label(g)}c.dataset.athleteStarGrade=g})}
+function syncCards(){const map=new Map(all().filter(x=>x?.id).map(x=>[x.id,x]));document.querySelectorAll('.card[data-id],.train210[data-athlete210]').forEach(c=>{const m=map.get(c.dataset.id||c.dataset.athlete210);if(!m)return;const g=athleteGrade(m),tag=c.querySelector('.athleteGrade340');if(tag){tag.className='athleteGrade340 grade340-'+g;tag.textContent=label(g)}c.dataset.athleteStarGrade=g;c.classList.remove('athleteGradeVisual362-1','athleteGradeVisual362-2','athleteGradeVisual362-3','athleteGradeVisual362-4','athleteGradeVisual362-5');c.classList.add('athleteGradeVisual362-'+g)})}
 function installBirthPipeline(){
  if(window.__STAR_BIRTH_PIPELINE362)return;
  const base=window.baby;if(typeof base!=='function')return;
@@ -37,6 +37,11 @@ function syncModules(){
  }
 }
 function sync(){syncModules();migrate();syncCards();try{window.STAR_CARD_GRADE360?.sync?.()}catch(_){}}
+const style=document.createElement('style');style.id='athleteGradeVisual362css';style.textContent=`
+.card.athleteGradeVisual362-4,.train210.athleteGradeVisual362-4{background:linear-gradient(135deg,#e8fbff 0%,#f3e8ff 32%,#fff5d7 58%,#e8f7ff 82%,#f7eaff 100%)!important;background-size:220% 220%!important;box-shadow:0 0 0 1px #ffffffaa inset,0 0 11px #9b7ddb44!important;animation:phantomBg362 7s ease-in-out infinite}
+@keyframes phantomBg362{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.card.athleteGradeVisual362-5,.train210.athleteGradeVisual362-5{background:radial-gradient(circle at 50% 18%,#fff6bc 0,#e5f8ff 26%,#eee3ff 52%,#fff8dd 100%)!important;box-shadow:0 0 0 1px #fff inset,0 0 15px #a67cff55!important}
+`;document.head.appendChild(style);
 window.STAR_GRADE_ENGINE362={meta:META,colorTier,colorGrade,shinyGrade,specialGrade,resonanceGrade,patternGrade,bodyGrade,accessoryGrade,athleteGrade,breakdown,label,sync};
 try{if(window.STAR_GRADE340){STAR_GRADE340.athleteGrade=athleteGrade}}catch(_){}
 function installRenderHook(){
