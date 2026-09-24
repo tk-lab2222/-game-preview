@@ -136,23 +136,6 @@ css.textContent=`
 .starColor341 .artimg{
  transition:filter .25s ease;
 }
-.starColor-shiny341.starSpecies-draco341 .dracoCanvas,
-.starColor-shiny341.starSpecies-draco341 .speciesCanvas,
-.starColor-shiny341.starSpecies-draco341 .artimg{
- filter:hue-rotate(92deg) saturate(1.55) brightness(1.04) drop-shadow(0 0 5px #65e0b866);
-}
-.starColor-shiny341.starSpecies-unil341 .speciesCanvas,
-.starColor-shiny341.starSpecies-unil341 .artimg{
- filter:hue-rotate(70deg) saturate(1.15) brightness(1.08) drop-shadow(0 0 5px #8be5c966);
-}
-.starColor-shiny341.starSpecies-grimo341 .speciesCanvas,
-.starColor-shiny341.starSpecies-grimo341 .artimg{
- filter:hue-rotate(245deg) saturate(1.45) brightness(1.02) drop-shadow(0 0 5px #b889e866);
-}
-.starColor-shiny341.starSpecies-puru341 .speciesCanvas,
-.starColor-shiny341.starSpecies-puru341 .artimg{
- filter:hue-rotate(315deg) saturate(1.35) brightness(1.06) drop-shadow(0 0 5px #f39bc766);
-}
 .starColor-gold341 .dracoCanvas,
 .starColor-gold341 .speciesCanvas,
 .starColor-gold341 .artimg{
