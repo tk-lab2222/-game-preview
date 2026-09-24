@@ -187,8 +187,6 @@ function sync343(){
  decorate343();
  try{window.STAR_GRADE340?.sync?.()}catch(_){}
 }
-try{const prevRender343=render;render=function(){const out=prevRender343();setTimeout(sync343,0);return out}}catch(e){console.warn('body343 render',e)}
-document.addEventListener('click',e=>{if(e.target?.closest?.('#hatch,#breedBtn,#adopt,.tab'))setTimeout(sync343,20)},true);
 
 window.STAR_BODY343={
  info:info343,grade:grade343,label:label343,effect:fullEffect343,
