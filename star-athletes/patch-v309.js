@@ -16,9 +16,26 @@ function generation309(){
  const fromNest=Math.max(0,...(S.nest||[]).map(m=>Number(m?.gen)||0));
  return Math.max(1,fromState,fromNest);
 }
+function rosterKey309(){
+ const nest=Array.isArray(S.nest)?S.nest:[];
+ if(nest.length!==3)return '';
+ return nest.map(m=>String(m?.id||'')).sort().join('|');
+}
+function cycle309(){
+ S.shopCycle309=S.shopCycle309&&typeof S.shopCycle309==='object'?S.shopCycle309:{seq:0,rosterKey:''};
+ const key=rosterKey309();
+ // A shop cycle starts only when the next three-athlete roster has actually been adopted.
+ // Entering breeding / incrementing generation233 must never reset purchase limits.
+ if(key&&key!==S.shopCycle309.rosterKey){
+   S.shopCycle309.seq=Math.max(1,Number(S.shopCycle309.seq)||0)+1;
+   S.shopCycle309.rosterKey=key;
+ }
+ if(!Number(S.shopCycle309.seq))S.shopCycle309.seq=1;
+ return String(S.shopCycle309.seq);
+}
 function usage309(){
  S.shopUsage309=S.shopUsage309&&typeof S.shopUsage309==='object'?S.shopUsage309:{};
- const g=String(generation309());
+ const g='roster:'+cycle309();
  if(!S.shopUsage309[g]||typeof S.shopUsage309[g]!=='object')S.shopUsage309[g]={};
  return S.shopUsage309[g];
 }
@@ -146,7 +163,7 @@ function renderShop309(){
    coins,
    (S.nest||[]).map(m=>[m.id,m.name]),
    Number(S.specialShop?.lucky)||0,
-   generation309(),usage309(),
+   cycle309(),usage309(),
    t
  ]);
  if(shop.dataset.renderKey309===renderKey&&shop.querySelector('[data-buy122]'))return;
@@ -186,7 +203,7 @@ try{
  const prev=render;
  render=function(){const out=prev();setTimeout(renderShop309,0);return out}
 }catch(e){console.warn('render309',e)}
-window.STAR_SHOP309={sync:sync309,target:(id)=>targetId309(id)};
+window.STAR_SHOP309={sync:sync309,target:(id)=>targetId309(id),cycle:cycle309};
 setTimeout(sync309,0);
 
 const css309=document.createElement('style');css309.id='shopVisual309';css309.textContent=`
