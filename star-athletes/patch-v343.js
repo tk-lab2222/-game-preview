@@ -179,7 +179,7 @@ css.textContent=`
 .bodyGrade343-4{background:linear-gradient(90deg,#eefaff,#f2eaff);border-color:#a68cca;box-shadow:0 0 8px #9c7bd533}
 .bodyGrade343-5{background:linear-gradient(90deg,#fff0aa,#eee4ff,#dffaff);border-color:#b48b43;box-shadow:0 0 11px #9275d95c}
 .birthBody343{width:min(300px,90%);margin:6px auto;padding:7px 9px;border-radius:10px;text-align:center}
-.birthBody343 b,.birthBody343 small{display:block}.birthBody343 b{font-size:10px}.birthBody343 small{margin-top:2px;font-size:6px;color:#5d6875}
+.birthBody343 b,.birthBody343 small{display:block}.birthBody343 b{font-size:10px;color:#2d3540!important;text-shadow:none!important}.birthBody343 small{margin-top:2px;font-size:6px;color:#5d6875!important;text-shadow:none!important}.birthBody343.bodyGrade343-3 b{color:#594500!important}.birthBody343.bodyGrade343-4 b{color:#44335f!important}.birthBody343.bodyGrade343-5 b{color:#503a12!important}
 `;
 document.head.appendChild(css);
 migrate343();setTimeout(sync343,0);
