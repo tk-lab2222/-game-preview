@@ -37,7 +37,7 @@ const CHAMP233=[10,7,5,3,2,1,0,0],PTS233=[8,6,5,4,3,2,1,0];
 const TEMPER233=['大胆','冷静','粘り強い','慎重'];
 function n233(v){return Number(v)||0}function clamp233(v,a,b){return Math.max(a,Math.min(b,v))}function rnd233(a,b){return Math.floor(Math.random()*(b-a+1))+a}
 function save233(){
- try{localStorage.setItem(SAVE233,JSON.stringify({savedAt:Date.now(),S}))}catch(e){console.error('save233',e)}
+ try{window.STAR_SAVE_CORE?.save?.('v233')||localStorage.setItem(SAVE233,JSON.stringify({savedAt:Date.now(),S}))}catch(e){console.error('save233',e)}
  try{
    if(Array.isArray(S.nest)&&S.nest.length===3){
      const raw=JSON.stringify(S.nest);
