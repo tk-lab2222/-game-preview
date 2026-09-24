@@ -22,8 +22,7 @@ function migrate(){let changed=false;for(const m of all()){if(m?.rareVisual243==
 function syncCards(){const map=new Map(all().filter(x=>x?.id).map(x=>[x.id,x]));document.querySelectorAll('.card[data-id],.train210[data-athlete210]').forEach(c=>{const m=map.get(c.dataset.id||c.dataset.athlete210);if(!m)return;const g=athleteGrade(m),tag=c.querySelector('.athleteGrade340');if(tag){tag.className='athleteGrade340 grade340-'+g;tag.textContent=label(g)}c.dataset.athleteStarGrade=g})}
 function sync(){migrate();syncCards()}
 window.STAR_GRADE_ENGINE362={meta:META,colorTier,colorGrade,shinyGrade,specialGrade,resonanceGrade,patternGrade,bodyGrade,accessoryGrade,athleteGrade,breakdown,label,sync};
-try{if(window.STAR_GRADE340){STAR_GRADE340.athleteGrade=athleteGrade;STAR_GRADE340.visualGrade=colorGrade;STAR_GRADE340.specialGrade=specialGrade}}catch(_){}
-try{if(window.STAR_GRADE_FIX361){STAR_GRADE_FIX361.expected=athleteGrade;STAR_GRADE_FIX361.sync=sync}}catch(_){}
+try{if(window.STAR_GRADE340){STAR_GRADE340.athleteGrade=athleteGrade}}catch(_){}
 try{const prev=render;render=function(){const x=prev.apply(this,arguments);setTimeout(sync,0);return x}}catch(_){}
 addEventListener('load',()=>setTimeout(sync,100));document.addEventListener('click',()=>setTimeout(sync,40),true);setTimeout(sync,0);
 })();
