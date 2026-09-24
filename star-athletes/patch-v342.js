@@ -177,17 +177,7 @@ function applyDirect342(m){
 }
 
 function decorate342(){
- const byId=new Map(all342().map(m=>[m.id,m]));
- document.querySelectorAll('#cands .card[data-id],#breeders .card[data-id],#lineagePool .card[data-id]').forEach(card=>{
-  const m=byId.get(card.dataset.id);if(!m)return;
-  card.querySelector('.patternBadge342')?.remove();
-  const x=info342(m),g=grade342(m);
-  const tag=document.createElement('div');
-  tag.className='patternBadge342 patternGrade342-'+g;
-  tag.innerHTML=`<b>${label342(m)}</b><small>${effect342(m)}</small>`;
-  (card.querySelector('.coreMeta243')||card.querySelector('.bd')||card).appendChild(tag);
- });
- const birth=document.querySelector('#birth .hatchReveal'),latest=(S?.cands||[])[(S?.cands||[]).length-1];
+const birth=document.querySelector('#birth .hatchReveal'),latest=(S?.cands||[])[(S?.cands||[]).length-1];
  if(birth){
   birth.querySelector('.birthPattern342')?.remove();
   if(latest&&grade342(latest)>=3){
