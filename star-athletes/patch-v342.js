@@ -208,7 +208,7 @@ css.textContent=`
 .patternGrade342-4{background:linear-gradient(90deg,#e9f8ff,#f2e8ff);border-color:#a88bc9;box-shadow:0 0 8px #9d80cc33}
 .patternGrade342-5{background:linear-gradient(90deg,#fff0ad,#eee4ff,#dffaff);border-color:#b68d44;box-shadow:0 0 10px #9274d955}
 .birthPattern342{width:min(300px,90%);margin:6px auto;padding:7px 9px;border-radius:10px;text-align:center}
-.birthPattern342 b,.birthPattern342 small{display:block}.birthPattern342 b{font-size:10px}.birthPattern342 small{margin-top:2px;font-size:6px;color:#5f6d7b}
+.birthPattern342 b,.birthPattern342 small{display:block}.birthPattern342 b{font-size:10px;color:#2d3540;text-shadow:none}.birthPattern342 small{margin-top:2px;font-size:6px;color:#5f6d7b}.birthPattern342.patternGrade342-3 b{color:#594500}.birthPattern342.patternGrade342-4 b{color:#44335f}.birthPattern342.patternGrade342-5 b{color:#503a12}
 `;
 document.head.appendChild(css);
 
