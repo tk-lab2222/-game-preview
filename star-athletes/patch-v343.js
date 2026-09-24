@@ -159,16 +159,7 @@ function competitionMul343(m,e){
 }
 
 function decorate343(){
- const byId=new Map(all343().map(m=>[m.id,m]));
- document.querySelectorAll('#cands .card[data-id],#breeders .card[data-id],#lineagePool .card[data-id]').forEach(card=>{
-  const m=byId.get(card.dataset.id);if(!m)return;
-  card.querySelector('.bodyBadge343')?.remove();
-  const g=grade343(m),tag=document.createElement('div');
-  tag.className='bodyBadge343 bodyGrade343-'+g;
-  tag.innerHTML=`<b>${label343(m)}</b><small>${fullEffect343(m)}</small>`;
-  (card.querySelector('.patternBadge342')||card.querySelector('.coreMeta243')||card.querySelector('.bd')||card).appendChild(tag);
- });
- const birth=document.querySelector('#birth .hatchReveal'),latest=(S?.cands||[])[(S?.cands||[]).length-1];
+const birth=document.querySelector('#birth .hatchReveal'),latest=(S?.cands||[])[(S?.cands||[]).length-1];
  if(birth){
   birth.querySelector('.birthBody343')?.remove();
   if(latest&&grade343(latest)>=3){
