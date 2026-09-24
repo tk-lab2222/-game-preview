@@ -20,6 +20,17 @@ function breakdown(m){return{athlete:athleteGrade(m),shiny:shinyGrade(m),starCol
 function label(g){const z=META[clamp(g)];return z.stars+' '+z.name}
 function migrate(){let changed=false;for(const m of all()){if(m?.rareVisual243==='shiny'){delete m.rareVisual243;changed=true}const t=colorTier(m);if(['prism','gold','divine'].includes(t)&&m.rareVisual243!==t){m.rareVisual243=t;changed=true}const g=athleteGrade(m);if(Number(m.athleteStarGrade362)!==g){m.athleteStarGrade362=g;changed=true}if('birthStarGrade361'in m){delete m.birthStarGrade361;changed=true}}if(changed)try{localStorage.setItem(SAVE,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
 function syncCards(){const map=new Map(all().filter(x=>x?.id).map(x=>[x.id,x]));document.querySelectorAll('.card[data-id],.train210[data-athlete210]').forEach(c=>{const m=map.get(c.dataset.id||c.dataset.athlete210);if(!m)return;const g=athleteGrade(m),tag=c.querySelector('.athleteGrade340');if(tag){tag.className='athleteGrade340 grade340-'+g;tag.textContent=label(g)}c.dataset.athleteStarGrade=g})}
+function installBirthPipeline(){
+ if(window.__STAR_BIRTH_PIPELINE362)return;
+ const base=window.baby;if(typeof base!=='function')return;
+ window.__STAR_BIRTH_PIPELINE362=true;
+ window.baby=function(a,b){
+  let c=base(a,b);
+  const stages=[window.STAR_PATTERN342,window.STAR_BODY343,window.STAR_DIVINE_COLOR346,window.STAR_RARE_SKILL347];
+  for(const api of stages){try{if(typeof api?.birth==='function')c=api.birth(c,a,b)||c}catch(e){console.warn('star birth stage',e)}}
+  return c;
+ };
+}
 function syncModules(){
  for(const api of [window.STAR_COLOR341,window.STAR_PATTERN342,window.STAR_BODY343,window.STAR_RESONANCE344,window.STAR_RESONANCE_MISSION345,window.STAR_DIVINE_COLOR346,window.STAR_RARE_SKILL347]){
   try{api?.sync?.()}catch(e){console.warn('star module sync',e)}
@@ -34,6 +45,7 @@ function installRenderHook(){
  window.__STAR_RENDER_SYNC362=true;
  window.render=function(){const x=prev.apply(this,arguments);setTimeout(sync,0);return x};
 }
+installBirthPipeline();
 installRenderHook();
 addEventListener('load',()=>setTimeout(sync,100));
 document.addEventListener('click',()=>setTimeout(sync,40),true);
