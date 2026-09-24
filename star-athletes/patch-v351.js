@@ -78,7 +78,6 @@ document.addEventListener('click',e=>{
  if(e.target?.closest?.('[data-share-native351]')){nativeShare(window.__shareAthlete351);return}
  if(e.target?.closest?.('[data-share-copy351]')){copy(window.__shareAthlete351);return}
 },true);
-try{const prev=render;render=function(){const out=prev();setTimeout(install,60);return out}}catch(_){}
 setInterval(install,700);
 
 const css=document.createElement('style');css.textContent=`
