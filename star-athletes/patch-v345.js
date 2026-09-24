@@ -85,10 +85,6 @@ document.addEventListener('click',e=>{
  if(b){e.preventDefault();e.stopPropagation();claim345(b.dataset.resMission345);return}
  if(e.target?.closest?.('.tab[data-v="mission203"],#hatch,#adopt,#breedBtn'))setTimeout(render345,30);
 },true);
-try{
- const prev=render;
- render=function(){const out=prev();setTimeout(render345,0);return out};
-}catch(e){console.warn('resonance mission345 render',e)}
 
 const css=document.createElement('style');
 css.id='resonanceMission345css';
