@@ -164,7 +164,7 @@ css.textContent=`
 @keyframes resGlow344{50%{filter:brightness(1.08);transform:translateY(-1px)}}
 .birthResonance344{width:min(310px,92%);margin:8px auto;padding:11px 12px;border-radius:14px;text-align:center}
 .birthResonance344 small,.birthResonance344 b,.birthResonance344 strong,.birthResonance344 em{display:block}
-.birthResonance344 small{font-size:7px;letter-spacing:.13em}.birthResonance344 b{font-size:17px;margin:3px 0}.birthResonance344 strong{font-size:8px}.birthResonance344 em{font-size:7px;font-style:normal;margin-top:4px}
+.birthResonance344 small{font-size:7px;letter-spacing:.13em;color:#655574!important}.birthResonance344 b{font-size:17px;margin:3px 0;color:#30263d!important}.birthResonance344 strong{font-size:8px;color:#4b3d5a!important}.birthResonance344 em{font-size:7px;font-style:normal;margin-top:4px;color:#62586d!important}
 .birthResonance344.resonanceGrade344-5 b{text-shadow:0 0 12px #a872ff88}
 `;
 document.head.appendChild(css);
