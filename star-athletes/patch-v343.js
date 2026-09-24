@@ -119,6 +119,7 @@ function roll343(c,a,b){
 function migrate343(){
  let changed=false;
  for(const m of all343()){
+  if(rename343(m))changed=true;
   if(!m.starBody343){m.starBody343=base343(m);changed=true}
  }
  if(changed)persist343();
