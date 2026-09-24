@@ -112,18 +112,6 @@ function syncDOM341(){
 }
 
 wrapAvatar341();
-try{
- const prevRender341=render;
- render=function(){
-  const out=prevRender341();
-  setTimeout(syncDOM341,0);
-  return out;
- };
-}catch(e){console.warn('color341 render wrap',e)}
-
-document.addEventListener('click',e=>{
- if(e.target?.closest?.('[data-mode="p"],#breedBtn,#hatch,#adopt,.tab'))setTimeout(syncDOM341,20);
-},true);
 
 const css=document.createElement('style');
 css.id='starColor341css';
@@ -175,6 +163,6 @@ css.textContent=`
 document.head.appendChild(css);
 
 migrate341();
-setTimeout(()=>{try{render();syncDOM341()}catch(e){console.warn('color341 boot',e)}},0);
+setTimeout(syncDOM341,0);
 window.STAR_COLOR341={meta:META341,tier:tier341,label:label341,effects:effects341,sync:syncDOM341};
 })();
