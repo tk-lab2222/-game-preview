@@ -7,19 +7,19 @@ if(window.STAR_PATTERN342)return;
 const SAVE342='star-athletes-save-v200';
 const BASE342={
  'なし':{id:'plain',name:'無紋',grade:1,effect:'安定型・補正なし'},
- '縞':{id:'stream',name:'流線紋',grade:1,effect:'スピード・すばやさ育成 +3%'},
- '斑点':{id:'speck',name:'斑星紋',grade:2,effect:'大成功・超成功率 微増'},
- '炎':{id:'flame',name:'炎紋',grade:2,effect:'高負荷育成 成功時 +5%／ケガ率 +1pt'},
- '雷':{id:'thunder',name:'雷紋',grade:2,effect:'50m走・リレー適性 +2%'},
- '星':{id:'star',name:'星紋',grade:2,effect:'スキル習得率 +2pt'}
+ '縞':{id:'stream',name:'流線模様',grade:1,effect:'スピード・すばやさ育成 +3%'},
+ '斑点':{id:'speck',name:'星の斑点',grade:2,effect:'大成功・超成功率 微増'},
+ '炎':{id:'flame',name:'炎模様',grade:2,effect:'高負荷育成 成功時 +5%／ケガ率 +1pt'},
+ '雷':{id:'thunder',name:'雷模様',grade:2,effect:'50m走・リレー適性 +2%'},
+ '星':{id:'star',name:'星模様',grade:2,effect:'スキル習得率 +2pt'}
 };
 const UPPER342={
- stream:{shine:{id:'lightstream',name:'光流紋',grade:3,effect:'スピード・すばやさ育成 +5%'},phantom:{id:'comet',name:'彗星紋',grade:4,effect:'スピード・すばやさ育成 +7%／50m走適性 +2%'},god:{id:'godstream',name:'神駆紋',grade:5,effect:'高速系育成 +15%／瞬発競技 +8%'}},
- speck:{shine:{id:'brightspeck',name:'煌斑紋',grade:3,effect:'大成功・超成功率 上昇'},phantom:{id:'moon',name:'月輪紋',grade:4,effect:'大成功・超成功率 大幅上昇'},god:{id:'godmoon',name:'神月紋',grade:5,effect:'大成功 +8pt／超成功 +5pt'}},
- flame:{shine:{id:'hellflame',name:'獄炎紋',grade:3,effect:'高負荷成功時 +8%／ケガ率 +1pt'},phantom:{id:'sun',name:'日輪紋',grade:4,effect:'高負荷成功時 +10%／大成功率UP'},god:{id:'godsun',name:'神陽紋',grade:5,effect:'高負荷育成 +18%／超成功 +4pt'}},
- thunder:{shine:{id:'heaventhunder',name:'天雷紋',grade:3,effect:'50m走・リレー適性 +3%'},phantom:{id:'storm',name:'天嵐紋',grade:4,effect:'瞬発競技適性 +4%'},god:{id:'godthunder',name:'神雷紋',grade:5,effect:'50m走・リレー適性 +10%'}},
- star:{shine:{id:'heavenstar',name:'天星紋',grade:3,effect:'スキル習得率 +4pt'},phantom:{id:'galaxy',name:'銀河紋',grade:4,effect:'スキル習得率 +6pt／特殊血統に好影響'},god:{id:'godstar',name:'神紋',grade:5,effect:'スキル習得率 +15pt／特殊血統 ×1.35'}},
- plain:{shine:{id:'clear',name:'澄紋',grade:3,effect:'育成失敗・ケガをわずかに抑制'},phantom:{id:'void',name:'空輪紋',grade:4,effect:'安定性特化の希少紋'},god:{id:'godplain',name:'無極紋',grade:5,effect:'ケガ率 -5pt／育成 +8%'}}
+ stream:{shine:{id:'lightstream',name:'光の流線',grade:3,effect:'スピード・すばやさ育成 +5%'},phantom:{id:'comet',name:'彗星の流線',grade:4,effect:'スピード・すばやさ育成 +7%／50m走適性 +2%'},god:{id:'godstream',name:'神速の流線',grade:5,effect:'高速系育成 +15%／瞬発競技 +8%'}},
+ speck:{shine:{id:'brightspeck',name:'輝く斑点',grade:3,effect:'大成功・超成功率 上昇'},phantom:{id:'moon',name:'月光の斑点',grade:4,effect:'大成功・超成功率 大幅上昇'},god:{id:'godmoon',name:'神月の斑点',grade:5,effect:'大成功 +8pt／超成功 +5pt'}},
+ flame:{shine:{id:'hellflame',name:'獄炎模様',grade:3,effect:'高負荷成功時 +8%／ケガ率 +1pt'},phantom:{id:'sun',name:'太陽の炎',grade:4,effect:'高負荷成功時 +10%／大成功率UP'},god:{id:'godsun',name:'神炎',grade:5,effect:'高負荷育成 +18%／超成功 +4pt'}},
+ thunder:{shine:{id:'heaventhunder',name:'稲妻模様',grade:3,effect:'50m走・リレー適性 +3%'},phantom:{id:'storm',name:'天雷模様',grade:4,effect:'瞬発競技適性 +4%'},god:{id:'godthunder',name:'神雷',grade:5,effect:'50m走・リレー適性 +10%'}},
+ star:{shine:{id:'heavenstar',name:'輝星模様',grade:3,effect:'スキル習得率 +4pt'},phantom:{id:'galaxy',name:'銀河模様',grade:4,effect:'スキル習得率 +6pt／特殊血統に好影響'},god:{id:'godstar',name:'神星模様',grade:5,effect:'スキル習得率 +15pt／特殊血統 ×1.35'}},
+ plain:{shine:{id:'clear',name:'澄み模様',grade:3,effect:'育成失敗・ケガをわずかに抑制'},phantom:{id:'void',name:'幻影模様',grade:4,effect:'安定性特化の希少紋'},god:{id:'godplain',name:'神秘模様',grade:5,effect:'ケガ率 -5pt／育成 +8%'}}
 };
 const GRADE342={1:['★','通常'],2:['★★','希少'],3:['★★★','輝星'],4:['★★★★','幻星'],5:['★★★★★','神星']};
 const LEGACY_BY_NAME342={};
