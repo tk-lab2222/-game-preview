@@ -11,7 +11,7 @@ const POL266={
 };
 function state266(){if(!S.training263||typeof S.training263!=='object')S.training263={};return S.training263}
 function policy266(){return state266().policy266||''}
-function persist266(){try{localStorage.setItem(SAVE266,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
+function persist266(){try{window.STAR_SAVE_CORE?.save?.('v266')||localStorage.setItem(SAVE266,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
 function persistPlans266(){try{const mem=JSON.parse(localStorage.getItem(MEM266)||'{}');(S.nest||[]).forEach(m=>{if(S.plans?.[m.id])mem[m.id]=S.plans[m.id]});localStorage.setItem(MEM266,JSON.stringify(mem))}catch(_){}}
 function planForStat266(k){return k==='power'?'power':k==='stamina'?'stamina':k==='tech'?'tech':k==='guts'?'team':'speed'}
 function statKey266(m,dir='max'){
