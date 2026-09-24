@@ -48,10 +48,18 @@ function info342(m){
  return{id:b.id||b.base,base:b.base||b.id,grade:b.grade,name:b.name,effect:b.effect,tier:b.grade>=3?'upper':'base'};
 }
 function persist342(){try{localStorage.setItem(SAVE342,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}}
+function rename342(m){
+ const names={'流線紋':'流線模様','斑星紋':'星の斑点','炎紋':'炎模様','雷紋':'雷模様','星紋':'星模様','光流紋':'光の流線','彗星紋':'彗星の流線','神駆紋':'神速の流線','煌斑紋':'輝く斑点','月輪紋':'月光の斑点','神月紋':'神月の斑点','獄炎紋':'獄炎模様','日輪紋':'太陽の炎','神陽紋':'神炎','天雷紋':'稲妻模様','天嵐紋':'天雷模様','神雷紋':'神雷','天星紋':'輝星模様','銀河紋':'銀河模様','神紋':'神星模様','澄紋':'澄み模様','空輪紋':'幻影模様','無極紋':'神秘模様'};
+ let changed=false;
+ if(m?.starPattern342?.name&&names[m.starPattern342.name]){m.starPattern342.name=names[m.starPattern342.name];changed=true}
+ if(m?.visual?.pattern&&names[m.visual.pattern]){m.visual.pattern=names[m.visual.pattern];changed=true}
+ return changed;
+}
 function migrate342(){
  let changed=false;
  for(const m of all342()){
   if(!m?.visual)continue;
+  if(rename342(m))changed=true;
   if(!m.starPattern342){
    const b=baseInfo342(m);
    m.starPattern342={id:b.id||b.base,base:b.base||b.id,grade:b.grade,name:b.name,effect:b.effect,tier:b.grade>=3?'upper':'base'};
