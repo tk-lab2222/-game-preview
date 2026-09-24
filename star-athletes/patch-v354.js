@@ -26,7 +26,6 @@ function star354(){
  });
 }
 function sync354(){tools354();star354()}
-try{const prev=window.render;if(typeof prev==='function')window.render=function(){const out=prev.apply(this,arguments);setTimeout(sync354,0);return out}}catch(_){}
 document.addEventListener('click',e=>{if(e.target?.closest?.('.tab,#hatch,#adopt'))setTimeout(sync354,40)},true);
 const css=document.createElement('style');css.textContent=`
 .saveBtns352{grid-template-columns:1fr 1fr!important}.saveBtns352 #reset354{grid-column:1/3;border-color:#d88b8b!important;background:#fff4f4!important;color:#8d3434!important}
