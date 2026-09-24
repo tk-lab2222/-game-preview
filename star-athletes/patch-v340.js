@@ -26,27 +26,8 @@ function clamp340(v){return Math.max(1,Math.min(5,Math.round(Number(v)||1)))}
 function grade340(n){return GRADE340[clamp340(n)]}
 function skillGrade340(id){return clamp340(SKILL_GRADE340[id]||1)}
 function skillName340(id){return SKILL_NAME340[id]||id||'スキル'}
-function visualGrade340(m){
-  if(m?.rareVisual243==='divine'||m?.visual?.color==='神彩')return 5;
-  if(m?.rareVisual243==='prism'||m?.visual?.color==='プリズム')return 4;
-  if(m?.rareVisual243==='mutation')return 4;
-  if(m?.rareVisual243==='gold'||m?.visual?.color==='金')return 3;
-  if(m?.shiny)return 2;
-  return 1;
-}
-function specialGrade340(m){
-  const id=m?.ultraRare274?.id;
-  if(id==='mythic')return 5;
-  if(id==='miracle')return 4;
-  if(id==='mutation')return 3;
-  if(id==='ex')return 2;
-  if(m?.specialLineage273)return 3;
-  return 1;
-}
 function athleteGrade340(m){
-  // Fallback only; v362 is canonical. Shiny is independent from Star Color, but guarantees at least ★★.
-  // Component grades never promote athlete grade directly; Star Resonance may promote it.
-  return Math.max(visualGrade340(m),specialGrade340(m),Number(window.STAR_RESONANCE344?.grade?.(m)||1));
+  try{return Number(window.STAR_GRADE_ENGINE362?.athleteGrade?.(m)||1)}catch(_){return 1}
 }
 function highestSkill340(m){
   let best=null;
@@ -154,8 +135,6 @@ window.STAR_GRADE340={
   grades:GRADE340,
   skillGrade:skillGrade340,
   athleteGrade:athleteGrade340,
-  visualGrade:visualGrade340,
-  specialGrade:specialGrade340,
   highestSkill:highestSkill340,
   abilityRank:abilityRank340,
   finalizeAbilityRanks:finalizeAbilityRanks340,
