@@ -1,0 +1,30 @@
+(()=>{'use strict';if(window.STAR_UI369)return;
+function all(){const out=[],seen=new Set();for(const k of ['starters','nest','lineage','released','cands','foster'])for(const m of(S?.[k]||[]))if(m?.id&&!seen.has(m.id)){seen.add(m.id);out.push(m)}return out}
+const vals=m=>[['ちから',m.power||0,'pow'],['スピード',m.speed||0,'spd'],['スタミナ',m.stamina||0,'sta'],['すばやさ',m.agility||0,'agi'],['テクニック',m.tech||0,'tec'],['こんじょう',m.guts||0,'gut']];
+function grade(m){try{return Math.max(1,Math.min(5,Number(STAR_GRADE362?.athleteGrade?.(m)||m.athleteStarGrade362||1)))}catch(_){return 1}}
+function rank(m){try{return STAR_GRADE340?.abilityRank?.(m)||m.abilityRank340||m.abilityRank||''}catch(_){return m.abilityRank340||''}}
+function enhance(card,m){if(card.classList.contains('starUI369'))return;card.classList.add('starUI369','starUIGrade369-'+grade(m));
+ const host=card.querySelector('.bd')||card.querySelector('header>div')||card;
+ const old=card.querySelector('.starHero369');if(old)old.remove();
+ const g=grade(m),stars='★'.repeat(g),mx=Math.max(800,...vals(m).map(x=>Number(x[1])||0));
+ let traits=[];try{traits=(STAR_BODY343?.traits?.(m)||[]).map(x=>({g:Number(STAR_BODY343?.traitGrade?.(x)||x.grade||1),name:x.name||''}))}catch(_){}
+ const hero=document.createElement('div');hero.className='starHero369';
+ hero.innerHTML='<div class="heroTop369"><span class="grade369">'+stars+' '+(['','通常','希少','輝星','幻星','神星'][g]||'')+'</span>'+(rank(m)?'<b class="rank369">'+rank(m)+'</b>':'')+'</div><div class="stage369"><div class="aura369"></div><div class="athlete369">'+(card.querySelector('.avatar,.art,.artimg')?.outerHTML||'<span>✦</span>')+'</div><div class="traitFloat369">'+traits.filter(x=>x.g>=3).slice(0,2).map(x=>'<em>'+'★'.repeat(x.g)+' '+x.name+'</em>').join('')+'</div></div><div class="statHud369">'+vals(m).map(x=>'<div class="stat369 '+x[2]+'"><span>'+x[0]+'</span><i><b style="width:'+Math.max(4,Math.min(100,Math.round((Number(x[1])||0)/mx*100)))+'%"></b></i><strong>'+Math.round(Number(x[1])||0)+'</strong></div>').join('')+'</div>';
+ host.prepend(hero);
+}
+function sync(){const map=new Map(all().map(m=>[String(m.id),m]));document.querySelectorAll('.card[data-id],.train210[data-athlete210]').forEach(c=>{const m=map.get(String(c.dataset.id||c.dataset.athlete210));if(m)enhance(c,m)})}
+const st=document.createElement('style');st.textContent=`
+.starUI369{position:relative;overflow:hidden!important;border:1px solid #324d76!important;background:linear-gradient(155deg,#07101f,#11172d 55%,#241240)!important;color:#edf6ff!important;box-shadow:0 12px 30px #050b1888!important}
+.starUI369 .bd{background:transparent!important}.starHero369{margin:-2px -2px 8px;padding:8px;border-radius:13px;background:linear-gradient(160deg,#101c35,#1d1640);border:1px solid #395681}
+.heroTop369{display:flex;justify-content:space-between;align-items:center}.grade369{font-size:8px;font-weight:900;color:#f0dcff;text-shadow:0 0 9px #b66cff}.rank369{padding:3px 7px;border-radius:10px;background:#0c3850;color:#7ef4ff;font-size:9px;box-shadow:0 0 10px #45dfff55}
+.stage369{position:relative;height:126px;margin:5px 0;border-radius:12px;overflow:hidden;background:radial-gradient(circle at 50% 48%,#9a55ff88 0 15%,#352660 35%,#0b1428 72%);border:1px solid #654b93}
+.stage369:before,.stage369:after{content:"";position:absolute;border:1px solid #82eaff55;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}.stage369:before{width:150px;height:80px}.stage369:after{width:190px;height:108px;border-color:#c479ff44}
+.aura369{position:absolute;width:95px;height:95px;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 28px 12px #a95fff66}
+.athlete369{position:absolute;inset:8px 45px;display:flex;align-items:center;justify-content:center;z-index:2}.athlete369 .avatar,.athlete369 .art,.athlete369 .artimg{width:100%!important;height:100%!important;max-width:150px!important;object-fit:contain!important;background:transparent!important;border:0!important}.athlete369>span{font-size:55px;color:white;text-shadow:0 0 18px #d18cff}
+.traitFloat369{position:absolute;right:5px;top:34px;z-index:3;display:flex;flex-direction:column;gap:4px}.traitFloat369 em{font-style:normal;font-size:6px;font-weight:800;padding:4px 5px;border-radius:9px;background:#321d4edd;border:1px solid #a86bd6;color:#f2ddff}
+.statHud369{display:grid;grid-template-columns:1fr 1fr;gap:4px 8px}.stat369{display:grid;grid-template-columns:39px 1fr 27px;align-items:center;gap:4px;font-size:6px}.stat369>span{color:#a9bdd4;font-weight:800}.stat369>strong{text-align:right;font-size:8px;color:#fff}.stat369 i{height:6px;border-radius:5px;background:#17263b;overflow:hidden}.stat369 i b{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#5bdcff,#ad72ff);box-shadow:0 0 6px #64dfff}.stat369.pow i b{background:linear-gradient(90deg,#ff6c87,#ff9bba)}.stat369.spd i b{background:linear-gradient(90deg,#ffd557,#fff08a)}.stat369.sta i b{background:linear-gradient(90deg,#64df82,#9cffaa)}.stat369.agi i b{background:linear-gradient(90deg,#9a72ff,#d8a2ff)}.stat369.tec i b{background:linear-gradient(90deg,#45bfff,#7ee8ff)}.stat369.gut i b{background:linear-gradient(90deg,#54e4e8,#8cffff)}
+.starUIGrade369-4 .starHero369{border-color:#9e69d1;box-shadow:inset 0 0 20px #a75cff22}.starUIGrade369-5 .starHero369{border-color:#e7c965;background:linear-gradient(145deg,#251936,#10233d);box-shadow:0 0 18px #ffd76c55}.starUIGrade369-5 .stage369{background:radial-gradient(circle,#ffe99a99,#7b4f9d 35%,#10233d 72%)}
+.starUI369 .starDetails360,.starUI369 .skillUnified254{border-color:#344a67!important}.starUI369 .starDetail360,.starUI369 .bodyParts360,.starUI369 .bodyPart360{background:#0e1b2ddd!important;color:#e9f4ff!important;border-color:#344a67!important}.starUI369 .bodyPart360 small,.starUI369 .starDetail360 small{color:#9fb3ca!important}
+`;document.head.appendChild(st);
+try{const prev=render;render=function(){const out=prev();setTimeout(sync,0);setTimeout(sync,120);return out}}catch(_){}
+window.STAR_UI369={sync};setTimeout(sync,0)})();
