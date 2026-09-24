@@ -25,10 +25,6 @@ function ensure347(m){
  m.rareSkillRolled347=true;
  return m;
 }
-try{
- const prevBaby347=baby;
- baby=function(a,b){return ensure347(prevBaby347(a,b))};
-}catch(e){console.warn('rare skill347 baby',e)}
 function all347(){
  const out=[],seen=new Set();
  for(const key of ['starters','nest','lineage','released','cands','foster']){
@@ -46,6 +42,6 @@ function migrate347(){
  }
  if(changed)save347();
 }
-window.STAR_RARE_SKILL347={ensure:ensure347,sync:migrate347};
+window.STAR_RARE_SKILL347={birth:(c)=>ensure347(c),ensure:ensure347,sync:migrate347};
 setTimeout(migrate347,0);
 })();
