@@ -44,8 +44,9 @@ function specialGrade340(m){
   return 1;
 }
 function athleteGrade340(m){
-  // Star grade is an innate birth trait. Acquired skills must never raise it after training.
-  // Fallback only; v362 is canonical. Component grades never promote athlete grade directly.\n  return Math.max(visualGrade340(m),specialGrade340(m),Number(window.STAR_RESONANCE344?.grade?.(m)||1));
+  // Fallback only; v362 is canonical. Shiny is independent from Star Color, but guarantees at least ★★.
+  // Component grades never promote athlete grade directly; Star Resonance may promote it.
+  return Math.max(visualGrade340(m),specialGrade340(m),Number(window.STAR_RESONANCE344?.grade?.(m)||1));
 }
 function highestSkill340(m){
   let best=null;
