@@ -5,8 +5,7 @@ if(window.STAR_COLOR341)return;
 
 const SAVE341='star-athletes-save-v200';
 const META341={
- normal:{name:'通常色',stars:'★',grade:1},
- shiny:{name:'色違い',stars:'★★',grade:2},
+ normal:{name:'星色なし',stars:'★',grade:1},
  gold:{name:'黄金',stars:'★★★',grade:3},
  prism:{name:'虹色',stars:'★★★★',grade:4},
  mutation:{name:'異変色',stars:'★★★★',grade:4},
@@ -27,17 +26,14 @@ function tier341(m){
  if(m?.rareVisual243==='prism'||m?.visual?.color==='プリズム')return'prism';
  if(m?.rareVisual243==='gold'||m?.visual?.color==='金')return'gold';
  if(m?.rareVisual243==='mutation')return'mutation';
- if(m?.rareVisual243==='shiny'||m?.shiny)return'shiny';
  return'normal';
 }
 function label341(m){
  const t=tier341(m),meta=META341[t]||META341.normal;
- if(t==='shiny')return `${meta.stars} ${meta.name}・${SHINY_NAME341[m?.species]||'特殊色'}`;
  return `${meta.stars} ${meta.name}`;
 }
 function effects341(m){
  const t=tier341(m);
- if(t==='shiny')return['特殊血統レシピ ×1.10'];
  if(t==='gold')return['親使用時 能力継承率 +1pt'];
  if(t==='prism')return['特殊血統レシピ ×1.25','特殊誕生抽選 ×1.25'];
  if(t==='mutation')return['特殊変異を示す希少外見'];
@@ -51,13 +47,7 @@ function migrate341(){
  let changed=false;
  for(const m of all341()){
   if(!m)continue;
-  // v243 previously converted legacy shiny into gold. Only undo that when it is
-  // clearly not a genuine gold-colored athlete.
-  if(m.shiny&&m.rareVisual243==='gold'&&m?.visual?.color!=='金'){
-   m.rareVisual243='shiny';changed=true;
-  }
-  if(m.shiny&&!m.rareVisual243){m.rareVisual243='shiny';changed=true}
- }
+  // 色違い(shiny)は星色とは独立。旧データで星色に混入した shiny マーカーだけ除去する。\n  if(m.rareVisual243==='shiny'){delete m.rareVisual243;changed=true}\n }
  if(changed)persist341();
  return changed;
 }
@@ -196,7 +186,6 @@ css.textContent=`
 .colorChip341 b{font-size:7px;white-space:nowrap}.colorChip341 em{font-size:6px;font-style:normal;color:#667789}
 .color-gold341{background:linear-gradient(90deg,#fff7cf,#fff)!important;border-color:#d7bd5b!important}
 .color-prism341{background:linear-gradient(90deg,#e8faff,#f4e8ff,#fff7d7)!important;border-color:#ac91d0!important}
-.color-shiny341{background:#effbf7!important;border-color:#8bcdb7!important}
 .color-mutation341{background:#f4ebff!important;border-color:#ad83d7!important}
 
 .birthColor341{width:min(300px,90%);margin:7px auto;padding:7px 9px;border:1px solid #d7dfe7;border-radius:10px;text-align:center;background:#fff}
