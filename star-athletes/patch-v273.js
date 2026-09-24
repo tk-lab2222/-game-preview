@@ -44,7 +44,7 @@ function rareRecipeParentMult273(a,b,m){
  const parents=[a,b].filter(Boolean);
  const hasDivine=parents.some(p=>p?.rareVisual243==='divine'||p?.visual?.color==='神彩');
  const hasPrism=parents.some(p=>p?.rareVisual243==='prism'||p?.visual?.color==='プリズム');
- const hasShiny=parents.some(p=>p?.rareVisual243==='shiny'||p?.shiny);
+ const hasShiny=parents.some(p=>!!p?.shiny);
  if(hasDivine){mult*=1.50;reasons.push('神彩血統×1.50')}
  else if(hasPrism){mult*=1.25;reasons.push('虹色血統×1.25')}
  else if(hasShiny){mult*=1.10;reasons.push('色違い血統×1.10')}
