@@ -38,9 +38,7 @@ function currentRank200(){
   return cur;
 }
 function nextRank200(){const cur=currentRank200(),i=RANKS200.indexOf(cur);return RANKS200[Math.min(i+1,RANKS200.length-1)]}
-function save200(){
-  try{init200();localStorage.setItem(SAVE200,JSON.stringify({savedAt:Date.now(),S}))}catch(e){console.warn('save200',e)}
-}
+function canonicalSave200(source='core'){\n  try{init200();localStorage.setItem(SAVE200,JSON.stringify({savedAt:Date.now(),source,S}));return true}catch(e){console.warn('canonical save',source,e);return false}\n}\nwindow.STAR_SAVE_CORE={key:SAVE200,save:canonicalSave200};\nfunction save200(){canonicalSave200('v200')}
 function load200(){\n  // Legacy v200 snapshots can be months/generations behind the live in-memory state.\n  // Never replace S wholesale on boot; current game state is authoritative.\n  try{const raw=localStorage.getItem(SAVE200);if(!raw)return false;const d=JSON.parse(raw);if(!d?.S)return false;const old=d.S;init200();\n    S.emblems=Array.from(new Set([...(S.emblems||[]),...(old.emblems||[])]));\n    S.missionClaimed={...(old.missionClaimed||{}),...(S.missionClaimed||{})};\n    S.specialShop={...(old.specialShop||{}),...(S.specialShop||{})};\n    S.totalSpent=Math.max(Number(S.totalSpent)||0,Number(old.totalSpent)||0);\n    return true\n  }catch(e){console.warn('load200',e);return false}\n}
 function missionDefs200(){
   const hist=S.seasonHistory||[],breeds=S.breedCount||0;
