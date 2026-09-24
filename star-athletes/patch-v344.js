@@ -146,8 +146,6 @@ function sync344(){
  try{window.STAR_MY_STAR323?.sync?.()}catch(_){}
  try{window.STAR_GRADE340?.sync?.()}catch(_){}
 }
-try{const prev=render;render=function(){const out=prev();setTimeout(sync344,0);return out}}catch(e){console.warn('resonance344 render',e)}
-document.addEventListener('click',e=>{if(e.target?.closest?.('#hatch,#breedBtn,#adopt,.tab,[data-my-star323]'))setTimeout(sync344,30)},true);
 
 window.STAR_RESONANCE344={
  grade:resonanceGrade344,title:title344,label:label344,effect:effect344,
