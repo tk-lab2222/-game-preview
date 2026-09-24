@@ -7,7 +7,7 @@ const SAVE='star-athletes-save-v200',SNAP='star-athletes-save-v200-prebalance-03
 const LEAGUES=['ローカル','エリア','グランド','メジャー','プラネット','ギャラクシー'];
 const RANK_LEAGUE={C:'ローカル挑戦前',U:'ローカル級',R:'エリア級',SR:'グランド級',SSR:'メジャー級',UR:'プラネット級',EX:'ギャラクシー級'};
 const RANK_ORDER=['C','U','R','SR','SSR','UR','EX'];
-function save352(){try{localStorage.setItem(SAVE,JSON.stringify({savedAt:Date.now(),S}));return true}catch(_){return false}}
+function save352(){try{return window.STAR_SAVE_CORE?.save?.('v352')||!!localStorage.setItem(SAVE,JSON.stringify({savedAt:Date.now(),S}))}catch(_){return false}}
 function valid352(raw){try{const d=JSON.parse(raw);return d&&d.S&&typeof d.S==='object'?d:null}catch(_){return null}}
 function protect352(force=false){
  try{
