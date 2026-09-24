@@ -41,14 +41,13 @@ function title344(m){
  if(c==='prism'&&p.base==='stream'&&b.role==='speed')return'星虹の天駆';
  if(c==='prism'&&p.base==='star'&&b.role==='tech')return'星虹天星';
  if(c==='mutation'&&p.base==='speck'&&(b.role==='tech'||b.role==='stamina'))return'幻月異相';
- if(c==='shiny'&&p.base==='stream'&&b.role==='speed')return'異彩疾風';
  if(g===5&&c==='divine'&&p.base==='star')return'神彩星帝';
  if(g===5&&c==='divine'&&p.base==='thunder')return'神彩雷皇';
  if(g===5&&c==='divine')return'神彩天王';
  if(g===5&&c==='prism')return'神虹星皇';
  if(g===5&&c==='gold')return'黄金神王';
  if(g===5&&c==='mutation')return'幻異神星';
- const cp={normal:'星',shiny:'異彩',gold:'黄金',prism:'星虹',mutation:'幻異',divine:'神彩'}[c]||'星';
+ const cp={normal:'星',gold:'黄金',prism:'星虹',mutation:'幻異',divine:'神彩'}[c]||'星';
  const pp={plain:'無極',stream:'疾風',speck:'月影',flame:'烈火',thunder:'雷光',star:'天星'}[p.base]||'星';
  const bp={speed:'迅',power:'剛',tech:'慧',stamina:'堅'}[b.role]||'王';
  return cp+pp+bp;
