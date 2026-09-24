@@ -174,7 +174,6 @@ document.addEventListener('click',e=>{
  if(e.target?.closest?.('#hatch,#breedBtn,#adopt,.tab,[data-my-star323]'))setTimeout(sync348,50);
 },true);
 
-try{const prev=render;render=function(){const out=prev();setTimeout(sync348,0);return out}}catch(e){console.warn('god present348 render',e)}
 
 const css=document.createElement('style');
 css.id='godPresent348css';
