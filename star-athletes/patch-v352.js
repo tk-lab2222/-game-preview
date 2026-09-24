@@ -16,12 +16,7 @@ function protect352(force=false){
   return true;
  }catch(_){return false}
 }
-function restore352(){
- try{
-  const raw=localStorage.getItem(SNAP),d=valid352(raw);if(!d)return false;
-  localStorage.setItem(SAVE,raw);window.S=d.S;location.reload();return true;
- }catch(_){return false}
-}
+function restore352(){\n try{\n  const raw=localStorage.getItem(SNAP),d=valid352(raw);if(!d)return false;\n  // Explicit user recovery only. Mutate the canonical state object instead of replacing window.S,\n  // because every loaded patch closes over the original S reference.\n  if(!confirm('保護データへ戻すと現在の大会・世代・配合進行を置き換えます。続行しますか？'))return false;\n  Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,d.S);save352();render();return true;\n }catch(_){return false}\n}
 // Preserve the current pre-test lineage automatically before the user resets it.
 protect352(false);
 
@@ -36,7 +31,7 @@ function saveTools352(){
  const has=!!valid352(localStorage.getItem(SNAP));
  box.innerHTML='<div><small>PLAYTEST SAVE</small><h3>💾 検証データ保護</h3><p>新バランスを最初から試しても、現在の血統へ戻せます。</p></div><div class="saveBtns352"><button id="protect352">現在データを保護</button><button id="restore352" '+(has?'':'disabled')+'>保護データへ戻す</button></div><em>'+(has?'✓ 保護データあり':'保護データなし')+'</em>';
  box.querySelector('#protect352').onclick=()=>{if(protect352(true)){toast352('💾 現在の血統を保護しました');saveTools352()}};
- box.querySelector('#restore352').onclick=()=>{if(confirm('現在の進行を保護データで置き換えます。よろしいですか？'))restore352()};
+ box.querySelector('#restore352').onclick=()=>restore352();
 }
 
 function abilityResult352(list){
