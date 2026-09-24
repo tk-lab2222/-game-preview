@@ -22,9 +22,10 @@ function colorGrade344(m){
 }
 function pattern344(m){try{return window.STAR_PATTERN342?.info?.(m)||{base:'plain',grade:1,name:'無紋'}}catch(_){return{base:'plain',grade:1,name:'無紋'}}}
 function body344(m){try{return window.STAR_BODY343?.info?.(m)||{role:'',grade:1,name:''}}catch(_){return{role:'',grade:1,name:''}}}
+function bodies344(m){try{return window.STAR_BODY343?.traits?.(m)||[body344(m)]}catch(_){return[body344(m)]}}
 function grades344(m){
- const p=pattern344(m),b=body344(m);
- return{color:colorGrade344(m),pattern:Number(p.grade)||1,body:Number(b.grade)||1};
+ const p=pattern344(m),bg=Math.max(...bodies344(m).map(x=>Number(x.grade)||1),1);
+ return{color:colorGrade344(m),pattern:Number(p.grade)||1,body:bg};
 }
 function resonanceGrade344(m){
  const g=Object.values(grades344(m)).sort((a,b)=>b-a);
