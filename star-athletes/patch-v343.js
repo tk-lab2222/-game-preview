@@ -9,28 +9,28 @@ const GRADE343={1:['★','通常'],2:['★★','希少'],3:['★★★','輝星'
 
 const BODY343={
  draco:[
-  {id:'horn',base:'竜角体',shine:'王角体',phantom:'天角体',god:'神角体',role:'power',stats:['power','guts'],effect:'ちから・こんじょう型'},
-  {id:'wing',base:'翼竜体',shine:'光翼体',phantom:'天翼体',god:'神翼体',role:'speed',stats:['speed','agility'],effect:'スピード・すばやさ型'},
-  {id:'tail',base:'星尾体',shine:'彗尾体',phantom:'天尾体',god:'神尾体',role:'tech',stats:['tech','agility'],effect:'テクニック・すばやさ型'},
-  {id:'scale',base:'晶鱗体',shine:'輝鱗体',phantom:'幻晶体',god:'神晶体',role:'stamina',stats:['stamina','guts'],effect:'スタミナ・こんじょう型'}
+  {id:'horn',base:'竜の角',shine:'王者の角',phantom:'天空の角',god:'神角',role:'power',stats:['power','guts'],effect:'ちから・こんじょう型'},
+  {id:'wing',base:'風の翼',shine:'光の翼',phantom:'天空の翼',god:'神翼',role:'speed',stats:['speed','agility'],effect:'スピード・すばやさ型'},
+  {id:'tail',base:'星の尾',shine:'彗星の尾',phantom:'天空の尾',god:'神尾',role:'tech',stats:['tech','agility'],effect:'テクニック・すばやさ型'},
+  {id:'scale',base:'水晶の鱗',shine:'輝く鱗',phantom:'幻晶ボディ',god:'神晶ボディ',role:'stamina',stats:['stamina','guts'],effect:'スタミナ・こんじょう型'}
  ],
  unil:[
-  {id:'horn',base:'俊角体',shine:'光角体',phantom:'天角体',god:'神角体',role:'power',stats:['power','tech'],effect:'ちから・テクニック型'},
-  {id:'mane',base:'風鬣体',shine:'疾鬣体',phantom:'天鬣体',god:'神鬣体',role:'speed',stats:['speed','agility'],effect:'スピード・すばやさ型'},
-  {id:'ear',base:'聴星体',shine:'星耳体',phantom:'天聴体',god:'神聴体',role:'tech',stats:['tech','agility'],effect:'テクニック・すばやさ型'},
-  {id:'tail',base:'流尾体',shine:'光尾体',phantom:'天尾体',god:'神尾体',role:'stamina',stats:['stamina','guts'],effect:'スタミナ・こんじょう型'}
+  {id:'horn',base:'俊敏の角',shine:'光の角',phantom:'天空の角',god:'神角',role:'power',stats:['power','tech'],effect:'ちから・テクニック型'},
+  {id:'mane',base:'風のたてがみ',shine:'疾風のたてがみ',phantom:'天空のたてがみ',god:'神風のたてがみ',role:'speed',stats:['speed','agility'],effect:'スピード・すばやさ型'},
+  {id:'ear',base:'星の耳',shine:'輝く耳',phantom:'天空の耳',god:'神聴の耳',role:'tech',stats:['tech','agility'],effect:'テクニック・すばやさ型'},
+  {id:'tail',base:'流れる尾',shine:'光の尾',phantom:'天空の尾',god:'神尾',role:'stamina',stats:['stamina','guts'],effect:'スタミナ・こんじょう型'}
  ],
  grimo:[
-  {id:'beak',base:'鋭嘴体',shine:'王嘴体',phantom:'天嘴体',god:'神嘴体',role:'tech',stats:['tech','power'],effect:'テクニック・ちから型'},
-  {id:'wing',base:'翼書体',shine:'光翼体',phantom:'天翼体',god:'神翼体',role:'speed',stats:['speed','agility'],effect:'スピード・すばやさ型'},
-  {id:'chest',base:'星羽体',shine:'輝羽体',phantom:'天羽体',god:'神羽体',role:'stamina',stats:['stamina','guts'],effect:'スタミナ・こんじょう型'},
-  {id:'crest',base:'冠羽体',shine:'王冠羽体',phantom:'天冠体',god:'神冠体',role:'power',stats:['power','guts'],effect:'ちから・こんじょう型'}
+  {id:'beak',base:'鋭いくちばし',shine:'王者のくちばし',phantom:'天空のくちばし',god:'神鳥のくちばし',role:'tech',stats:['tech','power'],effect:'テクニック・ちから型'},
+  {id:'wing',base:'大きな翼',shine:'光の翼',phantom:'天空の翼',god:'神翼',role:'speed',stats:['speed','agility'],effect:'スピード・すばやさ型'},
+  {id:'chest',base:'星の羽',shine:'輝く羽',phantom:'天羽体',god:'神羽体',role:'stamina',stats:['stamina','guts'],effect:'スタミナ・こんじょう型'},
+  {id:'crest',base:'冠羽',shine:'王者の冠羽',phantom:'天空の冠羽',god:'神鳥の冠羽',role:'power',stats:['power','guts'],effect:'ちから・こんじょう型'}
  ],
  puru:[
-  {id:'ear',base:'伸耳体',shine:'光耳体',phantom:'天耳体',god:'神耳体',role:'speed',stats:['speed','agility'],effect:'スピード・すばやさ型'},
-  {id:'tail',base:'流尾体',shine:'光尾体',phantom:'天尾体',god:'神尾体',role:'power',stats:['power','guts'],effect:'ちから・こんじょう型'},
-  {id:'clear',base:'透晶体',shine:'輝晶体',phantom:'幻晶体',god:'神晶体',role:'stamina',stats:['stamina','tech'],effect:'スタミナ・テクニック型'},
-  {id:'core',base:'星核体',shine:'輝核体',phantom:'天核体',god:'神核体',role:'tech',stats:['tech','guts'],effect:'テクニック・こんじょう型'}
+  {id:'ear',base:'長い耳',shine:'光の耳',phantom:'天空の耳',god:'神速の耳',role:'speed',stats:['speed','agility'],effect:'スピード・すばやさ型'},
+  {id:'tail',base:'流れる尾',shine:'光の尾',phantom:'天空の尾',god:'神尾',role:'power',stats:['power','guts'],effect:'ちから・こんじょう型'},
+  {id:'clear',base:'透明ボディ',shine:'輝くボディ',phantom:'幻晶ボディ',god:'神晶ボディ',role:'stamina',stats:['stamina','tech'],effect:'スタミナ・テクニック型'},
+  {id:'core',base:'星のコア',shine:'輝くコア',phantom:'天空のコア',god:'神星のコア',role:'tech',stats:['tech','guts'],effect:'テクニック・こんじょう型'}
  ]
 };
 
