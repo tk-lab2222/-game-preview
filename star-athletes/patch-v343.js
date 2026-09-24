@@ -63,6 +63,8 @@ function traitGrade343(x){return Math.max(1,Math.min(5,Number(x?.grade)||1))}
 function traitLabel343(x){const g=traitGrade343(x),z=GRADE343[g];return `${z[0]} ${z[1]}・${x.name}`}
 function label343(m){return traitLabel343(info343(m))}
 function statPct343(g){return g>=5?.06:g===4?.03:g===3?.015:0}
+function godCount343(m){return traits343(m).filter(x=>traitGrade343(x)>=5).length}
+function godCompletion343(m){const n=godCount343(m);return n>=4?{count:n,name:'神体完成',allPct:.04}:n>=3?{count:n,name:'三神体',allPct:0}:n>=2?{count:n,name:'双神体',allPct:0}:{count:n,name:'',allPct:0}}
 function traitEffect343(x){
  const g=traitGrade343(x),pct=Math.round(statPct343(g)*100),role=x?.effect||'身体特性';
  if(g>=3)return `${role}／得意能力 +${pct}%${g>=4?'／育成・競技にも補正':''}`;
@@ -129,18 +131,19 @@ function migrate343(){
 function applyDirect343(m){
  if(!m||m.starBodiesStatApplied343)return false;
  const bonuses={};
- for(const x of traits343(m)){const pct=statPct343(traitGrade343(x));if(!pct)continue;for(const k of(x.stats||[]))bonuses[k]=Math.max(bonuses[k]||0,pct)}
+ for(const x of traits343(m)){const g=traitGrade343(x),pct=statPct343(g);if(!pct)continue;for(const k of(x.stats||[])){if(g>=5)bonuses[k]=(bonuses[k]||0)+pct;else bonuses[k]=Math.max(bonuses[k]||0,pct)}}
+ const completion=godCompletion343(m);if(completion.allPct)for(const k of['speed','power','stamina','tech','agility','guts'])bonuses[k]=(bonuses[k]||0)+completion.allPct
  if(!Object.keys(bonuses).length)return false;
  m.stats=m.stats||{};
  for(const [k,pct] of Object.entries(bonuses)){const cur=Number(m.stats[k])||0;if(cur>0)m.stats[k]=Math.min(cap343(),Math.max(cur+1,Math.round(cur*(1+pct))))}
- m.starBodiesStatApplied343={bonuses,at:Date.now()};return true;
+ m.starBodiesStatApplied343={bonuses,godCount:completion.count,completion:completion.name,at:Date.now()};return true;
 }
 function trainingMul343(m,plan,mode,k){
- let best=1;for(const x of traits343(m)){if(!(x.stats||[]).includes(k))continue;const g=traitGrade343(x);best=Math.max(best,g>=5?1.05:g===4?1.03:g===3?1.015:1)}return best;
+ let best=1,god=0;for(const x of traits343(m)){if(!(x.stats||[]).includes(k))continue;const g=traitGrade343(x);if(g>=5)god++;else best=Math.max(best,g===4?1.03:g===3?1.015:1)}return best+(god*.05);
 }
 function competitionMul343(m,e){
  const roleEvents={speed:['50m走','リレー','障害物競走'],power:['大玉ころがし','坂道かけあがり','的当て'],tech:['的当て','障害物競走','リレー'],stamina:['10000m走','坂道かけあがり','大玉ころがし']};
- let best=1;for(const x of traits343(m)){if(!(roleEvents[x.role]||[]).includes(e))continue;const g=traitGrade343(x);best=Math.max(best,g>=5?1.04:g===4?1.02:g===3?1.01:1)}return best;
+ let best=1,god=0;for(const x of traits343(m)){if(!(roleEvents[x.role]||[]).includes(e))continue;const g=traitGrade343(x);if(g>=5)god++;else best=Math.max(best,g===4?1.02:g===3?1.01:1)}return best+(god*.04);
 }
 
 function decorate343(){
@@ -163,7 +166,7 @@ function sync343(){
 }
 
 window.STAR_BODY343={
- info:info343,grade:grade343,label:label343,effect:fullEffect343,traits:traits343,traitGrade:traitGrade343,traitLabel:traitLabel343,traitEffect:traitEffect343,
+ info:info343,grade:grade343,label:label343,effect:fullEffect343,traits:traits343,traitGrade:traitGrade343,traitLabel:traitLabel343,traitEffect:traitEffect343,godCount:godCount343,godCompletion:godCompletion343,
  birth:roll343,trainingMul:trainingMul343,competitionMul:competitionMul343,applyDirect:applyDirect343,sync:sync343
 };
 
