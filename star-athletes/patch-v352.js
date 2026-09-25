@@ -17,8 +17,8 @@ function protect352(force=false){
  }catch(_){return false}
 }
 function restore352(){\n try{\n  const raw=localStorage.getItem(SNAP),d=valid352(raw);if(!d)return false;\n  // Explicit user recovery only. Mutate the canonical state object instead of replacing window.S,\n  // because every loaded patch closes over the original S reference.\n  if(!confirm('保護データへ戻すと現在の大会・世代・配合進行を置き換えます。続行しますか？'))return false;\n  Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,d.S);save352();render();return true;\n }catch(_){return false}\n}
-// Preserve the current pre-test lineage automatically before the user resets it.
-protect352(false);
+// Recovery incident: do not auto-create or overwrite any protection snapshot on boot.
+// Protection is manual only until the lost-save recovery is complete.
 
 function toast352(t){
  let el=document.getElementById('toast352');if(!el){el=document.createElement('div');el.id='toast352';document.body.appendChild(el)}
