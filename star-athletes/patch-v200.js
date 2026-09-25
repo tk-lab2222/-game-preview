@@ -39,7 +39,31 @@ function currentRank200(){
 }
 function nextRank200(){const cur=currentRank200(),i=RANKS200.indexOf(cur);return RANKS200[Math.min(i+1,RANKS200.length-1)]}
 function canonicalSave200(source='core'){\n  try{init200();localStorage.setItem(SAVE200,JSON.stringify({savedAt:Date.now(),source,S}));return true}catch(e){console.warn('canonical save',source,e);return false}\n}\nwindow.STAR_SAVE_CORE={key:SAVE200,save:canonicalSave200};\nfunction save200(){canonicalSave200('v200')}
-function load200(){\n  // Legacy v200 snapshots can be months/generations behind the live in-memory state.\n  // Never replace S wholesale on boot; current game state is authoritative.\n  try{const raw=localStorage.getItem(SAVE200);if(!raw)return false;const d=JSON.parse(raw);if(!d?.S)return false;const old=d.S;init200();\n    S.emblems=Array.from(new Set([...(S.emblems||[]),...(old.emblems||[])]));\n    S.missionClaimed={...(old.missionClaimed||{}),...(S.missionClaimed||{})};\n    S.specialShop={...(old.specialShop||{}),...(S.specialShop||{})};\n    S.totalSpent=Math.max(Number(S.totalSpent)||0,Number(old.totalSpent)||0);\n    return true\n  }catch(e){console.warn('load200',e);return false}\n}
+function progress200(x){
+  if(!x||typeof x!=='object')return 0;
+  const gen=Math.max(Number(x.generation233)||0,...['starters','nest','lineage','cands','foster'].flatMap(k=>(x[k]||[]).map(m=>Number(m?.gen)||0)),0);
+  return gen*100000+(Number(x.leagueRank)||0)*10000+(Number(x.season)||0)*1000+(Number(x.dex?.b)||0)*10+(x.nest?.length||0);
+}
+function applySave200(saved){
+  if(!saved||typeof saved!=='object')return false;
+  Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,saved);init200();return true;
+}
+function load200(){
+  // Base app starts with an empty S on every page load. Restore the persisted state IN PLACE so
+  // all patch closures keep the same canonical object reference.
+  try{
+    const main=(()=>{const raw=localStorage.getItem(SAVE200);if(!raw)return null;const d=JSON.parse(raw);return d?.S?d:null})();
+    const snap=(()=>{const raw=localStorage.getItem('star-athletes-save-v200-prebalance-03234');if(!raw)return null;const d=JSON.parse(raw);return d?.S?d:null})();
+    let chosen=main;
+    // Emergency recovery for the v0.32.75-.78 regression: those builds could overwrite the main
+    // save with the empty boot state. If that happened, prefer the protected pre-balance snapshot.
+    if(snap&&progress200(snap.S)>progress200(main?.S||{})&&progress200(main?.S||{})<100000)chosen=snap;
+    if(!chosen?.S)return false;
+    applySave200(chosen.S);
+    if(chosen===snap)canonicalSave200('recovery-prebalance-03234');
+    return true;
+  }catch(e){console.warn('load200',e);return false}
+}
 function missionDefs200(){
   const hist=S.seasonHistory||[],breeds=S.breedCount||0;
   return [
@@ -133,7 +157,7 @@ function decorate200(){
 }
 const renderBefore200=render;
 render=function(){const out=renderBefore200();decorate200();save200();return out};
-// Merge only v200-owned metadata. Never restore the whole game state from this legacy snapshot.\nif(load200()){try{decorate200()}catch(e){console.error('v200 metadata restore',e)}}
+// Restore persisted state before any deferred save can run.\nif(load200()){try{renderBefore200();decorate200()}catch(e){console.error('v200 state restore',e)}}
 installMissionClaim200();
 setTimeout(()=>{try{decorate200();save200()}catch(e){}},0);
 const css=document.createElement('style');css.textContent=`
