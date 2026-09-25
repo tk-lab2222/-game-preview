@@ -38,7 +38,27 @@ function currentRank200(){
   return cur;
 }
 function nextRank200(){const cur=currentRank200(),i=RANKS200.indexOf(cur);return RANKS200[Math.min(i+1,RANKS200.length-1)]}
-function canonicalSave200(source='core'){\n  try{init200();localStorage.setItem(SAVE200,JSON.stringify({savedAt:Date.now(),source,S}));return true}catch(e){console.warn('canonical save',source,e);return false}\n}\nwindow.STAR_SAVE_CORE={key:SAVE200,save:canonicalSave200};\nfunction save200(){canonicalSave200('v200')}
+function canonicalSave200(source='core'){\n  try{init200();localStorage.setItem(SAVE200,JSON.stringify({savedAt:Date.now(),source,S}));return true}catch(e){console.warn('canonical save',source,e);return false}\n}\nwindow.STAR_SAVE_CORE={key:SAVE200,save:canonicalSave200};
+window.STAR_SAVE_DIAG={
+  scan(){
+    const rows=[];
+    for(let i=0;i<localStorage.length;i++){
+      const key=localStorage.key(i);if(!key||!/star-athletes/i.test(key))continue;
+      const raw=localStorage.getItem(key);let parsed=null,summary={};
+      try{parsed=JSON.parse(raw)}catch(_){}
+      const x=parsed?.S||parsed;
+      if(x&&typeof x==='object'){
+        const lists=['starters','nest','lineage','cands','foster','released'];
+        summary={generation:x.generation233??x.generation??null,league:x.leagueRank??null,season:x.season??null,needsBreeding:x.needsBreeding??null,egg:!!x.egg,
+          lists:Object.fromEntries(lists.map(k=>[k,Array.isArray(x[k])?x[k].length:null])),
+          maxGen:Math.max(0,...lists.flatMap(k=>(Array.isArray(x[k])?x[k]:[]).map(m=>Number(m?.gen)||0)))};
+      }
+      rows.push({key,bytes:raw?.length||0,savedAt:parsed?.savedAt||null,source:parsed?.source||null,summary});
+    }
+    rows.sort((a,b)=>(b.summary?.maxGen||0)-(a.summary?.maxGen||0)||b.bytes-a.bytes);
+    return rows;
+  }
+};\nfunction save200(){canonicalSave200('v200')}
 function progress200(x){
   if(!x||typeof x!=='object')return 0;
   const gen=Math.max(Number(x.generation233)||0,...['starters','nest','lineage','cands','foster'].flatMap(k=>(x[k]||[]).map(m=>Number(m?.gen)||0)),0);
