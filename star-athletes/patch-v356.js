@@ -10,7 +10,7 @@ function clear356(){
  sessionStorage.clear();
 }
 try{
- if(localStorage.getItem(FLAG)==='1'||new URL(location.href).searchParams.has('fresh356')){
+ if(localStorage.getItem(FLAG)==='1'){
   clear356();localStorage.removeItem(FLAG);
   // app-v094 has already created the genuine empty base S. Do not replace it with {}.
   window.__STAR_FRESH_RESET356=true;
