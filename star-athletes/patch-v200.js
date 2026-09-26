@@ -75,9 +75,11 @@ function load200(){
     const main=(()=>{const raw=localStorage.getItem(SAVE200);if(!raw)return null;const d=JSON.parse(raw);return d?.S?d:null})();
     const snap=(()=>{const raw=localStorage.getItem('star-athletes-save-v200-prebalance-03234');if(!raw)return null;const d=JSON.parse(raw);return d?.S?d:null})();
     let chosen=main;
-    // Emergency recovery for the v0.32.75-.78 regression: those builds could overwrite the main
-    // save with the empty boot state. If that happened, prefer the protected pre-balance snapshot.
-    if(snap&&progress200(snap.S)>progress200(main?.S||{})&&progress200(main?.S||{})<100000)chosen=snap;
+    const recoveryBoot=new URL(location.href).searchParams.has('recovered');
+    // During explicit recovery, the protected snapshot is authoritative regardless of the damaged primary.
+    // This avoids any early patch/write racing the recovery copy before v200 restores runtime S.
+    if(recoveryBoot&&snap?.S)chosen=snap;
+    else if(snap&&progress200(snap.S)>progress200(main?.S||{})&&progress200(main?.S||{})<100000)chosen=snap;
     if(!chosen?.S)return false;
     applySave200(chosen.S);
     if(chosen===snap)canonicalSave200('recovery-prebalance-03234');
