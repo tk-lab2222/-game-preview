@@ -164,4 +164,26 @@
   };
  } setTimeout(traceDiag3289,250);
 })();
+</script><script>
+(function(){
+ try{
+  var u=new URL(location.href);if(!u.searchParams.has('g24resume'))return;
+  var raw=localStorage.getItem('star-athletes-save-v200-g24-reconstructed-03292');
+  var d=raw&&JSON.parse(raw),st=d&&d.S;
+  if(!st||!Array.isArray(st.nest)||st.nest.length!==3)throw new Error('復旧用G24セーブがありません');
+  if(!window.S||typeof window.S!=='object')throw new Error('ゲーム状態Sがありません');
+  Object.keys(window.S).forEach(function(k){delete window.S[k]});
+  Object.assign(window.S,st);
+  window.S.generation233=24;window.S.leagueRank=5;window.S.season=1;
+  window.S.needsBreeding=false;window.S.generationActive=true;window.S.cands=[];window.S.egg=null;window.S.sel=[];
+  localStorage.setItem('star-athletes-active-roster-v210',JSON.stringify(window.S.nest));
+  localStorage.setItem('star-athletes-save-v200',JSON.stringify({savedAt:Date.now(),source:'g24-postboot-03294',S:window.S}));
+  history.replaceState(null,'',location.pathname);
+  if(typeof window.render==='function')window.render();
+  setTimeout(function(){
+   var ok=window.S&&window.S.generation233===24&&window.S.leagueRank===5&&Array.isArray(window.S.nest)&&window.S.nest.length===3;
+   if(!ok)alert('G24復旧後の状態検証に失敗しました。これ以上操作せず、この表示をChatGPTへ送ってください。');
+  },300);
+ }catch(e){alert('G24起動復旧に失敗しました: '+e.message)}
+})();
 </script></body></html>
