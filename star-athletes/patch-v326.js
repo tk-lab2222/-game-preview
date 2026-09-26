@@ -40,7 +40,7 @@ if(recovered326){
     t.textContent='💾 セーブデータを直前の正常状態から復元しました';t.classList.add('show326');
     setTimeout(()=>t.classList.remove('show326'),2600);
   },0);
-}else backup326();
+}else if(!new URL(location.href).searchParams.has('recovered')) backup326();
 const css=document.createElement('style');css.textContent=`#saveRecovery326{position:fixed;left:50%;bottom:86px;z-index:100005;max-width:calc(100vw - 28px);transform:translate(-50%,14px);opacity:0;pointer-events:none;padding:9px 13px;border:1px solid #7fd3a8;border-radius:12px;background:#10261d;color:#eafff2;font-size:9px;font-weight:900;box-shadow:0 10px 28px #0005;transition:.18s;white-space:nowrap}#saveRecovery326.show326{opacity:1;transform:translate(-50%,0)}`;document.head.appendChild(css);
 window.STAR_SAVE_RECOVERY326={backup:backup326,recover:recover326,backupKey:BACKUP326};
 })();
