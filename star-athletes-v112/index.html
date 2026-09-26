@@ -142,8 +142,16 @@
   var host=document.getElementById('recoveryDiag3281');if(!host||document.getElementById('traceDiag3289'))return;
   var targets=[['f3e9229e-fce5-4698-abd2-3da11ff58dc5','エル10'],['783488bb-63d1-44fb-b1cb-9f1bb71c27b9','ピノ15'],['191b6572-60ca-4686-ba2d-55319af71f10','シエル18']],hits=[];
   for(var i=0;i<localStorage.length;i++){var key=localStorage.key(i)||'',raw=localStorage.getItem(key)||'';if(key.indexOf('star-athletes')!==0)continue;var found=targets.filter(function(t){return raw.indexOf(t[0])>=0||raw.indexOf(t[1])>=0}).map(function(t){return t[1]});if(found.length)hits.push({key:key,bytes:raw.length,found:found});}
-  var box=document.createElement('div');box.id='traceDiag3289';box.innerHTML='<b>G24 保存領域追跡</b><p>エル10・ピノ15・シエル18を読み取り専用で検索。</p><textarea readonly style="width:100%;height:220px"></textarea><button>追跡結果をコピー</button>';
+  var box=document.createElement('div');box.id='traceDiag3289';box.innerHTML='<b>G24 保存領域追跡</b><div style="margin:8px 0"><button id="resumeG243291" style="padding:12px;font-weight:bold;background:#fff3a8">G24検証データからプレイ再開</button></div><p>エル10・ピノ15・シエル18を読み取り専用で検索。</p><textarea readonly style="width:100%;height:220px"></textarea><button>追跡結果をコピー</button>';
   box.querySelector('textarea').value=JSON.stringify({targets:targets,hits:hits},null,2);box.querySelector('button').onclick=function(){navigator.clipboard.writeText(box.querySelector('textarea').value)};host.appendChild(box);
+  var rb=document.getElementById('resumeG243291');if(rb)rb.onclick=function(){
+   if(!confirm('保存されているG24の3体（エル10・ピノ15・シエル18）をネストに戻し、Galaxy・G24・S1からプレイを再開します。続行しますか？'))return;
+   try{
+    var cur=localStorage.getItem('star-athletes-save-v200');if(cur)localStorage.setItem('star-athletes-save-v200-before-g24-resume-03291',cur);
+    if(!window.STAR_G24_RECOVERY_READY||!window.STAR_G24_RECOVERY_READY())throw new Error('G24ロスターを復元できません');
+    location.replace(location.pathname+'?g24resume=1');
+   }catch(e){alert('G24再開に失敗しました: '+e.message)}
+  };
  } setTimeout(traceDiag3289,250);
 })();
 </script></body></html>
