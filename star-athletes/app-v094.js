@@ -7,7 +7,7 @@ const PART={draco:['小角','二本角','丸角','星角'],unil:['短角','長�
 const P=['熱血','冷静','負けず嫌い','お調子者','臆病','マイペース'];
 const ART={draco:'../star-athletes/assets/draco.svg?v=095',unil:'../star-athletes/assets/unil.svg?v=095',grimo:'../star-athletes/assets/grimo.svg?v=095',puru:'../star-athletes/assets/puru.svg?v=095'};
 const INF={'50m走':['スピード・すばやさ','speed'],'障害物競走':['テクニック・すばやさ','tech'],'大玉ころがし':['ちから・スタミナ','power'],'坂道かけあがり':['ちから・スタミナ・こんじょう','stamina'],'10000m走':['スタミナ・こんじょう','stamina'],'的当て':['テクニック・ちから','tech'],'リレー':['スピード・テクニック・連携','speed'],'綱引き':['ちから・スタミナ・連携','power']};
-let S={starters:[],nest:[],lineage:[],released:[],cands:[],parents:[],egg:null,sel:[],wins:0,turn:0,foster:[],dex:{b:0,a:0,f:0,r:0,rel:0},schedule:[],plans:{},assign:{},strat:{}};
+let S=window.__STAR_RECOVERY_BOOT3285||{starters:[],nest:[],lineage:[],released:[],cands:[],parents:[],egg:null,sel:[],wins:0,turn:0,foster:[],dex:{b:0,a:0,f:0,r:0,rel:0},schedule:[],plans:{},assign:{},strat:{}};window.S=S;
 function breedingCap(){
   const rank=Math.max(0,Math.min(5,Number(S.leagueRank)||0));
   if(rank>=1)return Math.min(10,5+rank);
