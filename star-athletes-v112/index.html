@@ -157,7 +157,9 @@
     localStorage.setItem('star-athletes-save-v200-g24-reconstructed-03292',JSON.stringify({savedAt:Date.now(),source:'g24-reconstructed-03292',S:state}));
     localStorage.setItem('star-athletes-save-v200',JSON.stringify({savedAt:Date.now(),source:'g24-resume-03292',S:state}));
     localStorage.setItem('star-athletes-active-roster-v210',JSON.stringify(roster24));
-    location.replace(location.pathname+'?g24resume=3292');
+    var verify24=JSON.parse(localStorage.getItem('star-athletes-save-v200')||'null');
+    if(!verify24||!verify24.S||verify24.S.generation233!==24||verify24.S.leagueRank!==5||!Array.isArray(verify24.S.nest)||verify24.S.nest.length!==3)throw new Error('復旧セーブの検証に失敗しました');
+    location.replace(location.pathname+'?g24resume=3293');
    }catch(e){alert('G24再開に失敗しました: '+e.message)}
   };
  } setTimeout(traceDiag3289,250);
