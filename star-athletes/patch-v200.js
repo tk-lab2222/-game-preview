@@ -76,10 +76,10 @@ function load200(){
     const snap=(()=>{const raw=localStorage.getItem('star-athletes-save-v200-prebalance-03234');if(!raw)return null;const d=JSON.parse(raw);return d?.S?d:null})();
     let chosen=main;
     const recoveryBoot=new URL(location.href).searchParams.has('recovered');
-    // During explicit recovery, the protected snapshot is authoritative regardless of the damaged primary.
-    // This avoids any early patch/write racing the recovery copy before v200 restores runtime S.
+    // Explicit recovery uses the protected snapshot only for the recovery boot itself.
+    // After that, the primary save is authoritative. Never auto-fallback to the old protected snapshot:
+    // doing so can roll a legitimate progressed state back after a tournament/season reload.
     if(recoveryBoot&&snap?.S)chosen=snap;
-    else if(snap&&progress200(snap.S)>progress200(main?.S||{})&&progress200(main?.S||{})<100000)chosen=snap;
     if(!chosen?.S)return false;
     applySave200(chosen.S);
     if(chosen===snap)canonicalSave200('recovery-prebalance-03234');
