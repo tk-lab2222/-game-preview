@@ -76,7 +76,7 @@ function collection302(){
  <div class="nemDexGrid302">${NEM302.map((n,i)=>{
    const d=st.defeated[i],seen=st.seen[i]||d,rw=REW302[i];
    if(!seen)return `<article class="locked302"><div>？</div><b>未遭遇</b><small>リーグを進めよう</small></article>`;
-   return `<article class="${d?'done302':''}"><div class="dexIcon302">${n.icon}</div><b>${n.name}</b><small>${n.blood}</small><p><span>↑ ${LAB302[n.strong]}</span><span>↓ ${LAB302[n.weak]}</span></p><em>${d?`✓ 撃破 G${d.generation||'?'} / S${d.season||'?'}`:`⚔️ 未撃破`}</em><strong>${d?'🏅 記録済':`報酬 🪙${rw.coin}`}</strong></article>`;
+   return `<article class="${d?'done302':''}"><div class="dexIcon302">${n.icon}</div><b>${n.name}</b><small>${n.blood}</small><p><span>↑ ${LAB302[n.strong]}</span><span>↓ ${LAB302[n.weak]}</span></p><em>${d?(d.recovered3301?'✓ 撃破済（復旧記録）':`✓ 撃破 G${d.generation||'?'} / S${d.season||'?'}`):`⚔️ 未撃破`}</em><strong>${d?'🏅 記録済':`報酬 🪙${rw.coin}`}</strong></article>`;
  }).join('')}</div>`;
 }
 function sync302(){rewardNew302();battleCard302();collection302()}
