@@ -38,7 +38,10 @@ function currentRank200(){
   return cur;
 }
 function nextRank200(){const cur=currentRank200(),i=RANKS200.indexOf(cur);return RANKS200[Math.min(i+1,RANKS200.length-1)]}
-function canonicalSave200(source='core'){\n  try{init200();localStorage.setItem(SAVE200,JSON.stringify({savedAt:Date.now(),source,S}));return true}catch(e){console.warn('canonical save',source,e);return false}\n}\nwindow.STAR_SAVE_CORE={key:SAVE200,save:canonicalSave200};
+function canonicalSave200(source='core'){
+  try{init200();localStorage.setItem(SAVE200,JSON.stringify({savedAt:Date.now(),source,S}));return true}catch(e){console.warn('canonical save',source,e);return false}
+}
+window.STAR_SAVE_CORE={key:SAVE200,save:canonicalSave200};
 window.STAR_SAVE_DIAG={
   scan(){
     const rows=[];
@@ -58,7 +61,8 @@ window.STAR_SAVE_DIAG={
     rows.sort((a,b)=>(b.summary?.maxGen||0)-(a.summary?.maxGen||0)||b.bytes-a.bytes);
     return rows;
   }
-};\nfunction save200(){canonicalSave200('v200')}
+};
+function save200(){canonicalSave200('v200')}
 function progress200(x){
   if(!x||typeof x!=='object')return 0;
   const gen=Math.max(Number(x.generation233)||0,...['starters','nest','lineage','cands','foster'].flatMap(k=>(x[k]||[]).map(m=>Number(m?.gen)||0)),0);
@@ -189,7 +193,8 @@ function decorate200(){
 }
 const renderBefore200=render;
 render=function(){const out=renderBefore200();decorate200();save200();return out};
-// Restore persisted state before any deferred save can run.\nif(load200()){try{renderBefore200();decorate200()}catch(e){console.error('v200 state restore',e)}}
+// Restore persisted state before any deferred save can run.
+if(load200()){try{renderBefore200();decorate200()}catch(e){console.error('v200 state restore',e)}}
 installMissionClaim200();
 setTimeout(()=>{try{decorate200();recoveryDiag200()}catch(e){}},0);
 const css=document.createElement('style');css.textContent=`
