@@ -49,6 +49,16 @@ function renderRoster210(){
   try{window.STAR_VISUAL243?.sync?.()}catch(_){}
  })
 }
+window.STAR_G24_RECOVERY_READY=function(){
+ try{
+  const roster=JSON.parse(localStorage.getItem('star-athletes-active-roster-v209')||'null');
+  if(!Array.isArray(roster)||roster.length!==3)return false;
+  S.nest=roster;S.generation233=24;S.leagueRank=5;S.season=1;S.turn=0;
+  S.needsBreeding=false;S.generationActive=true;S.cands=[];S.egg=null;S.sel=[];
+  S.plans={};S.assign={};S.strat={};S.schedule=[];
+  saveRoster210();return true;
+ }catch(e){console.warn('G24 recovery',e);return false}
+};
 window.renderRoster210Live=renderRoster210;
 renderTrain=renderRoster210;
 function adopt210(){const selected=(S.cands||[]).filter(m=>m&&Array.isArray(S.sel)&&S.sel.includes(m.id));if(selected.length!==3)return;const old=Array.isArray(S.nest)?S.nest:[];S.lineage=Array.isArray(S.lineage)?S.lineage:[];old.forEach(m=>{if(m&&!S.lineage.some(x=>x.id===m.id))S.lineage.push(m)});const left=(S.cands||[]).filter(m=>!S.sel.includes(m.id));S.foster=Array.isArray(S.foster)?S.foster:[];left.forEach(m=>S.foster.push(m));S.dex=S.dex||{b:0,a:0,f:0,r:0,rel:0};S.dex.a=(S.dex.a||0)+3;S.dex.f=(S.dex.f||0)+left.length;S.nest=selected.map(m=>m);S.cands=[];S.sel=[];S.parents=[];S.egg=null;S.turn=0;S.plans={};S.assign={};S.strat={};try{makeSchedule()}catch(_){S.schedule=[]}saveRoster210();try{render()}catch(e){console.error('render adopt210',e)}try{typeof window.show==='function'&&window.show('train')}catch(_){}setTimeout(()=>{renderRoster210();try{window.STAR_SKILL254?.sync?.()}catch(_){}saveRoster210()},0)}
