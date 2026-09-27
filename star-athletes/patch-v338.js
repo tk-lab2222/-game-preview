@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
-// v0.31.95: replace rigid skill grid with natural-width wrapping badges.
-// Prevent clipping while keeping two skills side-by-side when space allows.
+// Canonical skill/card layout owner. Consolidates superseded v334/v335/v337.
+// Natural-width wrapping badges + compact cards + training roster skill layout.
 if(window.STAR_SKILL_WRAP338)return;
 
 function sync338(){
@@ -9,6 +9,9 @@ function sync338(){
     row.classList.add('skillWrap338');
     const list=row.querySelector(':scope > div');
     if(list)list.classList.add('skillList338');
+  });
+  document.querySelectorAll('.train210 .skillUnified254').forEach(row=>{
+    row.classList.add('skillTrain338');
   });
 }
 
@@ -32,6 +35,16 @@ document.addEventListener('click',e=>{
 const css=document.createElement('style');
 css.id='skillWrap338css';
 css.textContent=`
+.entries210{align-items:stretch!important}
+.entries210>button{
+  display:flex!important;
+  flex-direction:column!important;
+  min-height:0!important;
+  height:auto!important;
+}
+.entries210>button>.avatar{flex:0 0 86px!important}
+.entries210>button>.entrySkillHost254{flex:0 0 auto!important}
+
 .entries210 .entrySkillHost254{
   margin-top:5px!important;
   padding:5px 6px 7px!important;
@@ -93,6 +106,18 @@ css.textContent=`
 /* If three or more exist, wrapping happens naturally to the next line. */
 .entries210 .entrySkillHost254 .skillList338 .breedSkillBadge254:nth-child(n+3){
   margin-top:0!important;
+}
+
+.train210 .skillUnified254.skillTrain338{
+  display:grid!important;
+  grid-template-columns:38px minmax(0,1fr)!important;
+  gap:6px!important;
+  align-items:start!important;
+}
+.train210 .skillUnified254.skillTrain338>div{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:4px!important;
 }
 
 /* Very narrow screens: tighten only slightly, never clip. */
