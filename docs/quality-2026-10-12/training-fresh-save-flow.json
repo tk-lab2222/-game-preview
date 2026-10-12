@@ -1,0 +1,198 @@
+{
+  "baselineSource": "5bc83be5102fa19e4c295534fa97605631010f23",
+  "metricScope": "Default training screen, all scroll depth, non-whitespace text excluding ability/status panels, closed native details and hidden athletes",
+  "sameSave": true,
+  "before": {
+    "nonStatusVisibleCharacters": 1222,
+    "text": "LEAGUE CLASS🏘️ ローカル級S1/6S1〜S6の年間ランキング1位 → 昇格戦へANNUAL RANKING🏆 年間ランキングS1/61あなた0pt2アルト0pt3ガルド0pt4セナ0ptS1〜S6終了時の年間1位だけが昇格戦へ。GENERATION SEASONS1/6　ローカル運動会初実戦・経験獲得🛡️ 格下勝率 1%報酬 ×0.68 / 年間pt ×0.75スタータウン杯📍 スタータウン　☁️ 晴れ50m走 / 障害物競走 / 的当て / リレーこの大会を選ぶ🏆 標準勝率 1%報酬 ×1 / 年間pt ×1リバーフィールド杯📍 リバー地区　☁️ くもり50m走 / 大玉ころがし / 坂道かけあがり / 綱引き選択中🔥 格上勝率 1%報酬 ×1.6 / 年間pt ×1.4ルーキースター杯📍 ネスト広場　☁️ 晴れ障害物競走 / 的当て / 大玉ころがし / リレーこの大会を選ぶ次の大会：リバーフィールド杯（標準）50m走大玉ころがし坂道かけあがり綱引き個別トレーニング0/3GENERATION POLICY今世代の育成方針未選択🏆 大会重視得意能力のメニューを自動選択🌱 成長重視弱点能力のメニューを自動選択🧬 血統研究弱点育成＋安全強度を自動選択✨ スキル育成技術 / 勝負強さ系を自動選択方針を選ぶと3体の練習メニューが自動で切り替わります最初の育成前に1つ選択。固定の最強方針ではなく、育て方を変える選択です。フェルングリフォン / G1✏️ 名前SKILL未修得能力値は現在値を表示💨星駆けダッシュ💥メテオクラッシュ✨スタートリック🔥エンドレスロード🤝スターリンク負荷設定個体ごとに選択🛡️ 安全ケガなし / 成長小⚖️ 標準低リスク / 標準成長🔥 高負荷高リスク / 上振れ大ラゼルグリフォン / G1✏️ 名前SKILL🪽 空中感覚能力値は現在値を表示💨星駆けダッシュ💥メテオクラッシュ✨スタートリック🔥エンドレスロード🤝スターリンク負荷設定個体ごとに選択🛡️ 安全ケガなし / 成長小⚖️ 標準低リスク / 標準成長🔥 高負荷高リスク / 上振れ大ヴェントグリフォン / G1✏️ 名前SKILL未修得能力値は現在値を表示💨星駆けダッシュ💥メテオクラッシュ✨スタートリック🔥エンドレスロード🤝スターリンク負荷設定個体ごとに選択🛡️ 安全ケガなし / 成長小⚖️ 標準低リスク / 標準成長🔥 高負荷高リスク / 上振れ大TRAINING第1ラウンド0/33体それぞれの育成種目と強度を決めます。現在リーグ育成倍率×1.00。この内容で練習する出場者・作戦50m走重要：スピード・すばやさおすすめ ヴェントフェルンラゼルヴェント作戦先行バランス温存追込大玉ころがし重要：ちから・スタミナおすすめ フェルンフェルンラゼルヴェント作戦先行バランス温存追込坂道かけあがり重要：ちから・スタミナ・こんじょうおすすめ フェルンフェルンラゼルヴェント作戦先行バランス温存追込綱引き重要：ちから・スタミナ・連携おすすめ フェルンフェルンラゼルヴェント作戦先行バランス温存追込大会へ（育成 0/3）🔒 大会まであと3回育成",
+    "height": 5224,
+    "viewportWidth": 390,
+    "documentWidth": 390
+  },
+  "after": {
+    "nonStatusVisibleCharacters": 214,
+    "text": "ローカル級リーグ進行年間ランキング未開幕 · 0ptS1/6　ローカル級シーズン大会リバーフィールド杯1%育成0/3フェルン速度ラゼル速度ヴェント速度方針手動フェルングリフォン / G1素質・スキル✏️ 名前＋ 通常成功の目安💨速度💥力✨技巧🔥持久🤝連携安全標準高負荷☆ MY STAR練習 1/33体で練習育成の仕組み出場メンバー50m走ヴェントバランス大玉ころがしフェルンバランス坂道かけあがりフェルンバランス綱引きフェルンバランスあと3回練習",
+    "height": 1597,
+    "viewportWidth": 390,
+    "documentWidth": 390
+  },
+  "focusAndIndividualSettings": true,
+  "eventAssignmentAndDisclosure": true,
+  "meetSelectionRefreshesPreparation": true,
+  "forecastBounds": true,
+  "freshSaveProgression": [
+    {
+      "seed": 72012,
+      "initialAthletes": [
+        {
+          "name": "フェルン",
+          "stats": {
+            "power": 99,
+            "speed": 118,
+            "stamina": 101,
+            "agility": 102,
+            "tech": 108,
+            "guts": 86
+          }
+        },
+        {
+          "name": "ラゼル",
+          "stats": {
+            "power": 95,
+            "speed": 116,
+            "stamina": 98,
+            "agility": 99,
+            "tech": 112,
+            "guts": 84
+          }
+        },
+        {
+          "name": "ヴェント",
+          "stats": {
+            "power": 100,
+            "speed": 117,
+            "stamina": 96,
+            "agility": 104,
+            "tech": 113,
+            "guts": 87
+          }
+        }
+      ],
+      "seasons": [
+        {
+          "season": 1,
+          "tier": "safe",
+          "rank": 2,
+          "average": 106,
+          "league": 0
+        },
+        {
+          "season": 2,
+          "tier": "safe",
+          "rank": 1,
+          "average": 109,
+          "league": 0
+        },
+        {
+          "season": 3,
+          "tier": "standard",
+          "rank": 8,
+          "average": 113,
+          "league": 0
+        },
+        {
+          "season": 4,
+          "tier": "standard",
+          "rank": 8,
+          "average": 117,
+          "league": 0
+        },
+        {
+          "season": 5,
+          "tier": "standard",
+          "rank": 7,
+          "average": 122,
+          "league": 0
+        },
+        {
+          "season": 6,
+          "tier": "standard",
+          "rank": 2,
+          "average": 126,
+          "league": 0
+        }
+      ],
+      "nextGeneration": 2,
+      "leagueAfter": 0
+    },
+    {
+      "seed": 92019,
+      "initialAthletes": [
+        {
+          "name": "ユリア",
+          "stats": {
+            "power": 103,
+            "speed": 109,
+            "stamina": 94,
+            "agility": 114,
+            "tech": 96,
+            "guts": 105
+          }
+        },
+        {
+          "name": "ティリア",
+          "stats": {
+            "power": 110,
+            "speed": 114,
+            "stamina": 92,
+            "agility": 114,
+            "tech": 91,
+            "guts": 108
+          }
+        },
+        {
+          "name": "エリス",
+          "stats": {
+            "power": 107,
+            "speed": 112,
+            "stamina": 89,
+            "agility": 109,
+            "tech": 98,
+            "guts": 110
+          }
+        }
+      ],
+      "seasons": [
+        {
+          "season": 1,
+          "tier": "safe",
+          "rank": 4,
+          "average": 109,
+          "league": 0
+        },
+        {
+          "season": 2,
+          "tier": "safe",
+          "rank": 1,
+          "average": 113,
+          "league": 0
+        },
+        {
+          "season": 3,
+          "tier": "standard",
+          "rank": 8,
+          "average": 116,
+          "league": 0
+        },
+        {
+          "season": 4,
+          "tier": "standard",
+          "rank": 8,
+          "average": 120,
+          "league": 0
+        },
+        {
+          "season": 5,
+          "tier": "standard",
+          "rank": 5,
+          "average": 124,
+          "league": 0
+        },
+        {
+          "season": 6,
+          "tier": "standard",
+          "rank": 2,
+          "average": 129,
+          "league": 0
+        }
+      ],
+      "nextGeneration": 2,
+      "leagueAfter": 0
+    }
+  ],
+  "errors": [],
+  "missing": [],
+  "physicalSafari": false,
+  "seededAutomatedPlay": true,
+  "metricUnits": "Unicode code points excluding whitespace; normalised from logged visible text"
+}

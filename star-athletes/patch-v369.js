@@ -8,10 +8,11 @@ function enhance(card,m){card.classList.remove('starUIGrade369-1','starUIGrade36
  const artSource=card.querySelector(':scope > .avatar,:scope > .art')||card.querySelector('.athlete369 > .avatar,.athlete369 > .art')||card.querySelector('.avatar,.art');
  const old=card.querySelector('.starHero369');if(old)old.remove();
  const g=grade(m),stars='★'.repeat(g),mx=Math.max(800,...vals(m).map(x=>Number(x[1])||0));
+ const training=card.matches('.train210');
  let traits=[];try{traits=(STAR_BODY343?.traits?.(m)||[]).map(x=>({g:Number(STAR_BODY343?.traitGrade?.(x)||x.grade||1),name:x.name||''}))}catch(_){}
  const artHTML=artSource?'':'<span>✦</span>';
  const hero=document.createElement('div');hero.className='starHero369';
- hero.innerHTML='<div class="heroTop369"><span class="grade369">'+stars+' '+(['','通常','希少','輝星','幻星','神星'][g]||'')+'</span>'+(rank(m)?'<b class="rank369">'+rank(m)+'</b>':'')+'</div><div class="stage369"><div class="aura369"></div><div class="athlete369">'+artHTML+'</div><div class="traitFloat369">'+''+'</div></div><div class="statHud369">'+vals(m).map(x=>'<div class="stat369 '+x[2]+'"><span>'+x[0]+'</span><i><b style="width:'+Math.max(4,Math.min(100,Math.round((Number(x[1])||0)/mx*100)))+'%"></b></i><strong>'+Math.round(Number(x[1])||0)+'</strong></div>').join('')+'</div>';
+ hero.innerHTML='<div class="heroTop369"><span class="grade369">'+stars+' '+(['','通常','希少','輝星','幻星','神星'][g]||'')+'</span>'+(rank(m)?'<b class="rank369">'+rank(m)+'</b>':'')+'</div><div class="stage369"><div class="aura369"></div><div class="athlete369">'+artHTML+'</div><div class="traitFloat369">'+''+'</div></div>'+(training?'':'<div class="statHud369">'+vals(m).map(x=>'<div class="stat369 '+x[2]+'"><span>'+x[0]+'</span><i><b style="width:'+Math.max(4,Math.min(100,Math.round((Number(x[1])||0)/mx*100)))+'%"></b></i><strong>'+Math.round(Number(x[1])||0)+'</strong></div>').join('')+'</div>');
  // Keep the original art node: cloning a canvas drops its pixels and disconnects late painters.
  if(artSource)hero.querySelector('.athlete369').appendChild(artSource);
  host.prepend(hero);

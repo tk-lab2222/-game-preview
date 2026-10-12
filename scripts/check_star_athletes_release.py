@@ -16,6 +16,13 @@ GAME = ROOT / "star-athletes"
 errors = []
 text = SHELL.read_text(encoding="utf-8")
 refs = re.findall(r'(?:src|href)="\.\./star-athletes/([^"?]+)(?:\?v=([^"&]+))?', text)
+# Public release shells must not embed individual saved-athlete recovery payloads.
+if re.search(r'\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b', text, re.I):
+    errors.append("release shell embeds a saved-athlete identifier")
+if re.search(r'g24ProgressRepair3301|traceDiag3289|runRecovery3281', text):
+    errors.append("one-off personal recovery code is still loaded")
+if 'id="reloadBtn" data-game-refresh' not in text:
+    errors.append("latest refresh must consume GamePreviewStandard")
 if not refs:
     errors.append("release shell has no STAR ATHLETES assets")
 

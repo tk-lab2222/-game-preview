@@ -5,6 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 shell = (ROOT / 'star-athletes-v112/index.html').read_text(encoding='utf-8')
 core_save = (ROOT / 'star-athletes/patch-v200.js').read_text(encoding='utf-8')
 recovery = (ROOT / 'star-athletes/patch-v326.js').read_text(encoding='utf-8')
+shared = (ROOT / '_shared/game-preview-standard.js').read_text(encoding='utf-8')
 immediate = (ROOT / 'star-athletes/patch-v336.js').read_text(encoding='utf-8')
 growth = (ROOT / 'star-athletes/patch-v226.js').read_text(encoding='utf-8')
 pretest = (ROOT / 'star-athletes/patch-v352.js').read_text(encoding='utf-8')
@@ -73,8 +74,8 @@ require(selector in immediate,
         'training plan / entrant / strategy selects are not covered by immediate persistence')
 require('pagehide' in immediate and 'save336' in immediate,
         'pagehide persistence guard is missing')
-require("const SAVE336='star-athletes-save-v200'" in immediate,
-        'immediate persistence must use the authoritative v200 save key')
+require("window.STAR_SAVE_CORE?.save?.('core-controls336')" in immediate and 'localStorage.setItem' not in immediate,
+        'immediate persistence must delegate to the authoritative core save instead of writing a parallel payload')
 
 # v0.32.34 playtest protection must snapshot the exact authoritative save and restore it exactly.
 require("const SAVE='star-athletes-save-v200',SNAP='star-athletes-save-v200-prebalance-03234'" in pretest,
@@ -118,19 +119,25 @@ require('window.__STAR_FRESH_RESET356=true;' in early_reset,
 require('window.S={}' not in early_reset and 'S={}' not in early_reset,
         'early reset must not replace the base runtime state with an incomplete empty object')
 
-# "Load latest" may build a cache-busting URL dynamically.
+# Shared refresh must bind after its button exists, before game JS can fail.
 shell_cache = re.search(r'patch-v336\.js\?v=(\d+)', shell)
-replace_call = re.search(r'location\.replace\(([^\n;]+)\)', immediate)
-require(shell_cache is not None, 'release shell cache generation for patch-v336.js is missing')
-require(replace_call is not None, 'latest reload handler is missing')
-if replace_call:
-    expr = replace_call.group(1)
-    require('star-athletes-v112/' in expr,
-            'latest reload must target the current STAR ATHLETES release path')
-    pinned = re.search(r'[?&]v=(\d+)', expr)
-    if pinned and shell_cache:
-        require(pinned.group(1) == shell_cache.group(1),
-                f'latest reload cache generation {pinned.group(1)} does not match release {shell_cache.group(1)}')
+install = re.search(r"GamePreviewStandard.install\(\{version:'(\d+)'", shell)
+button_pos = shell.find('id="reloadBtn" data-game-refresh')
+install_pos = shell.find('GamePreviewStandard.install')
+app_pos = shell.find('app-v094.js')
+require(shell_cache is not None and install is not None and shell_cache.group(1) == install.group(1),
+        'shared refresh generation must match release assets')
+require(0 <= button_pos < install_pos < app_pos,
+        'shared refresh must install after button creation and before game runtime')
+require("document.querySelectorAll('[data-game-refresh]')" in shared
+        and 'new URL(location.href)' in shared
+        and "u.searchParams.set('v',version||Date.now())" in shared
+        and "u.searchParams.set('_',Date.now())" in shared
+        and 'location.replace(u.toString())' in shared,
+        'shared refresh must retain the canonical URL and bust its asset/cache generation')
+for path in ('app-v094.js','patch-v097.js','patch-v318.js','patch-v336.js'):
+    require('reloadBtn' not in (ROOT / 'star-athletes' / path).read_text(encoding='utf-8'),
+            f'{path} must not restore a competing reload handler')
 
 # Keep the no-broad-observer rule explicit in the save/reset path too.
 for name, text in [('patch-v200.js', core_save), ('patch-v326.js', recovery), ('patch-v336.js', immediate), ('patch-v352.js', pretest), ('patch-v354.js', reset), ('patch-v356.js', early_reset)]:

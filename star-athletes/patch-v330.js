@@ -70,12 +70,12 @@ function syncCards330(){
 
   document.querySelectorAll('#breeders .card[data-id],#lineagePool .card[data-id],#cands .card[data-id]').forEach(card=>{
     const m=find330(card.dataset.id);
-    if(m?.species==='draco')upsert330(card.querySelector('.bd')||card,m,false);
+    if(m?.species==='draco')upsert330(card.querySelector('.athleteTraits210')||card.querySelector('.bd')||card,m,false);
   });
 
   document.querySelectorAll('.train210[data-athlete210]').forEach(card=>{
     const m=find330(card.dataset.athlete210);
-    if(m?.species==='draco')upsert330(card.querySelector('.bd')||card,m,false);
+    if(m?.species==='draco')upsert330(card.querySelector('.athleteTraits210')||card.querySelector('.bd')||card,m,false);
   });
 
   const parentIds=Array.isArray(S?.parents)?S.parents:[];

@@ -2,7 +2,7 @@
 // v0.22.5: league progression independent from S1-S6 + visible rivals + promotion battles.
 const SAVE225='star-athletes-save-v200';
 const LEAGUES225=[
- {name:'ローカル',icon:'🏘️',base:150,reward:1.0},
+ {name:'ローカル',icon:'🏘️',base:125,reward:1.0},
  {name:'エリア',icon:'🗺️',base:230,reward:1.25},
  {name:'グランド',icon:'🏟️',base:330,reward:1.55},
  {name:'メジャー',icon:'🌟',base:460,reward:1.9},
@@ -81,10 +81,11 @@ function renderLeague225(){
  const train=document.getElementById('train');if(!train)return;
  let el=document.getElementById('league225');if(!el){el=document.createElement('div');el.id='league225';el.className='box league225';train.prepend(el)}
  const lg=league225(),max=S.leagueRank===LEAGUES225.length-1;
- el.innerHTML=`<div class="leagueHead225"><div><small>LEAGUE CLASS</small><b>${lg.icon} ${lg.name}級</b></div><span>S${Number(S.season)||1}/6</span></div><div class="leagueTrack225">${LEAGUES225.map((x,i)=>`<i class="${i<S.leagueRank?'done225':''} ${i===S.leagueRank?'now225':''}">${x.icon}<small>${x.name}</small></i>`).join('')}</div><div class="leagueRule225">${max?'最高ランク。年間1位になると最終イベント「惑星代表戦」へ。':'S1〜S6の年間ランキング1位 → 昇格戦へ'}</div>`;
+ const open=el.querySelector('details')?.open||false;
+ el.innerHTML=`<details ${open?'open':''}><summary class="leagueHead225"><b>${lg.name}級</b><span>リーグ進行</span></summary><div class="leagueTrack225">${LEAGUES225.map((x,i)=>`<i class="${i<S.leagueRank?'done225':''} ${i===S.leagueRank?'now225':''}">${x.icon}<small>${x.name}</small></i>`).join('')}</div><div class="leagueRule225">${max?'年間1位で惑星代表戦へ。':'6シーズンの年間1位で昇格戦へ。'}</div></details>`;
  // overwrite legacy season labels so S no longer implies league class.
  document.querySelectorAll('#season119 .seasonHead119 b,.seasonHead125 b').forEach(x=>x.textContent=`S${Number(S.season)||1}/6　${lg.name}級シーズン`);
- const title=train.querySelector('.box h3');
+ 
 }
 
 function renderRivals225(promo=false){
@@ -97,7 +98,8 @@ function renderRivals225(promo=false){
      if(exact&&Number.isFinite(Number(exact.pct)))c=exact;
    }catch(_){}
  }
- host.innerHTML=`<div class="rivalPanel225 ${promo?'promo225':''}"><div class="rivalTop225"><div><small>${promo?'PROMOTION BATTLE':'RIVAL SCOUT'}</small><b>${promo?'🔥 昇格戦':`${tour.icon} ${tour.name}`} / ${target.name}級</b></div><div class="chance225"><span>${promo?'対戦比較':'勝利見込み'}</span><strong>${promo?'—':(c.pct==null?'計算中…':c.pct+'%')}</strong><em>${promo?'':c.label}</em></div></div><div class="powerCompare225"><span>自軍平均 <b>${actual.ours}</b></span><i></i><span>相手平均 <b>${actual.theirs}</b></span></div><div class="rivalCards225">${rivals.slice(0,3).map(r=>`<article><header><b>${r.name}</b><em>${STAT_LABEL225[r.strong]}型</em></header><div>${STAT_KEYS225.map(k=>`<span class="${k===r.strong?'hot225':''}">${STAT_LABEL225[k]} <b>${r.stats[k]}</b></span>`).join('')}</div></article>`).join('')}</div><small class="rivalNote225">※表示されている能力値をそのまま大会計算に使用します。</small></div>`;
+ const rivalsOpen=host.querySelector('.rivalDetails225')?.open||false;
+ host.innerHTML=`<div class="rivalPanel225 ${promo?'promo225':''}"><div class="rivalTop225"><div><small>${promo?'PROMOTION BATTLE':'RIVAL SCOUT'}</small><b>${promo?'🔥 昇格戦':`${tour.icon} ${tour.name}`} / ${target.name}級</b></div><div class="chance225"><span>${promo?'対戦比較':'勝利見込み'}</span><strong>${promo?'—':(c.pct==null?'計算中…':c.pct+'%')}</strong><em>${promo?'':c.label}</em></div></div><div class="powerCompare225"><span>自軍平均 <b>${actual.ours}</b></span><i></i><span>相手平均 <b>${actual.theirs}</b></span></div><details class="rivalDetails225" ${rivalsOpen?'open':''}><summary>相手の能力を見る</summary><div class="rivalCards225">${rivals.slice(0,3).map(r=>`<article><header><b>${r.name}</b><em>${STAT_LABEL225[r.strong]}型</em></header><div>${STAT_KEYS225.map(k=>`<span class="${k===r.strong?'hot225':''}">${STAT_LABEL225[k]} <b>${r.stats[k]}</b></span>`).join('')}</div></article>`).join('')}</div><small class="rivalNote225">表示能力をそのまま大会計算に使用します。</small></details></div>`;
 }
 function stratMul225(s){return s==='先行'?1.015:s==='温存'?1.008:s==='追込'?1.012:1}
 function completedNormal225(){return(S.seasonHistory||[]).some(h=>h.generation===(Number(S.generation233)||1)&&Number(h.season)===(Number(S.season)||1)&&h.league===league225().name)}
@@ -160,14 +162,12 @@ function restoreNext225(){
 function wire225(){
  init225();renderLeague225();
  const run=document.getElementById('run');if(run&&!S.promotion233){run.onclick=()=>runBattle225(false)}
- const meetTab=document.querySelector('.tab[data-v="meet"]');if(meetTab&&!meetTab.dataset.rival225){meetTab.dataset.rival225='1';meetTab.addEventListener('click',()=>setTimeout(()=>renderRivals225(false),0))}
- const to=document.getElementById('toMeet');if(to&&!to.dataset.rival225){to.dataset.rival225='1';to.addEventListener('click',()=>setTimeout(()=>renderRivals225(false),0))}
  if(!document.getElementById('meet')?.classList.contains('hide'))renderRivals225(false);
  if(document.getElementById('result')?.textContent.trim())restoreNext225();
 }
 
 window.STAR_TOUR225={
- tiers:TOURS225,completed:completedNormal225,
+ tiers:TOURS225,completed:completedNormal225,renderRivals:renderRivals225,
  generateRivals:(promo=false)=>mkRivals225(!!promo),
  buildRivals:(tier='standard',promo=false,random=Math.random)=>buildRivals225(tier,!!promo,random),
  ensureRivals:(promo=false)=>ensureRivals225(!!promo),

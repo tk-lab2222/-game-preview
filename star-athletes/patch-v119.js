@@ -15,15 +15,14 @@ function shell119(){
   let el=document.getElementById('season119');
   if(!el){
     el=document.createElement('div');el.id='season119';host.insertBefore(el,host.firstChild);
-    el.innerHTML='<div class="seasonHead119"><small class="seasonMeta119">GENERATION SEASON</small><div class="seasonTitleRow119"><b class="seasonTitle119"></b><div class="seasonDots119"></div></div><span class="seasonSub119"></span></div><div class="wallet119"></div><div class="meetChoice119"></div>';
+    el.innerHTML='<div class="seasonHead119"><div class="seasonTitleRow119"><b class="seasonTitle119"></b><div class="seasonDots119"></div></div></div><details id="meetPicker290"><summary>大会 <b class="selectedMeet290"></b><span class="selectedChance290"></span></summary><div class="meetChoice119"></div><p class="meetHelp290">1シーズンに1大会。勝率はおまかせ出場・バランス作戦での推定です。選ぶと種目と出場者設定が切り替わります。</p></details>';
   }
   const s=SEASONS119[S.season]||SEASONS119[6];
   const title=el.querySelector('.seasonTitle119'),sub=el.querySelector('.seasonSub119'),dots=el.querySelector('.seasonDots119');
   if(title)title.textContent=`S${S.season}/6　${s.name}`;
   if(sub)sub.textContent=s.sub;
   if(dots)dots.innerHTML=[1,2,3,4,5,6].map(n=>`<i class="${n<S.season?'done':''} ${n===S.season?'now':''}">${n}</i>`).join('');
-  const wallet=el.querySelector('.wallet119');
-  if(wallet)wallet.innerHTML=`<span class="walletChip119">🪙 ${S.coins}</span><span class="walletChip119">⭐ 名声 ${S.fame}</span>`;
+
 }
 try{const prev119=render;render=function(){const out=prev119();shell119();return out}}catch(e){console.warn('render119',e)}
 const css=document.createElement('style');css.textContent=`

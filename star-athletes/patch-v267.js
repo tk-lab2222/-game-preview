@@ -96,7 +96,7 @@ function render267(){
  if(!p)host.innerHTML=st.lastResult?`<div class="eventResult267"><span>${st.lastResult}</span></div>`:'';
  else{const e=EV267[p.type];if(!e)return;host.innerHTML=`<div class="eventCard267 ${e.tier==='rare'?'rare267':e.tier==='special'?'special267':''}"><div class="eventTitle267"><b>${e.icon} ${e.name}</b><span>${p.name}</span></div><p>${e.text}</p><div class="eventActions267">${['a','b'].map((c,i)=>`<button type="button" data-event267="${c}"><b>${e[c]}</b><small style="display:block">${actionText267(ACTION267[p.type][i])}</small></button>`).join('')}</div></div>`}
  const go=document.getElementById('doTrain263');if(go)go.disabled=!!p||Number(S.turn)>=3;
- const meet=document.getElementById('toMeet');if(meet)meet.disabled=!!p||Number(S.turn)<3;
+ window.STAR_GATE222?.sync?.();
 }
 window.STAR_EVENTS267={afterTraining:afterTraining267,pending:()=>!!st267().pending,sync:render267};
 window.addEventListener('click',e=>{

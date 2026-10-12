@@ -65,5 +65,5 @@ $('toMeet').onclick=()=>{if(S.turn<3)return;$('events').innerHTML=S.schedule.map
 // Tournament execution and season/generation progression are owned by patch-v225/patch-v233.
 function show(id){['breed','train','meet','dex'].forEach(x=>$(x).classList.toggle('hide',x!==id));document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v===id))}
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>show(t.dataset.v));
-$('reloadBtn').onclick=()=>{let u=new URL(location.href);u.searchParams.set('v',V+'-'+Date.now());location.replace(u)};
+// Latest refresh is owned by GamePreviewStandard.
 if(!S.starters.length){const species=Object.keys(SP);for(let i=species.length-1;i>0;i--){const j=rnd(0,i);[species[i],species[j]]=[species[j],species[i]]}S.starters=species.slice(0,2).map(sp=>monster(sp))}render();

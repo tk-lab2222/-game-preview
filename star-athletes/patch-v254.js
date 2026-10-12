@@ -52,7 +52,7 @@ function cardSkills254(){
  });
  document.querySelectorAll('.train210').forEach(card=>{
    const id=card.dataset.athlete210||card.querySelector('[data-m210]')?.dataset.m210;
-   const m=byId254(id);if(!m)return;putSkill254(card,m,card.querySelector('header>div')||card);
+   const m=byId254(id);if(!m)return;putSkill254(card,m,card.querySelector('.athleteTraits210')||card.querySelector('header>div')||card);
  });
  document.querySelectorAll('.entries210>[data-m210]').forEach(card=>{
    const m=byId254(card.dataset.m210);if(!m)return;

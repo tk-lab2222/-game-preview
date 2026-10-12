@@ -135,7 +135,7 @@ with sync_playwright() as p:
     assert page.evaluate('S.nest[0].name')=='カスタム名'
     page.evaluate("S.qualityProbe={nested:{preserved:true}};STAR_SAVE_CORE.save('quality-flow')")
     page.locator('#doTrain263').click();page.wait_for_function('S.turn===1')
-    page.reload(wait_until='load');page.wait_for_timeout(700)
+    page.get_by_role('button',name='最新版を読み込む').click();page.wait_for_url(lambda u:'_=' in u);page.wait_for_timeout(700)
     assert page.evaluate('S===window.S')
     assert page.evaluate('S.nest.map(m=>m.id)')==ids
     assert page.evaluate('S.nest[0].name')=='カスタム名', 'Manual name did not survive reload'
@@ -217,7 +217,7 @@ with sync_playwright() as p:
     print('PASS new names are unique without numeric suffixes; manual naming survives reload; all four high-resolution sprites render.',flush=True)
     assert not errors,errors
     assert not missing,missing
-    report={'errors':errors,'missing':missing,'roster_ids_preserved':True,'training_reload_preserved':True,'protected_restore_preserved':True,'backup_recovery_identity_preserved':True,'newborn_rare_skill_marker':True,'disclosure_does_not_select_parents':True,'responsive_widths':[320,390,414],'hub_destinations':4,'main_navigation_count':4,'journal_destinations_verified':['dex','hall323','mission203','rep285'],'candidate_disclosure_does_not_select':True,'candidate_viewport_width':390,'loaded_fonts':fonts,'same_save_typography_comparison':args.compare_from is not None,'generated_names':generated_names,'generated_name_sample_unique':192,'manual_name_reload_preserved':True,'records_disclosure_verified':True,'high_resolution_art':art,'metrics':page.evaluate('({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,height:innerHeight,scrollHeight:document.documentElement.scrollHeight})')}
+    report={'errors':errors,'missing':missing,'shared_refresh_preserves_save':True,'roster_ids_preserved':True,'training_reload_preserved':True,'protected_restore_preserved':True,'backup_recovery_identity_preserved':True,'newborn_rare_skill_marker':True,'disclosure_does_not_select_parents':True,'responsive_widths':[320,390,414],'hub_destinations':4,'main_navigation_count':4,'journal_destinations_verified':['dex','hall323','mission203','rep285'],'candidate_disclosure_does_not_select':True,'candidate_viewport_width':390,'loaded_fonts':fonts,'same_save_typography_comparison':args.compare_from is not None,'generated_names':generated_names,'generated_name_sample_unique':192,'manual_name_reload_preserved':True,'records_disclosure_verified':True,'high_resolution_art':art,'metrics':page.evaluate('({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,height:innerHeight,scrollHeight:document.documentElement.scrollHeight})')}
     (OUT/'verified-flow.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
     print(json.dumps(report,ensure_ascii=False),flush=True)
     browser.close()

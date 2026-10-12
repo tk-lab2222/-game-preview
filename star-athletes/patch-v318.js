@@ -1,6 +1,5 @@
 (()=>{
 // v0.31.39: reload guard + post-load tournament hydration.
-let reloading318=false;
 function hydrate318(){
  try{window.STAR_MEET290?.sync?.()}catch(_){}
  try{window.STAR_CHANCE292?.sync?.()}catch(_){}
@@ -17,32 +16,13 @@ function hydrate318(){
    try{window.STAR_MEET290?.cards?.()}catch(_){}
  }
 }
-function bindReload318(){
- const btn=document.getElementById('reloadBtn');if(!btn||btn.dataset.reload318)return;
- btn.dataset.reload318='1';
- btn.addEventListener('click',e=>{
-   e.preventDefault();
-   if(reloading318)return;
-   reloading318=true;
-   btn.disabled=true;
-   btn.textContent='更新中…';
-   btn.style.pointerEvents='none';
-   const latest=new URL('../star-athletes/',location.href);
-   latest.searchParams.set('t',String(Date.now()));
-   requestAnimationFrame(()=>location.replace(latest.toString()));
- },{passive:false});
-}
 function boot318(){
- bindReload318();
  hydrate318();
  [60,180,500,1200].forEach(ms=>setTimeout(hydrate318,ms));
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot318,{once:true});
 else boot318();
 window.addEventListener('pageshow',()=>{
- reloading318=false;
- const b=document.getElementById('reloadBtn');
- if(b){b.disabled=false;b.textContent='↻';b.setAttribute('aria-label','最新版を読み込む');b.style.pointerEvents=''}
  setTimeout(hydrate318,0);
 });
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(hydrate318,0)});

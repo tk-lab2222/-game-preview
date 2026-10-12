@@ -2,12 +2,11 @@
 // v0.28.8: generation policy UI restored; avoid private TRAIN210 reference.
 const SAVE266='star-athletes-save-v200';
 const MEM266='star-athletes-training-memory-v243';
-const PLAN_NAME266={speed:'星駆けダッシュ',power:'メテオクラッシュ',tech:'スタートリック',stamina:'エンドレスロード',team:'スターリンク'};
 const POL266={
-  compete:{icon:'🏆',name:'大会重視',desc:'得意能力のメニューを自動選択',hint:'今世代の勝利を優先'},
-  growth:{icon:'🌱',name:'成長重視',desc:'弱点能力のメニューを自動選択',hint:'安定して能力を伸ばす'},
-  lineage:{icon:'🧬',name:'血統研究',desc:'弱点育成＋安全強度を自動選択',hint:'無理をせず素材を守る'},
-  skill:{icon:'✨',name:'スキル育成',desc:'技術 / 勝負強さ系を自動選択',hint:'技術 / 勝負強さを重点育成'}
+  compete:{icon:'🏆',name:'大会重視',desc:'得意能力を選択。標準・高負荷の成長 ×1.08'},
+  growth:{icon:'🌱',name:'成長重視',desc:'弱点能力を選択。安全・標準の成長 ×1.10'},
+  lineage:{icon:'🧬',name:'血統研究',desc:'弱点・安全を選択。安全・標準の成長 ×1.04、高負荷 ×0.96。高負荷のケガ率 −4pt、疲労は普通まで'},
+  skill:{icon:'✨',name:'スキル育成',desc:'技巧・連携を選択。両メニューの成長 ×1.14、ほか ×0.98。選ぶだけでスキルを獲得する効果はありません'}
 };
 function state266(){if(!S.training263||typeof S.training263!=='object')S.training263={};return S.training263}
 function policy266(){return state266().policy266||''}
@@ -30,7 +29,7 @@ function applyPolicy266(k){
   persistPlans266();
 }
 function choose266(k){
-  if(!POL266[k]||Number(S.turn)>=3)return;
+  if(!POL266[k]||Number(S.turn)>=3||window.STAR_EVENTS267?.pending?.())return;
   state266().policy266=k;applyPolicy266(k);persist266();
   try{window.renderRoster210Live&&window.renderRoster210Live()}catch(_){}
   setTimeout(()=>{try{window.renderRoster210Live&&window.renderRoster210Live()}catch(_){};render266()},80);
@@ -40,10 +39,8 @@ function render266(){
   const plans=document.getElementById('plans');if(!plans||!Array.isArray(S.nest)||S.nest.length!==3)return;
   let host=document.getElementById('policy266');
   if(!host){host=document.createElement('div');host.id='policy266';host.className='policy266';plans.before(host)}
-  const cur=policy266(),locked=Number(S.turn)>=3;
-  host.innerHTML=`<div class="policyHead266"><div><small>GENERATION POLICY</small><b>今世代の育成方針</b></div>${cur?`<strong>${POL266[cur].icon} ${POL266[cur].name}</strong>`:'<strong>未選択</strong>'}</div>
-    <div class="policyGrid266">${Object.entries(POL266).map(([k,p])=>`<button type="button" data-policy266="${k}" class="${cur===k?'on266':''}" ${locked?'disabled':''}><b>${p.icon} ${p.name}</b><small>${p.desc}</small></button>`).join('')}</div>
-    <div class="policyApplied266">${cur?`自動設定：${(S.nest||[]).map(m=>`${m.name}→${PLAN_NAME266[S.plans?.[m.id]]||S.plans?.[m.id]||'-'} / ${state266().intensity?.[m.id]==='safe'?'安全':state266().intensity?.[m.id]==='high'?'高負荷':'標準'}`).join('　')}`:'方針を選ぶと3体の練習メニューが自動で切り替わります'}</div><div class="policyHint266">${cur?(locked?'育成完了':'ラウンドごとに変更できます'):'最初の育成前に1つ選択。固定の最強方針ではなく、育て方を変える選択です。'}</div>`;
+  const cur=policy266(),locked=Number(S.turn)>=3||!!window.STAR_EVENTS267?.pending?.(),open=host.querySelector('details')?.open||false;
+  host.innerHTML=`<details ${open?'open':''}><summary>方針 <strong>${POL266[cur]?.name||'手動'}</strong></summary><div class="policyGrid266">${Object.entries(POL266).map(([k,p])=>`<button type="button" data-policy266="${k}" aria-pressed="${cur===k}" class="${cur===k?'on266':''}" ${locked?'disabled':''}><b>${p.name}</b><small>${p.desc}</small></button>`).join('')}</div><p class="policyHint266">選ぶと3体の種目・負荷を設定。以後は個別に変更できます。方針による成長補正は次の練習にも適用されます。</p></details>`;
   const go=document.getElementById('doTrain263');if(go){go.disabled=Number(S.turn)>=3||!!window.STAR_EVENTS267?.pending?.();go.title='' }
 }
 // Training263 owns policy outcome and fatigue; retire the dead wrapper and delayed duplicate.

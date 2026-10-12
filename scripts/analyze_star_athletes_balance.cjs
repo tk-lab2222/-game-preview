@@ -2,7 +2,7 @@
    Story model excludes cosmetic rare boosts, match rewards and missions; it is a
    conservative strategy model, not a substitute for full-game player playtests. */
 const fs=require('fs'),path=require('path'),vm=require('vm'),assert=require('assert');
-const ROOT=path.resolve(__dirname,'..'),OUT=process.argv[2]||'/tmp/star-balance-numerical.json';
+const ROOT=path.resolve(__dirname,'..'),OUT=(process.argv[2]==='--output'?process.argv[3]:process.argv[2])||'/tmp/star-balance-numerical.json';
 function runtime(seed){
  let x=seed>>>0,serial=0;const random=()=>{x=(Math.imul(x,1664525)+1013904223)>>>0;return x/4294967296};
  const math=Object.create(Math);math.random=random;
@@ -46,5 +46,5 @@ for(let seed=1;seed<=40;seed++){
  }return{seed:${seed},galaxyGeneration:null,leagues};})()`);model.push(r);
 }
 const reached=model.filter(x=>x.galaxyGeneration!==null),gens=reached.map(x=>x.galaxyGeneration).sort((a,b)=>a-b);
-const report={runtime:'v0.34.04',risk,eventMean,eventDistribution:Object.fromEntries([0,1,2].map(n=>[n,eventCounts.filter(x=>x===n).length])),specialLineageOdds:odds,representativeRarityIndependence:rep,storyModel:{seeds:40,maxGenerations:45,galaxyReached:reached.length,medianGeneration:gens[Math.floor(gens.length/2)]||null,minGeneration:gens[0]||null,maxGeneration:gens.at(-1)||null,runs:model,limits:'Fixed four-event schedule and specialist plans; ordinary domain birth/training, no cosmetic rare stat boosts, missions or match rewards; promotion approximation uses 3 of 4 event advantages. Not observed full-game pacing.'}};
+const report={runtime:fs.readFileSync(path.join(ROOT,'star-athletes-v112/index.html'),'utf8').match(/<title>STAR ATHLETES (v[0-9.]+)/)[1],risk,eventMean,eventDistribution:Object.fromEntries([0,1,2].map(n=>[n,eventCounts.filter(x=>x===n).length])),specialLineageOdds:odds,representativeRarityIndependence:rep,storyModel:{seeds:40,maxGenerations:45,galaxyReached:reached.length,medianGeneration:gens[Math.floor(gens.length/2)]||null,minGeneration:gens[0]||null,maxGeneration:gens.at(-1)||null,runs:model,limits:'Fixed four-event schedule and specialist plans; ordinary domain birth/training, no cosmetic rare stat boosts, missions or match rewards; promotion approximation uses 3 of 4 event advantages. Not observed full-game pacing.'}};
 fs.writeFileSync(OUT,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({risk,eventMean,rep,storyModel:{reached:reached.length,median:report.storyModel.medianGeneration,min:report.storyModel.minGeneration,max:report.storyModel.maxGeneration}}));

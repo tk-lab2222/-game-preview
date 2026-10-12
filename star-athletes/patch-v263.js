@@ -73,7 +73,7 @@ function riskText263(m,mode){
   return `コンディション ${f} / ケガ率 ${pct}%`;
 }
 function pointMul263(pt){return pt<=0?0:pt===1?.75:1.45}
-function outcome263(m,mode){
+function growthMultiplier263(m,mode,plan=S.plans?.[m.id]||''){
   const growth=hidden263(m,'growth',2),stability=hidden263(m,'stability',2),luck=hidden263(m,'luck',2),f=fatigue263(m);
   let gmul=[.80,.86,.92,1,1.07,1.16,1.28,1.42][growth]||1;
   const policy=state263().policy266||'';
@@ -81,12 +81,15 @@ function outcome263(m,mode){
   else if(policy==='growth'&&(mode==='safe'||mode==='normal'))gmul*=1.10;
   else if(policy==='lineage')gmul*=mode==='high'?.96:1.04;
   else if(policy==='skill'){
-    const plan=S.plans?.[m.id]||'';
     gmul*=plan==='tech'||plan==='team'?1.14:.98;
   }
   if(mode==='high')gmul*=f===2?.72:f===1?.88:1;
   else if(mode==='normal')gmul*=f===2?.86:f===1?.95:1;
 
+  return gmul;
+}
+function outcome263(m,mode){
+  const growth=hidden263(m,'growth',2),stability=hidden263(m,'stability',2),luck=hidden263(m,'luck',2),gmul=growthMultiplier263(m,mode);
   const injury=injuryRate263(m,mode),r=Math.random();
   if(r<injury)return{grade:'ケガ・中断',mul:0,risk:mode,injury:true};
   const rr=(r-injury)/(1-injury||1);
@@ -121,6 +124,18 @@ function highStatMul263(v){
   const ratio=n263(v)/cap;
   return ratio>=.90?.45:ratio>=.75?.62:ratio>=.60?.78:ratio>=.45?.90:1;
 }
+function gain263(m,plan,mode,k,base,mul,jitter=0){
+  const cur=n263(m.stats?.[k]),soft=highStatMul263(cur);
+  const patternMul=Number(window.STAR_PATTERN342?.trainingMul?.(m,plan,mode,k)||1);
+  const bodyMul=Number(window.STAR_BODY343?.trainingMul?.(m,plan,mode,k)||1);
+  const resonanceMul=Number(window.STAR_RESONANCE344?.trainingMul?.(m,plan,mode,k)||1);
+  return Math.max(0,Math.round((base*mul*leagueMul263()*patternMul*bodyMul*resonanceMul+jitter)*soft));
+}
+function preview263(m,plan,mode){
+  plan=TRAIN263[plan]?plan:'speed';mode=INT263[mode]?mode:'normal';
+  const mul=growthMultiplier263(m,mode,plan)*(mode==='safe'?.88:mode==='high'?1.12:1);
+  return Object.fromEntries(Object.entries(TRAIN263[plan].gain).map(([k,base])=>[k,Math.min(Math.max(0,cap263()-n263(m.stats?.[k])),gain263(m,plan,mode,k,base,mul))]));
+}
 function ensureGrowthMeta263(m){
   if(!m.geneticBase226){m.geneticBase226={};KEYS263.forEach(k=>m.geneticBase226[k]=n263(m.stats?.[k]))}
   if(!m.trainingGain226){m.trainingGain226={};KEYS263.forEach(k=>m.trainingGain226[k]=0)}
@@ -138,10 +153,11 @@ function panel263(){
   old.style.display='none';
   let host=document.getElementById('trainingDecision263');
   if(!host){host=document.createElement('div');host.id='trainingDecision263';host.className='trainingDecision263';old.after(host)}
-  const turn=clamp263(n263(S.turn),0,3),left=Math.max(0,3-turn);
-  host.innerHTML=`<div class="budgetHead263"><div><small>TRAINING</small><b>第${Math.min(3,turn+1)}ラウンド</b></div><strong>${turn}/3</strong></div>
-   <div class="budgetHint263">3体それぞれの育成種目と強度を決めます。現在リーグ育成倍率 <b>×${leagueMul263().toFixed(2)}</b>。</div>
-   <button type="button" id="doTrain263" class="btn or" ${turn<3&&!window.STAR_EVENTS267?.pending?.()?'':'disabled'}>${turn<3?'この内容で練習する':'育成完了'}</button>`;
+  const turn=clamp263(n263(S.turn),0,3),pending=!!window.STAR_EVENTS267?.pending?.();
+  const open=host.querySelector('details')?.open||false;
+  host.innerHTML=`<div class="budgetHead263"><b>${turn<3?'練習 '+(turn+1)+'/3':'練習完了'}</b><span class="roundDots263" aria-label="完了 ${turn}/3">${[0,1,2].map(i=>`<i class="${i<turn?'done263':''}"></i>`).join('')}</span></div>
+   <button type="button" id="doTrain263" class="btn or" ${turn<3&&!pending?'':'disabled'}>${pending?'イベントを選ぶ':turn<3?'3体で練習':'練習完了'}</button>
+   <details class="trainingHelp263" ${open?'open':''}><summary>育成の仕組み</summary><p>1シーズン3回、3体が同時に練習します。個体ごとの種目・負荷は毎回変更できます。</p><p>緑の＋は通常成功の目安です。素質・方針・疲労を反映し、成功度・ケガ・小さな変動で結果が変わります。リーグ倍率 ×${leagueMul263().toFixed(2)}。</p></details>`;
 }
 function render263(){try{controls263();panel263()}catch(e){console.warn('render263',e)}}
 function train263(){
@@ -154,12 +170,8 @@ function train263(){
     const plan=TRAIN263[S.plans?.[m.id]]?S.plans[m.id]:'speed';
     const o=outcome263(m,mode),ups=[];
     for(const [k,base] of Object.entries(TRAIN263[plan].gain)){
-      const cur=n263(m.stats[k]),soft=highStatMul263(cur),jitter=o.injury?0:(Math.random()<.35?1:0);
-      const patternMul=Number(window.STAR_PATTERN342?.trainingMul?.(m,plan,mode,k)||1);
-      const bodyMul=Number(window.STAR_BODY343?.trainingMul?.(m,plan,mode,k)||1);
-      const resonanceMul=Number(window.STAR_RESONANCE344?.trainingMul?.(m,plan,mode,k)||1);
-      const raw=(base*o.mul*leagueMul263()*patternMul*bodyMul*resonanceMul+jitter)*soft;
-      const gain=Math.max(0,Math.round(raw));
+      const jitter=o.injury?0:(Math.random()<.35?1:0);
+      const gain=gain263(m,plan,mode,k,base,o.mul,jitter);
       const actual=window.STAR_GROWTH226.trainingDelta(m,k,gain,cap263());
       ups.push(`${SL[k]}+${actual}`);
     }
@@ -175,7 +187,7 @@ function train263(){
   const gain=document.getElementById('gain');if(gain)gain.innerHTML=`<div class="notice trainGain263">${out.join('<br>')}</div>`;
   render263();persist263();
 }
-window.STAR_TRAIN263={injuryRate:injuryRate263,outcome:outcome263};
+window.STAR_TRAIN263={injuryRate:injuryRate263,outcome:outcome263,preview:preview263};
 window.addEventListener('click',e=>{
   if(e.target?.closest?.('.tab[data-v="train"],#adopt,#doTrain,#toMeet')){
     setTimeout(late263,0);

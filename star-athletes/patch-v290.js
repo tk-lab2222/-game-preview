@@ -63,6 +63,7 @@ function apply290(i,{rerender=false}={}){
  S.meetUiVersion290=1;persist290();
  if(rerender){try{render()}catch(e){console.warn('render apply290',e)}}
  sync290();
+ try{window.renderRoster210Live?.()}catch(_){}
 }
 function normalize290(){
  const season=season290(),list=MEETS290[season]||MEETS290[6],stateKey=oddsStateKey290();
@@ -86,20 +87,22 @@ function cards290(){
  wrap.dataset.oddsState290=oddsStateKey290();
  wrap.innerHTML=list.map((m,i)=>{
    const id=tierAt290(i,list.length),t=TIERS290[id],on=i===sel;
-   return `<button type="button" class="meetChoiceCard125 meetCard290 ${on?'sel':''}" data-star-meet290="${i}">
-    <div class="tier290"><b>${t.icon} ${t.label}</b><strong class="chance290">${(()=>{const p=chance290(id,m[3],rivalsFor290(i,list));return p==null?'計算中…':'勝率 '+p+'%'})()}</strong></div><div class="reward290">報酬 ×${t.reward} / 年間pt ×${t.annual}</div>
-    <b>${m[0]}</b><span>📍 ${m[1]}　☁️ ${m[2]}</span><small>${m[3].join(' / ')}</small><em>${on?'選択中':'この大会を選ぶ'}</em>
+   return `<button type="button" class="meetChoiceCard125 meetCard290 ${on?'sel':''}" data-star-meet290="${i}" aria-pressed="${on}">
+    <div class="tier290"><b>${t.label}</b><strong class="chance290">${(()=>{const p=chance290(id,m[3],rivalsFor290(i,list));return p==null?'—':p+'%'})()}</strong></div><b>${m[0]}</b><div class="reward290">🪙 ×${t.reward} · 年間pt ×${t.annual}</div><small>${m[3].join(' / ')}</small>
    </button>`;
  }).join('');
+ const picked=list[sel],pct=chance290(tierAt290(sel,list.length),picked[3],rivalsFor290(sel,list));
+ const name=root.querySelector('.selectedMeet290'),chance=root.querySelector('.selectedChance290');
+ if(name)name.textContent=picked[0];if(chance)chance.textContent=pct==null?'—':pct+'%';
 }
 function next290(){
  const season=season290(),list=MEETS290[season]||MEETS290[6],i=currentIndex290(list),m=list[i],tier=TIERS290[tierAt290(i,list.length)];
  const train=document.getElementById('train');if(!train)return;
  const sched=document.getElementById('sched');
  const box=sched?.closest('.box');
- const h=box?.querySelector('h3');if(h)h.textContent=`次の大会：${m[0]}（${tier.label}）`;
- if(sched)sched.innerHTML=m[3].map(e=>`<span class="chip"><b>${e}</b></span>`).join('');
- const to=document.getElementById('toMeet');if(to)to.textContent=(Number(S.turn)||0)<3?`大会へ（育成 ${Number(S.turn)||0}/3）`:`${m[0]}へ`;
+ const h=box?.querySelector('h3');if(h)h.hidden=true;
+ if(sched)sched.hidden=true;
+ const to=document.getElementById('toMeet');if(to)to.textContent=(Number(S.turn)||0)<3?'あと'+(3-(Number(S.turn)||0))+'回練習':'大会へ';
 }
 function sync290(){normalize290();cards290();next290()}
 window.addEventListener('click',e=>{
