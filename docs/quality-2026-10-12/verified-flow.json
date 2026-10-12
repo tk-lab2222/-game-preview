@@ -22,10 +22,25 @@
   ],
   "candidate_disclosure_does_not_select": true,
   "candidate_viewport_width": 390,
+  "loaded_fonts": [
+    {
+      "family": "Stellar UI",
+      "weight": "400"
+    },
+    {
+      "family": "Stellar UI",
+      "weight": "500"
+    },
+    {
+      "family": "Stellar Story",
+      "weight": "500"
+    }
+  ],
+  "same_save_typography_comparison": true,
   "metrics": {
     "width": 390,
     "scrollWidth": 390,
     "height": 844,
-    "scrollHeight": 980
+    "scrollHeight": 982
   }
 }

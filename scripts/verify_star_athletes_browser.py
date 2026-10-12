@@ -17,10 +17,12 @@ from playwright.sync_api import sync_playwright
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--output', type=Path, default=Path('/tmp/star-athletes-qa'))
+parser.add_argument('--compare-from', type=Path, help='Optional pre-change source files for a same-save typography comparison')
 args = parser.parse_args()
 ROOT = Path(__file__).resolve().parents[1]
 OUT = args.output.resolve()
 OUT.mkdir(parents=True, exist_ok=True)
+baseline_mode = args.compare_from is not None
 
 
 def serve(route):
@@ -34,6 +36,10 @@ def serve(route):
         return
     if target.is_dir():
         target /= 'index.html'
+    if baseline_mode:
+        previous = args.compare_from.resolve() / target.relative_to(ROOT)
+        if previous.is_file():
+            target = previous
     if not target.is_file():
         route.fulfill(status=404, body='Missing game asset: ' + str(target.relative_to(ROOT)))
         return
@@ -49,6 +55,17 @@ with sync_playwright() as p:
     page.on('pageerror',lambda e:errors.append(str(e)))
     page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
     page.goto('https://games.local/star-athletes/',wait_until='load');page.wait_for_timeout(1000)
+    if baseline_mode:
+        page.screenshot(path=str(OUT/'typography-before.png'))
+        original_ids=page.evaluate('S.starters.map(m=>m.id)')
+        baseline_mode=False
+        page.reload(wait_until='load')
+        page.wait_for_timeout(1000)
+        assert page.evaluate('S.starters.map(m=>m.id)')==original_ids
+    page.evaluate('async()=>{await document.fonts.ready}')
+    fonts=page.evaluate('[...document.fonts].filter(f=>f.status==="loaded").map(f=>({family:f.family,weight:f.weight}))')
+    assert any(f['family'].strip(chr(34))=='Stellar UI' for f in fonts),fonts
+    assert any(f['family'].strip(chr(34))=='Stellar Story' for f in fonts),fonts
     assert not errors,errors
     assert not missing,missing
     assert page.locator('#recoveryDiag200,#recoveryDiag3281').count()==0
@@ -148,6 +165,7 @@ with sync_playwright() as p:
         rp=responsive.new_page()
         rp.on('pageerror',lambda e:errors.append(str(e)))
         rp.goto('https://games.local/star-athletes/',wait_until='load');rp.wait_for_timeout(500)
+        rp.evaluate('async()=>{await document.fonts.ready}')
         assert rp.evaluate('document.documentElement.scrollWidth<=innerWidth'), f'Horizontal overflow at {width}px'
         rp.goto('https://games.local/',wait_until='load')
         links=rp.locator('a.card').evaluate_all('(nodes)=>nodes.map(n=>n.getAttribute("href"))')
@@ -157,7 +175,7 @@ with sync_playwright() as p:
     print('PASS disclosure does not select parents; game and hub fit 320/390/414px; hub has all four destinations.',flush=True)
     assert not errors,errors
     assert not missing,missing
-    report={'errors':errors,'missing':missing,'roster_ids_preserved':True,'training_reload_preserved':True,'protected_restore_preserved':True,'backup_recovery_identity_preserved':True,'newborn_rare_skill_marker':True,'disclosure_does_not_select_parents':True,'responsive_widths':[320,390,414],'hub_destinations':4,'main_navigation_count':4,'journal_destinations_verified':['dex','hall323','mission203','rep285'],'candidate_disclosure_does_not_select':True,'candidate_viewport_width':390,'metrics':page.evaluate('({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,height:innerHeight,scrollHeight:document.documentElement.scrollHeight})')}
+    report={'errors':errors,'missing':missing,'roster_ids_preserved':True,'training_reload_preserved':True,'protected_restore_preserved':True,'backup_recovery_identity_preserved':True,'newborn_rare_skill_marker':True,'disclosure_does_not_select_parents':True,'responsive_widths':[320,390,414],'hub_destinations':4,'main_navigation_count':4,'journal_destinations_verified':['dex','hall323','mission203','rep285'],'candidate_disclosure_does_not_select':True,'candidate_viewport_width':390,'loaded_fonts':fonts,'same_save_typography_comparison':args.compare_from is not None,'metrics':page.evaluate('({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,height:innerHeight,scrollHeight:document.documentElement.scrollHeight})')}
     (OUT/'verified-flow.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
     print(json.dumps(report,ensure_ascii=False),flush=True)
     browser.close()
