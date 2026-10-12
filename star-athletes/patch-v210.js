@@ -50,6 +50,7 @@ function renderRoster210(){
  prep.innerHTML=(S.schedule||[]).map((e,i)=>{const rec=best(e);if(!S.assign[i]||!S.nest.some(m=>m.id===S.assign[i]))S.assign[i]=rec.id;if(!STRAT210.includes(S.strat[i]))S.strat[i]='バランス';return `<article class="evt210"><header><div><b>${e}</b><small>重要：${INF[e]?.[0]||''}</small></div><em>おすすめ ${rec.name}</em></header><div class="entries210">${S.nest.map(m=>`<button type="button" data-e210="${i}" data-m210="${m.id}" class="${S.assign[i]===m.id?'on210':''}">${avatar(m)}<b>${m.name}</b><small>適性 ${Math.round(score(m,e))}</small><div>${eventKeys210(e).map(k=>`<span>${SL[k]} <b>${m.stats?.[k]??0}</b></span>`).join('')}</div></button>`).join('')}</div><div class="strat210"><span>作戦</span>${STRAT210.map(s=>`<button type="button" data-s210="${i}" data-v210="${s}" class="${S.strat[i]===s?'on210':''}">${s}</button>`).join('')}</div></article>`}).join('');
  const t=document.getElementById('turn');if(t)t.textContent=S.turn||0;const meet=document.getElementById('toMeet');if(meet)meet.disabled=(S.turn||0)<3;
  requestAnimationFrame(()=>{
+  window.STAR_RENAME_UI?.sync?.();
   try{window.paintSpecies&&window.paintSpecies()}catch(_){}
   try{window.STAR_SKILL254?.sync?.()}catch(_){}
   try{window.STAR_RARITY249?.sync?.()}catch(_){}

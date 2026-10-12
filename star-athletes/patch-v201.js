@@ -6,7 +6,7 @@ function normalizeMonster201(m,index=0){
   if(!m||typeof m!=='object')return m;
   const species=(m.species&&SP[m.species])?m.species:'draco';
   m.species=species;
-  m.name=(typeof m.name==='string'&&m.name.trim())?m.name:`${SP[species][0].slice(0,2)}${100+index}`;
+  m.name=(typeof m.name==='string'&&m.name.trim())?m.name:defaultAthleteName(species);
   m.gen=Number.isFinite(+m.gen)?+m.gen:0;
   m.personality=(typeof m.personality==='string'&&m.personality)?m.personality:'マイペース';
   m.origin=(typeof m.origin==='string'&&m.origin)?m.origin:'ネスト';
@@ -43,7 +43,7 @@ function repairBirth201(){
   if(!m)return;
   m=normalizeMonster201(m,777);
   const statHtml=Object.entries(m.stats).map(([k,v])=>`<div><span>${SL[k]||k}</span><b>${v}</b></div>`).join('');
-  reveal.innerHTML=`<div class="resultBadge128">NEW ATHLETE</div><div class="newbornLabel">あなたの血統に、新しいスター。</div>${avatar(m,true)}<div class="hatchName"><b>${m.name}</b></div><div class="hatchMeta">${SP[m.species][0]} ・ G${m.gen} ・ ${m.personality}</div><div class="traitRow hatchTraits"><span>${m.visual.pattern}</span><span>${m.visual.part}</span></div><details class="birthDetails201"><summary>受け継いだ能力と血統</summary><div class="hatchStats">${statHtml}</div><div class="inheritBox"><b>継承</b><br>親：${m.origin}<br>見た目：${m.visual.color} / ${m.visual.pattern} / ${m.visual.part}${m.visual.acc!=='なし'?' / '+m.visual.acc:''}</div></details>`;
+  reveal.innerHTML=`<div class="resultBadge128">誕生</div>${avatar(m,true)}<div class="hatchName"><b>${m.name}</b></div><div class="hatchMeta">${SP[m.species][0]} ・ G${m.gen} ・ ${m.personality}</div><div class="traitRow hatchTraits"><span>${m.visual.pattern}</span><span>${m.visual.part}</span></div><details class="birthDetails201"><summary aria-label="受け継いだ能力と血統">能力と血統</summary><div class="hatchStats">${statHtml}</div><div class="inheritBox"><b>継承</b><br>親：${m.origin}<br>見た目：${m.visual.color} / ${m.visual.pattern} / ${m.visual.part}${m.visual.acc!=='なし'?' / '+m.visual.acc:''}</div></details>`;
   birth.classList.add('birthStage128');reveal.classList.add('contrast202');birth.removeAttribute('data-rarity');
   try{window.paintSpecies&&window.paintSpecies()}catch(_){}
 }

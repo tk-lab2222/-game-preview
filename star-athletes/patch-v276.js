@@ -72,6 +72,7 @@ function render276(){
  }
  const st=state276(),found=REC276.filter(r=>n276(st.levels[r.id])>=3).length;
  const clues=REC276.filter(r=>n276(st.levels[r.id])>0).length;
+ const counter=document.getElementById('recordResearch');if(counter)counter.textContent=found+'/'+REC276.length;
  const ultra=all276().filter(m=>m?.ultraRare274).length;
  host.innerHTML=`<div class="head276"><div><small>BREEDING RESEARCH</small><b>📓 配合研究ノート</b></div><span>${found}/${REC276.length} 発見</span></div>
  <div class="summary276"><b>研究進行 ${clues}/${REC276.length}</b><span>特殊個体観測 ${ultra}</span></div>

@@ -9,6 +9,7 @@ import argparse
 import json
 import mimetypes
 import os
+import re
 import shutil
 from pathlib import Path
 from urllib.parse import unquote, urlparse
@@ -59,17 +60,18 @@ with sync_playwright() as p:
         page.evaluate('async()=>{await document.fonts.ready}')
         page.screenshot(path=str(OUT/'typography-before.png'))
         original_ids=page.evaluate('S.starters.map(m=>m.id)')
+        original_names=page.evaluate('S.starters.map(m=>m.name)')
         baseline_mode=False
         page.reload(wait_until='load')
         page.wait_for_timeout(1000)
         assert page.evaluate('S.starters.map(m=>m.id)')==original_ids
+        assert page.evaluate('S.starters.map(m=>m.name)')==original_names, 'Saved names were changed during startup'
     page.evaluate('async()=>{await document.fonts.ready}')
     fonts=page.evaluate('[...document.fonts].filter(f=>f.status==="loaded").map(f=>({family:f.family,weight:f.weight}))')
     assert any(f['family'].strip(chr(34))=='Stellar Text' for f in fonts),fonts
     assert any(f['family'].strip(chr(34))=='Stellar Display' for f in fonts),fonts
     assert {f['weight'] for f in fonts if f['family'].strip(chr(34))=='Stellar Text'} >= {'400','600','700'},fonts
-    assert page.locator('.labScene>h3').evaluate('(el)=>getComputedStyle(el).fontWeight')=='700'
-    assert page.locator('.labScene>h3').evaluate('(el)=>getComputedStyle(el).display')=='block'
+    assert page.locator('.labScene>h3,.sceneEyebrow,.journey').count()==0
     assert page.locator('#breeders .nm b').first.evaluate('(el)=>getComputedStyle(el).fontWeight')=='700'
     assert not errors,errors
     assert not missing,missing
@@ -92,6 +94,12 @@ with sync_playwright() as p:
         assert not page.evaluate('document.getElementById("labJournal").open')
         page.locator('.tabs [data-v="breed"]').click()
     page.wait_for_timeout(500)
+    page.locator('#labRecords>summary').click()
+    page.wait_for_timeout(1000)
+    assert page.locator('#recordsBody321 #research276').is_visible()
+    assert page.locator('#recordsBody321 .lineageArchive118').is_visible()
+    assert page.evaluate('S.parents.length')==0
+    page.locator('#labRecords>summary').click()
     page.screenshot(path=str(OUT/'athletes-viewport-after.png'))
     page.screenshot(path=str(OUT/'athletes-after.png'),full_page=True)
     print('PASS initial load: no errors or failed assets, live character art retained, diagnostics hidden, canonical state identity preserved.',flush=True)
@@ -103,6 +111,8 @@ with sync_playwright() as p:
         if index==0:page.locator('#birth').screenshot(path=str(OUT/'athletes-birth-after.png'))
         print(f'PASS parent selection, breeding and hatch {index+1}.',flush=True)
     assert page.evaluate('S.cands.every(m=>m.rareSkillRolled347===true)')
+    generated_names=page.evaluate('S.cands.map(m=>m.name)')
+    assert len(set(generated_names))==3 and all(re.fullmatch('[ァ-ヶー・]+',name) for name in generated_names),generated_names
     page.wait_for_timeout(500)
     candidate_summary=page.locator('#cands .athleteInfo369 > summary').first
     candidate_summary.click()
@@ -120,11 +130,15 @@ with sync_playwright() as p:
     page.locator('#adopt').click()
     page.wait_for_function('S.nest.length===3&&S.cands.length===0')
     ids=page.evaluate('S.nest.map(m=>m.id)')
+    page.once('dialog',lambda d:d.accept('カスタム名'))
+    page.locator('#train [data-rename224="'+ids[0]+'"]').first.click()
+    assert page.evaluate('S.nest[0].name')=='カスタム名'
     page.evaluate("S.qualityProbe={nested:{preserved:true}};STAR_SAVE_CORE.save('quality-flow')")
     page.locator('#doTrain263').click();page.wait_for_function('S.turn===1')
     page.reload(wait_until='load');page.wait_for_timeout(700)
     assert page.evaluate('S===window.S')
     assert page.evaluate('S.nest.map(m=>m.id)')==ids
+    assert page.evaluate('S.nest[0].name')=='カスタム名', 'Manual name did not survive reload'
     assert page.evaluate('S.turn')==1
     assert page.evaluate('S.qualityProbe.nested.preserved')
     print('PASS adoption, first training round and reload preserve roster IDs, progress and unknown nested state.',flush=True)
@@ -178,9 +192,29 @@ with sync_playwright() as p:
         assert rp.evaluate('document.documentElement.scrollWidth<=innerWidth')
         responsive.close()
     print('PASS disclosure does not select parents; game and hub fit 320/390/414px; hub has all four destinations.',flush=True)
+    naming=page.evaluate("""()=>{const before=JSON.stringify(S),names=Object.keys(SP).flatMap(sp=>Array.from({length:48},()=>STAR_NAMES.generate(sp)));return {names,stateUnchanged:JSON.stringify(S)===before}}""")
+    assert naming['stateUnchanged'] and len(set(naming['names']))==192
+    assert all(re.fullmatch('[ァ-ヶー・]+',name) and len(name)<=8 for name in naming['names'])
+    gallery_context=browser.new_context(viewport={'width':390,'height':1200},device_scale_factor=2,is_mobile=True,has_touch=True,service_workers='block',reduced_motion='reduce')
+    gallery_context.route('**/*',serve)
+    gp=gallery_context.new_page()
+    gp.on('pageerror',lambda e:errors.append(str(e)))
+    gp.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
+    gp.goto('https://games.local/star-athletes/',wait_until='load')
+    gp.evaluate('async()=>{await document.fonts.ready}')
+    gp.evaluate('S.starters=Object.keys(SP).map(sp=>monster(sp));render()')
+    gp.add_style_tag(content='#breeders{grid-auto-flow:row!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-columns:auto!important;overflow:visible!important}')
+    gp.wait_for_timeout(1500)
+    art=gp.evaluate("""async()=>{const out=[];for(const sp of Object.keys(SP)){const im=new Image();im.src='../star-athletes/assets/creatures/'+sp+'.png?v=3403';await im.decode();out.push({species:sp,width:im.naturalWidth,height:im.naturalHeight})}return out}""")
+    assert len(art)==4 and all(im['width']>=1024 and im['height']>=1024 for im in art),art
+    assert gp.locator('#breeders canvas.speciesCanvas').evaluate_all('(nodes)=>nodes.length===3&&nodes.every(c=>c.width>0&&Array.from(c.getContext("2d").getImageData(0,0,c.width,c.height).data).some((v,i)=>i%4===3&&v>0))')
+    assert gp.locator('#breeders .dracoStableImg329').evaluate('(el)=>el.complete&&el.naturalWidth>=1024')
+    gp.screenshot(path=str(OUT/'four-species-after.png'))
+    gallery_context.close()
+    print('PASS new names are unique without numeric suffixes; manual naming survives reload; all four high-resolution sprites render.',flush=True)
     assert not errors,errors
     assert not missing,missing
-    report={'errors':errors,'missing':missing,'roster_ids_preserved':True,'training_reload_preserved':True,'protected_restore_preserved':True,'backup_recovery_identity_preserved':True,'newborn_rare_skill_marker':True,'disclosure_does_not_select_parents':True,'responsive_widths':[320,390,414],'hub_destinations':4,'main_navigation_count':4,'journal_destinations_verified':['dex','hall323','mission203','rep285'],'candidate_disclosure_does_not_select':True,'candidate_viewport_width':390,'loaded_fonts':fonts,'same_save_typography_comparison':args.compare_from is not None,'metrics':page.evaluate('({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,height:innerHeight,scrollHeight:document.documentElement.scrollHeight})')}
+    report={'errors':errors,'missing':missing,'roster_ids_preserved':True,'training_reload_preserved':True,'protected_restore_preserved':True,'backup_recovery_identity_preserved':True,'newborn_rare_skill_marker':True,'disclosure_does_not_select_parents':True,'responsive_widths':[320,390,414],'hub_destinations':4,'main_navigation_count':4,'journal_destinations_verified':['dex','hall323','mission203','rep285'],'candidate_disclosure_does_not_select':True,'candidate_viewport_width':390,'loaded_fonts':fonts,'same_save_typography_comparison':args.compare_from is not None,'generated_names':generated_names,'generated_name_sample_unique':192,'manual_name_reload_preserved':True,'records_disclosure_verified':True,'high_resolution_art':art,'metrics':page.evaluate('({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,height:innerHeight,scrollHeight:document.documentElement.scrollHeight})')}
     (OUT/'verified-flow.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
     print(json.dumps(report,ensure_ascii=False),flush=True)
     browser.close()

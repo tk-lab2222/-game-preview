@@ -2,7 +2,6 @@
 // v0.11.7 gameplay polish: rarity eggs, meet cut-ins + cheer tap, species scouting,
 // local ranking/share, shiny colors, and first-gift copy cleanup.
 const SHINY_BASE=.025;
-const SCOUT_NAMES={draco:'ノヴァ',unil:'ルミ',grimo:'フェル',puru:'しずく'};
 
 // --- Shiny variants (lightweight: color treatment, no part-layer dependency) ---
 const babyBefore117=baby;
@@ -59,7 +58,7 @@ function scoutReward117(){
   // First tournament guarantees one missing species; third guarantees the other.
   if(S.meetsDone!==1&&S.meetsDone!==3)return null;
   const sp=missing[Math.floor(Math.random()*missing.length)];
-  const m=monster(sp,SCOUT_NAMES[sp],0);m.origin='大会スカウト';m.shiny=Math.random()<SHINY_BASE;
+  const m=monster(sp,undefined,0);m.origin='大会スカウト';m.shiny=Math.random()<SHINY_BASE;
   S.lineage.push(m);
   return m;
 }

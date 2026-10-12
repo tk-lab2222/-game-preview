@@ -38,8 +38,9 @@ function host285(id,parent,after){
 function relocate285(){
  ensureSection285();
  // 配合研究ノート -> 配合
- const breed=document.getElementById('breed'),lineage=document.getElementById('lineagePool')?.closest('.box'),research=document.getElementById('research276');
- if(breed&&research){const h=host285('breedResearchHost285',breed,lineage);if(research.parentElement!==h)h.appendChild(research)}
+ const records=document.getElementById('recordsBody321'),research=document.getElementById('research276');
+ if(records&&research&&research.parentElement!==records)records.appendChild(research);
+ document.getElementById('breedResearchHost285')?.remove();
  // LIMIT解放/限界育成 -> 育成
  const train=document.getElementById('train'),prep=document.getElementById('prep')?.closest('.box');
  const lp=document.getElementById('limitPanel278'),lt=document.getElementById('limitTrain279');

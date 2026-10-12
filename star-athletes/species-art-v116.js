@@ -1,35 +1,21 @@
 (()=>{
-// v0.11.7: transparent body-only art with aspect ratio preserved in every UI slot.
-const VER='117';
+// Current high-resolution species art. Preserve the live canvas and aspect ratio.
+const VER='3403';
 const FILES={
-  unil:['../star-athletes/embedded/unil-v116.webp.b64?v='+VER],
-  grimo:[1,2,3,4,5].map(n=>`../star-athletes/embedded/grimo-v116-${n}.b64?v=${VER}`),
-  puru:[1,2,3].map(n=>`../star-athletes/embedded/puru-v116-${n}.b64?v=${VER}`)
+  unil:'../star-athletes/assets/creatures/unil.png?v='+VER,
+  grimo:'../star-athletes/assets/creatures/grimo.png?v='+VER,
+  puru:'../star-athletes/assets/creatures/puru.png?v='+VER
 };
 const FIT={
-  unil:{scale:.88,dx:0,dy:.02},
-  grimo:{scale:.84,dx:0,dy:.02},
-  puru:{scale:.80,dx:0,dy:.04}
+  unil:{scale:.96,dx:0,dy:0},
+  grimo:{scale:.96,dx:0,dy:0},
+  puru:{scale:.96,dx:0,dy:0}
 };
-const sourceCache={},imageCache={};
-async function sourceFor(sp){
-  if(sourceCache[sp]) return sourceCache[sp];
-  sourceCache[sp]=(async()=>{
-    const parts=await Promise.all(FILES[sp].map(async url=>{
-      const r=await fetch(url,{cache:'no-store'});
-      if(!r.ok) throw new Error(`art fetch ${sp} ${r.status}`);
-      return (await r.text()).trim();
-    }));
-    const b64=parts.join('');
-    if(!b64.startsWith('UklG')) throw new Error(`invalid webp base64 ${sp}`);
-    return 'data:image/webp;base64,'+b64;
-  })();
-  return sourceCache[sp];
-}
+const imageCache={};
 async function loadImage(sp){
   if(imageCache[sp]) return imageCache[sp];
   imageCache[sp]=(async()=>{
-    const src=await sourceFor(sp);
+    const src=FILES[sp];
     return await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(new Error('image decode '+sp));i.src=src;});
   })();
   return imageCache[sp];
@@ -49,7 +35,8 @@ async function paintOne(c){
     const f=FIT[sp]||{scale:.84,dx:0,dy:0};
     const base=Math.min(W/im.naturalWidth,H/im.naturalHeight)*f.scale;
     const w=im.naturalWidth*base,h=im.naturalHeight*base;
-    const dx=(W-w)/2+W*f.dx,dy=(H-h)/2+H*f.dy;
+    const dx=(W-w)/2+W*f.dx,dy=H-h-H*.035+H*f.dy;
+    x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';
     x.drawImage(im,dx,dy,w,h);
     c.dataset.error='0';
   }catch(e){

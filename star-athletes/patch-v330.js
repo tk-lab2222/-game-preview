@@ -5,7 +5,7 @@ if(window.STAR_DRACO_TRAITS330)return;
 
 const SRC330=(window.STAR_DRACO_STABLE329&&window.STAR_DRACO_STABLE329.source)
   ? window.STAR_DRACO_STABLE329.source
-  : '../star-athletes-draco-lab/generated/body_base_clean.png?v=414';
+  : '../star-athletes/assets/creatures/draco.png?v=3403';
 
 const JP330=window.DRACO_JP||{
   normal:'ノーマル',

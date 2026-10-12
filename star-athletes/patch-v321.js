@@ -41,15 +41,6 @@ function genetics321(m){
     <em>気性 ${h.temperament||'?'}</em>
   </div>`;
 }
-function pristine321(){
-  const generation=Math.max(1,n321(S?.generation233)||n321(S?.generation232)||1);
-  return generation===1
-    && n321(S?.dex?.b)===0
-    && !(S?.nest||[]).length
-    && !(S?.lineage||[]).length
-    && !(S?.cands||[]).length
-    && (S?.starters||[]).length===2;
-}
 function placePair321(){
   const breed=document.getElementById('breed');if(!breed)return;
   const parentBox=[...breed.querySelectorAll(':scope>.box')].find(x=>x.querySelector('#breeders'));
@@ -62,7 +53,7 @@ function visualShell321(){
   placePair321();
   pair.dataset.state=S.egg?'incubating':S.parents?.length===2?'ready':'choosing';
   pair.classList.add('breedHero126');
-  const title=pair.querySelector('h3');if(title)title.innerHTML='星をつなぐ配合 <span class="sm">'+(S.egg?'新しい命を待っています':'親から子へ、個性をつなぐ')+'</span>';
+  const title=pair.querySelector('h3');if(title)title.textContent=S.egg?'孵化':'配合';
   const parents=pair.querySelector('.parents');
   if(parents){
     parents.classList.add('parentsHero126');
@@ -73,26 +64,12 @@ function visualShell321(){
   }
   const btn=pair.querySelector('#breedBtn');
   if(btn){
-    btn.textContent=S.parents?.length===2?'この2体から、スターを誕生させる':'まずは、親を2体選ぼう';
+    btn.textContent='配合';
     btn.classList.add('breedMain126');
     const p=btn.closest('p');if(p)p.classList.add('singleBreed321');
   }
 }
-function copy321(){
-  const section=document.getElementById('breed');
-  const first=section?.querySelector(':scope > .box');
-  const h=first?.querySelector('h3');
-  const sm=h?.nextElementSibling;
-  if(!h||!sm)return;
-  first.classList.toggle('incubatingLab321',!!S.egg);
-  if(pristine321()){
-    h.innerHTML='<span>次の世代を、</span><span>育てよう。</span>';
-    sm.textContent='ふたつの個性から、新しい血統を。';
-  }else{
-    h.innerHTML='<span>個性をつなぐ、</span><span>次の世代へ。</span>';
-    sm.textContent='どの個性を、次のスターへ受け継ごう。';
-  }
-}
+function copy321(){document.querySelector('#breed>.labScene')?.classList.toggle('incubatingLab321',!!S.egg)}
 function slot321(m,label){
   if(!m)return `<div class="slotEmpty321"><b>${label}</b><span>アスリートを選択</span></div>`;
   const sp=(typeof SP!=='undefined'&&SP[m.species])?SP[m.species][0]:(m.species||'');
@@ -164,7 +141,7 @@ function breeders321(){
     let details=el.querySelector('.parentInfo321');
     if(!details){
       details=document.createElement('details');details.className='parentInfo321';
-      details.innerHTML='<summary>能力と血統を見る</summary>';
+      details.innerHTML='<summary aria-label="能力と血統を見る">能力</summary>';
       bd.appendChild(details);
     }
     details.insertAdjacentHTML('beforeend',genetics321(m));
@@ -233,7 +210,9 @@ function archive321(){
       box.dataset.archiveDesc='1';
     }
     box.classList.add('lineageArchive118');
-    if(breed&&cand&&cand.nextElementSibling!==box)breed.insertBefore(box,cand.nextSibling);
+    const records=document.getElementById('recordsBody321');
+    if(records&&box.parentElement!==records)records.appendChild(box);
+    const count=document.getElementById('recordPool');if(count)count.textContent=(S.lineage||[]).length+'/'+poolCap();
   }
   host.querySelectorAll('[data-release]').forEach(btn=>{
     const id=btn.dataset.release,card=btn.closest('.card');
@@ -301,5 +280,5 @@ body .a .breedHero126{background:linear-gradient(150deg,#203b2a,#10271d)!importa
 document.head.appendChild(css);
 
 late321();
-window.STAR_BREEDING321={sync:sync321,pool:pool321,pristine:pristine321,compatibility:compatibility321,archive:archive321,singleBreed:singleBreed321};
+window.STAR_BREEDING321={sync:sync321,pool:pool321,compatibility:compatibility321,archive:archive321,singleBreed:singleBreed321};
 })();

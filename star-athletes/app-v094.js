@@ -1,6 +1,6 @@
 const V='0.9.5';
 const $=id=>document.getElementById(id), rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
-const SP={draco:['ドラコ族','🐲',{power:18,guts:14,stamina:8}],unil:['ユニル族','🦄',{speed:18,agility:14,tech:7}],grimo:['グリモ族','🦅',{tech:18,agility:14,speed:5}],puru:['ぷるもん族','🫧',{stamina:16,tech:8}]};
+const SP={draco:['ドラコ','🐲',{power:18,guts:14,stamina:8}],unil:['ユニル','🦄',{speed:18,agility:14,tech:7}],grimo:['グリフォン','🦅',{tech:18,agility:14,speed:5}],puru:['ネリス','🫧',{stamina:16,tech:8}]};
 const SL={power:'ちから',speed:'スピード',stamina:'スタミナ',agility:'すばやさ',tech:'テクニック',guts:'こんじょう'};
 const R=['C','U','R','SR','SSR','UR','EX'], COL=['赤','青','緑','白','黒','黄','金'], PAT=['なし','縞','斑点','炎','雷','星'], ACC=['なし','🎀','🥽','🎗️','🔔','⭐'];
 const PART={draco:['小角','二本角','丸角','星角'],unil:['短角','長角','螺旋角','星角'],grimo:['小羽','丸羽','長羽','星羽'],puru:['丸耳','しずく耳','星耳','ふわ耳']};
@@ -8,6 +8,31 @@ const P=['熱血','冷静','負けず嫌い','お調子者','臆病','マイペ�
 const ART={draco:'../star-athletes/assets/draco.svg?v=095',unil:'../star-athletes/assets/unil.svg?v=095',grimo:'../star-athletes/assets/grimo.svg?v=095',puru:'../star-athletes/assets/puru.svg?v=095'};
 const INF={'50m走':['スピード・すばやさ','speed'],'障害物競走':['テクニック・すばやさ','tech'],'大玉ころがし':['ちから・スタミナ','power'],'坂道かけあがり':['ちから・スタミナ・こんじょう','stamina'],'10000m走':['スタミナ・こんじょう','stamina'],'的当て':['テクニック・ちから','tech'],'リレー':['スピード・テクニック・連携','speed'],'綱引き':['ちから・スタミナ・連携','power']};
 let S=window.__STAR_RECOVERY_BOOT3285||{starters:[],nest:[],lineage:[],released:[],cands:[],parents:[],egg:null,sel:[],wins:0,turn:0,foster:[],dex:{b:0,a:0,f:0,r:0,rel:0},schedule:[],plans:{},assign:{},strat:{}};window.S=S;
+// One naming owner for founders, births, scouting and missing-name repair.
+// Species IDs are stable; naming does not change genetics or competitive power.
+const ATHLETE_NAMES={
+ draco:['アストラ','ノクス','ヴァルト','オルド','セリオ','ファルド','アデル','リュカ','ソレル','ルシオ','ゼノン','アルヴァ','イグニス','ヴェリオ','エルド','レオル'],
+ unil:['ルミナ','セレナ','エリス','シルヴァ','リュネ','エルナ','フィリア','ミレル','アリア','イリス','オルナ','ティリア','リリア','セリス','ユリア','ネリア'],
+ grimo:['フェルン','アルク','シオン','レイス','ゼフィル','オルフェ','アエル','ヴェント','ラゼル','フェリオ','アルノ','レヴィル','ノエル','シエル','カイル','エイリス'],
+ puru:['ミレア','ネリア','セリカ','リュミア','アクア','ルネア','ティレル','ミオラ','セリネ','エルミア','ニレア','モリス','アクレル','ノリス','リセア','ルミエ']
+};
+const ATHLETE_NAME_STEMS={draco:['アル','ヴァ','オル','ゼ','ファ','アス','セ','レ','ル','ノ','エル','イグ'],unil:['ルミ','セ','エリ','シル','フィ','アリ','イリ','ティ','リリ','ユ','ネ','ミレ'],grimo:['フェ','アル','シ','レ','ゼ','オル','アエ','ヴェ','ラ','ノ','カイ','エイ'],puru:['ミレ','ネ','セ','リュ','アク','ル','ティ','ミオ','エル','ニ','モ','リセ']};
+const ATHLETE_NAME_ENDINGS={draco:['リオ','ヴァル','ルド','レイ','セオ','ナス','ディル','ロス','クス','ギル','シオ','ルン'],unil:['リア','リス','ネル','ルナ','ミア','ルネ','ノア','セラ','ヴァ','レア','シア','フィル'],grimo:['リオ','フェル','ゼル','ノア','リス','レイ','ヴァル','シオ','ルン','ディル','ネル','ラス'],puru:['リア','リス','ネル','ルナ','ミア','ルネ','セラ','レア','シア','レル','ノア','ナ']};
+const issuedAthleteNames=new Set();
+function defaultAthleteName(sp){
+ const key=ATHLETE_NAMES[sp]?sp:'draco',used=new Set(issuedAthleteNames);
+ for(const k of ['starters','nest','lineage','released','cands','foster'])for(const m of S[k]||[])if(m?.name)used.add(m.name);
+ if(S.egg?.name)used.add(S.egg.name);
+ const pick=list=>{const available=list.filter(n=>!used.has(n));return available.length?available[rnd(0,available.length-1)]:null};
+ let name=pick(ATHLETE_NAMES[key]);
+ if(!name)name=pick([...new Set(ATHLETE_NAME_STEMS[key].flatMap(a=>ATHLETE_NAME_ENDINGS[key].map(b=>a+b)))]);
+ // Extremely large archives use a pronounceable kana suffix, never an ID/number.
+ if(!name){const sounds=['ア','イ','ウ','エ','オ','カ','キ','ク','ケ','コ','ラ','リ','ル','レ','ロ','ナ','ニ','ヌ','ネ','ノ'];let serial=0;
+  do{let n=serial++,tail='';do{tail=sounds[n%sounds.length]+tail;n=Math.floor(n/sounds.length)-1}while(n>=0);name=ATHLETE_NAMES[key][0]+'・'+tail}while(used.has(name));
+ }
+ issuedAthleteNames.add(name);return name;
+}
+window.STAR_NAMES={generate:defaultAthleteName,pools:ATHLETE_NAMES};
 function breedingCap(){
   const rank=Math.max(0,Math.min(5,Number(S.leagueRank)||0));
   if(rank>=1)return Math.min(10,5+rank);
@@ -17,12 +42,12 @@ function breedingCap(){
 }
 const cap=()=>breedingCap(), poolCap=()=>Math.min(18,8+Math.floor(S.wins/2));
 function visual(sp){return{color:COL[rnd(0,6)],pattern:PAT[rnd(0,5)],acc:ACC[rnd(0,5)],part:PART[sp][rnd(0,3)]}}
-function monster(sp,name,gen=0){let st={};for(let k in SL)st[k]=90+rnd(-8,8)+(SP[sp][2][k]||0);return{id:crypto.randomUUID(),name,species:sp,gen,stats:st,personality:P[rnd(0,5)],visual:visual(sp),origin:'プレゼント',rivalCount:0}}
-function baby(a,b){let sp=Math.random()<.5?a.species:b.species,st={};for(let k in SL){let av=(a.stats[k]+b.stats[k])/2,hi=Math.max(a.stats[k],b.stats[k]);st[k]=Math.round(av*.78+hi*.22+rnd(-8,10)+(SP[sp][2][k]||0)*.2)}let v={};for(let k of ['color','pattern','acc','part'])v[k]=Math.random()<.48?a.visual[k]:Math.random()<.96?b.visual[k]:visual(sp)[k];return{id:crypto.randomUUID(),name:SP[sp][0].slice(0,2)+rnd(10,99),species:sp,gen:Math.max(a.gen,b.gen)+1,stats:st,personality:P[rnd(0,5)],visual:v,origin:a.name+'×'+b.name,rivalCount:0}}
+function monster(sp,name,gen=0){let st={};for(let k in SL)st[k]=90+rnd(-8,8)+(SP[sp][2][k]||0);return{id:crypto.randomUUID(),name:name||defaultAthleteName(sp),species:sp,gen,stats:st,personality:P[rnd(0,5)],visual:visual(sp),origin:'プレゼント',rivalCount:0}}
+function baby(a,b){let sp=Math.random()<.5?a.species:b.species,st={};for(let k in SL){let av=(a.stats[k]+b.stats[k])/2,hi=Math.max(a.stats[k],b.stats[k]);st[k]=Math.round(av*.78+hi*.22+rnd(-8,10)+(SP[sp][2][k]||0)*.2)}let v={};for(let k of ['color','pattern','acc','part'])v[k]=Math.random()<.48?a.visual[k]:Math.random()<.96?b.visual[k]:visual(sp)[k];return{id:crypto.randomUUID(),name:defaultAthleteName(sp),species:sp,gen:Math.max(a.gen,b.gen)+1,stats:st,personality:P[rnd(0,5)],visual:v,origin:a.name+'×'+b.name,rivalCount:0}}
 function avatar(m,big=false){return `<div class="avatar art ${big?'bigArt':''}"><img class="artimg" src="${ART[m.species]}" alt="${SP[m.species][0]}"><div class="accessory">${m.visual.acc==='なし'?'':m.visual.acc}</div></div>`}
 function stats(m){return Object.entries(m.stats).map(([k,v])=>`<span>${SL[k]} <b>${v}</b></span>`).join('')}
 function breederPool(){let x=[...S.starters,...S.lineage,...S.nest],map=new Map();x.forEach(m=>map.set(m.id,m));return [...map.values()]}
-function card(m,mode){let on=mode==='p'&&S.parents.includes(m.id)||mode==='c'&&S.sel.includes(m.id);return `<div class="card ${on?'sel':''}" data-id="${m.id}" data-mode="${mode}">${avatar(m)}<div class="bd"><div class="nm"><b>${m.name}</b></div><div class="sm speciesLine">${SP[m.species][0]} / G${m.gen} / ${m.personality}</div><div class="traitRow"><span>${m.visual.pattern}</span><span>${m.visual.part}</span></div><div class="miniStats">${stats(m)}</div><div class="tags">${m.visual.color}・${m.visual.pattern}・${m.visual.part}</div></div></div>`}
+function card(m,mode){let on=mode==='p'&&S.parents.includes(m.id)||mode==='c'&&S.sel.includes(m.id);return `<div class="card ${on?'sel':''}" data-id="${m.id}" data-mode="${mode}">${avatar(m)}<div class="bd"><div class="nm"><b>${m.name}</b></div><div class="sm speciesLine"><span>${SP[m.species][0]}</span><span>G${m.gen} · ${m.personality}</span></div><div class="traitRow"><span>${m.visual.pattern}</span><span>${m.visual.part}</span></div><div class="miniStats">${stats(m)}</div><div class="tags">${m.visual.color}・${m.visual.pattern}・${m.visual.part}</div></div></div>`}
 function makeSchedule(){let a=['50m走','障害物競走','大玉ころがし','坂道かけあがり','10000m走','的当て'].sort(()=>Math.random()-.5).slice(0,3);a.push(Math.random()<.5?'リレー':'綱引き');S.schedule=a}
 function score(m,e){let s=m.stats;return e==='50m走'?s.speed*.5+s.agility*.3+s.tech*.2:e==='障害物競走'?s.tech*.4+s.agility*.35+s.speed*.15+s.guts*.1:e==='大玉ころがし'?s.power*.48+s.stamina*.3+s.guts*.22:e==='坂道かけあがり'?s.power*.35+s.stamina*.35+s.guts*.3:e==='10000m走'?s.stamina*.45+s.guts*.3+s.speed*.15+s.tech*.1:e==='的当て'?s.tech*.55+s.power*.2+s.agility*.15+s.guts*.1:e==='リレー'?s.speed*.45+s.tech*.2+s.agility*.2+s.guts*.15:s.power*.45+s.stamina*.3+s.guts*.25}
 const best=e=>[...S.nest].sort((a,b)=>score(b,e)-score(a,e))[0];
@@ -41,4 +66,4 @@ $('toMeet').onclick=()=>{if(S.turn<3)return;$('events').innerHTML=S.schedule.map
 function show(id){['breed','train','meet','dex'].forEach(x=>$(x).classList.toggle('hide',x!==id));document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v===id))}
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>show(t.dataset.v));
 $('reloadBtn').onclick=()=>{let u=new URL(location.href);u.searchParams.set('v',V+'-'+Date.now());location.replace(u)};
-S.starters=[monster('draco','ラゴ'),monster('unil','ミラ')];render();
+if(!S.starters.length){const species=Object.keys(SP);for(let i=species.length-1;i>0;i--){const j=rnd(0,i);[species[i],species[j]]=[species[j],species[i]]}S.starters=species.slice(0,2).map(sp=>monster(sp))}render();

@@ -1,5 +1,7 @@
 # STAR ATHLETES — reduce non-status text to about one fifth
 
+Update: v0.34.03 implements the first low-text lab/birth step in the canonical runtime owners; see [names and art revision](STAR_ATHLETES_NAMES_AND_ART_2026-10-12.md). The prototype/counts below remain historical feasibility evidence. Training/tournament/Nest redesign is still planned.
+
 Human direction: preserve status information and consider reducing other text to roughly 1/5. This document evaluates the proposal and provides an isolated visual prototype. It does not claim the complete game has been redesigned or deployed.
 
 ## Findings

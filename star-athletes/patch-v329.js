@@ -4,7 +4,7 @@
 // Keep horn/wing/tail genetics as data, but stop destructive alpha compositing and part replacement in normal UI.
 if(window.STAR_DRACO_STABLE329)return;
 
-const SRC329='../star-athletes-draco-lab/generated/body_base_clean.png?v=414';
+const SRC329='../star-athletes/assets/creatures/draco.png?v=3403';
 const JP329=window.DRACO_JP||{
  normal:'ノーマル',curl:'カール角',crystal:'クリスタル',feather:'フェザー',star:'スター尾',leaf:'リーフ尾'
 };
@@ -57,7 +57,7 @@ const css=document.createElement('style');
 css.id='dracoStable329css';
 css.textContent=`
 .avatar.draco-stable329{position:relative;overflow:hidden!important;padding:0!important;background:linear-gradient(#fff9eb,#f4ead6)!important}
-.dracoStableImg329{position:absolute;left:50%;top:50%;width:88%;height:88%;object-fit:contain;object-position:center;transform:translate(-50%,-50%);display:block;max-width:none!important;max-height:none!important;filter:none!important}
+.dracoStableImg329{position:absolute;left:50%;top:auto;bottom:3%;width:96%;height:96%;object-fit:contain;object-position:center bottom;transform:translateX(-50%);display:block;max-width:none!important;max-height:none!important;filter:none!important}
 .train210>header .avatar.draco-stable329 .dracoStableImg329,.entries210 .avatar.draco-stable329 .dracoStableImg329{width:84%;height:84%}
 .avatar.draco-stable329 .pattern,.avatar.draco-stable329 .accessory{display:none!important}
 .avatar.draco-stable329 .dracoGene329{z-index:3;max-width:calc(100% - 8px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:#fffdf2ee}
