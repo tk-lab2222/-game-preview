@@ -1,0 +1,59 @@
+[
+  {
+    "species_id": "unil",
+    "source_generation": "exec-917b148e-e3ca-40c7-bf90-ca9d7b89a4bc.png",
+    "file": "unil-growth-concept.png",
+    "bytes": 1606555,
+    "sha256": "ae6b88a7271cdb44afbc5ef161e02f62df482a1d8bfae6cceac719be911e344a",
+    "size": [
+      1774,
+      887
+    ],
+    "mode": "RGBA",
+    "alpha_bounds": [
+      33,
+      17,
+      1760,
+      887
+    ],
+    "purpose": "concept comparison only; not integrated stage assets"
+  },
+  {
+    "species_id": "grimo",
+    "source_generation": "exec-3e46e373-fc95-4447-952a-7e236f596f2d.png",
+    "file": "grimo-growth-concept.png",
+    "bytes": 1771010,
+    "sha256": "92a57c30742a9ecaf770955877f9d059817fe4d0ada7b0f9be193ca84662ff69",
+    "size": [
+      1983,
+      793
+    ],
+    "mode": "RGBA",
+    "alpha_bounds": [
+      40,
+      25,
+      1954,
+      776
+    ],
+    "purpose": "concept comparison only; not integrated stage assets"
+  },
+  {
+    "species_id": "puru",
+    "source_generation": "exec-0a54691b-746b-49f0-b0b7-5db14f2899a7.png",
+    "file": "puru-growth-concept.png",
+    "bytes": 1700596,
+    "sha256": "b148b8e19ea0609dbf4a4f7a010dd58ca982911798f0f63c45904b1370cbc9b7",
+    "size": [
+      1908,
+      824
+    ],
+    "mode": "RGBA",
+    "alpha_bounds": [
+      30,
+      0,
+      1907,
+      824
+    ],
+    "purpose": "concept comparison only; not integrated stage assets"
+  }
+]

@@ -33,6 +33,32 @@ GAME CORE: stage/progression belongs to existing training/domain owners and spec
 
 ## Visual evidence and limits
 
+### Remaining three species — refined visual proposals
+
+The human asked whether physical growth fits the current training loop and requested refinement of the remaining three creatures. The following original comparison sheets use the currently implemented species sprites as image references. Left to right: juvenile / adolescent / adult. They are generated concepts, not gameplay screenshots, separately usable sprites or animations.
+
+| Species | Visual development | Comparison |
+| --- | --- | --- |
+| ユニル (`unil`) | Short legs and horn bud → developing spiral horn/mane → longer legs/neck, elegant equine proportions and flowing mane. Keep ivory, pink/lilac, violet eyes and flank markings. | [Unil](quality-2026-10-12/unil-growth-concept.png) |
+| グリフォン (`grimo`) | Compact fluffy chick → developing flight feathers/talons → stronger lion hindquarters, mature eagle profile, closed beak and substantial wings. Keep navy/ivory/gold. | [Griffin](quality-2026-10-12/grimo-growth-concept.png) |
+| ネリス (`puru`) | Small droplet → rounded water spirit → flowing wave crest, longer liquid limbs and more composed expression. Keep cyan translucent water and the luminous core. | [Neris](quality-2026-10-12/puru-growth-concept.png) |
+
+Griffin received a second composition/maturity pass after the first output clipped the adult at the right edge. The selected sheet improves full-body framing and adult expression. Neris still needs more outer margin in a production sprite and assessment of whether its adult silhouette retains enough of the original droplet identity. Unil's adult mane and tail may need simplified highlights at actual mobile size. These are remaining art tasks, not hidden verification claims. Original outputs are copied byte-for-byte; metadata/hashes are in [the manifest](quality-2026-10-12/growth-refinements-manifest.json).
+
+### Feasibility within the existing training loop
+
+Physical life stages are absent, but the game already grows abilities and has six seasons × three normal training rounds. Appearance milestones can therefore accompany existing play without adding an age-management screen, extra training currency, waiting timer, lifespan/death rule or new compulsory action. First implement visible development; adult status should not be an extra requirement for competing or breeding. Three/nine individual rounds remain provisional art milestones, with playtesting needed to judge pacing.
+
+Proposed counting policy: one committed normal training round counts once for each participating individual, independent of safe/normal/high intensity, success grade or stat gain; an injury still uses the round and counts as experience. Canceled/blocked actions, rerenders, reloads and tournaments do not count. This avoids making safe training slower to mature or making high-load the visual-growth shortcut. Confirm this policy when implementing.
+
+`patch-v279.js::train279()` is also a live training path: LIMIT training allocates points selectively and currently records a global LIMIT session count, not individual age. If it contributes to appearance growth, advance only participants with positive allocation, once per committed session regardless of allocated points. Unallocated individuals do not advance. Owners263/279 should consume one core progression rule; do not introduce competing counters or an extra wrapper/patch.
+
+For legacy saves, retain the existing static appearance and mark historic session progress unknown rather than reverse-engineering age from stats. At migration, fix a presentation floor matching the legacy sprite; new valid sessions can move forward without making existing athletes visually younger. Birth initialization must distinguish new offspring from restored legacy data. Save identity, genes, names, lineage and representative references remain intact. This migration is a proposal, not implemented code.
+
+### Original additional-species scope
+
+The human recalled an original plan of “あと5種”. Searches of Alpha Lab's current project state, canonical product direction, milestone roadmap, repository file tree/code search and species-related issues, plus the runtime repository's current species assets, did not recover those five names/motifs. This is not proof that the older idea never existed. A clarification is pending; do not replace the original roster with invented species or silently decide whether the intended total was six or nine. The three existing species above are refined now; original additional species remain to be recovered.
+
 [Draco lifecycle concept](quality-2026-10-12/draco-growth-concept.png) is generated original concept art using the current Draco sprite as reference, not a game screenshot. It shows left-to-right juvenile/adolescent/adult and is intended for visual comparison. It is not an animation sheet, a set of separately integrated sprites or proof of genetic consistency for every individual. No runtime code, statistics, save schema or public deployment is changed by this proposal.
 
 Before implementation is called complete, verify actual birth → valid training → visible stage transition → reload/protected restore/corrupt-primary recovery → lineage/representative display; preserve naming/identity/rarity/genes, count valid actions once, and verify mobile framing and asset performance for every supported species/stage. Existing runtime CI validates v0.34.03 and does not validate an unimplemented growth system.
