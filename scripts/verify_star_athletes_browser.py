@@ -156,6 +156,9 @@ with sync_playwright() as p:
     page.locator('#doTrain263').click();page.wait_for_function('S.turn===3')
     assert page.evaluate('S.nest.map(m=>S.training263.fatigue[m.id])')==[max(0,x-1) for x in fatigue_before]
     print('PASS high-load fatigue increments once; safe training recovers once.',flush=True)
+    page.wait_for_timeout(300)
+    if page.locator('[data-event267="b"]').count():
+        page.locator('[data-event267="b"]').click()
     page.locator('#toMeet').click();page.locator('#run').click()
     page.wait_for_function('(S.seasonHistory||[]).length>0');page.wait_for_timeout(500)
     page.screenshot(path=str(OUT/'athletes-tournament-after.png'),full_page=True)

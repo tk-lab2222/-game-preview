@@ -1,8 +1,6 @@
 (()=>{
 // v0.31.8: tournament win chance is estimated by deterministic Monte Carlo using the real battle rules.
 const KEYS295=['power','speed','stamina','agility','tech','guts'];
-const BASES295=[102,120,140,163,190,222];
-const DIFF295={safe:-18,standard:0,challenge:20};
 const PTS295=[8,6,5,4,3,2,1,0];
 const cache295=new Map();
 function score295(stats,e){
@@ -71,8 +69,7 @@ function chance295(tier='standard',eventsOverride=null,rivalsOverride=null,mode=
  if(!nest.length){const z={ours:0,theirs:0,pct:5,label:'強敵注意',simulations:0};cache295.set(sig,z);return z}
  const rank=Math.max(0,Math.min(5,Number(S?.leagueRank)||0));
  const season=Math.max(1,Number(S?.season)||1);
- const base=(BASES295[rank]||102)+(season-1)*1.5+(DIFF295[tier]||0);
- const events=Array.isArray(eventsOverride)&&eventsOverride.length?eventsOverride:(Array.isArray(S?.schedule)&&S.schedule.length?S.schedule:['50m走','障害物競走','的当て','リレー']);
+  const events=Array.isArray(eventsOverride)&&eventsOverride.length?eventsOverride:(Array.isArray(S?.schedule)&&S.schedule.length?S.schedule:['50m走','障害物競走','的当て','リレー']);
  const rand=rng295(hash295(sig));
  const RUNS=500;
  const supplied=Array.isArray(rivalsOverride)&&rivalsOverride.length===7?rivalsOverride:null;
@@ -87,15 +84,7 @@ function chance295(tier='standard',eventsOverride=null,rivalsOverride=null,mode=
  let wins=0,rivalAvgTotal=0;
  for(let n=0;n<RUNS;n++){
    const rivals=fixedRivals?fixedRivals.map(r=>({...r})):[];
-   if(!fixedRivals){
-     for(let r=0;r<7;r++){
-       const stats={},bias=base+(r-3)*1.5;
-       KEYS295.forEach(k=>stats[k]=Math.max(70,Math.round(bias+(rand()*18-9))));
-       const strong=KEYS295[Math.floor(rand()*KEYS295.length)];
-       stats[strong]+=10+Math.floor(rand()*10);
-       rivals.push(stats);
-     }
-   }
+   if(!fixedRivals)rivals.push(...window.STAR_TOUR225.buildRivals(tier,false,rand).map(r=>({...r.stats})));
    rivalAvgTotal+=rivals.reduce((sum,r)=>sum+KEYS295.reduce((a,k)=>a+(r[k]||0),0)/KEYS295.length,0)/rivals.length;
    const total=[0,0,0,0,0,0,0,0];
    for(let i=0;i<events.length;i++){

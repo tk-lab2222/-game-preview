@@ -43,15 +43,18 @@ function score225(stats,e){
  e==='リレー'?(s.speed||0)*.45+(s.tech||0)*.2+(s.agility||0)*.2+(s.guts||0)*.15:
  (s.power||0)*.45+(s.stamina||0)*.3+(s.guts||0)*.25;
 }
-function buildRivals225(tierId='standard',promo=false){
+function buildRivals225(tierId='standard',promo=false,random=Math.random){
  init225();
  const target=Math.min(LEAGUES225.length-1,S.leagueRank+(promo?1:0));
  const lg=LEAGUES225[target],seasonBoost=((Number(S.season)||1)-1)*1.5,tour=promo?TOURS225[1]:(TOURS225.find(x=>x.id===tierId)||TOURS225[1]);
  return Array.from({length:7},(_,i)=>{
    const stats={};const bias=lg.base+seasonBoost+tour.diff+(i-3)*1.5;
-   STAT_KEYS225.forEach(k=>stats[k]=Math.max(70,Math.round(bias+(Math.random()*18-9))));
-   const strong=STAT_KEYS225[Math.floor(Math.random()*STAT_KEYS225.length)];stats[strong]+=10+Math.floor(Math.random()*10);
-   return{id:'r'+i,name:RIVAL_NAMES225[(S.leagueRank*3+i+((Number(S.season)||1)-1))%RIVAL_NAMES225.length],stats,strong};
+   STAT_KEYS225.forEach(k=>stats[k]=Math.max(70,Math.round(bias+(random()*18-9))));
+   const n=i===0?window.STAR_NEMESIS268?.profile?.(target):null;
+   const strong=n?n.strong:STAT_KEYS225[Math.floor(random()*STAT_KEYS225.length)];stats[strong]+=10+Math.floor(random()*10);
+   const r={id:'r'+i,name:RIVAL_NAMES225[(S.leagueRank*3+i+((Number(S.season)||1)-1))%RIVAL_NAMES225.length],stats,strong};
+   if(i===0&&n){r.name=n.name;r.strong=n.strong;r.nemesis268=true;r.bloodline268=n.blood;r.skill268=n.skill;r.weak268=n.weak;r.stats[n.strong]+=14+target*2;r.stats[n.weak]=Math.max(70,Math.round(bias-20-target*2))}
+   return r;
  });
 }
 function mkRivals225(promo=false){
@@ -97,8 +100,9 @@ function renderRivals225(promo=false){
  host.innerHTML=`<div class="rivalPanel225 ${promo?'promo225':''}"><div class="rivalTop225"><div><small>${promo?'PROMOTION BATTLE':'RIVAL SCOUT'}</small><b>${promo?'🔥 昇格戦':`${tour.icon} ${tour.name}`} / ${target.name}級</b></div><div class="chance225"><span>${promo?'対戦比較':'勝利見込み'}</span><strong>${promo?'—':(c.pct==null?'計算中…':c.pct+'%')}</strong><em>${promo?'':c.label}</em></div></div><div class="powerCompare225"><span>自軍平均 <b>${actual.ours}</b></span><i></i><span>相手平均 <b>${actual.theirs}</b></span></div><div class="rivalCards225">${rivals.slice(0,3).map(r=>`<article><header><b>${r.name}</b><em>${STAT_LABEL225[r.strong]}型</em></header><div>${STAT_KEYS225.map(k=>`<span class="${k===r.strong?'hot225':''}">${STAT_LABEL225[k]} <b>${r.stats[k]}</b></span>`).join('')}</div></article>`).join('')}</div><small class="rivalNote225">※表示されている能力値をそのまま大会計算に使用します。</small></div>`;
 }
 function stratMul225(s){return s==='先行'?1.015:s==='温存'?1.008:s==='追込'?1.012:1}
+function completedNormal225(){return(S.seasonHistory||[]).some(h=>h.generation===(Number(S.generation233)||1)&&Number(h.season)===(Number(S.season)||1)&&h.league===league225().name)}
 async function runBattle225(promo=false){
- init225();const run=document.getElementById('run');if(!run||run.disabled)return;
+ init225();const run=document.getElementById('run');if(!run||run.disabled||(!promo&&completedNormal225()))return;
  if(promo&&S.leagueRank===0){S.localPromotionEnteredCap=true;save225();}
  const rivals=ensureRivals225(promo);run.disabled=true;run.textContent=promo?'昇格戦中…':'大会進行中…';
  const events=Array.isArray(S.schedule)&&S.schedule.length?S.schedule:['50m走','障害物競走','的当て','リレー'];
@@ -122,10 +126,11 @@ async function runBattle225(promo=false){
  }
  if(overall===1){S.wins=(S.wins||0)+1;S.leagueWins[lg.name]=(S.leagueWins[lg.name]||0)+1;if(S.leagueRank===0)S.localFirstWinCap=true;}S.promotionPending=false;S.promotionFromSeason=0;
  const coin=Math.round((overall===1?1000:overall===2?700:overall===3?450:250)*lg.reward*tour.reward),fame=Math.round((overall===1?120:overall===2?80:overall===3?50:25)*lg.reward*tour.reward);S.coins=(S.coins||0)+coin;S.fame=(S.fame||0)+fame;
- S.seasonHistory=S.seasonHistory||[];S.seasonHistory.push({season:Number(S.season)||1,league:lg.name,name:tour.name,meetChoice:tour.id,annualMul:tour.annual,overall,points:totalPts[0],coins:coin,fame});
+ S.seasonHistory=S.seasonHistory||[];S.seasonHistory.push({generation:Number(S.generation233)||1,season:Number(S.season)||1,league:lg.name,name:tour.name,meetChoice:tour.id,annualMul:tour.annual,overall,points:totalPts[0],coins:coin,fame});
  let scout117=null;try{scout117=window.STAR_META117?.afterMeet?.(overall,totalPts[0])||null}catch(_){}
  if(result)result.innerHTML=`<div class="notice leagueResult225"><b>${tour.icon} ${tour.name} / ${lg.icon} ${lg.name}級・S${Number(S.season)||1}</b><br>${rows.map(x=>`${x.e}：${x.rank}位`).join('<br>')}<hr><strong>総合${overall}位 / ${totalPts[0]}pt</strong><br>🪙 +${coin}　⭐名声 +${fame}${scout117?`<div class="scout117">🎁 大会スカウト！<br><b>${SP[scout117.species][0]}「${scout117.name}」</b> が血統プールに加入！</div>`:''}<button class="btn tiny" id="shareMeet117">結果を共有</button></div>`;
  const share117=document.getElementById('shareMeet117');if(share117)share117.onclick=()=>window.STAR_META117?.shareMeet?.(overall,totalPts[0]);
+ window.STAR_NEMESIS268?.record?.({rank:S.leagueRank,season:Number(S.season)||1,generation:Number(S.generation233)||1,won:overall===1,tier:tour.id,rivals});
  save225();run.classList.add('hide');run.disabled=false;installNext225();
 }
 function nextSeason225(){
@@ -162,9 +167,9 @@ function wire225(){
 }
 
 window.STAR_TOUR225={
- tiers:TOURS225,
+ tiers:TOURS225,completed:completedNormal225,
  generateRivals:(promo=false)=>mkRivals225(!!promo),
- buildRivals:(tier='standard',promo=false)=>buildRivals225(tier,!!promo),
+ buildRivals:(tier='standard',promo=false,random=Math.random)=>buildRivals225(tier,!!promo,random),
  ensureRivals:(promo=false)=>ensureRivals225(!!promo),
  ensureNext:restoreNext225,
  score:score225,

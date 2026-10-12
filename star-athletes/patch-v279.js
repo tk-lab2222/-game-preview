@@ -15,6 +15,7 @@ function st279(){
  if(!Number.isFinite(Number(st.energy)))st.energy=MAX_EN279;
  if(!Number.isFinite(Number(st.lastEnergyAt)))st.lastEnergyAt=Date.now();
  if(!Number.isFinite(Number(st.sessions)))st.sessions=0;
+ st.energy=Math.max(0,Math.min(MAX_EN279,Math.floor(n279(st.energy))));
  return st;
 }
 function regen279(){
@@ -37,12 +38,14 @@ function ensure279(){
    if(!STATS279.includes(st.target[m.id]))st.target[m.id]=STATS279.slice().sort((a,b)=>n279(m.stats?.[b])-n279(m.stats?.[a]))[0]||'speed';
  });
  let total=(S.nest||[]).reduce((a,m)=>a+n279(st.alloc[m.id]),0);
- if(total===0&&S.nest?.length===3){st.alloc[S.nest[0].id]=2;st.alloc[S.nest[1].id]=1;st.alloc[S.nest[2].id]=1}
+ const rosterKey=[...ids].sort().join('|');
+ if(st.rosterKey!==rosterKey&&total===0&&S.nest?.length===3){st.alloc[S.nest[0].id]=2;st.alloc[S.nest[1].id]=1;st.alloc[S.nest[2].id]=1}
+ st.rosterKey=rosterKey;
  normalize279();
 }
 function normalize279(){
  const st=st279(),nest=S.nest||[];
- nest.forEach(m=>st.alloc[m.id]=Math.max(0,Math.min(PTS279,n279(st.alloc[m.id]))));
+ nest.forEach(m=>st.alloc[m.id]=Math.max(0,Math.min(PTS279,Math.floor(n279(st.alloc[m.id])))));
  let total=nest.reduce((a,m)=>a+n279(st.alloc[m.id]),0);
  while(total>PTS279){
    const m=[...nest].sort((a,b)=>n279(st.alloc[b.id])-n279(st.alloc[a.id]))[0];if(!m||st.alloc[m.id]<=0)break;
@@ -70,7 +73,7 @@ function galaxyWins279(){return n279(S.leagueWins?.['ギャラクシー'])}
 function clearCheck279(){
  const st=st279();
  const ability=bestStat279()>=1500,training=n279(st.sessions)>=3,galaxy=galaxyWins279()>=2;
- st.cleared=ability&&training&&galaxy;
+ st.cleared=!!S.limit1Cleared||(ability&&training&&galaxy);
  if(st.cleared)S.limit1Cleared=true;
  return{ability,training,galaxy,all:st.cleared};
 }
@@ -79,20 +82,25 @@ function nextEnergy279(){
  const left=Math.max(0,REGEN_MS279-(Date.now()-st.lastEnergyAt));
  return `次の回復まで ${Math.ceil(left/60000)}分`;
 }
+function hasGain279(){
+ const st=st279();return(S.nest||[]).some(m=>{const k=st.target[m.id],pt=n279(st.alloc[m.id]);return gain279(n279(m.stats?.[k]),pt)+secondary279(n279(m.stats?.[secondStat279(k)]),pt)>0});
+}
 function train279(){
  if(!released279()||!Array.isArray(S.nest)||S.nest.length!==3)return;
  ensure279();const st=st279();
- if(st.energy<1||total279()!==PTS279)return;
+ if(st.energy<1||total279()!==PTS279||window.STAR_EVENTS267?.pending?.())return;
+ if(!hasGain279())return;
  const rows=[];
  for(const m of S.nest){
    const pt=n279(st.alloc[m.id]);if(pt<=0)continue;
    const k=st.target[m.id],sec=secondStat279(k);
    const before=n279(m.stats?.[k]),before2=n279(m.stats?.[sec]);
    const g=gain279(before,pt),g2=secondary279(before2,pt);
-   m.stats[k]=Math.min(CAP279,before+g);m.stats[sec]=Math.min(CAP279,before2+g2);
+   window.STAR_GROWTH226.trainingDelta(m,k,g,CAP279);window.STAR_GROWTH226.trainingDelta(m,sec,g2,CAP279);
    rows.push(`${m.name}：${LAB279[k]}+${g} / ${LAB279[sec]}+${g2}`);
  }
- st.energy--;st.sessions++;st.lastEnergyAt=Date.now();st.alloc={};
+ if(st.energy===MAX_EN279)st.lastEnergyAt=Date.now();
+ st.energy--;st.sessions++;
  ensure279();clearCheck279();persist279();
  render279();
  let msg=document.getElementById('limitResult279');if(msg)msg.innerHTML=`<div class="notice limitGain279"><b>⚡ LIMIT TRAINING #${st.sessions}</b><br>${rows.join('<br>')}</div>`;
@@ -111,7 +119,7 @@ function render279(){
  host.innerHTML=`<div class="limitTrainHead279"><div><small>LIMIT 1 TRAINING</small><b>⚡ 限界育成</b></div><div><strong>ENERGY ${st.energy}/${MAX_EN279}</strong><small>${nextEnergy279()}</small></div></div>
  <div class="ptHead279"><span>育成ポイント</span><b>${total}/${PTS279} pt</b><small>LIMIT 1では毎回4ptを3体へ配分</small></div>
  <div class="athletes279">${S.nest.map(m=>{const pt=n279(st.alloc[m.id]),k=st.target[m.id];return `<article data-a279="${m.id}"><header><b>${m.name}</b><strong>${pt}pt</strong></header><div class="alloc279"><button data-minus279="${m.id}" ${pt<=0?'disabled':''}>−</button><span>${pt}</span><button data-plus279="${m.id}" ${total>=PTS279?'disabled':''}>＋</button></div><label>強化先<select data-target279="${m.id}">${STATS279.map(x=>`<option value="${x}" ${x===k?'selected':''}>${LAB279[x]} ${n279(m.stats?.[x])}</option>`).join('')}</select></label><small>予測：${LAB279[k]} +${gain279(n279(m.stats?.[k]),pt)} / ${LAB279[secondStat279(k)]} +${secondary279(n279(m.stats?.[secondStat279(k)]),pt)}</small></article>`}).join('')}</div>
- <button type="button" id="limitGo279" class="btn or" ${st.energy<1||total!==PTS279?'disabled':''}>⚡ LIMIT育成を実行</button>
+ <button type="button" id="limitGo279" class="btn or" ${st.energy<1||total!==PTS279||!hasGain279()||window.STAR_EVENTS267?.pending?.()?'disabled':''}>${total!==PTS279?'ポイントを配分':!hasGain279()?'対象の能力は上限':'⚡ LIMIT育成を実行'}</button>
  <div id="limitResult279"></div>
  <div class="break279"><b>LIMIT 1 突破条件</b><span class="${chk.ability?'ok279':''}">${chk.ability?'✓':'◇'} 1能力 1,500以上 <em>${bestStat279()}/1500</em></span><span class="${chk.training?'ok279':''}">${chk.training?'✓':'◇'} LIMIT育成 3回 <em>${Math.min(3,n279(st.sessions))}/3</em></span><span class="${chk.galaxy?'ok279':''}">${chk.galaxy?'✓':'◇'} ギャラクシー級優勝 2回 <em>${Math.min(2,galaxyWins279())}/2</em></span><strong>${chk.all?'LIMIT 1 COMPLETE — LIMIT 2 準備完了':'3条件を満たすとLIMIT 1 COMPLETE'}</strong></div>
  <small class="limitNote279">通常の配合・大会は止まりません。ENERGYはLIMIT育成だけで消費し、30分で1回復します。数値はLIMIT1検証用の初期設定です。</small>`;

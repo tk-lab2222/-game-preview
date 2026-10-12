@@ -28,11 +28,11 @@ function state276(){
 function observedLevel276(id,list){
  if(list.some(m=>m?.specialLineage273?.id===id))return 3;
  if(id==='godspeed'){
-   if(list.some(m=>skills276(m).includes('speed')&&skills276(m).includes('agility')))return 2;
+   if(list.some(m=>skills276(m).includes('speed'))&&list.some(m=>skills276(m).includes('agility')))return 2;
    if(list.some(m=>skills276(m).includes('speed')||skills276(m).includes('agility')))return 1;
  }
  if(id==='titan'){
-   if(list.some(m=>skills276(m).includes('power')&&skills276(m).includes('stamina')))return 2;
+   if(list.some(m=>skills276(m).includes('power'))&&list.some(m=>skills276(m).includes('stamina')))return 2;
    if(list.some(m=>skills276(m).includes('power')||skills276(m).includes('stamina')))return 1;
  }
  if(id==='aberrant'){
@@ -40,7 +40,7 @@ function observedLevel276(id,list){
    if(list.some(m=>h276(m,'mutation')>=6))return 1;
  }
  if(id==='pureblood'){
-   const maxGen=list.reduce((a,m)=>Math.max(a,n276(m?.gen)),0);
+   const maxGen=list.reduce((a,m)=>Math.max(a,n276(m?.pureLineage273)||1),0);
    if(maxGen>=5)return 2;if(maxGen>=3)return 1;
  }
  if(id==='hybrid'){
@@ -72,17 +72,19 @@ function render276(){
  }
  const st=state276(),found=REC276.filter(r=>n276(st.levels[r.id])>=3).length;
  const clues=REC276.filter(r=>n276(st.levels[r.id])>0).length;
- const counter=document.getElementById('recordResearch');if(counter)counter.textContent=found+'/'+REC276.length;
+ const parents=(S.parents||[]).map(id=>all276().find(m=>m.id===id)).filter(Boolean);
+ const reaction=parents.length===2?window.STAR_RARE273.evaluate({species:parents[0].species,gen:Math.max(...parents.map(m=>n276(m.gen)))+1,skills233:[...new Set(parents.flatMap(skills276))],hidden233:Object.fromEntries(['mutation','luck','heredity'].map(k=>[k,Math.max(...parents.map(m=>h276(m,k)))]))},...parents):[];
+ const counter=document.getElementById('recordResearch');if(counter)counter.textContent=found+'/'+REC276.length+(reaction.length?' · 反応'+reaction.length:'');
  const ultra=all276().filter(m=>m?.ultraRare274).length;
  host.innerHTML=`<div class="head276"><div><small>BREEDING RESEARCH</small><b>📓 配合研究ノート</b></div><span>${found}/${REC276.length} 発見</span></div>
- <div class="summary276"><b>研究進行 ${clues}/${REC276.length}</b><span>特殊個体観測 ${ultra}</span></div>
+ <div class="summary276"><b>手がかり ${clues}/${REC276.length}</b><span>特殊個体 ${ultra}</span></div>${reaction.length?`<p>選択した親：${reaction.length}系統に手がかり</p>`:''}
  <div class="list276">${REC276.map(r=>{const lv=n276(st.levels[r.id]);return `<article class="lv${lv}"><header><b>${lv? r.icon:'🔒'} ${lv>=2?r.name:'未解析レシピ'}</b><em>${tier276(lv)}</em></header><p>${text276(r,lv)}</p><div><i></i><i class="${lv>=1?'on':''}"></i><i class="${lv>=2?'on':''}"></i><i class="${lv>=3?'on':''}"></i></div></article>`}).join('')}</div>
  <small class="note276">正確な内部確率は非公開。血統・SKILL・変異を重ねるほど研究ノートの手がかりが増えます。</small>`;
 }
 function late276(){render276();[80,220,500,900].forEach(ms=>setTimeout(render276,ms))}
 try{const prev276=render;render=function(){const out=prev276();setTimeout(late276,0);return out}}catch(e){console.warn('render276',e)}
 window.addEventListener('click',e=>{
- if(e.target?.closest?.('.tab[data-v="nest201"],#batchGo260,#hatch,#adopt,#doTrain263,#run,#next225,#annualNext233'))setTimeout(late276,0);
+ if(e.target?.closest?.('.tab[data-v="nest201"],#breeders .card,#batchGo260,#hatch,#adopt,#doTrain263,#run,#next225,#annualNext233'))setTimeout(late276,0);
 },true);
 const css=document.createElement('style');css.textContent=`
 .research276{border:2px solid #405875!important;background:linear-gradient(145deg,#f8fbff,#eef4fb)!important}

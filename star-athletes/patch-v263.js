@@ -18,7 +18,7 @@ const INT263={
 };
 function n263(v){return Number(v)||0}
 function clamp263(v,a,b){return Math.max(a,Math.min(b,v))}
-function cap263(){try{return Math.max(999,Number(window.STAR_LIMIT278?.cap?.())||999)}catch(_){return 999}}
+function cap263(){return 999}
 function hidden263(m,k,d=3){const v=Number(m?.hidden233?.[k]);return Number.isFinite(v)?clamp263(v,0,7):d}
 function avg263(m){const a=KEYS263.map(k=>n263(m?.stats?.[k]));return a.reduce((x,y)=>x+y,0)/(a.length||1)}
 function best263(){return [...(S.nest||[])].sort((a,b)=>avg263(b)-avg263(a))[0]?.id}
@@ -113,7 +113,7 @@ function outcome263(m,mode){
 function gradeLabel263(g){return g==='ケガ・中断'?'🩹 ケガで中断':g==='伸び悩み'?'△ 伸び悩み':g==='超成功'?'💫 超成功':g==='大成功'?'🌟 大成功':'✅ 成功'}
 function leagueMul263(){
   const r=clamp263(n263(S.leagueRank),0,5);
-  return [1,1.15,1.30,1.50,1.70,1.90][r]||1;
+  return [1,1.30,1.60,1.90,2.20,2.50][r]||1;
 }
 function highStatMul263(v){
   const cap=cap263();
@@ -141,11 +141,11 @@ function panel263(){
   const turn=clamp263(n263(S.turn),0,3),left=Math.max(0,3-turn);
   host.innerHTML=`<div class="budgetHead263"><div><small>TRAINING</small><b>第${Math.min(3,turn+1)}ラウンド</b></div><strong>${turn}/3</strong></div>
    <div class="budgetHint263">3体それぞれの育成種目と強度を決めます。現在リーグ育成倍率 <b>×${leagueMul263().toFixed(2)}</b>。</div>
-   <button type="button" id="doTrain263" class="btn or" ${turn<3?'':'disabled'}>${turn<3?'この内容で練習する':'育成完了'}</button>`;
+   <button type="button" id="doTrain263" class="btn or" ${turn<3&&!window.STAR_EVENTS267?.pending?.()?'':'disabled'}>${turn<3?'この内容で練習する':'育成完了'}</button>`;
 }
 function render263(){try{controls263();panel263()}catch(e){console.warn('render263',e)}}
 function train263(){
-  if(n263(S.turn)>=3||!Array.isArray(S.nest)||S.nest.length!==3)return;
+  if(n263(S.turn)>=3||!Array.isArray(S.nest)||S.nest.length!==3||window.STAR_EVENTS267?.pending?.())return;
   const st=state263(),out=[];
   for(const m of S.nest){
     const mode=INT263[st.intensity[m.id]]?st.intensity[m.id]:'normal';
@@ -160,21 +160,22 @@ function train263(){
       const resonanceMul=Number(window.STAR_RESONANCE344?.trainingMul?.(m,plan,mode,k)||1);
       const raw=(base*o.mul*leagueMul263()*patternMul*bodyMul*resonanceMul+jitter)*soft;
       const gain=Math.max(0,Math.round(raw));
-      m.stats[k]=Math.min(cap263(),cur+gain);
-      const actual=m.stats[k]-cur;
-      m.trainingGain226[k]=n263(m.trainingGain226[k])+actual;
+      const actual=window.STAR_GROWTH226.trainingDelta(m,k,gain,cap263());
       ups.push(`${SL[k]}+${actual}`);
     }
     st.fatigue[m.id]=mode==='high'?Math.min(2,fatigueBefore+1):mode==='safe'?Math.max(0,fatigueBefore-1):fatigueBefore===2?1:fatigueBefore;
+    if(st.policy266==='lineage'&&mode==='high'&&st.fatigue[m.id]>=2)st.fatigue[m.id]=1;
     out.push(`<b>${m.name}：${INT263[mode].label} / ${gradeLabel263(o.grade)}</b> ${ups.join(' / ')}`);
   }
   S.turn=n263(S.turn)+1;
+  window.STAR_EVENTS267?.afterTraining?.();
   persist263();
   try{render()}catch(e){console.error('render train263',e)}
   try{window.renderRoster210Live&&window.renderRoster210Live()}catch(_){}
   const gain=document.getElementById('gain');if(gain)gain.innerHTML=`<div class="notice trainGain263">${out.join('<br>')}</div>`;
   render263();persist263();
 }
+window.STAR_TRAIN263={injuryRate:injuryRate263,outcome:outcome263};
 window.addEventListener('click',e=>{
   if(e.target?.closest?.('.tab[data-v="train"],#adopt,#doTrain,#toMeet')){
     setTimeout(late263,0);

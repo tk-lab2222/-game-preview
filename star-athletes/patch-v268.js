@@ -18,31 +18,18 @@ function state268(){
  if(!S.nemesis268.defeated)S.nemesis268.defeated={};if(!S.nemesis268.seen)S.nemesis268.seen={};return S.nemesis268;
 }
 function nem268(rank=rank268()){const n=NEM268[rank]||NEM268[0];return {...n,rank}}
-function base268(rank){const base=([112,132,154,180,210,246][rank]||112);const diff=S.meetChoice225==='safe'?-18:S.meetChoice225==='challenge'?20:0;return base+diff}
-function stats268(rank,n){
- const b=base268(rank),s={};KEYS268.forEach((k,i)=>s[k]=Math.round(b+((rank+1)*(i+3)%9)-4));
- s[n.strong]+=24+rank*3;s[n.weak]=Math.max(70,s[n.weak]-15-rank*2);return s;
-}
 function inject268(){
- if(!Array.isArray(S.rivals225)||!S.rivals225.length)return;
- const rank=Math.max(0,Math.min(NEM268.length-1,Number(S.leagueRank)||0)),n=nem268(rank);
- // Nemesis is presentation/progression metadata only.
- // Never mutate fixed tournament rival identity, stats or strong stat after odds are calculated.
- const r=S.rivals225[0]||{};
- r.nemesis268=true;r.bloodline268=n.blood;r.skill268=n.skill;r.weak268=n.weak;
- state268().seen[rank]=true;save268();
+ const n=nem268(),r=(S.rivals225||[]).find(x=>x.nemesis268&&x.name===n.name);
+ if(!r||S.promotion233||S.planetRepresentative233)return;
+ state268().seen[rank268()]=true;save268();
 }
-function mark268(){
- const result=document.getElementById('result');if(!result)return;
- const txt=result.textContent||'';
- if(!txt.includes('総合1位')&&!txt.includes('昇格成功'))return;
- const rank=rank268(),st=state268();if(st.defeated[rank])return;
- st.defeated[rank]={season:Number(S.season)||1,at:Date.now()};save268();try{window.STAR_NEMESIS302?.sync?.()}catch(_){}
+function record268({rank,season,generation,won,tier,rivals}){
+ const n=nem268(rank);if(!won||tier==='safe'||!rivals.some(r=>r.nemesis268&&r.name===n.name))return false;
+ const st=state268();if(st.defeated[rank])return false;
+ st.defeated[rank]={season,generation,at:Date.now()};save268();window.STAR_NEMESIS302?.sync?.();return true;
 }
-window.addEventListener('click',e=>{
- if(e.target?.closest?.('.tab[data-v="meet"],#toMeet'))setTimeout(inject268,60);
- if(e.target?.closest?.('#run')){setTimeout(mark268,900);setTimeout(mark268,1800);setTimeout(mark268,3200)}
-},true);
+window.STAR_NEMESIS268={catalog:NEM268,profile:nem268,record:record268};
+window.addEventListener('click',e=>{if(e.target?.closest?.('.tab[data-v="meet"],#toMeet'))setTimeout(inject268,60)},true);
 try{const prev268=render;render=function(){const out=prev268();if(!document.getElementById('meet')?.classList.contains('hide'))inject268();return out}}catch(e){console.warn('render268',e)}
 inject268();
 })();

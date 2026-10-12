@@ -194,7 +194,7 @@ try{
 }catch(e){console.warn('baby233',e)}
 // ---------- annual ranking ----------
 function ensureAnnual233(){S.generation233=Math.max(1,n233(S.generation233)||n233(S.generation232)||1);if(!S.annual233||S.annual233.generation!==S.generation233||S.annual233.league!==n233(S.leagueRank)){S.annual233={generation:S.generation233,league:n233(S.leagueRank),season:0,recorded:{},table:[{id:'you',name:'あなた',pts:0,wins:0},...NPC233.map((name,i)=>({id:'npc'+i,name,pts:0,wins:0}))]}}return S.annual233}
-function latestSeason233(){const arr=Array.isArray(S.seasonHistory)?S.seasonHistory:[];for(let i=arr.length-1;i>=0;i--){const h=arr[i];if(n233(h.season)===n233(S.season)&&(h.league==null||h.league===LEAGUE233[clamp233(n233(S.leagueRank),0,5)].name))return h}return null}
+function latestSeason233(){const arr=Array.isArray(S.seasonHistory)?S.seasonHistory:[];for(let i=arr.length-1;i>=0;i--){const h=arr[i];if((h.generation==null||n233(h.generation)===n233(S.generation233))&&n233(h.season)===n233(S.season)&&(h.league==null||h.league===LEAGUE233[clamp233(n233(S.leagueRank),0,5)].name))return h}return null}
 function shuffle233(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=rnd233(0,i);[a[i],a[j]]=[a[j],a[i]]}return a}
 function recordSeason233(){const a=ensureAnnual233(),season=clamp233(n233(S.season)||1,1,6),key=String(season);if(a.recorded[key])return;const h=latestSeason233(),rank=clamp233(n233(h?.overall)||8,1,8),mul=Math.max(.5,Math.min(2,Number(h?.annualMul)||1)),p=Math.max(0,Math.round((CHAMP233[rank-1]||0)*mul)),you=a.table.find(x=>x.id==='you');you.pts+=p;if(rank===1)you.wins++;const pool=[...CHAMP233];pool.splice(rank-1,1);const rp=shuffle233(pool);shuffle233(a.table.filter(x=>x.id!=='you')).forEach((x,i)=>{x.pts+=rp[i]||0;if((rp[i]||0)===10)x.wins++});a.recorded[key]={rank,pts:p};a.season=Math.max(a.season,season);S.promotionPending=false;save233()}
 function standings233(){return[...ensureAnnual233().table].sort((x,y)=>y.pts-x.pts||y.wins-x.wins||x.name.localeCompare(y.name,'ja'))}function annualRank233(){return standings233().findIndex(x=>x.id==='you')+1}
@@ -310,7 +310,7 @@ function annualFinish233(){
  }else nextGen233(rk===1?'🥚 最高ランク・次世代配合へ':'🥚 次世代配合へ');
 }
 // normal tournament temporary modifiers
-window.addEventListener('click',e=>{const run=e.target?.closest?.('#run');if(run&&!run.disabled&&!S.promotion233&&!S.planetRepresentative233){const before=document.getElementById('result')?.textContent||'';applyNormalMods233();watchNormal233(before)}},true);
+window.addEventListener('click',e=>{const run=e.target?.closest?.('#run');if(run&&!run.disabled&&!S.promotion233&&!S.planetRepresentative233&&!window.STAR_TOUR225?.completed?.()){const before=document.getElementById('result')?.textContent||'';applyNormalMods233();watchNormal233(before)}},true);
 // no mid-year promotion: own #next225 throughout S1-S6
 window.addEventListener('click',e=>{const b=e.target?.closest?.('#next225');if(!b)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if((n233(S.season)||1)<6)advanceSeason233();else annualFinish233()},true);
 window.addEventListener('click',e=>{if(e.target?.closest?.('#run')&&S.planetRepresentative233){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();runPlanetRepresentative233();return}if(e.target?.closest?.('#run')&&S.promotion233){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();runPromotion233()}},true);

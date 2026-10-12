@@ -1,7 +1,7 @@
 (()=>{
 // v0.22.6: growth loop; cap follows current LIMIT stage.
 // - Existing saves migrate safely: current stats become genetic base.
-// - Training gains are temporary-to-the-athlete; 25% is inherited by children.
+// - Earned growth has bounded partial inheritance (48–60% under current tuning).
 // - Match performance can add small real-stat growth.
 // - Rival strength now uses the full 100-900 long-term range.
 const SAVE226='star-athletes-save-v200';
@@ -43,6 +43,12 @@ function migrate226(){
  save226();
 }
 function acquired226(m,k){meta226(m);return n226(m.trainingGain226[k])+n226(m.matchGain226[k])}
+// One journal for normal training, events and LIMIT; restored over-cap stats stay intact.
+function trainingDelta226(m,k,raw,cap=999){
+ if(!m?.stats||!K226.includes(k)||!Number.isFinite(Number(raw)))return 0;
+ meta226(m);const cur=n226(m.stats[k]),limit=Math.max(cur,n226(cap)),next=Math.max(0,Math.min(limit,cur+Math.round(Number(raw)))),actual=next-cur;
+ m.stats[k]=next;m.trainingGain226[k]=n226(m.trainingGain226[k])+actual;return actual;
+}
 function heritageRate226(a,b){
   try{
     window.STAR_ANNUAL233?.ensureHidden?.(a);
@@ -51,7 +57,7 @@ function heritageRate226(a,b){
   const ha=Math.max(0,Math.min(7,n226(a?.hidden233?.heredity)));
   const hb=Math.max(0,Math.min(7,n226(b?.hidden233?.heredity)));
   const avg=(ha+hb)/2;
-  const base=.35+(avg/7)*.07;
+  const base=.48+(avg/7)*.10;
   let bonus=0;
   try{
     const skills=[...(a?.skills233||[]),...(b?.skills233||[])];
@@ -60,11 +66,11 @@ function heritageRate226(a,b){
     const divineParents=[a,b].filter(p=>p?.rareVisual243==='divine'||p?.visual?.color==='神彩').length;
     bonus+=goldParents*.01+divineParents*.02;
   }catch(_){}
-  return Math.min(.45,base+bonus);
+  return Math.min(.60,base+bonus);
 }
 function inherited226(m,k,rate=.42){meta226(m);return n226(m.geneticBase226[k])+acquired226(m,k)*rate}
 
-// Children inherit the stable bloodline plus 42% of earned growth so ordinary bloodlines keep advancing without rare rolls.
+// Stable bloodline plus bounded partial earned growth; ordinary bloodlines can progress without rare rolls.
 // The old baby() still owns species, rarity, looks and cute-name wrappers.
 try{
  const beforeBaby226=baby;
@@ -151,6 +157,7 @@ const oldRender226=render;
 render=function(){const out=oldRender226();setTimeout(badges226,0);return out};
 const css=document.createElement('style');css.textContent=`.growth226{margin-top:7px;padding:5px 7px;border-radius:8px;background:#edf7ff;border:1px solid #acd5ef;color:#35546c;font-size:7px;font-weight:900}.matchGrowth226{margin-top:9px;padding:9px;border:2px solid #e7c454;border-radius:11px;background:#fff8d8;color:#594915;font-size:9px;line-height:1.6}.matchGrowth226 b{font-size:11px}`;document.head.appendChild(css);
 window.STAR_GROWTH226={
+ trainingDelta:trainingDelta226,
  heritageRate:heritageRate226,
  inherited:(m,k,rate)=>inherited226(m,k,rate)
 };

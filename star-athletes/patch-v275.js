@@ -14,17 +14,10 @@ function st275(){
  if(!S.training263.fatigue||typeof S.training263.fatigue!=='object')S.training263.fatigue={};
  return S.training263;
 }
-function hidden275(m,k,d=2){const v=Number(m?.hidden233?.[k]);if(!Number.isFinite(v))return d;return [0,0,0,1,2,3,4,5][clamp275(Math.round(v),0,7)]}
 function fatigue275(m){return clamp275(n275(st275().fatigue[m.id]),0,2)}
 function condition275(m){const f=fatigue275(m);return f===0?'好調':f===1?'普通':'疲労'}
 function rate275(m,mode){
- const stability=hidden275(m,'stability',2),luck=hidden275(m,'luck',2),f=fatigue275(m);
- if(mode==='safe')return 0;
- if(mode==='normal')return clamp275(.04-stability*.004-luck*.002+f*.015,.01,.08);
- let r=clamp275(.28-stability*.035-luck*.008,.06,.28);
- if(f===1)r=1-(1-r)*.84;if(f===2)r=1-(1-r)*.66;
- if(st275().policy266==='lineage')r=Math.max(.03,r-.04);
- return clamp275(r,.03,.48);
+ return window.STAR_TRAIN263.injuryRate(m,mode);
 }
 function persist275(){
  try{localStorage.setItem(SAVE275,JSON.stringify({savedAt:Date.now(),S}))}catch(_){}

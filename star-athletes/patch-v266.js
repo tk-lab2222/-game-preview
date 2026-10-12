@@ -44,37 +44,12 @@ function render266(){
   host.innerHTML=`<div class="policyHead266"><div><small>GENERATION POLICY</small><b>今世代の育成方針</b></div>${cur?`<strong>${POL266[cur].icon} ${POL266[cur].name}</strong>`:'<strong>未選択</strong>'}</div>
     <div class="policyGrid266">${Object.entries(POL266).map(([k,p])=>`<button type="button" data-policy266="${k}" class="${cur===k?'on266':''}" ${locked?'disabled':''}><b>${p.icon} ${p.name}</b><small>${p.desc}</small></button>`).join('')}</div>
     <div class="policyApplied266">${cur?`自動設定：${(S.nest||[]).map(m=>`${m.name}→${PLAN_NAME266[S.plans?.[m.id]]||S.plans?.[m.id]||'-'} / ${state266().intensity?.[m.id]==='safe'?'安全':state266().intensity?.[m.id]==='high'?'高負荷':'標準'}`).join('　')}`:'方針を選ぶと3体の練習メニューが自動で切り替わります'}</div><div class="policyHint266">${cur?(locked?'育成完了':'ラウンドごとに変更できます'):'最初の育成前に1つ選択。固定の最強方針ではなく、育て方を変える選択です。'}</div>`;
-  const go=document.getElementById('doTrain263');if(go){go.disabled=Number(S.turn)>=3;go.title=''}
+  const go=document.getElementById('doTrain263');if(go){go.disabled=Number(S.turn)>=3||!!window.STAR_EVENTS267?.pending?.();go.title='' }
 }
-// Modify M2.2 outcome multipliers, while leaving click ownership with v263.
-try{
-  if(typeof outcome263==='function'&&!window.outcome263Policy266){
-    const base266=outcome263;window.outcome263Policy266=true;
-    outcome263=function(m,mode){
-      const o=base266(m,mode),p=policy266();
-      if(p==='compete'&&(mode==='normal'||mode==='high'))o.mul*=1.08;
-      else if(p==='growth'&&(mode==='safe'||mode==='normal'))o.mul*=1.10;
-      else if(p==='lineage')o.mul*=mode==='high'?.96:1.04;
-      else if(p==='skill'){
-        const plan=S.plans?.[m.id]||'';
-        if(plan==='tech'||plan==='team')o.mul*=1.14;else o.mul*=.98;
-      }
-      return o;
-    };
-  }
-}catch(e){console.warn('policy outcome266',e)}
-// Bloodline research softens fatigue gain from high-load once per training result.
-function softenFatigue266(){
-  if(policy266()!=='lineage'||!S.training263?.fatigue)return;
-  S.nest?.forEach(m=>{
-    if((S.training263.intensity?.[m.id]||'normal')==='high'&&Number(S.training263.fatigue[m.id])>=2){
-      S.training263.fatigue[m.id]=1;
-    }
-  });persist266();
-}
+// Training263 owns policy outcome and fatigue; retire the dead wrapper and delayed duplicate.
 window.addEventListener('click',e=>{
   const b=e.target?.closest?.('[data-policy266]');if(b){e.preventDefault();e.stopPropagation();choose266(b.dataset.policy266);return}
-  if(e.target?.closest?.('#doTrain263'))setTimeout(()=>{softenFatigue266();render266()},20);
+  if(e.target?.closest?.('#doTrain263'))setTimeout(render266,20);
   if(e.target?.closest?.('.tab[data-v="train"],#adopt'))setTimeout(render266,0);
 },true);
 // New adopted roster starts a new generation policy choice.
