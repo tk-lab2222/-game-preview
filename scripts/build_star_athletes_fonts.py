@@ -12,16 +12,19 @@ from pathlib import Path
 
 from fontTools import subset
 from fontTools.ttLib import TTFont
+from fontTools.varLib.instancer import instantiateVariableFont
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'star-athletes' / 'assets' / 'fonts'
 SOURCES = [
-    ('zen-ui-regular.ttf', 'stellar-ui-regular.woff2', 'Stellar UI', 400,
-     'zenmarugothic/ZenMaruGothic-Regular.ttf'),
-    ('zen-ui-medium.ttf', 'stellar-ui-medium.woff2', 'Stellar UI', 500,
-     'zenmarugothic/ZenMaruGothic-Medium.ttf'),
-    ('shippori-story-medium.ttf', 'stellar-story-medium.woff2', 'Stellar Story', 500,
-     'shipporimincho/ShipporiMincho-Medium.ttf'),
+    ('noto-ui-variable.ttf', 'stellar-text-regular.woff2', 'Stellar Text', 400,
+     'notosansjp/NotoSansJP%5Bwght%5D.ttf'),
+    ('noto-ui-variable.ttf', 'stellar-text-semibold.woff2', 'Stellar Text', 600,
+     'notosansjp/NotoSansJP%5Bwght%5D.ttf'),
+    ('noto-ui-variable.ttf', 'stellar-text-bold.woff2', 'Stellar Text', 700,
+     'notosansjp/NotoSansJP%5Bwght%5D.ttf'),
+    ('barlow-display-semibold.ttf', 'stellar-display-semibold.woff2', 'Stellar Display', 600,
+     'barlowcondensed/BarlowCondensed-SemiBold.ttf'),
 ]
 
 
@@ -50,15 +53,17 @@ def main():
     for filename, output, family, weight, url in SOURCES:
         original = args.source_dir / filename
         font = TTFont(original, recalcTimestamp=False)
+        if 'fvar' in font:
+            font = instantiateVariableFont(font, {'wght': weight}, inplace=True)
         options = subset.Options()
         options.name_IDs = ['*']
         options.name_legacy = True
         options.name_languages = ['*']
         sub = subset.Subsetter(options=options)
-        sub.populate(unicodes=common_names if family == 'Stellar UI' else vocabulary)
+        sub.populate(unicodes=common_names if family == 'Stellar Text' else set(range(0x20,0x100)))
         sub.subset(font)
         # Modified fonts get new internal names; retain copyright/license records.
-        style = 'Regular' if weight == 400 else 'Medium'
+        style = {400:'Regular',600:'SemiBold',700:'Bold'}[weight]
         for entry in font['name'].names:
             values = {1: family, 2: style, 3: f'{family}-{style}-STAR-ATHLETES',
                       4: f'{family} {style}', 6: family.replace(' ', '') + '-' + style,
@@ -75,8 +80,8 @@ def main():
             'source_sha256': hashlib.sha256(original.read_bytes()).hexdigest(),
             'sha256': hashlib.sha256(target.read_bytes()).hexdigest(),
         })
-    for source, target in [('zenmaru-OFL.txt', 'ZenMaruGothic-OFL.txt'),
-                           ('shippori-OFL.txt', 'ShipporiMincho-OFL.txt')]:
+    for source, target in [('noto-OFL.txt', 'NotoSansJP-OFL.txt'),
+                           ('barlow-OFL.txt', 'BarlowCondensed-OFL.txt')]:
         (OUT / target).write_text('\n'.join(line.rstrip() for line in (args.source_dir / source).read_text().splitlines()) + '\n')
     (OUT / 'manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
     print(json.dumps(manifest, ensure_ascii=False))

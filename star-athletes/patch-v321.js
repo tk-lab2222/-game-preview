@@ -86,7 +86,7 @@ function copy321(){
   if(!h||!sm)return;
   first.classList.toggle('incubatingLab321',!!S.egg);
   if(pristine321()){
-    h.innerHTML='<span>この出会いから、</span><span>はじまる。</span>';
+    h.innerHTML='<span>次の世代を、</span><span>育てよう。</span>';
     sm.textContent='ふたつの個性から、新しい血統を。';
   }else{
     h.innerHTML='<span>個性をつなぐ、</span><span>次の世代へ。</span>';

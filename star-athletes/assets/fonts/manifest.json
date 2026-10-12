@@ -3,34 +3,44 @@
   "format": "WOFF2",
   "fonts": [
     {
-      "file": "stellar-ui-regular.woff2",
-      "family": "Stellar UI",
+      "file": "stellar-text-regular.woff2",
+      "family": "Stellar Text",
       "weight": 400,
-      "bytes": 188036,
-      "glyphs": 1254,
-      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/zenmarugothic/ZenMaruGothic-Regular.ttf",
-      "source_sha256": "a0c0b53543e0993ae2225e629c833f3d51495ad31720694ff112ce4ce11111ef",
-      "sha256": "74be2d6fe811baeeb79025b661faafcd5694ec8a3fad3ea34ffa20ef367691d3"
+      "bytes": 167988,
+      "glyphs": 1532,
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf",
+      "source_sha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f",
+      "sha256": "f8abb3eff57a5ca9238ac902924fe5ba5a7dbc4eae09dc04add4decb4e1ddb4f"
     },
     {
-      "file": "stellar-ui-medium.woff2",
-      "family": "Stellar UI",
-      "weight": 500,
-      "bytes": 190596,
-      "glyphs": 1254,
-      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/zenmarugothic/ZenMaruGothic-Medium.ttf",
-      "source_sha256": "3cfdb98a13571ede17fcc769f5093a97c38b80a7b9b2ab754a26b4d822092b3b",
-      "sha256": "aa3627df8a9eea96388987bc013b28173923bc5538313711fae1be9277699a9e"
+      "file": "stellar-text-semibold.woff2",
+      "family": "Stellar Text",
+      "weight": 600,
+      "bytes": 169232,
+      "glyphs": 1532,
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf",
+      "source_sha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f",
+      "sha256": "3e48e987bf2db4bfe78ec299b00b9c76c9efeeb496439905a7c8f59bd9ad761c"
     },
     {
-      "file": "stellar-story-medium.woff2",
-      "family": "Stellar Story",
-      "weight": 500,
-      "bytes": 198928,
-      "glyphs": 1728,
-      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/shipporimincho/ShipporiMincho-Medium.ttf",
-      "source_sha256": "700e505afc4cded2338eba29478a041e04c1c2ea5114fbb3e0b04e76c302c5d8",
-      "sha256": "89c919d32bd5d2d8aca8510fa311e5c8c0453fdeef1c869d69fee14a805bee05"
+      "file": "stellar-text-bold.woff2",
+      "family": "Stellar Text",
+      "weight": 700,
+      "bytes": 170740,
+      "glyphs": 1532,
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf",
+      "source_sha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f",
+      "sha256": "d286280e0d4626a89af55c70f50fa8a6f6e44a45073fe132032aa92f48986f73"
+    },
+    {
+      "file": "stellar-display-semibold.woff2",
+      "family": "Stellar Display",
+      "weight": 600,
+      "bytes": 18916,
+      "glyphs": 234,
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/barlowcondensed/BarlowCondensed-SemiBold.ttf",
+      "source_sha256": "7b619d14bc2327509a9ef32b0890f709626f7ecc9ff61191c2a4314c5499d2d9",
+      "sha256": "20f422f059ca183fca823d18f6017756bf20ce435681c66aafea63697055f024"
     }
   ]
 }

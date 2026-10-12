@@ -24,16 +24,20 @@
   "candidate_viewport_width": 390,
   "loaded_fonts": [
     {
-      "family": "Stellar UI",
+      "family": "Stellar Text",
       "weight": "400"
     },
     {
-      "family": "Stellar UI",
-      "weight": "500"
+      "family": "Stellar Text",
+      "weight": "600"
     },
     {
-      "family": "Stellar Story",
-      "weight": "500"
+      "family": "Stellar Text",
+      "weight": "700"
+    },
+    {
+      "family": "Stellar Display",
+      "weight": "600"
     }
   ],
   "same_save_typography_comparison": true,

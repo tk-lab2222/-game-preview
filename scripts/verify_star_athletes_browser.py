@@ -56,6 +56,7 @@ with sync_playwright() as p:
     page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
     page.goto('https://games.local/star-athletes/',wait_until='load');page.wait_for_timeout(1000)
     if baseline_mode:
+        page.evaluate('async()=>{await document.fonts.ready}')
         page.screenshot(path=str(OUT/'typography-before.png'))
         original_ids=page.evaluate('S.starters.map(m=>m.id)')
         baseline_mode=False
@@ -64,8 +65,12 @@ with sync_playwright() as p:
         assert page.evaluate('S.starters.map(m=>m.id)')==original_ids
     page.evaluate('async()=>{await document.fonts.ready}')
     fonts=page.evaluate('[...document.fonts].filter(f=>f.status==="loaded").map(f=>({family:f.family,weight:f.weight}))')
-    assert any(f['family'].strip(chr(34))=='Stellar UI' for f in fonts),fonts
-    assert any(f['family'].strip(chr(34))=='Stellar Story' for f in fonts),fonts
+    assert any(f['family'].strip(chr(34))=='Stellar Text' for f in fonts),fonts
+    assert any(f['family'].strip(chr(34))=='Stellar Display' for f in fonts),fonts
+    assert {f['weight'] for f in fonts if f['family'].strip(chr(34))=='Stellar Text'} >= {'400','600','700'},fonts
+    assert page.locator('.labScene>h3').evaluate('(el)=>getComputedStyle(el).fontWeight')=='700'
+    assert page.locator('.labScene>h3').evaluate('(el)=>getComputedStyle(el).display')=='block'
+    assert page.locator('#breeders .nm b').first.evaluate('(el)=>getComputedStyle(el).fontWeight')=='700'
     assert not errors,errors
     assert not missing,missing
     assert page.locator('#recoveryDiag200,#recoveryDiag3281').count()==0
