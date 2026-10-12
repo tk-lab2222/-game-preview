@@ -14,9 +14,9 @@ function ensureSection285(){
   h.innerHTML='<small>NEST REPRESENTATIVE</small><h2>🏁 ネスト代表</h2><p>自分史上最高の3体を選び、役割・戦術・シナジーを磨く</p>';
   sec.prepend(h);
  }
- const tabs=document.querySelector('.tabs');
+ const tabs=document.getElementById('journalNav');
  if(tabs&&!tabs.querySelector('.tab[data-v="rep285"]')){
-  const b=document.createElement('button');b.className='tab';b.dataset.v='rep285';b.innerHTML='🏁<br>代表';
+  const b=document.createElement('button');b.className='tab';b.dataset.v='rep285';b.setAttribute('data-dialog-close','');b.textContent='ネスト代表';
   const dexTab=tabs.querySelector('.tab[data-v="dex"]');dexTab?.before(b);if(!b.parentNode)tabs.appendChild(b);
  }
 }
@@ -62,6 +62,6 @@ window.addEventListener('click',e=>{if(e.target?.closest?.('.tab,#batchGo260,#ha
 const css=document.createElement('style');css.textContent=`
 #rep285{padding-bottom:90px}.sectionTitle285{margin-top:8px}.iaHost285{margin:0 0 10px}.iaHost285>.box{margin:0 0 10px!important}
 .iaTitle285{display:flex;align-items:center;gap:7px;margin:10px 0 8px;padding:9px 10px;border-radius:12px;background:#17243a;color:#fff}.iaTitle285 small{font-size:6px;letter-spacing:.12em;color:#8fdfff;font-weight:1000}.iaTitle285 b{font-size:12px}.iaTitle285 span{margin-left:auto;font-size:6px;color:#becdde}
-#rep285>.rep280{margin-top:0!important}.tabs{grid-template-columns:none!important;display:flex!important;overflow-x:auto!important}.tabs .tab{flex:1 0 64px!important;min-width:64px!important}
+#rep285>.rep280{margin-top:0!important}
 `;document.head.appendChild(css);setTimeout(late285,0);
 })();

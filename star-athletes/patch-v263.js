@@ -150,6 +150,7 @@ function train263(){
   for(const m of S.nest){
     const mode=INT263[st.intensity[m.id]]?st.intensity[m.id]:'normal';
     ensureGrowthMeta263(m);
+    const fatigueBefore=fatigue263(m);
     const plan=TRAIN263[S.plans?.[m.id]]?S.plans[m.id]:'speed';
     const o=outcome263(m,mode),ups=[];
     for(const [k,base] of Object.entries(TRAIN263[plan].gain)){
@@ -164,6 +165,7 @@ function train263(){
       m.trainingGain226[k]=n263(m.trainingGain226[k])+actual;
       ups.push(`${SL[k]}+${actual}`);
     }
+    st.fatigue[m.id]=mode==='high'?Math.min(2,fatigueBefore+1):mode==='safe'?Math.max(0,fatigueBefore-1):fatigueBefore===2?1:fatigueBefore;
     out.push(`<b>${m.name}：${INT263[mode].label} / ${gradeLabel263(o.grade)}</b> ${ups.join(' / ')}`);
   }
   S.turn=n263(S.turn)+1;

@@ -45,7 +45,9 @@ function migrate341(){
  let changed=false;
  for(const m of all341()){
   if(!m)continue;
-  // 色違い(shiny)は星色とは独立。旧データで星色に混入した shiny マーカーだけ除去する。\n  if(m.rareVisual243==='shiny'){delete m.rareVisual243;changed=true}\n }
+  // 色違い(shiny)は星色とは独立。旧データで星色に混入した shiny マーカーだけ除去する。
+  if(m.rareVisual243==='shiny'){delete m.rareVisual243;changed=true}
+ }
  if(changed)persist341();
  return changed;
 }

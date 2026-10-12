@@ -21,12 +21,12 @@ function recover326(){
     const back=localStorage.getItem(BACKUP326),d=parse326(back);
     if(!d)return false;
     localStorage.setItem(PRIMARY326,back);
-    window.S=d.S;
+    Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,d.S);
     return true;
   }catch(_){return false}
 }
-// patch-v200 has already run by the time this patch loads. If its loader rejected a malformed
-// primary, restore the valid backup and runtime state immediately; never restore when primary is absent.
+// Run before patch-v200 hydration. Keep the base S object shared by every closure;
+// restore a valid backup in place, and never restore when the primary is absent.
 const recovered326=recover326();
 try{
   const prev326=window.render;

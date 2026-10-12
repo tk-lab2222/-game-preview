@@ -5,6 +5,9 @@ Checks the public shell without changing game state.
 from pathlib import Path
 import re
 import sys
+import json
+import shutil
+import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 SHELL = ROOT / "star-athletes-v112" / "index.html"
@@ -28,6 +31,21 @@ for rel, _ in refs:
 # Historical/unreferenced patch files intentionally remain in the repository and
 # must not make a current release fail merely because they contain an old pattern.
 loaded_js = sorted({rel for rel, _ in refs if rel.endswith(".js")})
+syntax_sources = {}
+for src in re.findall(r'<script[^>]+src="([^"?]+)', text):
+    path = (SHELL.parent / src).resolve()
+    if path.is_file():
+        syntax_sources[str(path.relative_to(ROOT))] = path.read_text(encoding='utf-8')
+for index, inline in enumerate(re.findall(r'<script(?:\s[^>]*)?>([\s\S]*?)</script>', text)):
+    if inline.strip():
+        syntax_sources[f'release-inline-{index}'] = inline
+node = shutil.which('node')
+if not node:
+    errors.append('Node.js is required to check the shipped JavaScript syntax')
+else:
+    syntax = subprocess.run([node, '-e', "const fs=require('fs'),vm=require('vm');let failed=false;for(const [name,code] of Object.entries(JSON.parse(fs.readFileSync(0,'utf8')))){try{new vm.Script(code,{filename:name})}catch(e){failed=true;console.error(name+': '+e.message)}}process.exitCode=failed?1:0"], input=json.dumps(syntax_sources), text=True, capture_output=True, timeout=30)
+    if syntax.returncode:
+        errors.extend(syntax.stderr.strip().splitlines())
 for rel in loaded_js:
     js = GAME / rel
     if not js.is_file():

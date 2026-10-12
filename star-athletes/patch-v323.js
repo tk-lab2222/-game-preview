@@ -40,8 +40,8 @@ function ensureSection323(){
  const app=document.querySelector('.a');if(!app)return null;
  let sec=document.getElementById('hall323');
  if(!sec){sec=document.createElement('section');sec.id='hall323';sec.className='hide';const dex=document.getElementById('dex');dex?.after(sec);if(!sec.parentNode)app.appendChild(sec)}
- const tabs=document.querySelector('.tabs');
- if(tabs&&!tabs.querySelector('.tab[data-v="hall323"]')){const b=document.createElement('button');b.className='tab';b.dataset.v='hall323';b.innerHTML='⭐<br>MY STAR';tabs.appendChild(b)}
+ const tabs=document.getElementById('journalNav');
+ if(tabs&&!tabs.querySelector('.tab[data-v="hall323"]')){const b=document.createElement('button');b.className='tab';b.dataset.v='hall323';b.setAttribute('data-dialog-close','');b.textContent='MY STAR 殿堂';tabs.appendChild(b)}
  return sec;
 }
 function titleBadges323(m){

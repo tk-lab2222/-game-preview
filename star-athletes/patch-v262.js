@@ -66,6 +66,9 @@ function ensurePanel262(){
 function decorateCards262(sorted){
  const top3=new Set(sorted.slice(0,3).map(m=>m.id));
  document.querySelectorAll('#cands .card[data-id]').forEach(card=>{
+  card.onclick=null;
+  card.setAttribute('role','button');card.tabIndex=0;
+  card.onkeydown=e=>{if(e.target===card&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select262(card.dataset.id)}};
    const m=(S.cands||[]).find(x=>x.id===card.dataset.id);if(!m)return;
    card.classList.toggle('recommended262',top3.has(m.id));
    let row=card.querySelector('.shortBadge262');if(!row){row=document.createElement('div');row.className='shortBadge262';(card.querySelector('.bd')||card).prepend(row)}
@@ -111,6 +114,7 @@ function render262(){
 function late262(){render262();[60,180,420].forEach(ms=>setTimeout(render262,ms))}
 try{const prev262=render;render=function(){const out=prev262();late262();return out}}catch(e){console.warn('render262',e)}
 window.addEventListener('click',e=>{
+ if(e.target?.closest?.('#cands details'))return;
  const card=e.target?.closest?.('#cands [data-mode="c"][data-id]');
  if(card){
    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();

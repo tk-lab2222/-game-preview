@@ -43,6 +43,7 @@ function canonicalSave200(source='core'){
 }
 window.STAR_SAVE_CORE={key:SAVE200,save:canonicalSave200};
 window.STAR_SAVE_DIAG={
+  enabled:new URL(location.href).searchParams.get('diagnostics')==='1',
   scan(){
     const rows=[];
     for(let i=0;i<localStorage.length;i++){
@@ -91,6 +92,7 @@ function load200(){
   }catch(e){console.warn('load200',e);return false}
 }
 function recoveryDiag200(){
+  if(!window.STAR_SAVE_DIAG.enabled)return;
   let box=document.getElementById('recoveryDiag200');
   if(!box){box=document.createElement('div');box.id='recoveryDiag200';box.className='box';box.style.cssText='border:3px solid #d33;background:#fff7f7;margin:10px';document.querySelector('.a')?.prepend(box)}
   const rows=window.STAR_SAVE_DIAG?.scan?.()||[];

@@ -42,7 +42,7 @@ else boot318();
 window.addEventListener('pageshow',()=>{
  reloading318=false;
  const b=document.getElementById('reloadBtn');
- if(b){b.disabled=false;b.textContent='最新版を読み込む';b.style.pointerEvents=''}
+ if(b){b.disabled=false;b.textContent='↻';b.setAttribute('aria-label','最新版を読み込む');b.style.pointerEvents=''}
  setTimeout(hydrate318,0);
 });
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(hydrate318,0)});

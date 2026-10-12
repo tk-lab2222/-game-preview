@@ -60,8 +60,9 @@ function visualShell321(){
   const breed=document.getElementById('breed');if(!breed)return;
   const pair=[...breed.querySelectorAll(':scope>.box')].find(x=>x.querySelector('#breedBtn'));if(!pair)return;
   placePair321();
+  pair.dataset.state=S.egg?'incubating':S.parents?.length===2?'ready':'choosing';
   pair.classList.add('breedHero126');
-  const title=pair.querySelector('h3');if(title)title.innerHTML='✨ スター配合 <span class="sm">2体の個性を次世代へ</span>';
+  const title=pair.querySelector('h3');if(title)title.innerHTML='星をつなぐ配合 <span class="sm">'+(S.egg?'新しい命を待っています':'親から子へ、個性をつなぐ')+'</span>';
   const parents=pair.querySelector('.parents');
   if(parents){
     parents.classList.add('parentsHero126');
@@ -72,7 +73,7 @@ function visualShell321(){
   }
   const btn=pair.querySelector('#breedBtn');
   if(btn){
-    btn.textContent=S.parents?.length===2?'🥚 1体ずつスター配合':'親を2体選ぶ';
+    btn.textContent=S.parents?.length===2?'この2体から、スターを誕生させる':'まずは、親を2体選ぼう';
     btn.classList.add('breedMain126');
     const p=btn.closest('p');if(p)p.classList.add('singleBreed321');
   }
@@ -83,12 +84,13 @@ function copy321(){
   const h=first?.querySelector('h3');
   const sm=h?.nextElementSibling;
   if(!h||!sm)return;
+  first.classList.toggle('incubatingLab321',!!S.egg);
   if(pristine321()){
-    h.textContent='🎁 最初の2体を受け取りました';
-    sm.textContent='この2体が最初の祖先です。2体をタップして最初の子を誕生させよう。';
+    h.textContent='この出会いから、はじまる。';
+    sm.textContent='最初の2体をタップして、新しい血統を育てよう。';
   }else{
-    h.textContent='🧬 配合する親を選ぶ';
-    sm.textContent='親候補から2体を選択。能力だけでなく、遺伝力・変異因子・LUCKなどの遺伝情報も確認しよう。';
+    h.textContent='個性をつなぐ、次の世代。';
+    sm.textContent='どの個性を受け継ごう？ 親にする2体を選ぼう。';
   }
 }
 function slot321(m,label){
@@ -97,8 +99,11 @@ function slot321(m,label){
   return `<div class="slotFilled321">${typeof avatar==='function'?avatar(m):''}<div class="slotMeta321"><small>${label}</small><b>${m.name||'NO NAME'}</b><span>${sp} ・ ${m.rarity||'C'}</span><em>${m.personality||''}</em></div></div>`;
 }
 function bindParent321(card,id){
+  card.setAttribute('role','button');card.tabIndex=0;
+  card.setAttribute('aria-pressed',S.parents.includes(id)?'true':'false');
+  card.onkeydown=e=>{if(e.target===card&&(e.key==='Enter'||e.key===' ')){e.preventDefault();card.click()}};
   card.onclick=e=>{
-    if(e?.target?.closest?.('button,select,a'))return;
+    if(e?.target?.closest?.('button,select,a,details'))return;
     e?.preventDefault?.();
     e?.stopPropagation?.();
     S.parents=Array.isArray(S.parents)?S.parents.filter(Boolean):[];
@@ -107,6 +112,10 @@ function bindParent321(card,id){
     else S.parents=[S.parents[1],id];
     try{typeof save200==='function'&&save200()}catch(_){}
     sync321();
+    if(S.parents.length===2){
+      const pair=document.getElementById('breedBtn')?.closest('.breedHero126');
+      pair?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});
+    }
   };
 }
 function singleBreed321(){
@@ -152,7 +161,13 @@ function breeders321(){
     el.classList.toggle('sel',S.parents.includes(m.id));
     el.querySelectorAll('.parentGenetics320,.parentGenetics321').forEach(x=>x.remove());
     const bd=el.querySelector('.bd')||el;
-    bd.insertAdjacentHTML('beforeend',genetics321(m));
+    let details=el.querySelector('.parentInfo321');
+    if(!details){
+      details=document.createElement('details');details.className='parentInfo321';
+      details.innerHTML='<summary>能力と血統を見る</summary>';
+      bd.appendChild(details);
+    }
+    details.insertAdjacentHTML('beforeend',genetics321(m));
     bindParent321(el,m.id);
   });
 
@@ -187,7 +202,7 @@ function compatibility321(){
   if(!box)return;
   const pool=pool321(),a=pool.find(x=>x.id===S.parents?.[0]),b=pool.find(x=>x.id===S.parents?.[1]);
   if(!a||!b){
-    box.innerHTML='<div class="compatEmpty321"><b>配合相性</b><span>親を2体選ぶと相性と継承期待を表示します</span></div>';
+    box.innerHTML='<div class="compatEmpty321"><b>どんなスターに、出会えるだろう。</b><span>親を2体選ぶと、相性が分かります。</span></div>';
     return;
   }
   let info=null;
@@ -212,7 +227,7 @@ function archive321(){
       if(count)h.appendChild(count);
       box.dataset.archiveNamed='1';
     }
-    const desc=box.querySelector('.sm:last-child');
+    const desc=box.querySelector(':scope > .sm:last-child');
     if(desc&&!box.dataset.archiveDesc){
       desc.textContent='過去世代の採用個体を保管する場所です。必要な個体だけ残し、親候補としていつでも呼び戻せます。';
       box.dataset.archiveDesc='1';
@@ -239,6 +254,7 @@ function sync321(){
     try{window.STAR_RARE273?.sync?.()}catch(_){}
     try{window.STAR_ULTRA274?.sync?.()}catch(_){}
     try{window.STAR_SKILL254?.sync?.()}catch(_){}
+    try{window.STAR_UI369?.sync?.()}catch(_){}
     placePair321();
   }finally{syncing321=false}
 }
@@ -275,32 +291,12 @@ window.addEventListener('pageshow',late321);
 const css=document.createElement('style');
 css.id='breedingOwner321';
 css.textContent=`
-.breedHero126{position:relative;overflow:hidden;background:radial-gradient(circle at 50% 40%,#203c66 0,#111c32 48%,#080d17 100%)!important;color:#fff!important;border:0!important;box-shadow:0 15px 35px #0004!important}.breedHero126:before{content:'';position:absolute;inset:-30%;background:conic-gradient(from 0deg,transparent,#56d7ff19,transparent,#ff74c819,transparent);animation:spin126 14s linear infinite;pointer-events:none}@keyframes spin126{to{transform:rotate(360deg)}}.breedHero126>h3,.breedHero126>*{position:relative;z-index:1}.breedHero126 h3{color:#fff}.breedHero126 h3 .sm{color:#9bdfff!important}.parentsHero126{display:grid!important;grid-template-columns:1fr 74px 1fr!important;align-items:center!important;gap:8px!important}.parentsHero126 .par{min-height:150px!important;border:1px solid #ffffff38!important;border-radius:16px!important;background:#ffffff0c!important;color:#fff!important;overflow:hidden!important}.parentsHero126 .par .avatar{height:112px!important;background:transparent!important;border:0!important}.core126{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}.core126 i{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;font-style:normal;font-size:28px;color:#fff7bc;background:radial-gradient(circle,#fff 0 6%,#65e5ff 7% 20%,#4c6cff 45%,#17244a 70%);box-shadow:0 0 16px #63ddff,0 0 35px #596bff88;animation:pulse126 1.5s ease-in-out infinite alternate}.core126 b{font-size:7px;letter-spacing:.12em;color:#a9dfff}@keyframes pulse126{to{transform:scale(1.08);filter:brightness(1.25)}}.singleBreed321{margin:10px 0 0!important}.singleBreed321:before{content:'SINGLE BREED';display:block;margin-bottom:5px;font-size:7px;font-weight:1000;letter-spacing:.12em;color:#a9dfff}.breedMain126{width:100%;padding:13px!important;border-radius:12px!important;font-size:14px!important;background:linear-gradient(180deg,#68efff,#7869ff)!important;color:#07101b!important;border:1px solid #c6f8ff!important;box-shadow:0 0 20px #59dfff66,0 4px 0 #26358b!important}
-.compat321{margin:9px 0 11px;padding:11px 12px;border:2px solid #263e5c;border-radius:13px;background:linear-gradient(135deg,#eef7ff,#fff);color:#172033}
-.compatEmpty321{display:flex;flex-direction:column;gap:2px}.compatEmpty321 b{font-size:11px}.compatEmpty321 span{font-size:8px;color:#607287}
-.compatHead321{display:flex;justify-content:space-between;gap:10px;align-items:center}.compatHead321 small{display:block;font-size:6px;letter-spacing:.12em;color:#5e7c8f;font-weight:1000}
-.compatHead321 b{font-size:20px;line-height:1;color:#0877ad}.compatHead321 b em{font-size:9px;font-style:normal;color:#667789}.compatHead321 strong{font-size:9px;background:#fff0b5;border:1px solid #d5b84b;border-radius:999px;padding:5px 8px;white-space:nowrap}
-.compatBar321{height:7px;margin:8px 0 7px;border-radius:99px;background:#dce7ee;overflow:hidden}.compatBar321 i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#56b8da,#5ec48c)}
-.compatBreak321{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.compatBreak321 span{display:flex;justify-content:space-between;gap:4px;padding:4px 5px;border:1px solid #d8e2ea;border-radius:7px;background:#fff;font-size:6px}.compatBreak321 b{font-size:7px}
-.lineageArchive118{margin-top:12px;background:#fbfaf6}.lineageArchive118>h3{display:flex;align-items:center;justify-content:space-between;gap:8px}.lineageArchive118:before{content:'SUB';display:inline-block;font-size:8px;font-weight:1000;letter-spacing:.12em;background:#222;color:#fff;border-radius:999px;padding:2px 6px;margin-bottom:6px}
-#pa,#pb{position:relative!important;min-height:168px!important;display:block!important;padding:0!important;overflow:hidden!important;background:#f7fbff!important;color:#142033!important}
-.slotFilled321{height:100%;min-height:168px;display:grid;grid-template-rows:112px auto;background:linear-gradient(180deg,#f7fbff,#eef5ff)}
-.slotFilled321 .avatar{height:112px!important;width:100%!important;border:0!important;border-bottom:1px solid #c7d9ea!important;background:linear-gradient(#fff8ea,#eef8ff)!important}
-.slotMeta321{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px;color:#142033!important;background:#fff}
-.slotMeta321 small{font-size:7px;font-weight:1000;color:#1688b8}.slotMeta321 b{font-size:12px;line-height:1.1}.slotMeta321 span,.slotMeta321 em{font-size:7px;font-style:normal;color:#5d6d7e}
-.slotEmpty321{min-height:168px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#6c7d8e}.slotEmpty321 b{font-size:12px}.slotEmpty321 span{font-size:8px}
-.pairTag321{position:absolute;left:6px;top:6px;z-index:12;background:#0aa9d8;color:white;border:2px solid white;border-radius:999px;padding:3px 8px;font-size:8px;font-weight:1000;box-shadow:0 2px 8px #0004}
-#breeders .card.sel{outline:4px solid #5bd8ff!important;box-shadow:0 0 0 3px #dff8ff!important}
-#breeders .parentLineage271>.hidden271{display:none!important}
-.parentGenetics321{margin-top:7px;padding-top:7px;border-top:1px dashed #b8c5d0}
-.pgHead321{display:flex;justify-content:space-between;align-items:center;gap:6px}
-.pgHead321 b{font-size:8px;color:#30485f}.pgHead321 small{font-size:6px;color:#7a8793}
-.pgGrid321{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin-top:5px}
-.pgGrid321 span{display:flex;justify-content:space-between;gap:3px;padding:4px 5px;border:1px solid #ccd6df;border-radius:7px;background:#f8fafc;font-size:7px;white-space:nowrap}
-.pgGrid321 span b{font-size:8px;color:#1f3041}
-.parentGenetics321>em{display:block;margin-top:4px;font-size:7px;font-style:normal;color:#657787}
-.card.ex312 .parentGenetics321,.card.ex312 .parentGenetics321 *{color:#f6f1e6!important}
-.card.ex312 .pgGrid321 span{background:rgba(255,255,255,.10)!important;border-color:rgba(255,255,255,.28)!important}
+.parentInfo321{margin-top:10px;border-top:1px solid #a3c2aa33}.parentInfo321>summary{min-height:44px;padding:13px 2px;color:#bed5c1;font-size:11px;cursor:pointer;list-style-position:inside}.parentInfo321>summary:focus-visible{outline:2px solid #d3d9a6;outline-offset:2px}.parentInfo321[open]{padding-bottom:8px}.parentInfo321 .starDetails360,.parentInfo321 .parentGenetics321{font-size:11px}
+body .a .breedHero126{background:linear-gradient(150deg,#203b2a,#10271d)!important;border:1px solid #abc5a83a!important;color:#e5eee0!important;box-shadow:none!important;padding:20px!important}.breedHero126 h3{font-size:17px}.breedHero126 h3 .sm{display:block;font-size:11px;margin-top:6px;color:#a8ba9f}.parentsHero126{display:grid;grid-template-columns:1fr 38px 1fr;gap:8px;align-items:center}.breedHero126[data-state=choosing] .parentsHero126,.breedHero126[data-state=choosing] .compat321{display:none}.breedHero126 .breedStrip128{display:none}.breedHero126[data-state=incubating]{background:linear-gradient(180deg,#112519bb,#092016ed),url('../star-athletes/assets/stellar-lab.png') center/cover!important}.breedHero126[data-state=incubating] .parentsHero126,.breedHero126[data-state=incubating] .compat321,.breedHero126[data-state=incubating] .singleBreed321,.breedHero126[data-state=incubating] .batchBreed260{display:none}
+.core126{display:grid;place-items:center;color:#e9d1a1}.core126 i{font-style:normal;font-size:26px}.core126 b{display:none}.singleBreed321{margin:15px 0 0}.singleBreed321:before{display:none}body .a .breedMain126{font-size:13px!important;padding:16px 10px!important;border-radius:14px!important;background:linear-gradient(125deg,#f0ddad,#d6ba7f)!important;color:#253a29!important;box-shadow:0 3px 20px #e8cf8318!important;border:1px solid #f0e2b6!important}.breedHero126:not([data-state=incubating]) #egg,.breedHero126:not([data-state=incubating]) #hatch{display:none!important}body .a #hatch{margin-top:12px;background:#eddbb0!important;color:#1a3022!important}
+.compat321{margin-top:14px;padding:13px;background:#e3e8c707;border:1px solid #b6ceac24;border-radius:14px;color:#e0e6cd}.compatHead321{display:flex;justify-content:space-between;gap:6px;align-items:center}.compatHead321 small{display:block;font-size:8px;letter-spacing:.12em;color:#9fb999;margin-bottom:7px}.compatHead321 b{font-size:20px;color:#d8dcad}.compatHead321 b em{font-size:10px;font-style:normal;color:#b8c3a4}.compatHead321 strong{font-size:10px;color:#e6dcaf;background:#c8c68d14;padding:6px 8px;border-radius:8px}.compatBar321{height:5px;background:#7d98622b;border-radius:5px;overflow:hidden;margin:12px 0}.compatBar321 i{display:block;height:100%;background:linear-gradient(90deg,#9fbf8e,#e9d997)}.compatBreak321{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.compatBreak321 span{font-size:10px;color:#b9c9ad;display:flex;justify-content:space-between;padding:4px 0}.compatEmpty321 b{font-size:13px}.compatEmpty321 span{display:block;font-size:11px;color:#aebc9f;margin-top:6px}
+#pa,#pb{min-height:115px!important;display:block!important;background:#a7c49d08!important;color:#dce7cb!important;border:1px solid #b6cba526!important;border-radius:14px}.slotFilled321{display:flex;flex-direction:column;align-items:center;padding:10px 4px}.slotFilled321 .avatar{height:80px!important;width:100%;border:0!important;background:transparent!important}.slotMeta321{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px}.slotMeta321 small{font-size:9px;color:#b2c7a1}.slotMeta321 b{font-size:13px}.slotMeta321 span{font-size:9px;color:#a5b69a}.slotMeta321 em{display:none}.slotEmpty321{padding:22px 7px;font-size:11px;color:#9eaf95;display:flex;flex-direction:column;gap:8px}.slotEmpty321 span{font-size:10px}.pairTag321{position:absolute;right:8px;top:8px;z-index:12;background:#d9dfac;color:#244333;border:0;border-radius:8px;padding:4px 7px;font-size:9px;font-weight:700}.lineageArchive118>h3{display:flex;justify-content:space-between;align-items:center}.lineageArchive118:before{display:none}
+#breeders .parentLineage271>.hidden271{display:none}.parentGenetics321{margin-top:12px;padding-top:12px;border-top:1px solid #aac9aa26}.pgHead321{display:flex;justify-content:space-between;gap:6px}.pgHead321 b{font-size:11px;color:#d5e6c7}.pgHead321 small{display:none}.pgGrid321{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:9px}.pgGrid321 span{display:flex;justify-content:space-between;gap:4px;font-size:10px;padding:5px;background:#99b0900d;border-radius:5px;color:#a8c19e}.pgGrid321 b{font-size:11px;color:#dbebc9}.parentGenetics321>em{display:block;margin-top:8px;font-size:10px;color:#b5c5a6;font-style:normal}
 `;
 document.head.appendChild(css);
 

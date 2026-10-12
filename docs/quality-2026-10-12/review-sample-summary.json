@@ -1,0 +1,102 @@
+{
+  "collected_at_utc": "2026-10-12",
+  "sampling": "20 most recent Steam-purchased reviews per title, language=english; qualitative convenience sample, not sales or population estimate",
+  "games": [
+    {
+      "game": "demoncrawl",
+      "appid": 1141220,
+      "source": "https://store.steampowered.com/appreviews/1141220?json=1&language=english&review_type=all&purchase_type=steam&filter=recent&num_per_page=20",
+      "sample_size": 20,
+      "positive": 14,
+      "negative": 6,
+      "query_summary": {
+        "num_reviews": 20,
+        "review_score": 6,
+        "review_score_desc": "Mostly Positive",
+        "total_positive": 825,
+        "total_negative": 254,
+        "total_reviews": 1079
+      }
+    },
+    {
+      "game": "demons-tilt",
+      "appid": 422510,
+      "source": "https://store.steampowered.com/appreviews/422510?json=1&language=english&review_type=all&purchase_type=steam&filter=recent&num_per_page=20",
+      "sample_size": 20,
+      "positive": 17,
+      "negative": 3,
+      "query_summary": {
+        "num_reviews": 20,
+        "review_score": 8,
+        "review_score_desc": "Very Positive",
+        "total_positive": 717,
+        "total_negative": 38,
+        "total_reviews": 755
+      }
+    },
+    {
+      "game": "downwell",
+      "appid": 360740,
+      "source": "https://store.steampowered.com/appreviews/360740?json=1&language=english&review_type=all&purchase_type=steam&filter=recent&num_per_page=20",
+      "sample_size": 20,
+      "positive": 17,
+      "negative": 3,
+      "query_summary": {
+        "num_reviews": 20,
+        "review_score": 9,
+        "review_score_desc": "Overwhelmingly Positive",
+        "total_positive": 5087,
+        "total_negative": 163,
+        "total_reviews": 5250
+      }
+    },
+    {
+      "game": "monster-crown",
+      "appid": 830370,
+      "source": "https://store.steampowered.com/appreviews/830370?json=1&language=english&review_type=all&purchase_type=steam&filter=recent&num_per_page=20",
+      "sample_size": 20,
+      "positive": 7,
+      "negative": 13,
+      "query_summary": {
+        "num_reviews": 20,
+        "review_score": 5,
+        "review_score_desc": "Mixed",
+        "total_positive": 364,
+        "total_negative": 171,
+        "total_reviews": 535
+      }
+    },
+    {
+      "game": "monster-sanctuary",
+      "appid": 814370,
+      "source": "https://store.steampowered.com/appreviews/814370?json=1&language=english&review_type=all&purchase_type=steam&filter=recent&num_per_page=20",
+      "sample_size": 20,
+      "positive": 17,
+      "negative": 3,
+      "query_summary": {
+        "num_reviews": 20,
+        "review_score": 8,
+        "review_score_desc": "Very Positive",
+        "total_positive": 4656,
+        "total_negative": 363,
+        "total_reviews": 5019
+      }
+    },
+    {
+      "game": "tametsi",
+      "appid": 709920,
+      "source": "https://store.steampowered.com/appreviews/709920?json=1&language=english&review_type=all&purchase_type=steam&filter=recent&num_per_page=20",
+      "sample_size": 20,
+      "positive": 18,
+      "negative": 2,
+      "query_summary": {
+        "num_reviews": 20,
+        "review_score": 9,
+        "review_score_desc": "Overwhelmingly Positive",
+        "total_positive": 1100,
+        "total_negative": 23,
+        "total_reviews": 1123
+      }
+    }
+  ]
+}

@@ -16,7 +16,15 @@ function protect352(force=false){
   return true;
  }catch(_){return false}
 }
-function restore352(){\n try{\n  const raw=localStorage.getItem(SNAP),d=valid352(raw);if(!d)return false;\n  // Explicit user recovery only. Mutate the canonical state object instead of replacing window.S,\n  // because every loaded patch closes over the original S reference.\n  if(!confirm('保護データへ戻すと現在の大会・世代・配合進行を置き換えます。続行しますか？'))return false;\n  Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,d.S);save352();render();return true;\n }catch(_){return false}\n}
+function restore352(){
+ try{
+  const raw=localStorage.getItem(SNAP),d=valid352(raw);if(!d)return false;
+  // Explicit user recovery only. Mutate the canonical state object instead of replacing window.S,
+  // because every loaded patch closes over the original S reference.
+  if(!confirm('保護データへ戻すと現在の大会・世代・配合進行を置き換えます。続行しますか？'))return false;
+  Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,d.S);save352();render();return true;
+ }catch(_){return false}
+}
 // Recovery incident: do not auto-create or overwrite any protection snapshot on boot.
 // Protection is manual only until the lost-save recovery is complete.
 

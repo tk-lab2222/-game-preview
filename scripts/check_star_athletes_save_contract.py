@@ -40,10 +40,11 @@ require(pos352 >= 0 and pos354 >= 0 and pos352 < pos354,
 # Authoritative save contract: persist and restore the complete runtime S object.
 require("const SAVE200='star-athletes-save-v200'" in core_save,
         'authoritative save layer must use the v200 save key')
-require('JSON.stringify({savedAt:Date.now(),S})' in core_save,
+require('JSON.stringify({savedAt:Date.now(),source,S})' in core_save,
         'authoritative save must serialize the complete runtime S object')
-require('S=d.S;init200();return true' in core_save,
-        'authoritative load must restore the complete runtime S object')
+require('Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,saved);init200();return true;' in core_save
+        and 'applySave200(chosen.S);' in core_save,
+        'authoritative load must restore the complete state while preserving the canonical S reference')
 require('render=function(){const out=renderBefore200();decorate200();save200();return out}' in core_save,
         'core render path must continue to persist runtime state')
 
@@ -52,8 +53,9 @@ require("if(raw===null||parse326(raw))return false" in recovery,
         'recovery must not restore backup when primary save is absent')
 require("localStorage.setItem(PRIMARY326,back)" in recovery,
         'recovery must restore a valid backup into the primary key')
-require("window.S=d.S" in recovery,
-        'recovery must restore runtime state as well as localStorage')
+require('Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,d.S);' in recovery
+        and 'window.S=d.S' not in recovery,
+        'recovery must restore runtime state without replacing the shared S reference')
 require("typeof d.S==='object'&&!Array.isArray(d.S)" in recovery,
         'recovery must reject array-shaped state instead of treating it as a valid save object')
 
@@ -81,8 +83,9 @@ require("const raw=localStorage.getItem(SAVE);if(!valid352(raw))return false;" i
         'playtest protection must reject a missing or malformed primary save')
 require("localStorage.setItem(SNAP,raw)" in pretest,
         'playtest protection must preserve the complete raw authoritative save')
-require("localStorage.setItem(SAVE,raw);window.S=d.S;location.reload();return true" in pretest,
-        'playtest restore must replace both persistent and runtime state before reload')
+require('Object.keys(S).forEach(k=>delete S[k]);Object.assign(S,d.S);save352();render();return true;' in pretest
+        and "if(!confirm('" in pretest,
+        'playtest restore must confirm and restore complete canonical runtime and persisted state in place')
 require('JSON.stringify({savedAt:Date.now(),S})' in pretest,
         'v0.32.34 save helper must continue serializing the complete runtime S object')
 
@@ -105,8 +108,9 @@ require("k.startsWith('star-athletes-')&&k!==KEEP&&k!==FLAG" in early_reset,
         'early reset must clear STAR ATHLETES persisted state except the protected snapshot and handshake flag')
 require('sessionStorage.clear();' in early_reset,
         'early reset must clear transient session state before authoritative hydration')
-require("localStorage.getItem(FLAG)==='1'||new URL(location.href).searchParams.has('fresh356')" in early_reset,
-        'early reset must be gated by the reset handshake or explicit fresh URL')
+require("localStorage.getItem(FLAG)==='1'" in early_reset
+        and "searchParams.has('fresh356')" not in early_reset,
+        'early reset must require its pending handshake; a URL alone must not erase a save')
 require('clear356();localStorage.removeItem(FLAG);' in early_reset,
         'early reset must clear persisted state before consuming its pending flag')
 require('window.__STAR_FRESH_RESET356=true;' in early_reset,
