@@ -1,0 +1,54 @@
+{
+  "source_sha": "224a0f7b344ca8d32b6baf573ecd72c6600e8c84",
+  "scope": "Characters including status, full current rendered page; closed details and hidden nodes excluded; bottom navigation outside .a excluded",
+  "states": {
+    "lab-initial": {
+      "total_chars": 314,
+      "viewport_chars": 184,
+      "width": 390,
+      "height": 844
+    },
+    "lab-ready": {
+      "total_chars": 521,
+      "viewport_chars": 193,
+      "width": 390,
+      "height": 844
+    },
+    "lab-egg": {
+      "total_chars": 237,
+      "viewport_chars": 237,
+      "width": 390,
+      "height": 844
+    },
+    "lab-birth": {
+      "total_chars": 633,
+      "viewport_chars": 188,
+      "width": 390,
+      "height": 844
+    },
+    "training": {
+      "total_chars": 1917,
+      "viewport_chars": 322,
+      "width": 390,
+      "height": 844
+    },
+    "tournament-setup": {
+      "total_chars": 234,
+      "viewport_chars": 234,
+      "width": 390,
+      "height": 844
+    },
+    "tournament-result": {
+      "total_chars": 301,
+      "viewport_chars": 301,
+      "width": 390,
+      "height": 844
+    },
+    "nest": {
+      "total_chars": 664,
+      "viewport_chars": 245,
+      "width": 390,
+      "height": 844
+    }
+  }
+}

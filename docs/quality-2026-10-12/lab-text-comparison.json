@@ -1,0 +1,545 @@
+{
+  "source_sha": "224a0f7b344ca8d32b6baf573ecd72c6600e8c84",
+  "kind": "isolated DOM visual prototype; not a production implementation",
+  "before": {
+    "total": 330,
+    "non_status": 258,
+    "viewport_non_status": 149,
+    "nodes": [
+      {
+        "text": "✦",
+        "chars": 1,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "STAR ATHLETES",
+        "chars": 12,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "v0.34.02",
+        "chars": 8,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "↻",
+        "chars": 1,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "☰",
+        "chars": 1,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "第",
+        "chars": 1,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "1",
+        "chars": 1,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "世代",
+        "chars": 2,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "/",
+        "chars": 1,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "はじまりの血統",
+        "chars": 7,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "✧",
+        "chars": 1,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "0",
+        "chars": 1,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "勝利",
+        "chars": 2,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "01",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "出会いと配合",
+        "chars": 6,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "—",
+        "chars": 1,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "02",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "育てる",
+        "chars": 3,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "—",
+        "chars": 1,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "03",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "大会へ",
+        "chars": 3,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "THE STELLAR NURSERY",
+        "chars": 17,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "✧",
+        "chars": 1,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "次の世代を、",
+        "chars": 6,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "育てよう。",
+        "chars": 5,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "ふたつの個性から、新しい血統を。",
+        "chars": 16,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "★ 通常",
+        "chars": 3,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "C",
+        "chars": 1,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "グリ",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "グリモ族 / G0 / 負けず嫌い",
+        "chars": 13,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "能力と血統を見る",
+        "chars": 8,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "★ 通常",
+        "chars": 3,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "C",
+        "chars": 1,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "ぷる",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "ぷるもん族 / G0 / 負けず嫌い",
+        "chars": 14,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "能力と血統を見る",
+        "chars": 8,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "親を2体、タップして選ぶ。",
+        "chars": 13,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "星をつなぐ配合",
+        "chars": 7,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "親から子へ、個性をつなぐ",
+        "chars": 12,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "まずは、親を2体選ぼう",
+        "chars": 11,
+        "status": false,
+        "viewport": false
+      },
+      {
+        "text": "BREEDING RESEARCH",
+        "chars": 16,
+        "status": false,
+        "viewport": false
+      },
+      {
+        "text": "📓 配合研究ノート",
+        "chars": 8,
+        "status": false,
+        "viewport": false
+      },
+      {
+        "text": "0/5 発見",
+        "chars": 5,
+        "status": true,
+        "viewport": false
+      },
+      {
+        "text": "研究進行 0/5",
+        "chars": 7,
+        "status": true,
+        "viewport": false
+      },
+      {
+        "text": "特殊個体観測 0",
+        "chars": 7,
+        "status": true,
+        "viewport": false
+      },
+      {
+        "text": "研究内容を見る",
+        "chars": 7,
+        "status": false,
+        "viewport": false
+      },
+      {
+        "text": "📚 血統アーカイブ",
+        "chars": 8,
+        "status": false,
+        "viewport": false
+      },
+      {
+        "text": "0",
+        "chars": 1,
+        "status": true,
+        "viewport": false
+      },
+      {
+        "text": "/",
+        "chars": 1,
+        "status": false,
+        "viewport": false
+      },
+      {
+        "text": "8",
+        "chars": 1,
+        "status": true,
+        "viewport": false
+      },
+      {
+        "text": "まだ過去世代はいません。",
+        "chars": 12,
+        "status": false,
+        "viewport": false
+      },
+      {
+        "text": "過去世代の採用個体を保管する場所です。必要な個体だけ残し、親候補としていつでも呼び戻せます。",
+        "chars": 46,
+        "status": false,
+        "viewport": false
+      },
+      {
+        "text": "ラボ",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "育成",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "大会",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "ネスト",
+        "chars": 3,
+        "status": false,
+        "viewport": true
+      }
+    ]
+  },
+  "after": {
+    "total": 108,
+    "non_status": 50,
+    "viewport_non_status": 50,
+    "nodes": [
+      {
+        "text": "✦",
+        "chars": 1,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "STAR ATHLETES",
+        "chars": 12,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "v0.34.02",
+        "chars": 8,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "↻",
+        "chars": 1,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "☰",
+        "chars": 1,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "第",
+        "chars": 1,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "1",
+        "chars": 1,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "世代",
+        "chars": 2,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "/",
+        "chars": 1,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "はじまりの血統",
+        "chars": 7,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "✧",
+        "chars": 1,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "0",
+        "chars": 1,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "勝利",
+        "chars": 2,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "★ 通常",
+        "chars": 3,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "C",
+        "chars": 1,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "グリ",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "グリモ族 / G0 / 負けず嫌い",
+        "chars": 13,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "能力",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "★ 通常",
+        "chars": 3,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "C",
+        "chars": 1,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "ぷる",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "ぷるもん族 / G0 / 負けず嫌い",
+        "chars": 14,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "能力",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "親を2体選ぶ",
+        "chars": 6,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "配合",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "記録",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "0/5 · 0/8",
+        "chars": 7,
+        "status": true,
+        "viewport": true
+      },
+      {
+        "text": "ラボ",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "育成",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "大会",
+        "chars": 2,
+        "status": false,
+        "viewport": true
+      },
+      {
+        "text": "ネスト",
+        "chars": 3,
+        "status": false,
+        "viewport": true
+      }
+    ]
+  },
+  "remaining_non_status_ratio": 0.1937984496124031,
+  "starter_data_unchanged": true,
+  "native_details_access_verified": true,
+  "runtime_errors": [],
+  "failed_assets": []
+}
