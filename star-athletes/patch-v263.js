@@ -143,7 +143,7 @@ function feedback263(){
  const current=last&&last.generation===(Number(S.generation233)||1)&&last.season===(Number(S.season)||1)&&last.turn===Number(S.turn);
  if(!current){gain.innerHTML='';return}
  const box=document.createElement('div');box.className='roundFeedback263';box.setAttribute('aria-live','polite');
- for(const x of last.athletes){const card=document.createElement('article');card.className=x.injury?'injury263':x.grade==='大成功'||x.grade==='超成功'?'great263':'';for(const [tag,text] of [['b',x.name],['span',gradeLabel263(x.grade)],['strong',Object.entries(x.deltas).map(([k,v])=>(SL[k]||k)+' +'+v).join(' · ')]]){const n=document.createElement(tag);n.textContent=text;card.appendChild(n)}box.appendChild(card)}gain.replaceChildren(box);
+ for(const x of last.athletes){const card=document.createElement('article');card.className=x.injury?'injury263':x.grade==='大成功'||x.grade==='超成功'?'great263':'';for(const [tag,text] of [['b',x.name],['span',gradeLabel263(x.grade)+(x.appearanceChanged?' · '+x.appearanceLabel+'へ':'')],['strong',Object.entries(x.deltas).map(([k,v])=>(SL[k]||k)+' +'+v).join(' · ')]]){const n=document.createElement(tag);n.textContent=text;card.appendChild(n)}box.appendChild(card)}gain.replaceChildren(box);
 }
 function preview263(m,plan,mode){
   plan=TRAIN263[plan]?plan:'speed';mode=INT263[mode]?mode:'normal';
@@ -176,7 +176,7 @@ function panel263(){
 function render263(){try{controls263();panel263();feedback263()}catch(e){console.warn('render263',e)}}
 function train263(){
   if(n263(S.turn)>=3||!Array.isArray(S.nest)||S.nest.length!==3||window.STAR_EVENTS267?.pending?.())return;
-  const st=state263(),out=[];
+  const st=state263(),out=[],appearanceKey=`${Number(S.generation233)||1}:${Number(S.season)||1}:${n263(S.turn)+1}`;
   for(const m of S.nest){
     const mode=INT263[st.intensity[m.id]]?st.intensity[m.id]:'normal';
     ensureGrowthMeta263(m);
@@ -191,7 +191,8 @@ function train263(){
     }
     st.fatigue[m.id]=mode==='high'?Math.min(2,fatigueBefore+1):mode==='safe'?Math.max(0,fatigueBefore-1):fatigueBefore===2?1:fatigueBefore;
     if(st.policy266==='lineage'&&mode==='high'&&st.fatigue[m.id]>=2)st.fatigue[m.id]=1;
-    out.push({id:m.id,name:m.name,plan,intensity:mode,drill:st.drill263?.[m.id]||'steady',grade:o.grade,injury:!!o.injury,deltas,fatigueBefore,fatigueAfter:st.fatigue[m.id]});
+    const appearanceChanged=window.STAR_GROWTH226.appearanceTraining(m,'normal',appearanceKey),appearanceLabel=window.STAR_GROWTH226.appearance(m).label;
+    out.push({id:m.id,name:m.name,appearanceChanged,appearanceLabel,plan,intensity:mode,drill:st.drill263?.[m.id]||'steady',grade:o.grade,injury:!!o.injury,deltas,fatigueBefore,fatigueAfter:st.fatigue[m.id]});
   }
   S.turn=n263(S.turn)+1;
   st.lastRound263={generation:Number(S.generation233)||1,season:Number(S.season)||1,turn:S.turn,athletes:out};

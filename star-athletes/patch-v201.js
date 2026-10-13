@@ -74,7 +74,7 @@ function gallery201(section){
  else stage.appendChild(make('span','nestEmpty201',nestGroup201==='team'?'3体を迎えよう':nestGroup201==='stars'?'お気に入りを残そう':'次の世代へつなごう'));
  host.appendChild(stage);
  if(m){
-  const identity=make('div','nestName201');identity.appendChild(make('h2','',m.name||'アスリート'));identity.appendChild(make('span','',`${SP[m.species]?.[0]||m.species||''} · G${m.gen??0}`));host.appendChild(identity);
+  const identity=make('div','nestName201');identity.appendChild(make('h2','',m.name||'アスリート'));identity.appendChild(make('span','',`${SP[m.species]?.[0]||m.species||''} · G${m.gen??0} · ${window.STAR_GROWTH226?.appearance?.(m)?.label||'成体'}`));host.appendChild(identity);
   const strip=make('div','nestChoices201');strip.setAttribute('role','group');strip.setAttribute('aria-label','見る個体を選ぶ');
   for(const x of list){const b=make('button',x.id===m.id?'on201':'');b.type='button';b.dataset.nestPick201=x.id;b.setAttribute('aria-pressed',String(x.id===m.id));b.setAttribute('aria-label',x.name||'アスリート');const art=make('div','nestThumb201');art.innerHTML=avatar(x);b.append(art,make('span','',x.name||'アスリート'));b.onclick=()=>{nestPicked201=x.id;gallery201(section)};strip.appendChild(b)}
   host.appendChild(strip);

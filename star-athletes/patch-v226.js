@@ -25,6 +25,30 @@ function save226(){
  try{localStorage.setItem(SAVE226,JSON.stringify({savedAt:Date.now(),S}))}catch(e){console.warn('save226',e)}
  try{if(Array.isArray(S.nest)&&S.nest.length===3)localStorage.setItem(ROSTER226,JSON.stringify(S.nest))}catch(e){console.warn('roster226',e)}
 }
+// Physical appearance is individual development, separate from ability and birth rarity.
+const APPEARANCE_LABELS226=['幼体','育成期','成体'];
+function appearance226(m){
+ const a=m?.appearanceGrowth226;
+ if(!a||typeof a!=='object'||Array.isArray(a))return{stage:2,label:APPEARANCE_LABELS226[2],sessions:null,historyKnown:false};
+ const sessions=Number.isFinite(Number(a.sessions))?Math.max(0,Math.floor(Number(a.sessions))):0;
+ const floor=Number.isFinite(Number(a.floor))?clamp226(Math.floor(Number(a.floor)),0,2):2;
+ const stage=Math.max(floor,sessions>=9?2:sessions>=3?1:0);
+ return{stage,label:APPEARANCE_LABELS226[stage],sessions,historyKnown:a.historyKnown===true};
+}
+function appearanceBirth226(m){
+ if(!m||typeof m!=='object')return m;
+ m.appearanceGrowth226={...(m.appearanceGrowth226||{}),version:1,sessions:0,floor:0,historyKnown:true,lastNormal:null,lastLimit:null};return m;
+}
+function appearanceTraining226(m,kind,key){
+ if(!m||!['normal','limit'].includes(kind)||typeof key!=='string'||!key)return false;
+ const old=m.appearanceGrowth226;
+ const a=old&&typeof old==='object'&&!Array.isArray(old)?old:{version:1,sessions:0,floor:2,historyKnown:false};
+ const field=kind==='normal'?'lastNormal':'lastLimit';if(a[field]===key)return false;
+ const view=appearance226({...m,appearanceGrowth226:a});
+ m.appearanceGrowth226={...a,sessions:(view.sessions||0)+1,floor:Math.max(view.stage,Number(a.floor)||0),[field]:key};
+ return appearance226(m).stage>view.stage;
+}
+
 function meta226(m){
  if(!m||!m.stats)return;
  if(!m.geneticBase226){m.geneticBase226={};K226.forEach(k=>m.geneticBase226[k]=n226(m.stats[k]))}
@@ -90,6 +114,7 @@ try{
    });
    c.geneticBase226={};c.trainingGain226={};c.matchGain226={};
    K226.forEach(k=>{c.geneticBase226[k]=c.stats[k];c.trainingGain226[k]=0;c.matchGain226[k]=0});
+   appearanceBirth226(c);
    return c;
  };
 }catch(e){console.warn('inherit226',e)}
@@ -158,6 +183,9 @@ render=function(){const out=oldRender226();setTimeout(badges226,0);return out};
 const css=document.createElement('style');css.textContent=`.growth226{margin-top:7px;padding:5px 7px;border-radius:8px;background:#edf7ff;border:1px solid #acd5ef;color:#35546c;font-size:7px;font-weight:900}.matchGrowth226{margin-top:9px;padding:9px;border:2px solid #e7c454;border-radius:11px;background:#fff8d8;color:#594915;font-size:9px;line-height:1.6}.matchGrowth226 b{font-size:11px}`;document.head.appendChild(css);
 window.STAR_GROWTH226={
  trainingDelta:trainingDelta226,
+ appearance:appearance226,
+ appearanceBirth:appearanceBirth226,
+ appearanceTraining:appearanceTraining226,
  heritageRate:heritageRate226,
  inherited:(m,k,rate)=>inherited226(m,k,rate)
 };

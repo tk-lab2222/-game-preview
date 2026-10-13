@@ -17,20 +17,7 @@ function gene329(m){
   const v=ensure329(m)?.visual||{};
   return [v.horn,v.wing,v.tail].map(x=>JP329[x]||x||'ノーマル').join(' / ');
 }
-function label329(m){
-  const sp=(typeof SP!=='undefined'&&SP.draco)?SP.draco[0]:'ドラコ';
-  return (m?.name?m.name+' / ':'')+sp;
-}
-
-const previousAvatar329=window.avatar;
-window.avatar=function(m,big=false){
-  if(!m||m.species!=='draco')return previousAvatar329(m,big);
-  ensure329(m);
-  return '<div class="avatar art draco-stable329 '+(big?'bigArt':'')+'">'+
-    '<img class="dracoStableImg329" src="'+SRC329+'" alt="'+label329(m).replace(/"/g,'&quot;')+'" draggable="false">'+
-    '<div class="geneMini dracoGene329">'+gene329(m)+'</div>'+
-  '</div>';
-};
+// Avatar construction is owned by330;116 supplies the younger atlas frames.
 
 function cleanup329(root=document){
   root.querySelectorAll?.('.avatar.draco-live').forEach(el=>{

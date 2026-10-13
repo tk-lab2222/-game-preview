@@ -49,6 +49,14 @@ for rel, _ in refs:
         if not asset.is_relative_to(ROOT) or not asset.is_file():
             errors.append(f"missing local CSS asset: {url}")
 
+creature_manifest = GAME / 'assets/creatures/manifest.json'
+if creature_manifest.is_file():
+    appearance = json.loads(creature_manifest.read_text(encoding='utf-8')).get('appearanceStages', {})
+    for atlas in appearance.get('atlases', []):
+        image = (creature_manifest.parent / atlas['file']).resolve()
+        if not image.is_relative_to(ROOT) or not image.is_file():
+            errors.append(f"missing appearance atlas: {atlas['file']}")
+
 # Guard only the JavaScript actually loaded by the public release shell.
 # Historical/unreferenced patch files intentionally remain in the repository and
 # must not make a current release fail merely because they contain an old pattern.

@@ -1,4 +1,6 @@
-# STAR ATHLETES — growth appearance proposal
+# STAR ATHLETES — growth appearance proposal (historical)
+
+Runtime implementation is now recorded in [physical growth v0.34.09](STAR_ATHLETES_PHYSICAL_GROWTH_2026-10-13.md). The text below preserves the original proposal and its then-current verification limits.
 
 The human suggested that appearance could change as a character grows, after seeing the new character art. This is a visual/design proposal, not a shipped growth system. Current runtime remains v0.34.03, source `c086aee0e55d9ef76ca53e8005b5afbc5d57fe5f`.
 

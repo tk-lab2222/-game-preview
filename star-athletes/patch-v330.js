@@ -104,6 +104,7 @@ const previousAvatar330=window.avatar;
 window.avatar=function(m,big=false){
   if(!m||m.species!=='draco')return previousAvatar330(m,big);
   ensure330(m);
+  if((window.STAR_GROWTH226?.appearance?.(m)?.stage??2)<2)return window.STAR_ART116.avatar(m,big);
   const sp=(typeof SP!=='undefined'&&SP.draco)?SP.draco[0]:'ドラコ';
   const alt=esc330((m?.name?m.name+' / ':'')+sp);
   return '<div class="avatar art draco-stable329 '+(big?'bigArt':'')+'">'+

@@ -97,6 +97,7 @@ function train279(){
    const before=n279(m.stats?.[k]),before2=n279(m.stats?.[sec]);
    const g=gain279(before,pt),g2=secondary279(before2,pt);
    window.STAR_GROWTH226.trainingDelta(m,k,g,CAP279);window.STAR_GROWTH226.trainingDelta(m,sec,g2,CAP279);
+   window.STAR_GROWTH226.appearanceTraining(m,'limit',`${Number(S.generation233)||1}:${n279(st.sessions)+1}`);
    rows.push(`${m.name}：${LAB279[k]}+${g} / ${LAB279[sec]}+${g2}`);
  }
  if(st.energy===MAX_EN279)st.lastEnergyAt=Date.now();
