@@ -1,7 +1,7 @@
 (()=>{
 // v0.28.7: reliable visible training intensity controls after every roster re-render.
 const SAVE275='star-athletes-save-v200',ROSTER275='star-athletes-active-roster-v210';
-const DRILLS275={focus:'特化',steady:'均衡',support:'補完'};
+const DRILLS275={focus:'メイン重視',steady:'バランス',support:'サブ重視'};
 const MODES275={
  safe:{icon:'🛡️',name:'安全',desc:'ケガなし / 成長小'},
  normal:{icon:'⚖️',name:'標準',desc:'低リスク / 標準成長'},

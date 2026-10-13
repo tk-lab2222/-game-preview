@@ -1,0 +1,19 @@
+{
+  "release": "v0.34.10",
+  "labels": {
+    "focus": "メイン重視",
+    "steady": "バランス",
+    "support": "サブ重視"
+  },
+  "widths": [
+    320,
+    390,
+    414
+  ],
+  "savedChoicePreserved": true,
+  "athleteStatsGrowthUnchanged": true,
+  "labelsFit": true,
+  "helpAligned": true,
+  "errors": [],
+  "missing": []
+}

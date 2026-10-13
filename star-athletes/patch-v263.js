@@ -171,7 +171,7 @@ function panel263(){
   const open=host.querySelector('details')?.open||false;
   host.innerHTML=`<div class="budgetHead263"><b>${turn<3?'練習 '+(turn+1)+'/3':'練習完了'}</b><span class="roundDots263" aria-label="完了 ${turn}/3">${[0,1,2].map(i=>`<i class="${i<turn?'done263':''}"></i>`).join('')}</span></div>
    <button type="button" id="doTrain263" class="btn or" ${turn<3&&!pending?'':'disabled'}>${pending?'イベントを選ぶ':turn<3?'3体で練習':'練習完了'}</button>
-   <details class="trainingHelp263" ${open?'open':''}><summary>育成の仕組み</summary><p>1シーズン3回、3体が同時に練習します。個体ごとの種目・負荷は毎回変更できます。</p><p>緑の＋は通常成功の目安です。素質・方針・疲労を反映し、成功度・ケガ・小さな変動で結果が変わります。リーグ倍率 ×${leagueMul263().toFixed(2)}。</p><p>特化は主能力へ1、補完は副能力へ1を、もう片方から移します。基準の合計成長は同じ。負荷・ケガ率は変わりません。</p></details>`;
+   <details class="trainingHelp263" ${open?'open':''}><summary>育成の仕組み</summary><p>1シーズン3回、3体が同時に練習します。個体ごとの種目・負荷は毎回変更できます。</p><p>緑の＋は通常成功の目安です。素質・方針・疲労を反映し、成功度・ケガ・小さな変動で結果が変わります。リーグ倍率 ×${leagueMul263().toFixed(2)}。</p><p>メイン重視は練習の中心になる能力を、サブ重視は一緒に伸びる能力を多めに育てます。バランスは通常の配分です。負荷・ケガ率は変わりません。</p></details>`;
 }
 function render263(){try{controls263();panel263();feedback263()}catch(e){console.warn('render263',e)}}
 function train263(){
