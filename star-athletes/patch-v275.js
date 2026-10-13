@@ -1,6 +1,7 @@
 (()=>{
 // v0.28.7: reliable visible training intensity controls after every roster re-render.
 const SAVE275='star-athletes-save-v200',ROSTER275='star-athletes-active-roster-v210';
+const DRILLS275={focus:'特化',steady:'均衡',support:'補完'};
 const MODES275={
  safe:{icon:'🛡️',name:'安全',desc:'ケガなし / 成長小'},
  normal:{icon:'⚖️',name:'標準',desc:'低リスク / 標準成長'},
@@ -31,12 +32,16 @@ function sync275(){
   if(!box){box=document.createElement('div');box.className='training275';card.appendChild(box)}
   const st=st275(),mode=MODES275[st.intensity[m.id]]?st.intensity[m.id]:'normal';st.intensity[m.id]=mode;
   const f=fatigue275(m),pct=Math.round(rate275(m,mode)*100);
+  if(!st.drill263||typeof st.drill263!=='object')st.drill263={};
+  const drill=DRILLS275[st.drill263[m.id]]?st.drill263[m.id]:'steady';
   const locked=Number(S.turn)>=3||!!window.STAR_EVENTS267?.pending?.();
-  box.innerHTML=`<div class="condition275"><b class="f${f}">${condition275(m)}</b><strong>ケガ ${pct}%</strong></div>
+  box.innerHTML=`<div class="drills275" role="group" aria-label="成長の配分">${Object.entries(DRILLS275).map(([k,v])=>`<button type="button" data-drill275="${k}" data-ath275="${m.id}" aria-pressed="${drill===k}" class="${drill===k?'on275':''}" ${locked?'disabled':''}>${v}</button>`).join('')}</div><div class="condition275"><b class="f${f}">${condition275(m)}</b><strong>ケガ ${pct}%</strong></div>
    <div class="modes275">${Object.entries(MODES275).map(([k,v])=>`<button type="button" data-int275="${k}" data-ath275="${m.id}" aria-pressed="${mode===k}" class="${mode===k?'on275':''}" ${locked?'disabled':''}><b>${v.name}</b></button>`).join('')}</div>`;
  });
 }
 window.addEventListener('click',e=>{
+ const drill=e.target?.closest?.('[data-drill275]');
+ if(drill){if(Number(S.turn)>=3||window.STAR_EVENTS267?.pending?.()||!DRILLS275[drill.dataset.drill275])return;e.preventDefault();e.stopPropagation();st275().drill263=st275().drill263||{};st275().drill263[drill.dataset.ath275]=drill.dataset.drill275;persist275();window.renderRoster210Live?.();sync275();return}
  const b=e.target?.closest?.('[data-int275]');
  if(b){
   if(Number(S.turn)>=3||window.STAR_EVENTS267?.pending?.())return;

@@ -131,10 +131,24 @@ function gain263(m,plan,mode,k,base,mul,jitter=0){
   const resonanceMul=Number(window.STAR_RESONANCE344?.trainingMul?.(m,plan,mode,k)||1);
   return Math.max(0,Math.round((base*mul*leagueMul263()*patternMul*bodyMul*resonanceMul+jitter)*soft));
 }
+function bases263(m,plan){
+ plan=TRAIN263[plan]?plan:'speed';
+ const entries=Object.entries(TRAIN263[plan].gain),drill=state263().drill263?.[m.id];
+ const shift=drill==='focus'?1:drill==='support'?-1:0;
+ return Object.fromEntries(entries.map(([k,v],i)=>[k,v+(i===0?shift:-shift)]));
+}
+function feedback263(){
+ const gain=document.getElementById('gain');if(!gain)return;
+ const last=state263().lastRound263;
+ const current=last&&last.generation===(Number(S.generation233)||1)&&last.season===(Number(S.season)||1)&&last.turn===Number(S.turn);
+ if(!current){gain.innerHTML='';return}
+ const box=document.createElement('div');box.className='roundFeedback263';box.setAttribute('aria-live','polite');
+ for(const x of last.athletes){const card=document.createElement('article');card.className=x.injury?'injury263':x.grade==='大成功'||x.grade==='超成功'?'great263':'';for(const [tag,text] of [['b',x.name],['span',gradeLabel263(x.grade)],['strong',Object.entries(x.deltas).map(([k,v])=>(SL[k]||k)+' +'+v).join(' · ')]]){const n=document.createElement(tag);n.textContent=text;card.appendChild(n)}box.appendChild(card)}gain.replaceChildren(box);
+}
 function preview263(m,plan,mode){
   plan=TRAIN263[plan]?plan:'speed';mode=INT263[mode]?mode:'normal';
   const mul=growthMultiplier263(m,mode,plan)*(mode==='safe'?.88:mode==='high'?1.12:1);
-  return Object.fromEntries(Object.entries(TRAIN263[plan].gain).map(([k,base])=>[k,Math.min(Math.max(0,cap263()-n263(m.stats?.[k])),gain263(m,plan,mode,k,base,mul))]));
+  return Object.fromEntries(Object.entries(bases263(m,plan)).map(([k,base])=>[k,Math.min(Math.max(0,cap263()-n263(m.stats?.[k])),gain263(m,plan,mode,k,base,mul))]));
 }
 function ensureGrowthMeta263(m){
   if(!m.geneticBase226){m.geneticBase226={};KEYS263.forEach(k=>m.geneticBase226[k]=n263(m.stats?.[k]))}
@@ -157,9 +171,9 @@ function panel263(){
   const open=host.querySelector('details')?.open||false;
   host.innerHTML=`<div class="budgetHead263"><b>${turn<3?'練習 '+(turn+1)+'/3':'練習完了'}</b><span class="roundDots263" aria-label="完了 ${turn}/3">${[0,1,2].map(i=>`<i class="${i<turn?'done263':''}"></i>`).join('')}</span></div>
    <button type="button" id="doTrain263" class="btn or" ${turn<3&&!pending?'':'disabled'}>${pending?'イベントを選ぶ':turn<3?'3体で練習':'練習完了'}</button>
-   <details class="trainingHelp263" ${open?'open':''}><summary>育成の仕組み</summary><p>1シーズン3回、3体が同時に練習します。個体ごとの種目・負荷は毎回変更できます。</p><p>緑の＋は通常成功の目安です。素質・方針・疲労を反映し、成功度・ケガ・小さな変動で結果が変わります。リーグ倍率 ×${leagueMul263().toFixed(2)}。</p></details>`;
+   <details class="trainingHelp263" ${open?'open':''}><summary>育成の仕組み</summary><p>1シーズン3回、3体が同時に練習します。個体ごとの種目・負荷は毎回変更できます。</p><p>緑の＋は通常成功の目安です。素質・方針・疲労を反映し、成功度・ケガ・小さな変動で結果が変わります。リーグ倍率 ×${leagueMul263().toFixed(2)}。</p><p>特化は主能力へ1、補完は副能力へ1を、もう片方から移します。基準の合計成長は同じ。負荷・ケガ率は変わりません。</p></details>`;
 }
-function render263(){try{controls263();panel263()}catch(e){console.warn('render263',e)}}
+function render263(){try{controls263();panel263();feedback263()}catch(e){console.warn('render263',e)}}
 function train263(){
   if(n263(S.turn)>=3||!Array.isArray(S.nest)||S.nest.length!==3||window.STAR_EVENTS267?.pending?.())return;
   const st=state263(),out=[];
@@ -168,26 +182,27 @@ function train263(){
     ensureGrowthMeta263(m);
     const fatigueBefore=fatigue263(m);
     const plan=TRAIN263[S.plans?.[m.id]]?S.plans[m.id]:'speed';
-    const o=outcome263(m,mode),ups=[];
-    for(const [k,base] of Object.entries(TRAIN263[plan].gain)){
+    const o=outcome263(m,mode),deltas={};
+    for(const [k,base] of Object.entries(bases263(m,plan))){
       const jitter=o.injury?0:(Math.random()<.35?1:0);
       const gain=gain263(m,plan,mode,k,base,o.mul,jitter);
       const actual=window.STAR_GROWTH226.trainingDelta(m,k,gain,cap263());
-      ups.push(`${SL[k]}+${actual}`);
+      deltas[k]=actual;
     }
     st.fatigue[m.id]=mode==='high'?Math.min(2,fatigueBefore+1):mode==='safe'?Math.max(0,fatigueBefore-1):fatigueBefore===2?1:fatigueBefore;
     if(st.policy266==='lineage'&&mode==='high'&&st.fatigue[m.id]>=2)st.fatigue[m.id]=1;
-    out.push(`<b>${m.name}：${INT263[mode].label} / ${gradeLabel263(o.grade)}</b> ${ups.join(' / ')}`);
+    out.push({id:m.id,name:m.name,plan,intensity:mode,drill:st.drill263?.[m.id]||'steady',grade:o.grade,injury:!!o.injury,deltas,fatigueBefore,fatigueAfter:st.fatigue[m.id]});
   }
   S.turn=n263(S.turn)+1;
+  st.lastRound263={generation:Number(S.generation233)||1,season:Number(S.season)||1,turn:S.turn,athletes:out};
   window.STAR_EVENTS267?.afterTraining?.();
   persist263();
   try{render()}catch(e){console.error('render train263',e)}
   try{window.renderRoster210Live&&window.renderRoster210Live()}catch(_){}
-  const gain=document.getElementById('gain');if(gain)gain.innerHTML=`<div class="notice trainGain263">${out.join('<br>')}</div>`;
+  setTimeout(()=>{document.querySelectorAll('.train210[data-athlete210]').forEach(card=>{const r=out.find(x=>x.id===card.dataset.athlete210);if(r){card.dataset.reaction263=r.injury?'injury':r.plan;setTimeout(()=>delete card.dataset.reaction263,900)}})},280);
   render263();persist263();
 }
-window.STAR_TRAIN263={injuryRate:injuryRate263,outcome:outcome263,preview:preview263};
+window.STAR_TRAIN263={injuryRate:injuryRate263,outcome:outcome263,preview:preview263,bases:bases263};
 window.addEventListener('click',e=>{
   if(e.target?.closest?.('.tab[data-v="train"],#adopt,#doTrain,#toMeet')){
     setTimeout(late263,0);

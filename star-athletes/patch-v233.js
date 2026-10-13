@@ -212,8 +212,8 @@ function nextGen233(label='🥚 次世代配合へ'){if(!canFinishGen233()){cons
 // ---------- battle modifiers / optional skills ----------
 let temp233=null;
 function applyNormalMods233(){if(temp233)return;temp233=(S.nest||[]).map(m=>({m,stats:{...m.stats},match:{...(m.matchGain226||{})}}));const cap=skillCap233();for(const m of(S.nest||[])){const h=hidden233(m),skill=skillEffect233(m,m.stats);for(const k of K233){const stable=[-.010,-.008,-.005,0,.004,.009,.015,.022][clamp233(n233(h.stability),0,7)],luck=Math.random()*[0,.0005,.001,.0018,.003,.005,.008,.012][clamp233(n233(h.luck),0,7)],clutch=(n233(S.season)>=6?[-.008,-.006,-.003,0,.004,.009,.016,.026][clamp233(n233(h.clutch),0,7)]:0);m.stats[k]=Math.min(cap,Math.round(n233(skill[k])*(1+stable+luck+clutch)))}}}
-function restoreNormalMods233(){if(!temp233)return;const cap=skillCap233();for(const x of temp233){for(const k of K233){const mgNow=n233(x.m.matchGain226?.[k]),mgBefore=n233(x.match?.[k]),earned=Math.max(0,mgNow-mgBefore);x.m.stats[k]=Math.min(cap,n233(x.stats[k])+earned)}}temp233=null;save233()}
-function watchNormal233(before){let tries=0;const tick=()=>{tries++;const txt=document.getElementById('result')?.textContent||'';if(txt&&txt!==before&&/総合\d+位/.test(txt)){setTimeout(restoreNormalMods233,180);return}if(tries<180)setTimeout(tick,80);else restoreNormalMods233()};setTimeout(tick,80)}
+function restoreNormalMods233(){if(!temp233)return;const cap=skillCap233();for(const x of temp233){for(const k of K233){const mgNow=n233(x.m.matchGain226?.[k]),mgBefore=n233(x.match?.[k]),earned=Math.max(0,mgNow-mgBefore);x.m.stats[k]=Math.min(Math.max(cap,n233(x.stats[k])),n233(x.stats[k])+earned)}}temp233=null;save233()}
+
 function score233(s,e){return e==='50m走'?n233(s.speed)*.5+n233(s.agility)*.3+n233(s.tech)*.2:e==='障害物競走'?n233(s.tech)*.4+n233(s.agility)*.35+n233(s.speed)*.15+n233(s.guts)*.1:e==='大玉ころがし'?n233(s.power)*.48+n233(s.stamina)*.3+n233(s.guts)*.22:e==='坂道かけあがり'?n233(s.power)*.35+n233(s.stamina)*.35+n233(s.guts)*.3:e==='10000m走'?n233(s.stamina)*.45+n233(s.guts)*.3+n233(s.speed)*.15+n233(s.tech)*.1:e==='的当て'?n233(s.tech)*.55+n233(s.power)*.2+n233(s.agility)*.15+n233(s.guts)*.1:e==='リレー'?n233(s.speed)*.45+n233(s.tech)*.2+n233(s.agility)*.2+n233(s.guts)*.15:n233(s.power)*.45+n233(s.stamina)*.3+n233(s.guts)*.25}
 function promoRivals233(){
   try{
@@ -223,7 +223,7 @@ function promoRivals233(){
   const li=clamp233(n233(S.leagueRank)+1,0,LEAGUE233.length-1),lg=LEAGUE233[li];
   return Array.from({length:7},(_,i)=>{const stats={};for(const k of K233)stats[k]=clamp233(Math.round(lg.base+(i-3)*2+rnd233(-10,10)),70,999);const strong=K233[rnd233(0,5)];stats[strong]=clamp233(stats[strong]+rnd233(12,22),70,999);return{id:'pr'+i,name:NPC233[i],stats,strong}})
 }
-function showPromotion233(){if(n233(S.leagueRank)===0)S.localPromotionEnteredCap=true;S.promotion233=true;S.promotionPending=false;S.rivals225=promoRivals233();save233();const lg=LEAGUE233[clamp233(n233(S.leagueRank)+1,0,5)],r=document.getElementById('result'),rh=document.getElementById('rival');if(r)r.innerHTML='<div class="notice annualFinal233"><b>🔥 年間王者・昇格戦</b><br>勝っても負けても、この一戦で世代終了。特別な経験からスキルを得ることがあります。</div>';if(rh)rh.innerHTML=`<div class="rivalPanel225 promo225"><div class="rivalTop225"><div><small>PROMOTION BATTLE</small><b>🔥 ${lg.name}級 昇格戦</b></div></div><div class="rivalCards225">${S.rivals225.slice(0,3).map(x=>`<article><header><b>${x.name}</b><em>${L233[x.strong]}型</em></header><div>${K233.map(k=>`<span class="${k===x.strong?'hot225':''}">${L233[k]} <b>${x.stats[k]}</b></span>`).join('')}</div></article>`).join('')}</div></div>`;const run=document.getElementById('run');if(run){run.classList.remove('hide');run.disabled=false;run.textContent='🔥 昇格戦スタート';run.onclick=null}document.getElementById('annualNext233')?.remove();document.getElementById('next225')?.style.setProperty('display','none','important')}
+function showPromotion233(options={}){if(n233(S.leagueRank)===0)S.localPromotionEnteredCap=true;S.promotion233=true;S.promotionPending=false;S.rivals225=options?.restore===true&&S.rivals225?.length===7?S.rivals225:promoRivals233();save233();const lg=LEAGUE233[clamp233(n233(S.leagueRank)+1,0,5)],r=document.getElementById('result'),rh=document.getElementById('rival');if(r)r.innerHTML='<div class="notice annualFinal233"><b>🔥 年間王者・昇格戦</b><br>勝っても負けても、この一戦で世代終了。特別な経験からスキルを得ることがあります。</div>';if(rh)rh.innerHTML=`<div class="rivalPanel225 promo225"><div class="rivalTop225"><div><small>PROMOTION BATTLE</small><b>🔥 ${lg.name}級 昇格戦</b></div></div><div class="rivalCards225">${S.rivals225.slice(0,3).map(x=>`<article><header><b>${x.name}</b><em>${L233[x.strong]}型</em></header><div>${K233.map(k=>`<span class="${k===x.strong?'hot225':''}">${L233[k]} <b>${x.stats[k]}</b></span>`).join('')}</div></article>`).join('')}</div></div>`;const run=document.getElementById('run');if(run){run.classList.remove('hide');run.disabled=false;run.textContent='🔥 昇格戦スタート';run.onclick=null}document.getElementById('annualNext233')?.remove();document.getElementById('next225')?.style.setProperty('display','none','important')}
 function variance233(m){return [.15,.135,.12,.105,.09,.07,.05,.03][clamp233(n233(hidden233(m).stability),0,7)]}
 function strategyMul233(m,s){const t=hidden233(m).temperament,want=t==='大胆'?'先行':t==='冷静'?'バランス':t==='慎重'?'温存':'追込';return s===want?1.02:1}
 function weightedSkillPool233(m){
@@ -239,7 +239,37 @@ function leagueUpCinematic233(from,to){
  document.body.appendChild(el);requestAnimationFrame(()=>el.classList.add('show233'));
  setTimeout(()=>el.classList.add('leave233'),2100);setTimeout(()=>el.remove(),2700);
 }
-async function runPromotion233(){const run=document.getElementById('run');if(!run||run.disabled)return;run.disabled=true;run.textContent='昇格戦中…';const rivals=S.rivals225?.length?S.rivals225:promoRivals233(),events=(S.schedule&&S.schedule.length)?S.schedule:['50m走','障害物競走','的当て','リレー'],tot=[0,0,0,0,0,0,0,0],rows=[];for(let i=0;i<events.length;i++){const e=events[i],m=(S.nest||[]).find(x=>x.id===S.assign?.[i])||[...(S.nest||[])].sort((a,b)=>score233(b.stats,e)-score233(a.stats,e))[0];if(!m)continue;const h=hidden233(m),eff=skillEffect233(m,m.stats),clutch=[.95,.965,.98,1,1.018,1.04,1.07,1.11][clamp233(n233(h.clutch),0,7)],luck=1+[0,.0005,.001,.002,.0035,.006,.009,.014][clamp233(n233(h.luck),0,7)]*Math.random(),sm=strategyMul233(m,S.strat?.[i]||'バランス'),vw=variance233(m),ours=score233(eff,e)*Number(window.STAR_PATTERN342?.competitionMul?.(m,e)||1)*Number(window.STAR_BODY343?.competitionMul?.(m,e)||1)*Number(window.STAR_RESONANCE344?.competitionMul?.(m,e)||1)*clutch*luck*sm*(1-vw/2+Math.random()*vw),scores=[ours,...rivals.map(x=>score233(x.stats,e)*(.95+Math.random()*.10))],ord=scores.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v);ord.forEach((x,rank)=>tot[x.idx]+=PTS233[rank]||0);const rank=ord.findIndex(x=>x.idx===0)+1;rows.push(`${e}：${rank}位`);const ev=document.getElementById('events');if(ev)ev.innerHTML=`<div class="battleEvent225"><b>${e}</b><span>${m.name}${m.skills233.length?' / '+m.skills233.map(x=>SK233[x]?.icon||'').join(''):''}</span><strong>${rank}位</strong></div>`;await new Promise(r=>setTimeout(r,300))}const ord=tot.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v),overall=ord.findIndex(x=>x.idx===0)+1,won=overall===1;const beforeLeague233=n233(S.leagueRank);if(won&&beforeLeague233<5)S.leagueRank++;const learned=acquireSkills233(won);if(won&&beforeLeague233<5)setTimeout(()=>leagueUpCinematic233(LEAGUE233[beforeLeague233].name,LEAGUE233[n233(S.leagueRank)].name),180);S.promotion233=false;const r=document.getElementById('result');if(r)r.innerHTML=`<div class="notice leagueResult225 ${won?'win225':'lose225'}"><b>🔥 昇格戦</b><br>${rows.join('<br>')}<hr><strong>${won?'🎉 昇格成功！ '+LEAGUE233[n233(S.leagueRank)].name+'級へ':'昇格失敗… 現ランク残留'}</strong><br>総合${overall}位 / ${tot[0]}pt${learned.length?`<div class="skillLearn233"><b>✨ スキル習得！</b><br>${learned.join('<br>')}</div>`:'<div class="skillNo233">今回は新しいスキル習得なし</div>'}<small>勝敗に関係なく、この世代は終了します。</small></div>`;try{window.STAR_GRADE340?.finalizeAbilityRanks?.(S.nest||[])}catch(e){console.warn('ability rank promotion',e)}save233();run.classList.add('hide');run.disabled=false;nextGen233()}
+function frames233(kind,rivals,events){
+ const cached=window.STAR_ARENA225.load(kind);
+ if(cached)return cached.rows.map(r=>({...r,m:S.nest.find(m=>m.id===r.id)}));
+ const frames=[];
+ for(let i=0;i<events.length;i++){
+  const e=events[i],m=(S.nest||[]).find(x=>x.id===S.assign?.[i])||[...(S.nest||[])].sort((a,b)=>score233(b.stats,e)-score233(a.stats,e))[0];if(!m)continue;
+  const h=hidden233(m),eff=skillEffect233(m,m.stats),clutch=[.95,.965,.98,1,1.018,1.04,1.07,1.11][clamp233(n233(h.clutch),0,7)],luck=1+[0,.0005,.001,.002,.0035,.006,.009,.014][clamp233(n233(h.luck),0,7)]*Math.random(),sm=strategyMul233(m,S.strat?.[i]||'バランス'),vw=variance233(m);
+  const ours=score233(eff,e)*Number(window.STAR_PATTERN342?.competitionMul?.(m,e)||1)*Number(window.STAR_BODY343?.competitionMul?.(m,e)||1)*Number(window.STAR_RESONANCE344?.competitionMul?.(m,e)||1)*clutch*luck*sm*(1-vw/2+Math.random()*vw);
+  const scores=[ours,...rivals.map(x=>score233(x.stats,e)*(kind==='planet'?.965+Math.random()*.07:.95+Math.random()*.10))];
+  const order=scores.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v);frames.push({e,m,scores,rank:order.findIndex(x=>x.idx===0)+1});
+ }
+ window.STAR_ARENA225.store(kind,frames);return frames;
+}
+async function playFrames233(frames){
+ const tot=[0,0,0,0,0,0,0,0];
+ for(let i=0;i<frames.length;i++){const f=frames[i];f.scores.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v).forEach((x,rank)=>tot[x.idx]+=PTS233[rank]||0);await window.STAR_ARENA225.present({event:f.e,athlete:f.m,scores:f.scores,rank:f.rank,index:i,total:frames.length})}
+ const order=tot.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v);return{overall:order.findIndex(x=>x.idx===0)+1,points:tot[0]};
+}
+async function runPromotion233(){
+ const run=document.getElementById('run');if(!run||run.disabled||!S.promotion233)return;
+ run.disabled=true;run.textContent='昇格戦中…';window.STAR_ARENA225.begin();
+ const rivals=S.rivals225?.length?S.rivals225:promoRivals233(),events=S.schedule?.length?S.schedule:['50m走','障害物競走','的当て','リレー'];
+ const frames=frames233('promotion',rivals,events),{overall,points}=await playFrames233(frames),won=overall===1,beforeLeague=n233(S.leagueRank);
+ if(won&&beforeLeague<5)S.leagueRank++;
+ const learned=acquireSkills233(won);S.promotion233=false;
+ window.STAR_ARENA225.resolve({kind:'promotion',title:'昇格戦',overall,points,won,message:won?'昇格成功！ '+LEAGUE233[n233(S.leagueRank)].name+'級へ':'昇格失敗・現ランク残留',learned});window.STAR_ARENA225.result(S.battle225);
+ if(won&&beforeLeague<5)setTimeout(()=>leagueUpCinematic233(LEAGUE233[beforeLeague].name,LEAGUE233[n233(S.leagueRank)].name),180);
+ try{window.STAR_GRADE340?.finalizeAbilityRanks?.(S.nest||[])}catch(e){console.warn('ability rank promotion',e)}
+ window.STAR_VISUAL243?.react?.(won);save233();run.classList.add('hide');run.disabled=false;nextGen233();
+}
+
 function planetRivals233(){
  const names=['地球代表・アストラ','火星代表・ヴァルカン','木星代表・ゼウス','土星代表・クロノス','金星代表・ルミナ','水星代表・メルクリ','海王星代表・ネレイド'];
  return names.map((name,i)=>{
@@ -250,10 +280,10 @@ function planetRivals233(){
    return{id:'planet'+i,name,stats,strong};
  });
 }
-function showPlanetRepresentative233(){
+function showPlanetRepresentative233(options={}){
  S.planetRepresentative233=true;
  S.promotion233=false;
- S.planetRivals233=planetRivals233();
+ if(options?.restore!==true||S.planetRivals233?.length!==7)S.planetRivals233=planetRivals233();
  save233();
  const r=document.getElementById('result'),rh=document.getElementById('rival');
  if(r)r.innerHTML='<div class="notice planetIntro233"><b>🌍 惑星代表戦</b><br>ギャラクシー級の頂点だけが挑める最終決戦。<br><strong>推奨：主力能力 900+</strong><br>勝利するとLIMIT RELEASE。</div>';
@@ -265,26 +295,15 @@ function showPlanetRepresentative233(){
 }
 async function runPlanetRepresentative233(){
  const run=document.getElementById('run');if(!run||run.disabled||!S.planetRepresentative233)return;
- run.disabled=true;run.textContent='惑星代表戦中…';
+ run.disabled=true;run.textContent='惑星代表戦中…';window.STAR_ARENA225.begin();
  const rivals=Array.isArray(S.planetRivals233)&&S.planetRivals233.length===7?S.planetRivals233:planetRivals233();
  const events=(S.schedule&&S.schedule.length)?S.schedule:['50m走','障害物競走','10000m走','リレー'];
- const tot=[0,0,0,0,0,0,0,0],rows=[];
- for(let i=0;i<events.length;i++){
-   const e=events[i],m=(S.nest||[]).find(x=>x.id===S.assign?.[i])||[...(S.nest||[])].sort((a,b)=>score233(b.stats,e)-score233(a.stats,e))[0];
-   if(!m)continue;
-   const h=hidden233(m),eff=skillEffect233(m,m.stats),clutch=[.95,.965,.98,1,1.018,1.04,1.07,1.11][clamp233(n233(h.clutch),0,7)],luck=1+[0,.0005,.001,.002,.0035,.006,.009,.014][clamp233(n233(h.luck),0,7)]*Math.random(),sm=strategyMul233(m,S.strat?.[i]||'バランス'),vw=variance233(m),ours=score233(eff,e)*Number(window.STAR_PATTERN342?.competitionMul?.(m,e)||1)*Number(window.STAR_BODY343?.competitionMul?.(m,e)||1)*Number(window.STAR_RESONANCE344?.competitionMul?.(m,e)||1)*clutch*luck*sm*(1-vw/2+Math.random()*vw);
-   const scores=[ours,...rivals.map(x=>score233(x.stats,e)*(.965+Math.random()*.07))],ord=scores.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v);
-   ord.forEach((x,rank)=>tot[x.idx]+=PTS233[rank]||0);
-   const rank=ord.findIndex(x=>x.idx===0)+1;rows.push(`${e}：${rank}位`);
-   const ev=document.getElementById('events');if(ev)ev.innerHTML=`<div class="battleEvent225 planetEvent233"><b>${e}</b><span>${m.name}</span><strong>${rank}位</strong></div>`;
-   await new Promise(r=>setTimeout(r,340));
- }
- const ord=tot.map((v,idx)=>({v,idx})).sort((a,b)=>b.v-a.v),overall=ord.findIndex(x=>x.idx===0)+1,won=overall===1;
+ const frames=frames233('planet',rivals,events),{overall,points}=await playFrames233(frames),won=overall===1;
  S.planetRepresentative233=false;
  if(won){S.planetRepresentativeWon233=true;S.planetRepresentativeWonAt233=Date.now()}
  const learned=acquireSkills233(won),r=document.getElementById('result');
- if(r)r.innerHTML=`<div class="notice leagueResult225 ${won?'win225':'lose225'} planetResult233"><b>🌍 惑星代表戦</b><br>${rows.join('<br>')}<hr><strong>${won?'🏆 惑星代表を撃破！ LIMIT RELEASEへ':'代表の壁は厚かった…'}</strong><br>総合${overall}位 / ${tot[0]}pt${learned.length?`<div class="skillLearn233"><b>✨ スキル習得！</b><br>${learned.join('<br>')}</div>`:''}<small>${won?'STAR ATHLETES本編クリア。次段階が解禁されます。':'次世代でさらに血統を鍛え、再びギャラクシー年間1位を目指そう。'}</small></div>`;
- save233();if(won)setTimeout(()=>{try{window.STAR_LIMIT278?.refresh?.()}catch(_){}},0);run.classList.add('hide');run.disabled=false;nextGen233();
+ window.STAR_ARENA225.resolve({kind:'planet',title:'惑星代表戦',overall,points,won,message:won?'惑星代表戦 優勝・LIMIT RELEASE':'次の世代で再挑戦',learned});window.STAR_ARENA225.result(S.battle225);
+ window.STAR_VISUAL243?.react?.(won);save233();if(won)setTimeout(()=>{try{window.STAR_LIMIT278?.refresh?.()}catch(_){}},0);run.classList.add('hide');run.disabled=false;nextGen233();
 }
 function restoreAnnualAction233(){
  const result=document.getElementById('result');if(!result)return;
@@ -316,7 +335,7 @@ function annualFinish233(){
  }else nextGen233(rk===1?'🥚 最高ランク・次世代配合へ':'🥚 次世代配合へ');
 }
 // normal tournament temporary modifiers
-window.addEventListener('click',e=>{const run=e.target?.closest?.('#run');if(run&&!run.disabled&&!S.promotion233&&!S.planetRepresentative233&&!window.STAR_TOUR225?.completed?.()){const before=document.getElementById('result')?.textContent||'';applyNormalMods233();watchNormal233(before)}},true);
+window.addEventListener('click',e=>{const run=e.target?.closest?.('#run');if(run&&!run.disabled&&n233(S.turn)>=3&&!S.needsBreeding&&!window.STAR_EVENTS267?.pending?.()&&!S.promotion233&&!S.planetRepresentative233&&!window.STAR_TOUR225?.completed?.()){applyNormalMods233()}},true);
 // no mid-year promotion: own #next225 throughout S1-S6
 window.addEventListener('click',e=>{const b=e.target?.closest?.('#next225');if(!b)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if((n233(S.season)||1)<6)advanceSeason233();else annualFinish233()},true);
 window.addEventListener('click',e=>{if(e.target?.closest?.('#run')&&S.planetRepresentative233){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();runPlanetRepresentative233();return}if(e.target?.closest?.('#run')&&S.promotion233){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();runPromotion233()}},true);
@@ -325,8 +344,9 @@ const css=document.createElement('style');css.textContent=`
 .annual233{border:2px solid #cda631!important;background:linear-gradient(145deg,#fff9dc,#fff)!important}.annualHead233,.compatHead233{display:flex;justify-content:space-between;align-items:center}.annualHead233 small,.compatHead233 small{display:block;font-size:7px;color:#8a6f17}.annualHead233 b,.compatHead233 b{font-size:13px}.annualList233{display:grid;gap:4px;margin:8px 0}.annualList233>div{display:grid;grid-template-columns:22px 1fr auto;gap:5px;padding:5px 7px;border-radius:8px;background:#fff;border:1px solid #eadb9b;font-size:9px}.annualList233 .you233,.annualFinal233 .you233{background:#fff0a6!important}.annualList233 i{font-style:normal;font-weight:1000}.compat233{margin:8px 0 4px;padding:9px;border:2px solid #8fb5d9;border-radius:13px;background:#f5fbff}.compat233.hide{display:none}.compatHead233 strong{font-size:10px}.compatBar233{height:7px;background:#dbe7ef;border-radius:999px;overflow:hidden;margin:7px 0}.compatBar233 i{display:block;height:100%;background:linear-gradient(90deg,#79b7df,#e5bd4f);border-radius:999px}.compatBreak233{font-size:6px;line-height:1.5;color:#65778a}.reveal233{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:7px}.reveal233>small{grid-column:1/3;font-size:7px;color:#52677b}.reveal233 span{display:flex;justify-content:space-between;border:1px solid #cbd9e6;border-radius:7px;background:#fff;padding:4px 6px;font-size:7px}.reveal233 em{font-style:normal;font-weight:1000}.compatHint233{font-size:7px;color:#687b8e;margin-top:6px}.annualFinal233{margin-top:10px;padding:10px;border:2px solid #d9b13e;border-radius:12px;background:#fff7cf;color:#42350d}.annualFinal233>div{display:grid;gap:3px;margin:7px 0}.annualFinal233 span{display:flex;justify-content:space-between;padding:4px 6px;border-radius:6px;background:#fff;font-size:8px}.annualFinal233 em{font-style:normal;font-weight:1000}.skillLearn233{margin:8px 0;padding:7px;border-radius:9px;background:#f2eaff!important;border:1px solid #bea6e5;font-size:9px}.skillNo233{margin:7px 0!important;font-size:7px;color:#786b56}.planetIntro233{border:2px solid #6652a8!important;background:linear-gradient(145deg,#f3efff,#eefaff)!important;color:#2b2448}.planetIntro233 strong{color:#5c3fa1}.planetPanel233{border-color:#7456b6!important;box-shadow:0 0 0 2px #d8cbff inset}.planetEvent233{border-color:#7259af!important}.planetResult233.win225{box-shadow:0 0 0 2px #7c66c7 inset}
 `;document.head.appendChild(css);
 setTimeout(()=>{migrate233();repairEarlyHidden233();ensureAnnual233();renderAnnual233()},0);
-window.STAR_ANNUAL233={showPromotion:showPromotion233,runPromotion:runPromotion233,finishGeneration:finishGen233,annualFinish:annualFinish233,ensureHidden:(m)=>hidden233(m),compatibility:compatibility233,compatLabel:compatLabel233,reveal:reveal233,restoreAction:restoreAnnualAction233};
+window.STAR_ANNUAL233={finishNormal:restoreNormalMods233,nextGeneration:nextGen233,showPromotion:showPromotion233,runPromotion:runPromotion233,finishGeneration:finishGen233,annualFinish:annualFinish233,ensureHidden:(m)=>hidden233(m),compatibility:compatibility233,compatLabel:compatLabel233,reveal:reveal233,restoreAction:restoreAnnualAction233};
 
+if(S.promotion233)showPromotion233({restore:true});else if(S.planetRepresentative233)showPlanetRepresentative233({restore:true});else window.STAR_ARENA225?.hydrate?.();
 const styleLeagueUp233=document.createElement('style');styleLeagueUp233.textContent=`
 .leagueUpBackdrop233{position:fixed;inset:0;z-index:99998;display:flex;align-items:center;justify-content:center;padding:18px;background:#07101ae8;opacity:0;transition:opacity .22s ease}.leagueUpBackdrop233.show233{opacity:1}.leagueUpBackdrop233.leave233{opacity:0}.leagueUpCard233{width:min(390px,100%);padding:25px 18px 22px;border-radius:24px;text-align:center;color:#fff;background:radial-gradient(circle at 50% 0,#375f86,#12263b 55%,#09131f);border:2px solid #7fe7ff;box-shadow:0 0 42px #4fdcff66;transform:scale(.72);animation:leagueUpPop233 .55s cubic-bezier(.2,1.35,.35,1) forwards}.leagueUpBurst233{font-size:10px;font-weight:1000;letter-spacing:.22em;color:#8ff0ff;text-shadow:0 0 12px #6cecff}.leagueUpCard233 h2{font-size:26px;margin:8px 0 14px;text-shadow:0 0 16px #72eaff}.leagueUpRoute233{display:flex;align-items:center;justify-content:center;gap:12px;padding:13px;border-radius:14px;background:#ffffff12}.leagueUpRoute233 span{font-size:13px;color:#b9c8d6}.leagueUpRoute233 i{font-style:normal;font-size:20px;color:#83eaff;animation:leagueArrow233 .7s ease-in-out infinite alternate}.leagueUpRoute233 strong{font-size:19px;color:#fff6a8;text-shadow:0 0 12px #ffd85c}.leagueUpCard233 small{display:block;margin-top:12px;font-size:8px;color:#aec5d7}@keyframes leagueUpPop233{to{transform:scale(1)}}@keyframes leagueArrow233{to{transform:translateX(4px);filter:brightness(1.5)}}`;document.head.appendChild(styleLeagueUp233);
 })();

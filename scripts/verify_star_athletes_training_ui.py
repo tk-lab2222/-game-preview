@@ -7,7 +7,7 @@ from pathlib import Path
 from urllib.parse import unquote,urlparse
 from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[1]
-ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,default=Path('/tmp/star-training-ui'));ap.add_argument('--compare-from',type=Path);ap.add_argument('--skip-fresh',action='store_true',help='Only repeat the same-save UI/controls check after presentation-only edits');args=ap.parse_args();OUT=args.output;OUT.mkdir(parents=True,exist_ok=True)
+ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,default=Path('/tmp/star-training-ui'));ap.add_argument('--compare-from',type=Path);ap.add_argument('--baseline-source',help='Commit of the comparison source files, if known');ap.add_argument('--skip-fresh',action='store_true',help='Only repeat the same-save UI/controls check after presentation-only edits');args=ap.parse_args();OUT=args.output;OUT.mkdir(parents=True,exist_ok=True)
 errors=[];missing=[]
 def server(previous=None):
  def serve(route):
@@ -77,7 +77,7 @@ with sync_playwright() as p:
  page.locator('#policy266 summary').click()
  assert page.evaluate('S.training263.policy266')=='growth',page.evaluate('({policy:S.training263.policy266,turn:S.turn,pending:STAR_EVENTS267.pending()})')
  # Normal-success forecast uses the real multiplier including the explicit plan (skill policy).
- report={'baselineSource':'5bc83be5102fa19e4c295534fa97605631010f23','metricScope':'Default training screen, all scroll depth, non-whitespace text excluding ability/status panels, closed native details and hidden athletes','sameSave':True,'before':baseline,'after':after,'focusAndIndividualSettings':True,'eventAssignmentAndDisclosure':True,'meetSelectionRefreshesPreparation':True}
+ report={'baselineSource':args.baseline_source,'metricScope':'Default training screen, all scroll depth, non-whitespace text excluding ability/status panels, closed native details and hidden athletes','sameSave':True,'before':baseline,'after':after,'focusAndIndividualSettings':True,'eventAssignmentAndDisclosure':True,'meetSelectionRefreshesPreparation':True}
  # Existing saved over-cap athlete: preview reports zero instead of negative or phantom growth.
  report['forecastBounds']=page.evaluate('''()=>{const m=structuredClone(S.nest[0]);m.stats.speed=3500;m.stats.agility=999;const before=JSON.stringify(S);const p=STAR_TRAIN263.preview(m,'speed','normal');if(p.speed!==0||p.agility!==0||JSON.stringify(S)!==before)throw Error('forecast mutated/overstated');return true}''')
  for width in (320,390,414):

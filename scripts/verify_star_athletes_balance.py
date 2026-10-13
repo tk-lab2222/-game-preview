@@ -71,6 +71,7 @@ with sync_playwright() as p:
   else:page.locator('#next225').click();settle(page)
  assert page.evaluate('S.nemesis268.defeated[0]&&S.nemesisRewards302[0]')
  page.locator('#annualNext233').click();settle(page);assert page.evaluate('S.promotion233')
+ rivals=page.evaluate('JSON.stringify(S.rivals225)');page.reload(wait_until='load');page.wait_for_timeout(700);page.evaluate('Math.random=()=>.5');assert page.evaluate('S.promotion233&&JSON.stringify(S.rivals225)')==rivals;assert page.locator('#run').is_visible()
  page.locator('#run').click();page.wait_for_function('!S.promotion233&&S.leagueRank===1');page.wait_for_timeout(800);close_reveals(page);settle(page)
  page.locator('#annualNext233').click();page.wait_for_load_state('load');page.wait_for_timeout(650)
  assert page.evaluate('S.generation233===2&&S.season===1&&S.needsBreeding')
@@ -96,6 +97,7 @@ with sync_playwright() as p:
  page.evaluate('S.leagueRank=5;S.season=6;S.turn=3;Math.random=()=>.5;S.nest.forEach(m=>{for(const k in m.stats)m.stats[k]=999;m.hidden233={...m.hidden233,clutch:3,stability:3,luck:3}});S.assign={};S.annual233={generation:S.generation233,league:5,season:6,recorded:{"6":{rank:1,pts:10}},table:[{id:"you",name:"あなた",pts:60,wins:6},...Array.from({length:7},(_,i)=>({id:"npc"+i,name:"相手"+i,pts:0,wins:0}))]};render()');settle(page)
  page.locator('.tabs [data-v="meet"]').click();settle(page);page.evaluate('STAR_ANNUAL233.annualFinish()');settle(page)
  page.locator('#annualNext233').click();settle(page);assert page.evaluate('S.planetRepresentative233&&!S.limit278.released')
+ rivals=page.evaluate('JSON.stringify(S.planetRivals233)');page.reload(wait_until='load');page.wait_for_timeout(700);page.evaluate('Math.random=()=>.5');assert page.evaluate('S.planetRepresentative233&&JSON.stringify(S.planetRivals233)')==rivals;assert page.locator('#run').is_visible()
  page.locator('#run').click();page.wait_for_function('!S.planetRepresentative233');assert page.evaluate('S.planetRepresentativeWon233&&S.limit278.released'),page.evaluate('({text:document.getElementById("result").textContent,nest:S.nest.map(m=>m.hidden233)})');page.wait_for_timeout(800);close_reveals(page);settle(page)
  report['planet_final_unlock']={'fixture':True,'realMatch':True,'released':True}
  # LIMIT training is then verified on the actual unlocked state.

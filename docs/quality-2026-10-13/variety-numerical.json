@@ -1,0 +1,1173 @@
+{
+  "runtime": "v0.34.06",
+  "risk": {
+    "safe-fatigue0": {
+      "meanMultiplier": 0.8940879999997893,
+      "injuryRate": 0,
+      "displayed": 0
+    },
+    "normal-fatigue0": {
+      "meanMultiplier": 0.9891275000000114,
+      "injuryRate": 0.0266,
+      "displayed": 0.027142857142857146
+    },
+    "high-fatigue0": {
+      "meanMultiplier": 1.0103064999999984,
+      "injuryRate": 0.18915,
+      "displayed": 0.18785714285714286
+    },
+    "safe-fatigue1": {
+      "meanMultiplier": 0.8937279999997884,
+      "injuryRate": 0,
+      "displayed": 0
+    },
+    "normal-fatigue1": {
+      "meanMultiplier": 0.9251750750002692,
+      "injuryRate": 0.04405,
+      "displayed": 0.04214285714285715
+    },
+    "high-fatigue1": {
+      "meanMultiplier": 0.7489411599999546,
+      "injuryRate": 0.31795,
+      "displayed": 0.31779999999999997
+    },
+    "safe-fatigue2": {
+      "meanMultiplier": 0.893619999999788,
+      "injuryRate": 0,
+      "displayed": 0
+    },
+    "normal-fatigue2": {
+      "meanMultiplier": 0.8283382400001501,
+      "injuryRate": 0.0552,
+      "displayed": 0.05714285714285715
+    },
+    "high-fatigue2": {
+      "meanMultiplier": 0.4780404000000286,
+      "injuryRate": 0.4686,
+      "displayed": 0.4639857142857142
+    }
+  },
+  "eventMean": 1.466,
+  "eventDistribution": {
+    "0": 43,
+    "1": 181,
+    "2": 276
+  },
+  "specialLineageOdds": {
+    "rows": [
+      {
+        "id": "godspeed",
+        "name": "神速系",
+        "hint": "疾風 + 軽業",
+        "base": 0.006,
+        "mult": 16,
+        "chance": 0.096,
+        "won": false,
+        "reasons": [
+          "変異因子S×8",
+          "5代継承×2"
+        ]
+      },
+      {
+        "id": "titan",
+        "name": "巨神系",
+        "hint": "豪腕 + 鉄肺",
+        "base": 0.006,
+        "mult": 16,
+        "chance": 0.096,
+        "won": false,
+        "reasons": [
+          "変異因子S×8",
+          "5代継承×2"
+        ]
+      },
+      {
+        "id": "aberrant",
+        "name": "異形系",
+        "hint": "変異S × 変異S",
+        "base": 0.0005,
+        "mult": 4,
+        "chance": 0.002,
+        "won": false,
+        "reasons": [
+          "LUCK S×4"
+        ]
+      },
+      {
+        "id": "pureblood",
+        "name": "純血系",
+        "hint": "同種族を5代以上継続",
+        "base": 0.004,
+        "mult": 4,
+        "chance": 0.016,
+        "won": false,
+        "reasons": [
+          "遺伝力S×4"
+        ]
+      }
+    ],
+    "counts": {
+      "titan": 4678,
+      "godspeed": 4831,
+      "pureblood": 813,
+      "aberrant": 97
+    },
+    "n": 50000
+  },
+  "representativeRarityIndependence": {
+    "plain": 1009,
+    "rare": 1009,
+    "skilled": 1112
+  },
+  "storyModel": {
+    "seeds": 40,
+    "maxGenerations": 45,
+    "galaxyReached": 40,
+    "medianGeneration": 19,
+    "minGeneration": 18,
+    "maxGeneration": 21,
+    "runs": [
+      {
+        "seed": 1,
+        "galaxyGeneration": 20,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 20
+          }
+        ]
+      },
+      {
+        "seed": 2,
+        "galaxyGeneration": 20,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 5
+          },
+          {
+            "league": 2,
+            "generation": 8
+          },
+          {
+            "league": 3,
+            "generation": 13
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 20
+          }
+        ]
+      },
+      {
+        "seed": 3,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 15
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 4,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 15
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 5,
+        "galaxyGeneration": 18,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 13
+          },
+          {
+            "league": 4,
+            "generation": 15
+          },
+          {
+            "league": 5,
+            "generation": 18
+          }
+        ]
+      },
+      {
+        "seed": 6,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 5
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 15
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 7,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 8,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 9,
+        "galaxyGeneration": 20,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 8
+          },
+          {
+            "league": 3,
+            "generation": 13
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 20
+          }
+        ]
+      },
+      {
+        "seed": 10,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 5
+          },
+          {
+            "league": 2,
+            "generation": 8
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 11,
+        "galaxyGeneration": 20,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 5
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 13
+          },
+          {
+            "league": 4,
+            "generation": 17
+          },
+          {
+            "league": 5,
+            "generation": 20
+          }
+        ]
+      },
+      {
+        "seed": 12,
+        "galaxyGeneration": 21,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 13
+          },
+          {
+            "league": 4,
+            "generation": 17
+          },
+          {
+            "league": 5,
+            "generation": 21
+          }
+        ]
+      },
+      {
+        "seed": 13,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 5
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 14,
+        "galaxyGeneration": 20,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 7
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 20
+          }
+        ]
+      },
+      {
+        "seed": 15,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 16,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 17,
+        "galaxyGeneration": 18,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 5
+          },
+          {
+            "league": 2,
+            "generation": 8
+          },
+          {
+            "league": 3,
+            "generation": 11
+          },
+          {
+            "league": 4,
+            "generation": 15
+          },
+          {
+            "league": 5,
+            "generation": 18
+          }
+        ]
+      },
+      {
+        "seed": 18,
+        "galaxyGeneration": 20,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 13
+          },
+          {
+            "league": 4,
+            "generation": 17
+          },
+          {
+            "league": 5,
+            "generation": 20
+          }
+        ]
+      },
+      {
+        "seed": 19,
+        "galaxyGeneration": 20,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 5
+          },
+          {
+            "league": 2,
+            "generation": 8
+          },
+          {
+            "league": 3,
+            "generation": 11
+          },
+          {
+            "league": 4,
+            "generation": 17
+          },
+          {
+            "league": 5,
+            "generation": 20
+          }
+        ]
+      },
+      {
+        "seed": 20,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 5
+          },
+          {
+            "league": 2,
+            "generation": 8
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 15
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 21,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 15
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 22,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 15
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 23,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 5
+          },
+          {
+            "league": 2,
+            "generation": 8
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 15
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 24,
+        "galaxyGeneration": 20,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 10
+          },
+          {
+            "league": 3,
+            "generation": 13
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 20
+          }
+        ]
+      },
+      {
+        "seed": 25,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 26,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 13
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 27,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 15
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 28,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 13
+          },
+          {
+            "league": 4,
+            "generation": 15
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 29,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 5
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 15
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 30,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 31,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 5
+          },
+          {
+            "league": 2,
+            "generation": 8
+          },
+          {
+            "league": 3,
+            "generation": 13
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 32,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 5
+          },
+          {
+            "league": 2,
+            "generation": 7
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 33,
+        "galaxyGeneration": 20,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 20
+          }
+        ]
+      },
+      {
+        "seed": 34,
+        "galaxyGeneration": 18,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 5
+          },
+          {
+            "league": 2,
+            "generation": 8
+          },
+          {
+            "league": 3,
+            "generation": 11
+          },
+          {
+            "league": 4,
+            "generation": 15
+          },
+          {
+            "league": 5,
+            "generation": 18
+          }
+        ]
+      },
+      {
+        "seed": 35,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 8
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 15
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 36,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 5
+          },
+          {
+            "league": 2,
+            "generation": 8
+          },
+          {
+            "league": 3,
+            "generation": 11
+          },
+          {
+            "league": 4,
+            "generation": 15
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 37,
+        "galaxyGeneration": 19,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 8
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 19
+          }
+        ]
+      },
+      {
+        "seed": 38,
+        "galaxyGeneration": 20,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 5
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 16
+          },
+          {
+            "league": 5,
+            "generation": 20
+          }
+        ]
+      },
+      {
+        "seed": 39,
+        "galaxyGeneration": 18,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 5
+          },
+          {
+            "league": 2,
+            "generation": 8
+          },
+          {
+            "league": 3,
+            "generation": 12
+          },
+          {
+            "league": 4,
+            "generation": 15
+          },
+          {
+            "league": 5,
+            "generation": 18
+          }
+        ]
+      },
+      {
+        "seed": 40,
+        "galaxyGeneration": 20,
+        "leagues": [
+          {
+            "league": 1,
+            "generation": 6
+          },
+          {
+            "league": 2,
+            "generation": 9
+          },
+          {
+            "league": 3,
+            "generation": 13
+          },
+          {
+            "league": 4,
+            "generation": 17
+          },
+          {
+            "league": 5,
+            "generation": 20
+          }
+        ]
+      }
+    ],
+    "limits": "Fixed four-event schedule and specialist plans; ordinary domain birth/training, no cosmetic rare stat boosts, missions or match rewards; promotion approximation uses 3 of 4 event advantages. Not observed full-game pacing."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "baselineSource": "a9e51666d81870c87860021ae4c099b2f000b51a",
+  "metricScope": "Default training screen, all scroll depth, non-whitespace text excluding ability/status panels, closed native details and hidden athletes",
+  "sameSave": true,
+  "before": {
+    "nonStatusVisibleCharacters": 205,
+    "text": "ローカル級リーグ進行年間ランキング未開幕 · 0ptS1/6　ローカル運動会大会リバーフィールド杯1%育成0/3フェルン速度ラゼル速度ヴェント速度方針手動フェルングリフォン / G1素質・スキル✏️ 名前＋ 通常成功の目安💨速度💥力✨技巧🔥持久🤝連携安全標準高負荷練習 1/33体で練習育成の仕組み出場メンバー50m走ヴェントバランス大玉ころがしフェルンバランス坂道かけあがりフェルンバランス綱引きフェルンバランスあと3回練習",
+    "height": 1548,
+    "viewportWidth": 390,
+    "documentWidth": 390
+  },
+  "after": {
+    "nonStatusVisibleCharacters": 220,
+    "text": "ローカル級リーグ進行年間ランキング未開幕 · 0ptS1/6　ローカル級シーズン大会リバーフィールド杯1%育成0/3フェルン速度ラゼル速度ヴェント速度方針手動フェルングリフォン / G1素質・スキル✏️ 名前＋ 通常成功の目安💨速度💥力✨技巧🔥持久🤝連携特化均衡補完安全標準高負荷☆ MY STAR練習 1/33体で練習育成の仕組み出場メンバー50m走ヴェントバランス大玉ころがしフェルンバランス坂道かけあがりフェルンバランス綱引きフェルンバランスあと3回練習",
+    "height": 1643,
+    "viewportWidth": 390,
+    "documentWidth": 390
+  },
+  "focusAndIndividualSettings": true,
+  "eventAssignmentAndDisclosure": true,
+  "meetSelectionRefreshesPreparation": true,
+  "forecastBounds": true,
+  "freshSaveProgression": [],
+  "errors": [],
+  "missing": [],
+  "physicalSafari": false,
+  "seededAutomatedPlay": false
+}

@@ -103,7 +103,7 @@ function highMul226(v){
  return r>=.90?.25:r>=.75?.45:r>=.60?.65:r>=.45?.82:1;
 }
 function addMatch226(m,k,raw){
- meta226(m);const cur=n226(m.stats[k]),gain=Math.max(0,Math.round(raw*highMul226(cur))),next=Math.min(cap226(),cur+gain),actual=next-cur;
+ meta226(m);const cur=n226(m.stats[k]),gain=Math.max(0,Math.round(raw*highMul226(cur))),next=Math.max(cur,Math.min(cap226(),cur+gain)),actual=next-cur;
  m.stats[k]=next;m.matchGain226[k]=n226(m.matchGain226[k])+actual;return actual;
 }
 function applyMatchGrowth226(text,promo){

@@ -20,7 +20,7 @@ function oddsStateKey290(){
  return [Number(S.generation233)||Number(S.generation232)||1,season290(),Number(S.leagueRank)||0].join('|');
 }
 function tierAt290(i,len){return len>=3?(i===0?'safe':i===1?'standard':'challenge'):len===2?(i===0?'standard':'challenge'):'standard'}
-function standardIndex290(list){return list.length>=3?1:0}
+function standardIndex290(list){return list.length>=3&&!(Number(S.generation233)===1&&season290()===1&&Number(S.leagueRank)===0)?1:0}
 function rivalKey290(i,list){
  const m=list[i],season=season290();
  return [Number(S.generation233)||Number(S.generation232)||1,season,Number(S.leagueRank)||0,m?.[0]||i].join('|');
@@ -106,7 +106,7 @@ function next290(){
 }
 function sync290(){normalize290();cards290();next290()}
 window.addEventListener('click',e=>{
- const b=e.target?.closest?.('[data-star-meet290]');if(!b)return;
+ const b=e.target?.closest?.('[data-star-meet290]');if(!b)return;if(window.STAR_ARENA225?.locked?.())return;
  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();apply290(Number(b.dataset.starMeet290),{rerender:false});
 },true);
 try{const prev290=render;render=function(){const out=prev290();setTimeout(sync290,0);return out}}catch(e){console.warn('render290',e)}
