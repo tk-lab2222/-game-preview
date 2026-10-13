@@ -2,7 +2,7 @@
 Actual births/training/match; fixed RNG for repeatability, no ability/turn/win fixture.
 Mobile Chromium only. Does not prove enjoyment, retention or physical Safari.
 """
-import argparse,json,mimetypes,os,shutil
+import argparse,json,mimetypes,os,shutil,re
 from pathlib import Path
 from urllib.parse import unquote,urlparse
 from playwright.sync_api import sync_playwright
@@ -94,5 +94,5 @@ with sync_playwright() as p:
  # Separate boundary fixture: existing over-cap values must survive a competition and match growth.
  oc,op=create(b,'reduce',snapshot);op.evaluate('S.nest.forEach(m=>Object.keys(m.stats).forEach(k=>m.stats[k]=3500));STAR_SAVE_CORE.save("over-cap-boundary")');op.locator('#run').click();op.wait_for_function('S.battle225.done');op.wait_for_timeout(700);assert op.evaluate('S.nest.every(m=>Object.values(m.stats).every(v=>v===3500))')
  assert not errors,errors;assert not missing,missing
- report={'version':'v0.34.06','baseBudgetPreserved':8,'focusVsSupportDistinct':True,'drillSaveReloadPreserved':True,'normalSuccessPreviewMatchesActual':True,'threeParticipantFeedbackReload':True,'competitionScenes':['race','precision','power'],'midSceneScoresReloadPreserved':True,'temporaryStatsRestoredBeforeAnimation':True,'inFlightMeetSelectionBlocked':True,'watchedSkipReducedMotionOutcomesEqual':True,'resultReloadHasNextAction':True,'duplicateRewardsBlocked':True,'unknownNestedStatePreserved':True,'overCap3500BoundaryFixturePreserved':True,'viewportWidths':[320,390,414],'scores':watched['scores'],'ranks':watched['ranks'],'physicalSafari':False,'errors':errors,'missing':missing}
+ report={'version':re.search(r'STAR ATHLETES (v[0-9.]+)',(ROOT/'star-athletes-v112/index.html').read_text()).group(1),'baseBudgetPreserved':8,'focusVsSupportDistinct':True,'drillSaveReloadPreserved':True,'normalSuccessPreviewMatchesActual':True,'threeParticipantFeedbackReload':True,'competitionScenes':['race','precision','power'],'midSceneScoresReloadPreserved':True,'temporaryStatsRestoredBeforeAnimation':True,'inFlightMeetSelectionBlocked':True,'watchedSkipReducedMotionOutcomesEqual':True,'resultReloadHasNextAction':True,'duplicateRewardsBlocked':True,'unknownNestedStatePreserved':True,'overCap3500BoundaryFixturePreserved':True,'viewportWidths':[320,390,414],'scores':watched['scores'],'ranks':watched['ranks'],'physicalSafari':False,'errors':errors,'missing':missing}
  (OUT/'variety-flow.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n');print(json.dumps(report,ensure_ascii=False));b.close()

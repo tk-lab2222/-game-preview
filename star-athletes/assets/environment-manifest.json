@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "asset": "training-ground.png",
+  "purpose": "Original daytime athletics training ground, consumed by release skin and competition presentation225",
+  "kind": "generated original environment",
+  "generatedAt": "2026-10-13",
+  "dimensions": [
+    1536,
+    1024
+  ],
+  "bytes": 2896790,
+  "sha256": "e4b4704aabe37128edb3eaa0480bc5cb0064cca9115a71fd39a6717e0cf127ed",
+  "competitorArtIncluded": false,
+  "characterArtChanged": false
+}

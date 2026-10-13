@@ -34,6 +34,21 @@ for rel, _ in refs:
     if not (GAME / rel).is_file():
         errors.append(f"missing asset: star-athletes/{rel}")
 
+# Follow the shipped skin's local URLs as well as the shell's script/link URLs.
+# Scene art and font files must ship with the CSS that consumes them.
+css_assets = set()
+for rel, _ in refs:
+    css = GAME / rel
+    if not css.is_file() or css.suffix != '.css':
+        continue
+    for url in re.findall(r'url\(\s*[\"\']?([^\"\')\s]+)', css.read_text(encoding='utf-8')):
+        if url.startswith(('data:', 'http:', 'https:')):
+            continue
+        asset = (css.parent / url.split('?', 1)[0]).resolve()
+        css_assets.add(asset)
+        if not asset.is_relative_to(ROOT) or not asset.is_file():
+            errors.append(f"missing local CSS asset: {url}")
+
 # Guard only the JavaScript actually loaded by the public release shell.
 # Historical/unreferenced patch files intentionally remain in the repository and
 # must not make a current release fail merely because they contain an old pattern.
@@ -87,5 +102,5 @@ if errors:
 
 print(
     "STAR ATHLETES release guard: OK "
-    f"({len(refs)} assets, {len(loaded_js)} loaded JS, cache key {next(iter(keys), 'none')})"
+    f"({len(refs)} shell assets, {len(css_assets)} CSS assets, {len(loaded_js)} loaded JS, cache key {next(iter(keys), 'none')})"
 )
