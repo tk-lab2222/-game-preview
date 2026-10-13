@@ -149,7 +149,7 @@ function present225({event,athlete,scores,rank,index,total}){
  const w=Math.max(240,el.querySelector('.arenaStage225').clientWidth),h=240,dpr=Math.min(2,window.devicePixelRatio||1);
  canvas.width=Math.round(w*dpr);canvas.height=h*dpr;ctx.scale(dpr,dpr);
  window.paintSpecies?.();
- const scenery=new Image();scenery.src='../star-athletes/assets/training-ground.png?v=3407';
+ const scenery=new Image();scenery.src='../star-athletes/assets/training-ground.png?v=3408';
  const max=Math.max(1,...scores),relative=scores.map(v=>Math.max(0,Math.min(1,v/max))),rival=relative.slice(1),top=Math.max(...rival);
  function comet(x,y,size,color){ctx.fillStyle=color;ctx.shadowColor=color;ctx.shadowBlur=12;ctx.beginPath();ctx.arc(x,y,size,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0}
  function draw(p){

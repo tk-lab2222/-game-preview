@@ -11,7 +11,7 @@ const SEASONS119={
 function shell119(){
   S.season=Math.max(1,Math.min(6,Number(S.season)||1));
   S.coins=Number(S.coins)||0;S.fame=Number(S.fame)||0;S.seasonHistory=Array.isArray(S.seasonHistory)?S.seasonHistory:[];
-  const train=document.getElementById('train'),host=train?.querySelector('.box');if(!host)return;
+  const train=document.getElementById('train'),host=document.getElementById('sched')?.closest('.box');if(!host)return;
   let el=document.getElementById('season119');
   if(!el){
     el=document.createElement('div');el.id='season119';host.insertBefore(el,host.firstChild);

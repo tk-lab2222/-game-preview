@@ -30,7 +30,7 @@ function decorateSections203(){
   const nest=document.getElementById('nest201');
   if(nest){
     let h=nest.querySelector('.sectionTitle203');
-    if(!h){h=document.createElement('div');h.className='sectionTitle203';h.innerHTML='<small>NEST BASE</small><h2>🏠 ネストショップ</h2><p>大会で稼いだコインを育成・配合へ還元</p>';nest.insertBefore(h,nest.firstChild)}
+    if(!h){h=document.createElement('div');h.className='sectionTitle203';h.innerHTML='<small>NEST BASE</small><h2>ネスト</h2>';nest.insertBefore(h,nest.firstChild)}
   }
   const missionSec=document.getElementById('mission203');
   if(missionSec){

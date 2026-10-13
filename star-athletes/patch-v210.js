@@ -42,6 +42,7 @@ function focus210(id){
 }
 function renderRoster210(){
  const plans=document.getElementById('plans'),prep=document.getElementById('prep');if(!plans||!prep)return;
+ const train=document.getElementById('train'),box=plans.closest('.box');if(train&&box&&train.firstElementChild!==box)train.prepend(box);
  if(!restoreRoster210()){document.getElementById('trainingRoster210')?.remove();plans.innerHTML='<div class="empty210">配合で3体を選ぶ</div>';prep.innerHTML='';return}
  S.plans=(S.plans&&typeof S.plans==='object')?S.plans:{};S.assign=(S.assign&&typeof S.assign==='object')?S.assign:{};S.strat=(S.strat&&typeof S.strat==='object')?S.strat:{};
  if(!Array.isArray(S.schedule)||!S.schedule.length){try{makeSchedule()}catch(_){}}
@@ -65,6 +66,7 @@ function renderRoster210(){
  })
 }
 window.renderRoster210Live=renderRoster210;
+window.STAR_ROSTER210={focus:focus210};
 renderTrain=renderRoster210;
 function adopt210(){const selected=(S.cands||[]).filter(m=>m&&Array.isArray(S.sel)&&S.sel.includes(m.id));if(selected.length!==3)return;const old=Array.isArray(S.nest)?S.nest:[];S.lineage=Array.isArray(S.lineage)?S.lineage:[];old.forEach(m=>{if(m&&!S.lineage.some(x=>x.id===m.id))S.lineage.push(m)});const left=(S.cands||[]).filter(m=>!S.sel.includes(m.id));S.foster=Array.isArray(S.foster)?S.foster:[];left.forEach(m=>S.foster.push(m));S.dex=S.dex||{b:0,a:0,f:0,r:0,rel:0};S.dex.a=(S.dex.a||0)+3;S.dex.f=(S.dex.f||0)+left.length;S.nest=selected.map(m=>m);S.cands=[];S.sel=[];S.parents=[];S.egg=null;S.turn=0;S.plans={};S.assign={};S.strat={};try{makeSchedule()}catch(_){S.schedule=[]}saveRoster210();try{render()}catch(e){console.error('render adopt210',e)}try{typeof window.show==='function'&&window.show('train')}catch(_){}setTimeout(()=>{renderRoster210();try{window.STAR_SKILL254?.sync?.()}catch(_){}saveRoster210()},0)}
 function syncAdopt210(){const b=document.getElementById('adopt');if(!b)return;const n=(S.cands||[]).filter(m=>m&&Array.isArray(S.sel)&&S.sel.includes(m.id)).length;b.disabled=n!==3;b.textContent=n===3?'この3体をネストへ':`3体選ぶ（${n}/3）`}

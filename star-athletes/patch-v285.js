@@ -22,8 +22,10 @@ function ensureSection285(){
 }
 function show285(id){
  ensureSection285();
+ const changed=document.getElementById(id)?.classList.contains('hide');
  SECTIONS285.forEach(x=>{const e=document.getElementById(x);if(e)e.classList.toggle('hide',x!==id)});
  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v===id));
+ if(changed)scrollTo({top:0,behavior:'auto'});
  if(['nest201','mission203','rep285','breed'].includes(id))requestAnimationFrame(()=>{try{window.paintSpecies&&window.paintSpecies()}catch(_){}});
 }
 function bind285(){
