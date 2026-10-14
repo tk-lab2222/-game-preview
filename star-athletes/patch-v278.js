@@ -37,7 +37,7 @@ function overlay278(){
       <div class="unlock278"><span>解禁</span><strong>LIMIT 1</strong><em>能力成長の次段階へ</em></div>
       <div class="cap278"><span>シナリオ基準</span><b>999</b><i>→</i><span>LIMIT 1 目標上限</span><b>3,000</b></div>
       <button type="button" class="btn or" data-close278>LIMIT 1へ</button>
-      <small class="note278">LIMIT専用育成・突破条件は次段階で解禁されます。</small>
+      <small class="note278">育成画面でポイントを配分できます。</small>
     </section></div>`);
 }
 function render278(){
@@ -56,7 +56,7 @@ function render278(){
   host.innerHTML=`<div class="limitHead278 released278"><div><small>END GAME</small><b>⚡ LIMIT 1</b></div><span>RELEASED</span></div>
     <div class="limitInfo278"><strong>シナリオクリア</strong><span>能力成長の次段階が解禁されました。</span></div>
     <div class="capLine278"><span>基準上限 999</span><i>→</i><b>LIMIT 1 目標 3,000</b></div>
-    <small>次：LIMIT専用育成 / 突破条件 / 追加育成リソース</small>`;
+    <small>4ptを配分して限界育成へ</small>`;
   overlay278();
 }
 function late278(){render278();[350,900,1600,2600].forEach(ms=>setTimeout(render278,ms))}

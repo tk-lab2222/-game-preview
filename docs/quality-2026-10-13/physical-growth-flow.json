@@ -1,0 +1,49 @@
+{
+  "version": "v0.34.09",
+  "actualBirthsNineRoundsThreeMatches": true,
+  "thresholds": [
+    0,
+    3,
+    9
+  ],
+  "blockedInputNoAdvance": true,
+  "injuryCommittedRoundCountsOnce": true,
+  "protectedRestoreCorruptBackupUnknownFields": true,
+  "birthIdentityGenesRarityPreserved": true,
+  "myStarJuvenileSnapshotFrozen": true,
+  "nineRoundsThreeMatchesOutcomesEqualPriorSource": true,
+  "matureParentBirthCounterResetBoundary": true,
+  "limitAllocationEnergyBoundaryFixture": true,
+  "legacyKeepsMatureHistoryUnknown": true,
+  "fourSpeciesThreeStagesArtFixture": true,
+  "frameHashes": {
+    "draco": [
+      "72d0e9f9a1dd206fcfba9b76b3064b012f783a77c3f34b341ad14f99108a1aee",
+      "eca3ab7c7056a95240f0dba47013f094c674e9b9be61527d827991dcd51cd8e0",
+      "fe97f9dd5c76be1b666a19ec94d09f97276ee4bc65ef89886a78bce7b17e29fe"
+    ],
+    "unil": [
+      "daec26f28b905a20f53f410987cf4f88a3eb69351066fe92c356006549de0e8b",
+      "8b101ce2c5144def86ce7594728830984714155d406de2ee1b28786e944748f6",
+      "950969252cdd1b37452ad4b8b2df038b6f1ff81d0629c3cd11a9fb4c04c2787d"
+    ],
+    "grimo": [
+      "c5a64493ce73b98421cb7959f36784d26991b9ba8629e43356216334fab34044",
+      "978754c3d15572e5a4d84539745adf2b2f416e804f07536ecc557f9d853f04bd",
+      "d43d145d97b0578f788ab55a467d6b796fc15cf18861c8045a13e30939743ff6"
+    ],
+    "puru": [
+      "4fa84d18d2ea41afc5fdbed80aa6bd6bcf9a96c928625f90f1f5cea2bf4bc0ed",
+      "974e1bd4caac61bc74dad007ab71dadaa0485152ebd6d012eda887afdefa455a",
+      "68ed1d437247329a7ad49931bfe59ec5884595e34d7fe890e3bc6a0423b12c1c"
+    ]
+  },
+  "viewportWidths": [
+    320,
+    390,
+    414
+  ],
+  "physicalSafari": false,
+  "errors": [],
+  "missing": []
+}

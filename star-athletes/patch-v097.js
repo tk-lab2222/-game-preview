@@ -8,6 +8,6 @@ $('toMeet').onclick=()=>{
 
 // Tournament execution is owned by patch-v225/patch-v233.
 
-$('reloadBtn').onclick=()=>location.replace('../star-athletes/?v=097-'+Date.now());
+// Latest refresh is owned by GamePreviewStandard.
 render();
 })();

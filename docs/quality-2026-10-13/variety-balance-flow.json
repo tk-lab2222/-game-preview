@@ -1,0 +1,63 @@
+{
+  "event_commit_reload_idempotence": true,
+  "lineage": {
+    "depths": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "oldGenerationNotPure": true,
+    "previewReadOnly": true,
+    "mixedResets": true
+  },
+  "mission_cap_and_idempotence": true,
+  "six_seasons_promotion_next_generation": {
+    "fixture": true,
+    "seasons": [
+      {
+        "season": 1,
+        "generation": 1,
+        "overall": 1
+      },
+      {
+        "season": 2,
+        "generation": 1,
+        "overall": 1
+      },
+      {
+        "season": 3,
+        "generation": 1,
+        "overall": 1
+      },
+      {
+        "season": 4,
+        "generation": 1,
+        "overall": 1
+      },
+      {
+        "season": 5,
+        "generation": 1,
+        "overall": 1
+      },
+      {
+        "season": 6,
+        "generation": 1,
+        "overall": 1
+      }
+    ],
+    "leagueAfter": 1
+  },
+  "representative_battle_repeat_reload_no_roster_mutation": true,
+  "next_generation_birth_adoption": true,
+  "planet_final_unlock": {
+    "fixture": true,
+    "realMatch": true,
+    "released": true
+  },
+  "limit_participant_journal_clock_no_waste_overcap": true,
+  "errors": [],
+  "missing": [],
+  "device": "isolated Chromium",
+  "physicalSafari": false
+}

@@ -1,0 +1,50 @@
+{
+  "errors": [],
+  "missing": [],
+  "roster_ids_preserved": true,
+  "training_reload_preserved": true,
+  "protected_restore_preserved": true,
+  "backup_recovery_identity_preserved": true,
+  "newborn_rare_skill_marker": true,
+  "disclosure_does_not_select_parents": true,
+  "responsive_widths": [
+    320,
+    390,
+    414
+  ],
+  "hub_destinations": 4,
+  "main_navigation_count": 4,
+  "journal_destinations_verified": [
+    "dex",
+    "hall323",
+    "mission203",
+    "rep285"
+  ],
+  "candidate_disclosure_does_not_select": true,
+  "candidate_viewport_width": 390,
+  "loaded_fonts": [
+    {
+      "family": "Stellar Text",
+      "weight": "400"
+    },
+    {
+      "family": "Stellar Text",
+      "weight": "600"
+    },
+    {
+      "family": "Stellar Text",
+      "weight": "700"
+    },
+    {
+      "family": "Stellar Display",
+      "weight": "600"
+    }
+  ],
+  "same_save_typography_comparison": true,
+  "metrics": {
+    "width": 390,
+    "scrollWidth": 390,
+    "height": 844,
+    "scrollHeight": 982
+  }
+}

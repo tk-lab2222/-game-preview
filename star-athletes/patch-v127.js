@@ -28,6 +28,7 @@ function result127(m){
  </div>`;
  try{window.paintSpecies&&window.paintSpecies()}catch(_){}
  try{window.STAR_SKILL254?.renderHatch?.()}catch(_){}
+ birth.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
 }
 function commit127(m){
  if(!m)return;
@@ -68,7 +69,7 @@ const prevRender127=render;
 render=function(){const out=prevRender127();bind127();requestAnimationFrame(decorateEgg127);return out};
 const css=document.createElement('style');css.textContent=`
 .eggStage127{position:relative!important;min-height:158px!important;display:grid!important;place-items:center!important;overflow:hidden!important;border-radius:20px!important;background:radial-gradient(circle at 50% 48%,var(--eggA,#fff8e9),#111b2c 72%)!important;perspective:600px}
-.eggShell127{position:relative;z-index:4;text-align:center;animation:eggFloat127 1.7s ease-in-out infinite alternate}.eggShell127 span{display:block;font-size:76px;filter:drop-shadow(0 12px 15px #0007) drop-shadow(0 0 18px var(--eggB,#ffd78a))}.eggShell127 i{display:inline-block;margin-top:-5px;padding:3px 9px;border-radius:999px;background:#10131a;color:#fff;font-style:normal;font-size:9px;font-weight:1000;box-shadow:0 0 14px var(--eggB,#ffd78a)}
+.eggShell127{position:relative;z-index:4;text-align:center;animation:eggFloat127 1.7s ease-in-out infinite alternate}.eggShell127 span{display:block;font-size:0;width:82px;height:105px;margin:8px auto 13px;border-radius:52% 52% 45% 45% / 62% 62% 38% 38%;background:radial-gradient(ellipse at 33% 28%,#ffffffb8,transparent 32%),radial-gradient(ellipse at 45% 45%,var(--eggA,#fff8e9),var(--eggB,#dbc190));border:1px solid #ffffff66;box-shadow:inset -9px -8px 18px #46533222,0 10px 24px #0005}.eggShell127 i{display:inline-block;margin-top:-5px;padding:3px 9px;border-radius:999px;background:#10131a;color:#fff;font-style:normal;font-size:9px;font-weight:1000;box-shadow:0 0 14px var(--eggB,#ffd78a)}
 .eggAura127{position:absolute;z-index:1;width:145px;height:145px;border-radius:50%;border:2px solid var(--eggB,#ffd78a);box-shadow:0 0 26px var(--eggB,#ffd78a),inset 0 0 24px var(--eggB,#ffd78a);opacity:.55;animation:aura127 1.15s ease-in-out infinite alternate}.eggStars127{position:absolute;z-index:2;color:var(--eggB,#ffd78a);font-size:20px;letter-spacing:12px;opacity:.5;animation:stars127 2.4s linear infinite}
 .shinyEgg127{outline:3px solid #fff19a;box-shadow:0 0 30px #ffe86f77!important}
 .hatchPulse127 .eggShell127{animation:heart127 .22s ease-in-out 3}.hatchPulse127 .eggAura127{animation:charge127 .65s ease-out forwards}

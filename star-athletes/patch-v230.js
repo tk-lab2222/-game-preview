@@ -14,7 +14,7 @@ function sync230(){
   const breed=document.querySelector('.tab[data-v="breed"]');
   const train=document.querySelector('.tab[data-v="train"]');
   const meet=document.querySelector('.tab[data-v="meet"]');
-  if(breed){breed.innerHTML=lock?'🥚<br>次世代配合':'🥚<br>配合';breed.classList.toggle('nextGen230',lock);breed.setAttribute('aria-disabled','false')}
+  if(breed){breed.querySelector('.tabLabel').textContent=lock?'次世代':'ラボ';breed.classList.toggle('nextGen230',lock);breed.setAttribute('aria-disabled','false')}
   [train,meet].forEach(t=>{if(t){t.classList.toggle('locked230',lock);t.setAttribute('aria-disabled',lock?'true':'false')}});
   if(lock){
     train?.classList.remove('active');meet?.classList.remove('active');breed?.classList.add('active');

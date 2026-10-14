@@ -30,7 +30,7 @@ function decorateSections203(){
   const nest=document.getElementById('nest201');
   if(nest){
     let h=nest.querySelector('.sectionTitle203');
-    if(!h){h=document.createElement('div');h.className='sectionTitle203';h.innerHTML='<small>NEST BASE</small><h2>🏠 ネストショップ</h2><p>大会で稼いだコインを育成・配合へ還元</p>';nest.insertBefore(h,nest.firstChild)}
+    if(!h){h=document.createElement('div');h.className='sectionTitle203';h.innerHTML='<small>NEST BASE</small><h2>ネスト</h2>';nest.insertBefore(h,nest.firstChild)}
   }
   const missionSec=document.getElementById('mission203');
   if(missionSec){
@@ -47,7 +47,7 @@ render=function(){
 };
 const css=document.createElement('style');css.textContent=`
 .sectionTitle203{margin:8px 0 10px;padding:13px 14px;border-radius:16px;background:linear-gradient(145deg,#121d31,#263f65);color:#fff;box-shadow:0 5px 0 #0002}.sectionTitle203 small{font-size:7px;letter-spacing:.16em;font-weight:1000;color:#75dcff}.sectionTitle203 h2{font-size:17px;margin:2px 0 3px}.sectionTitle203 p{margin:0;font-size:8px;opacity:.72;font-weight:800}
-#mission203{padding-bottom:90px}.tabs{grid-template-columns:repeat(6,minmax(64px,1fr))!important;overflow-x:auto!important}.tabs .tab{min-width:64px!important}
+#mission203{padding-bottom:90px}
 #train>#shop122,#train>#mission200{display:none!important}
 `;
 document.head.appendChild(css);

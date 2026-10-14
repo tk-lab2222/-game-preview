@@ -1,0 +1,46 @@
+{
+  "license": "SIL Open Font License 1.1",
+  "format": "WOFF2",
+  "fonts": [
+    {
+      "file": "stellar-text-regular.woff2",
+      "family": "Stellar Text",
+      "weight": 400,
+      "bytes": 167988,
+      "glyphs": 1532,
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf",
+      "source_sha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f",
+      "sha256": "f8abb3eff57a5ca9238ac902924fe5ba5a7dbc4eae09dc04add4decb4e1ddb4f"
+    },
+    {
+      "file": "stellar-text-semibold.woff2",
+      "family": "Stellar Text",
+      "weight": 600,
+      "bytes": 169232,
+      "glyphs": 1532,
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf",
+      "source_sha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f",
+      "sha256": "3e48e987bf2db4bfe78ec299b00b9c76c9efeeb496439905a7c8f59bd9ad761c"
+    },
+    {
+      "file": "stellar-text-bold.woff2",
+      "family": "Stellar Text",
+      "weight": 700,
+      "bytes": 170740,
+      "glyphs": 1532,
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/notosansjp/NotoSansJP%5Bwght%5D.ttf",
+      "source_sha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f",
+      "sha256": "d286280e0d4626a89af55c70f50fa8a6f6e44a45073fe132032aa92f48986f73"
+    },
+    {
+      "file": "stellar-display-semibold.woff2",
+      "family": "Stellar Display",
+      "weight": 600,
+      "bytes": 18916,
+      "glyphs": 234,
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/barlowcondensed/BarlowCondensed-SemiBold.ttf",
+      "source_sha256": "7b619d14bc2327509a9ef32b0890f709626f7ecc9ff61191c2a4314c5499d2d9",
+      "sha256": "20f422f059ca183fca823d18f6017756bf20ce435681c66aafea63697055f024"
+    }
+  ]
+}

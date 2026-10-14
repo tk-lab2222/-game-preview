@@ -1,0 +1,24 @@
+{
+  "release": "v0.34.11",
+  "actualBirthsThreeTrainingRounds": true,
+  "trainingPaths": [
+    "speed",
+    "power",
+    "tech"
+  ],
+  "differentSignatures": 3,
+  "allSixAxesBothModesCorrect": true,
+  "browsingReadonly": true,
+  "reloadJournalsPreserved": true,
+  "protectedRestore": true,
+  "savedStarUsesFrozenSnapshot": true,
+  "legacyMissingJournalReadonlyZero": true,
+  "priorSourceNumericParity": true,
+  "widths": [
+    320,
+    390,
+    414
+  ],
+  "errors": [],
+  "missing": []
+}

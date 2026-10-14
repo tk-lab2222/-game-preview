@@ -3,14 +3,7 @@
 const SAVE302='star-athletes-save-v200';
 const KEYS302=['power','speed','stamina','agility','tech','guts'];
 const LAB302={power:'ちから',speed:'スピード',stamina:'スタミナ',agility:'すばやさ',tech:'テクニック',guts:'こんじょう'};
-const NEM302=[
- {name:'疾風のルーチェ',blood:'シルフィード血統',strong:'speed',weak:'power',skill:'風切り',icon:'💨'},
- {name:'鉄壁のガルド',blood:'タイタン血統',strong:'power',weak:'agility',skill:'不動',icon:'🛡️'},
- {name:'慧眼のノクス',blood:'アストラ血統',strong:'tech',weak:'stamina',skill:'先読み',icon:'👁️'},
- {name:'烈火のミーティア',blood:'フェニクス血統',strong:'guts',weak:'tech',skill:'逆境',icon:'🔥'},
- {name:'蒼穹のセナ',blood:'アルタイル血統',strong:'agility',weak:'stamina',skill:'瞬転',icon:'🪽'},
- {name:'星海のクロウ',blood:'オリオン血統',strong:'stamina',weak:'agility',skill:'星巡り',icon:'🌌'}
-];
+const NEM302=window.STAR_NEMESIS268.catalog.map((n,i)=>({...n,icon:['💨','🛡️','👁️','🔥','🪽','🌌'][i]}));
 const REW302=[
  {coin:500,fame:60},{coin:700,fame:80},{coin:900,fame:110},
  {coin:1200,fame:150},{coin:1600,fame:200},{coin:2200,fame:300}
@@ -51,6 +44,7 @@ function showReward302(list){
 function battleCard302(){
  const host=document.getElementById('rival');if(!host)return;
  let old=document.getElementById('nemesisCard268');
+ if(S.promotion233||S.planetRepresentative233||!(S.rivals225||[]).some(r=>r.nemesis268&&r.name===NEM302[Math.max(0,Math.min(5,Number(S.leagueRank)||0))].name)){old?.remove();return}
  if(!old){old=document.createElement('div');old.id='nemesisCard268';host.prepend(old)}
  const rank=Math.max(0,Math.min(5,Number(S.leagueRank)||0)),n=NEM302[rank],st=st302(),def=!!st.defeated[rank],rw=REW302[rank];
  old.innerHTML=`<div class="nem302 ${def?'def302':''}">
@@ -64,7 +58,7 @@ function battleCard302(){
     <div class="skill302"><small>SKILL</small><b>${n.skill}</b></div>
     <div class="down302"><small>弱点 ↓</small><b>${LAB302[n.weak]}</b></div>
    </div>
-   <div class="nemBottom302"><span>${def?'図鑑登録済':'総合1位で撃破'}</span><b>🏅 🪙${rw.coin} + ⭐${rw.fame}</b></div>
+   <div class="nemBottom302"><span>${def?'図鑑登録済':S.meetChoice225==='safe'?'格下は撃破記録の対象外':'標準・格上で総合1位'}</span><b>🏅 🪙${rw.coin} + ⭐${rw.fame}</b></div>
   </div>`;
 }
 function collection302(){

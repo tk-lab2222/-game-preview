@@ -1,7 +1,7 @@
 (()=>{
 // v0.22.6: growth loop; cap follows current LIMIT stage.
 // - Existing saves migrate safely: current stats become genetic base.
-// - Training gains are temporary-to-the-athlete; 25% is inherited by children.
+// - Earned growth has bounded partial inheritance (48–60% under current tuning).
 // - Match performance can add small real-stat growth.
 // - Rival strength now uses the full 100-900 long-term range.
 const SAVE226='star-athletes-save-v200';
@@ -25,6 +25,30 @@ function save226(){
  try{localStorage.setItem(SAVE226,JSON.stringify({savedAt:Date.now(),S}))}catch(e){console.warn('save226',e)}
  try{if(Array.isArray(S.nest)&&S.nest.length===3)localStorage.setItem(ROSTER226,JSON.stringify(S.nest))}catch(e){console.warn('roster226',e)}
 }
+// Physical appearance is individual development, separate from ability and birth rarity.
+const APPEARANCE_LABELS226=['幼体','育成期','成体'];
+function appearance226(m){
+ const a=m?.appearanceGrowth226;
+ if(!a||typeof a!=='object'||Array.isArray(a))return{stage:2,label:APPEARANCE_LABELS226[2],sessions:null,historyKnown:false};
+ const sessions=Number.isFinite(Number(a.sessions))?Math.max(0,Math.floor(Number(a.sessions))):0;
+ const floor=Number.isFinite(Number(a.floor))?clamp226(Math.floor(Number(a.floor)),0,2):2;
+ const stage=Math.max(floor,sessions>=9?2:sessions>=3?1:0);
+ return{stage,label:APPEARANCE_LABELS226[stage],sessions,historyKnown:a.historyKnown===true};
+}
+function appearanceBirth226(m){
+ if(!m||typeof m!=='object')return m;
+ m.appearanceGrowth226={...(m.appearanceGrowth226||{}),version:1,sessions:0,floor:0,historyKnown:true,lastNormal:null,lastLimit:null};return m;
+}
+function appearanceTraining226(m,kind,key){
+ if(!m||!['normal','limit'].includes(kind)||typeof key!=='string'||!key)return false;
+ const old=m.appearanceGrowth226;
+ const a=old&&typeof old==='object'&&!Array.isArray(old)?old:{version:1,sessions:0,floor:2,historyKnown:false};
+ const field=kind==='normal'?'lastNormal':'lastLimit';if(a[field]===key)return false;
+ const view=appearance226({...m,appearanceGrowth226:a});
+ m.appearanceGrowth226={...a,sessions:(view.sessions||0)+1,floor:Math.max(view.stage,Number(a.floor)||0),[field]:key};
+ return appearance226(m).stage>view.stage;
+}
+
 function meta226(m){
  if(!m||!m.stats)return;
  if(!m.geneticBase226){m.geneticBase226={};K226.forEach(k=>m.geneticBase226[k]=n226(m.stats[k]))}
@@ -43,6 +67,12 @@ function migrate226(){
  save226();
 }
 function acquired226(m,k){meta226(m);return n226(m.trainingGain226[k])+n226(m.matchGain226[k])}
+// One journal for normal training, events and LIMIT; restored over-cap stats stay intact.
+function trainingDelta226(m,k,raw,cap=999){
+ if(!m?.stats||!K226.includes(k)||!Number.isFinite(Number(raw)))return 0;
+ meta226(m);const cur=n226(m.stats[k]),limit=Math.max(cur,n226(cap)),next=Math.max(0,Math.min(limit,cur+Math.round(Number(raw)))),actual=next-cur;
+ m.stats[k]=next;m.trainingGain226[k]=n226(m.trainingGain226[k])+actual;return actual;
+}
 function heritageRate226(a,b){
   try{
     window.STAR_ANNUAL233?.ensureHidden?.(a);
@@ -51,7 +81,7 @@ function heritageRate226(a,b){
   const ha=Math.max(0,Math.min(7,n226(a?.hidden233?.heredity)));
   const hb=Math.max(0,Math.min(7,n226(b?.hidden233?.heredity)));
   const avg=(ha+hb)/2;
-  const base=.35+(avg/7)*.07;
+  const base=.48+(avg/7)*.10;
   let bonus=0;
   try{
     const skills=[...(a?.skills233||[]),...(b?.skills233||[])];
@@ -60,11 +90,11 @@ function heritageRate226(a,b){
     const divineParents=[a,b].filter(p=>p?.rareVisual243==='divine'||p?.visual?.color==='神彩').length;
     bonus+=goldParents*.01+divineParents*.02;
   }catch(_){}
-  return Math.min(.45,base+bonus);
+  return Math.min(.60,base+bonus);
 }
 function inherited226(m,k,rate=.42){meta226(m);return n226(m.geneticBase226[k])+acquired226(m,k)*rate}
 
-// Children inherit the stable bloodline plus 42% of earned growth so ordinary bloodlines keep advancing without rare rolls.
+// Stable bloodline plus bounded partial earned growth; ordinary bloodlines can progress without rare rolls.
 // The old baby() still owns species, rarity, looks and cute-name wrappers.
 try{
  const beforeBaby226=baby;
@@ -84,6 +114,7 @@ try{
    });
    c.geneticBase226={};c.trainingGain226={};c.matchGain226={};
    K226.forEach(k=>{c.geneticBase226[k]=c.stats[k];c.trainingGain226[k]=0;c.matchGain226[k]=0});
+   appearanceBirth226(c);
    return c;
  };
 }catch(e){console.warn('inherit226',e)}
@@ -97,7 +128,7 @@ function highMul226(v){
  return r>=.90?.25:r>=.75?.45:r>=.60?.65:r>=.45?.82:1;
 }
 function addMatch226(m,k,raw){
- meta226(m);const cur=n226(m.stats[k]),gain=Math.max(0,Math.round(raw*highMul226(cur))),next=Math.min(cap226(),cur+gain),actual=next-cur;
+ meta226(m);const cur=n226(m.stats[k]),gain=Math.max(0,Math.round(raw*highMul226(cur))),next=Math.max(cur,Math.min(cap226(),cur+gain)),actual=next-cur;
  m.stats[k]=next;m.matchGain226[k]=n226(m.matchGain226[k])+actual;return actual;
 }
 function applyMatchGrowth226(text,promo){
@@ -139,20 +170,50 @@ document.addEventListener('click',e=>{
  if(run&&!run.disabled){const promo=!!S.rivalsPromo225;watchBattle226(promo)}
 },true);
 
-// Small visible checkpoint so growth inheritance is understandable while testing.
-function badges226(){
- document.querySelectorAll('.train210').forEach(c=>{
-   if(c.querySelector('.growth226'))return;const id=c.querySelector('[data-m210]')?.dataset.m210,m=(S.nest||[]).find(x=>x.id===id);if(!m)return;meta226(m);
-   const tg=Math.round(K226.reduce((a,k)=>a+n226(m.trainingGain226[k]),0)),mg=Math.round(K226.reduce((a,k)=>a+n226(m.matchGain226[k]),0));
-   const d=document.createElement('div');d.className='growth226';d.textContent=`血統基礎 + 現役育成　練習+${tg} / 実戦+${mg}`;c.appendChild(d);
- });
+// GAME CORE: one readonly view of the existing earned-growth journal.
+// Never migrate, infer birth history, save, or roll RNG while drawing a star.
+const STAR_AXES226=['speed','agility','tech','guts','stamina','power'];
+function starValues226(m){
+ const finite=v=>Number.isFinite(Number(v))?Number(v):0;
+ return STAR_AXES226.map(key=>({key,label:L226[key],current:finite(m?.stats?.[key]),training:finite(m?.trainingGain226?.[key]),match:finite(m?.matchGain226?.[key])}));
 }
-const oldRender226=render;
-render=function(){const out=oldRender226();setTimeout(badges226,0);return out};
-const css=document.createElement('style');css.textContent=`.growth226{margin-top:7px;padding:5px 7px;border-radius:8px;background:#edf7ff;border:1px solid #acd5ef;color:#35546c;font-size:7px;font-weight:900}.matchGrowth226{margin-top:9px;padding:9px;border:2px solid #e7c454;border-radius:11px;background:#fff8d8;color:#594915;font-size:9px;line-height:1.6}.matchGrowth226 b{font-size:11px}`;document.head.appendChild(css);
+function starMap226(m,view={mode:'earned',key:'speed'}){
+ const host=document.createElement('details');host.className='starMap226';host.setAttribute('aria-label','育てた星');host.open=!!view.open;
+ const signed=n=>(n>=0?'+':'')+n;
+ function draw(){
+  const rows=starValues226(m),mode=view.mode==='current'?'current':'earned',key=STAR_AXES226.includes(view.key)?view.key:'speed';
+  view.mode=mode;view.key=key;host.dataset.starView226=mode;host.dataset.starSelection226=key;
+  const values=rows.map(r=>mode==='current'?r.current:r.training+r.match),max=Math.max(mode==='current'?120:40,...values.map(v=>Math.max(0,v)))*1.12;
+  const point=(i,r)=>{const a=(-90+i*60)*Math.PI/180;return [120+Math.cos(a)*r,96+Math.sin(a)*r].map(n=>n.toFixed(2)).join(',')};
+  const points=values.map((v,i)=>point(i,Math.sqrt(Math.max(0,v)/max)*66));
+  const selected=rows.find(r=>r.key===key),empty=values.every(v=>v===0),total=values.reduce((a,v)=>a+v,0),description=rows.map((r,i)=>r.label+' '+(mode==='earned'?signed(values[i]):values[i])).join('、');
+  host.innerHTML=`<summary><span>✦ 育てた星</span><svg viewBox="0 0 240 192" aria-hidden="true"><polygon points="${points.join(' ')}" class="starShape226"/>${points.map(p=>`<circle cx="${p.split(',')[0]}" cy="${p.split(',')[1]}" r="5" class="starLight226"/>`).join('')}</svg><b><small>${mode==='earned'?'育成':'いま'}</small>${mode==='earned'?signed(total):total}</b><i aria-hidden="true">⌄</i></summary>
+   <header><div role="group" aria-label="星の表示"><button type="button" data-star-mode226="earned" aria-pressed="${mode==='earned'}">育成</button><button type="button" data-star-mode226="current" aria-pressed="${mode==='current'}">いま</button></div></header>
+   <div class="starSky226"><svg viewBox="0 0 240 192" role="img" aria-label="${mode==='earned'?'練習と実戦の記録':'現在の能力'}：${description}">
+   <circle cx="120" cy="96" r="66" class="starOrbit226"/><circle cx="120" cy="96" r="33" class="starOrbit226"/>
+   ${rows.map((r,i)=>`<line x1="120" y1="96" x2="${point(i,66).split(',')[0]}" y2="${point(i,66).split(',')[1]}" class="starAxis226"/>`).join('')}
+   <polygon points="${points.join(' ')}" class="starShape226"/>
+   ${rows.map((r,i)=>`<circle cx="${points[i].split(',')[0]}" cy="${points[i].split(',')[1]}" r="${key===r.key?5:3}" class="starLight226 ${key===r.key?'selected226':''}"/>`).join('')}
+   <path d="M120 88l2 6 6 2-6 2-2 6-2-6-6-2 6-2Z" class="starHeart226"/></svg>
+   ${rows.map((r,i)=>`<button type="button" class="starAxisButton226 axis226-${i}" data-star-key226="${r.key}" aria-pressed="${key===r.key}" aria-label="${r.label} ${mode==='earned'?signed(values[i]):values[i]}">${r.label}</button>`).join('')}</div>
+   <div class="starReadout226" aria-live="polite"><div><span>${selected.label}</span><strong>${mode==='earned'?signed(selected.training+selected.match):selected.current}</strong></div><small>練習 ${signed(selected.training)}<br>実戦 ${signed(selected.match)}</small></div>
+   ${mode==='earned'&&empty?'<p class="starStart226">練習で、星が伸びる</p>':''}`;
+ }
+ host.addEventListener('click',e=>{const mode=e.target.closest?.('[data-star-mode226]'),key=e.target.closest?.('[data-star-key226]');if(!mode&&!key)return;const restore=mode?'[data-star-mode226="'+mode.dataset.starMode226+'"]':'[data-star-key226="'+key.dataset.starKey226+'"]';if(mode)view.mode=mode.dataset.starMode226;if(key)view.key=key.dataset.starKey226;draw();host.querySelector(restore)?.focus({preventScroll:true})});
+ host.addEventListener('toggle',()=>{view.open=host.open});
+ draw();return host;
+}
+// Retire the old debug growth badge and its render wrapper; native owners mount the map.
+const css=document.createElement('style');css.textContent=`.matchGrowth226{margin-top:9px;padding:9px;border:2px solid #e7c454;border-radius:11px;background:#fff8d8;color:#594915;font-size:9px;line-height:1.6}.matchGrowth226 b{font-size:11px}`;document.head.appendChild(css);
 window.STAR_GROWTH226={
+ trainingDelta:trainingDelta226,
+ appearance:appearance226,
+ appearanceBirth:appearanceBirth226,
+ appearanceTraining:appearanceTraining226,
+ starValues:starValues226,
+ starMap:starMap226,
  heritageRate:heritageRate226,
  inherited:(m,k,rate)=>inherited226(m,k,rate)
 };
-setTimeout(()=>{migrate226();badges226()},0);
+setTimeout(migrate226,0);
 })();

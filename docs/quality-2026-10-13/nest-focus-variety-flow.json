@@ -1,0 +1,77 @@
+{
+  "version": "v0.34.08",
+  "baseBudgetPreserved": 8,
+  "focusVsSupportDistinct": true,
+  "drillSaveReloadPreserved": true,
+  "normalSuccessPreviewMatchesActual": true,
+  "threeParticipantFeedbackReload": true,
+  "competitionScenes": [
+    "race",
+    "precision",
+    "power"
+  ],
+  "midSceneScoresReloadPreserved": true,
+  "temporaryStatsRestoredBeforeAnimation": true,
+  "inFlightMeetSelectionBlocked": true,
+  "watchedSkipReducedMotionOutcomesEqual": true,
+  "resultReloadHasNextAction": true,
+  "duplicateRewardsBlocked": true,
+  "unknownNestedStatePreserved": true,
+  "overCap3500BoundaryFixturePreserved": true,
+  "viewportWidths": [
+    320,
+    390,
+    414
+  ],
+  "scores": [
+    [
+      116.05,
+      146.29999999999998,
+      146,
+      143.1,
+      148.1,
+      149.95,
+      152.79999999999998,
+      153.10000000000002
+    ],
+    [
+      112.4,
+      136.6,
+      146.9,
+      145.25,
+      151.85,
+      146.55,
+      150.95,
+      154.55
+    ],
+    [
+      102.34,
+      132.92000000000002,
+      144.34,
+      152.77999999999997,
+      153.1,
+      147.54,
+      153.79999999999998,
+      156.76
+    ],
+    [
+      115.15,
+      157.5,
+      145.45000000000002,
+      142.25,
+      144.5,
+      149.35,
+      154,
+      151.04999999999998
+    ]
+  ],
+  "ranks": [
+    8,
+    8,
+    8,
+    8
+  ],
+  "physicalSafari": false,
+  "errors": [],
+  "missing": []
+}

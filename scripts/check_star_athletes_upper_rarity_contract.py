@@ -34,7 +34,13 @@ for n in (342, 343, 344, 345, 346, 347):
 p344 = (PATCH_DIR / 'patch-v344.js').read_text(encoding='utf-8')
 p347 = (PATCH_DIR / 'patch-v347.js').read_text(encoding='utf-8')
 p350 = (PATCH_DIR / 'patch-v350.js').read_text(encoding='utf-8')
-for token in ('const prevBaby347=baby', 'baby=function(a,b){return ensure347(prevBaby347(a,b))}', 'rareSkillRolled347=true'):
+p362 = (PATCH_DIR / 'patch-v362.js').read_text(encoding='utf-8')
+if 'patch-v362.js' not in shell:
+    fail('canonical birth pipeline v362 is not connected to the release shell')
+for token in ('window.__STAR_BIRTH_PIPELINE362=true', 'window.baby=function(a,b)', 'window.STAR_RARE_SKILL347', 'c=api.birth(c,a,b)||c'):
+    if token not in p362:
+        fail(f'canonical v362 birth pipeline missing: {token}')
+for token in ('birth:(c)=>ensure347(c)', 'rareSkillRolled347=true'):
     if token not in p347:
         fail(f'patch-v347 rare-skill birth contract missing: {token}')
 if p347.count('m.skills233.length<6') < 2:
@@ -111,4 +117,4 @@ for token in (
     if token not in p350:
         fail(f'patch-v350 ID-less God-Star hatch dedupe contract missing: {token}')
 
-print('OK: STAR ATHLETES upper-rarity inheritance/save contract is intact through v351')
+print('OK: STAR ATHLETES upper-rarity inheritance/save contract is intact through birth owner v362')

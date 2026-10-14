@@ -14,16 +14,18 @@ function ensureSection285(){
   h.innerHTML='<small>NEST REPRESENTATIVE</small><h2>🏁 ネスト代表</h2><p>自分史上最高の3体を選び、役割・戦術・シナジーを磨く</p>';
   sec.prepend(h);
  }
- const tabs=document.querySelector('.tabs');
+ const tabs=document.getElementById('journalNav');
  if(tabs&&!tabs.querySelector('.tab[data-v="rep285"]')){
-  const b=document.createElement('button');b.className='tab';b.dataset.v='rep285';b.innerHTML='🏁<br>代表';
+  const b=document.createElement('button');b.className='tab';b.dataset.v='rep285';b.setAttribute('data-dialog-close','');b.textContent='ネスト代表';
   const dexTab=tabs.querySelector('.tab[data-v="dex"]');dexTab?.before(b);if(!b.parentNode)tabs.appendChild(b);
  }
 }
 function show285(id){
  ensureSection285();
+ const changed=document.getElementById(id)?.classList.contains('hide');
  SECTIONS285.forEach(x=>{const e=document.getElementById(x);if(e)e.classList.toggle('hide',x!==id)});
  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.v===id));
+ if(changed)scrollTo({top:0,behavior:'auto'});
  if(['nest201','mission203','rep285','breed'].includes(id))requestAnimationFrame(()=>{try{window.paintSpecies&&window.paintSpecies()}catch(_){}});
 }
 function bind285(){
@@ -38,8 +40,9 @@ function host285(id,parent,after){
 function relocate285(){
  ensureSection285();
  // 配合研究ノート -> 配合
- const breed=document.getElementById('breed'),lineage=document.getElementById('lineagePool')?.closest('.box'),research=document.getElementById('research276');
- if(breed&&research){const h=host285('breedResearchHost285',breed,lineage);if(research.parentElement!==h)h.appendChild(research)}
+ const records=document.getElementById('recordsBody321'),research=document.getElementById('research276');
+ if(records&&research&&research.parentElement!==records)records.appendChild(research);
+ document.getElementById('breedResearchHost285')?.remove();
  // LIMIT解放/限界育成 -> 育成
  const train=document.getElementById('train'),prep=document.getElementById('prep')?.closest('.box');
  const lp=document.getElementById('limitPanel278'),lt=document.getElementById('limitTrain279');
@@ -62,6 +65,6 @@ window.addEventListener('click',e=>{if(e.target?.closest?.('.tab,#batchGo260,#ha
 const css=document.createElement('style');css.textContent=`
 #rep285{padding-bottom:90px}.sectionTitle285{margin-top:8px}.iaHost285{margin:0 0 10px}.iaHost285>.box{margin:0 0 10px!important}
 .iaTitle285{display:flex;align-items:center;gap:7px;margin:10px 0 8px;padding:9px 10px;border-radius:12px;background:#17243a;color:#fff}.iaTitle285 small{font-size:6px;letter-spacing:.12em;color:#8fdfff;font-weight:1000}.iaTitle285 b{font-size:12px}.iaTitle285 span{margin-left:auto;font-size:6px;color:#becdde}
-#rep285>.rep280{margin-top:0!important}.tabs{grid-template-columns:none!important;display:flex!important;overflow-x:auto!important}.tabs .tab{flex:1 0 64px!important;min-width:64px!important}
+#rep285>.rep280{margin-top:0!important}
 `;document.head.appendChild(css);setTimeout(late285,0);
 })();

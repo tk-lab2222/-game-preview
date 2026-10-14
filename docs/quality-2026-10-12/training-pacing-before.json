@@ -1,0 +1,176 @@
+{
+  "rulesSource": "5bc83be5102fa19e4c295534fa97605631010f23",
+  "note": "Same v0.34.04 competitive rules through the improved UI/navigation; no stat/league/turn/win fixtures. Two seeded automated first generations, not player research.",
+  "freshSaveProgression": [
+    {
+      "seed": 72012,
+      "initialAthletes": [
+        {
+          "name": "フェルン",
+          "stats": {
+            "power": 99,
+            "speed": 118,
+            "stamina": 101,
+            "agility": 102,
+            "tech": 108,
+            "guts": 86
+          }
+        },
+        {
+          "name": "ラゼル",
+          "stats": {
+            "power": 95,
+            "speed": 116,
+            "stamina": 98,
+            "agility": 99,
+            "tech": 112,
+            "guts": 84
+          }
+        },
+        {
+          "name": "ヴェント",
+          "stats": {
+            "power": 100,
+            "speed": 117,
+            "stamina": 96,
+            "agility": 104,
+            "tech": 113,
+            "guts": 87
+          }
+        }
+      ],
+      "seasons": [
+        {
+          "season": 1,
+          "tier": "safe",
+          "rank": 8,
+          "average": 105,
+          "league": 0
+        },
+        {
+          "season": 2,
+          "tier": "safe",
+          "rank": 8,
+          "average": 109,
+          "league": 0
+        },
+        {
+          "season": 3,
+          "tier": "standard",
+          "rank": 8,
+          "average": 113,
+          "league": 0
+        },
+        {
+          "season": 4,
+          "tier": "standard",
+          "rank": 8,
+          "average": 117,
+          "league": 0
+        },
+        {
+          "season": 5,
+          "tier": "standard",
+          "rank": 8,
+          "average": 122,
+          "league": 0
+        },
+        {
+          "season": 6,
+          "tier": "standard",
+          "rank": 6,
+          "average": 126,
+          "league": 0
+        }
+      ],
+      "nextGeneration": 2,
+      "leagueAfter": 0
+    },
+    {
+      "seed": 92019,
+      "initialAthletes": [
+        {
+          "name": "ユリア",
+          "stats": {
+            "power": 103,
+            "speed": 109,
+            "stamina": 94,
+            "agility": 114,
+            "tech": 96,
+            "guts": 105
+          }
+        },
+        {
+          "name": "ティリア",
+          "stats": {
+            "power": 110,
+            "speed": 114,
+            "stamina": 92,
+            "agility": 114,
+            "tech": 91,
+            "guts": 108
+          }
+        },
+        {
+          "name": "エリス",
+          "stats": {
+            "power": 107,
+            "speed": 112,
+            "stamina": 89,
+            "agility": 109,
+            "tech": 98,
+            "guts": 110
+          }
+        }
+      ],
+      "seasons": [
+        {
+          "season": 1,
+          "tier": "safe",
+          "rank": 8,
+          "average": 109,
+          "league": 0
+        },
+        {
+          "season": 2,
+          "tier": "safe",
+          "rank": 8,
+          "average": 113,
+          "league": 0
+        },
+        {
+          "season": 3,
+          "tier": "standard",
+          "rank": 8,
+          "average": 116,
+          "league": 0
+        },
+        {
+          "season": 4,
+          "tier": "standard",
+          "rank": 8,
+          "average": 120,
+          "league": 0
+        },
+        {
+          "season": 5,
+          "tier": "standard",
+          "rank": 8,
+          "average": 124,
+          "league": 0
+        },
+        {
+          "season": 6,
+          "tier": "standard",
+          "rank": 8,
+          "average": 129,
+          "league": 0
+        }
+      ],
+      "nextGeneration": 2,
+      "leagueAfter": 0
+    }
+  ],
+  "errors": [],
+  "missing": []
+}

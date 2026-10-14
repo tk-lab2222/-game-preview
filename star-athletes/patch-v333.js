@@ -12,34 +12,20 @@ const css=document.createElement('style');
 css.id='artAlign333css';
 css.textContent=`
 /* ---------- shared portrait frame ---------- */
-.train210>header .avatar,
 .entries210 .avatar{
   position:relative!important;
   overflow:hidden!important;
   isolation:isolate!important;
   box-sizing:border-box!important;
-  background:linear-gradient(#fff9eb,#f4ead6)!important;
+  background:transparent!important;
 }
 
-/* Keep the visible art area consistent between roster and entry cards. */
-.train210>header .avatar{
-  height:94px!important;
-}
+/* Tournament entry portraits remain small; the training hero is owned by369. */
 .entries210 .avatar{
   height:86px!important;
 }
 
 /* ---------- Draco ---------- */
-.train210>header .avatar.draco-stable329 .dracoStableImg329{
-  left:50%!important;
-  top:auto!important;
-  bottom:3px!important;
-  width:82%!important;
-  height:82%!important;
-  transform:translateX(-50%)!important;
-  object-fit:contain!important;
-  object-position:center bottom!important;
-}
 .entries210 .avatar.draco-stable329 .dracoStableImg329{
   left:50%!important;
   top:auto!important;
@@ -52,7 +38,6 @@ css.textContent=`
 }
 
 /* ---------- canvas species: Unil / Grimo / Puru ---------- */
-.train210>header .avatar.species-live .speciesCanvas,
 .entries210 .avatar.species-live .speciesCanvas{
   position:absolute!important;
   inset:0!important;
@@ -66,32 +51,23 @@ css.textContent=`
  Normalize the apparent center by adjusting the canvas box itself rather than
  changing each individual card's layout.
 */
-.train210>header .avatar.species-live{
-  padding:3px 2px 0!important;
-}
 .entries210 .avatar.species-live{
   padding:2px 1px 0!important;
 }
 
 /* Puru reads visually shorter; give it a little more portrait presence. */
-.train210>header .avatar.species-puru .speciesCanvas{
-  transform:scale(1.08) translateY(2px)!important;
-  transform-origin:50% 55%!important;
-}
 .entries210 .avatar.species-puru .speciesCanvas{
   transform:scale(1.07) translateY(2px)!important;
   transform-origin:50% 55%!important;
 }
 
 /* Grimo's silhouette is slightly tall; keep it optically centered. */
-.train210>header .avatar.species-grimo .speciesCanvas,
 .entries210 .avatar.species-grimo .speciesCanvas{
   transform:scale(.98) translateY(1px)!important;
   transform-origin:50% 52%!important;
 }
 
 /* Unil stays close to the source proportions. */
-.train210>header .avatar.species-unil .speciesCanvas,
 .entries210 .avatar.species-unil .speciesCanvas{
   transform:translateY(1px)!important;
 }
@@ -99,10 +75,6 @@ css.textContent=`
 /* Selection / rarity state must not move the portrait itself. */
 .entries210>button,
 .entries210>button.on210,
-.train210,
-.train210.rarityFX249{
-  transform:none!important;
-}
 .entries210>button .avatar,
 .entries210>button.on210 .avatar{
   margin:0!important;

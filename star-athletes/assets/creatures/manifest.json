@@ -1,0 +1,213 @@
+{
+  "revision": "v0.34.09",
+  "assets": [
+    {
+      "species_id": "draco",
+      "file": "draco.png",
+      "pixels": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "alpha": true,
+      "bytes": 1871898,
+      "sha256": "ea5e67b70bc80b0063de8b5b424474f5066d74f594d0e9031a594c7a2d0ab7b1",
+      "origin": "Original art generated with image_gen using the existing game creature as reference; copied unchanged",
+      "generation_file": "exec-8a591a78-6b03-4848-9af0-751d6fedfc74.png"
+    },
+    {
+      "species_id": "grimo",
+      "file": "grimo.png",
+      "pixels": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "alpha": true,
+      "bytes": 1978814,
+      "sha256": "d74b915f07d08f19d3b9b2850ca18381c71e09d390c6196a6131853c19f2badd",
+      "origin": "Original art generated with image_gen using the existing game creature as reference; copied unchanged",
+      "generation_file": "exec-09367c3f-a8ca-4ad9-ab7d-bc34818fc751.png"
+    },
+    {
+      "species_id": "unil",
+      "file": "unil.png",
+      "pixels": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "alpha": true,
+      "bytes": 1571890,
+      "sha256": "e4ddc23fc6df7432b8b4dd0a0851d0f8d1cfacc7b5cf5e3bbf187ddbbb53f79b",
+      "origin": "Original art generated with image_gen using the existing game creature as reference; copied unchanged",
+      "generation_file": "exec-3de3d5b5-1e4b-4246-a98f-9eca8092daa5.png"
+    },
+    {
+      "species_id": "puru",
+      "file": "puru.png",
+      "pixels": [
+        1254,
+        1254
+      ],
+      "format": "PNG",
+      "alpha": true,
+      "bytes": 1287992,
+      "sha256": "af02e71f55c04424820aa03ebee407fbdd746173431d405740c64edbbf512e75",
+      "origin": "Original art generated with image_gen using the existing game creature as reference; copied unchanged",
+      "generation_file": "exec-0983dbb1-33b3-4006-b747-3e510fbf88f1.png"
+    }
+  ],
+  "appearanceStages": {
+    "version": 1,
+    "labels": [
+      "幼体",
+      "育成期",
+      "成体"
+    ],
+    "trainingThresholds": [
+      0,
+      3,
+      9
+    ],
+    "legacyPresentationFloor": 2,
+    "atlases": [
+      {
+        "species": "draco",
+        "file": "draco-growth.png",
+        "size": [
+          1536,
+          1024
+        ],
+        "frames": [
+          {
+            "stage": 0,
+            "source": [
+              0,
+              0,
+              768,
+              1024
+            ]
+          },
+          {
+            "stage": 1,
+            "source": [
+              768,
+              0,
+              768,
+              1024
+            ]
+          }
+        ],
+        "adult": "draco.png",
+        "bytes": 2156056,
+        "sha256": "27917f845b921e79188afe3912f4f62c08dc82fcdb792a2bb73e1a1c0f39225e",
+        "transparent": true,
+        "origin": "Original two-frame younger-form art generated with image_gen from the existing species PNG, copied unchanged",
+        "generation_file": "exec-543831a3-cf29-458b-92c1-f4c2b5754716.png"
+      },
+      {
+        "species": "unil",
+        "file": "unil-growth.png",
+        "size": [
+          1536,
+          1024
+        ],
+        "frames": [
+          {
+            "stage": 0,
+            "source": [
+              0,
+              0,
+              768,
+              1024
+            ]
+          },
+          {
+            "stage": 1,
+            "source": [
+              768,
+              0,
+              768,
+              1024
+            ]
+          }
+        ],
+        "adult": "unil.png",
+        "bytes": 2085497,
+        "sha256": "5c3fe2b530054712d1325a6ba377187010662feba50a4c803a51266570909387",
+        "transparent": true,
+        "origin": "Original two-frame younger-form art generated with image_gen from the existing species PNG, copied unchanged",
+        "generation_file": "exec-c718c93c-73a8-4a97-9b8d-9d061d3345a1.png"
+      },
+      {
+        "species": "grimo",
+        "file": "grimo-growth.png",
+        "size": [
+          1536,
+          1024
+        ],
+        "frames": [
+          {
+            "stage": 0,
+            "source": [
+              0,
+              0,
+              768,
+              1024
+            ]
+          },
+          {
+            "stage": 1,
+            "source": [
+              768,
+              0,
+              768,
+              1024
+            ]
+          }
+        ],
+        "adult": "grimo.png",
+        "bytes": 2312634,
+        "sha256": "6ed971f358a4b077e038d3577610de421a543b38ea140561c86e109c9c3f5f48",
+        "transparent": true,
+        "origin": "Original two-frame younger-form art generated with image_gen from the existing species PNG, copied unchanged",
+        "generation_file": "exec-332f2889-4ee0-4dc1-9db8-231ecd076fa0.png"
+      },
+      {
+        "species": "puru",
+        "file": "puru-growth.png",
+        "size": [
+          1536,
+          1024
+        ],
+        "frames": [
+          {
+            "stage": 0,
+            "source": [
+              0,
+              0,
+              768,
+              1024
+            ]
+          },
+          {
+            "stage": 1,
+            "source": [
+              768,
+              0,
+              768,
+              1024
+            ]
+          }
+        ],
+        "adult": "puru.png",
+        "bytes": 1900266,
+        "sha256": "d457b05a7fd22d2d1c31999513f4b4676959657ce75946041d26857e9ff3dc5f",
+        "transparent": true,
+        "origin": "Original two-frame younger-form art generated with image_gen from the existing species PNG, copied unchanged",
+        "generation_file": "exec-74a120f6-124c-4e14-83d6-488eb89e17e2.png"
+      }
+    ]
+  }
+}

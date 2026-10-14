@@ -5,7 +5,7 @@ if(window.STAR_DRACO_TRAITS330)return;
 
 const SRC330=(window.STAR_DRACO_STABLE329&&window.STAR_DRACO_STABLE329.source)
   ? window.STAR_DRACO_STABLE329.source
-  : '../star-athletes-draco-lab/generated/body_base_clean.png?v=414';
+  : '../star-athletes/assets/creatures/draco.png?v=3403';
 
 const JP330=window.DRACO_JP||{
   normal:'ノーマル',
@@ -70,12 +70,12 @@ function syncCards330(){
 
   document.querySelectorAll('#breeders .card[data-id],#lineagePool .card[data-id],#cands .card[data-id]').forEach(card=>{
     const m=find330(card.dataset.id);
-    if(m?.species==='draco')upsert330(card.querySelector('.bd')||card,m,false);
+    if(m?.species==='draco')upsert330(card.querySelector('.athleteTraits210')||card.querySelector('.bd')||card,m,false);
   });
 
   document.querySelectorAll('.train210[data-athlete210]').forEach(card=>{
     const m=find330(card.dataset.athlete210);
-    if(m?.species==='draco')upsert330(card.querySelector('.bd')||card,m,false);
+    if(m?.species==='draco')upsert330(card.querySelector('.athleteTraits210')||card.querySelector('.bd')||card,m,false);
   });
 
   const parentIds=Array.isArray(S?.parents)?S.parents:[];
@@ -104,6 +104,7 @@ const previousAvatar330=window.avatar;
 window.avatar=function(m,big=false){
   if(!m||m.species!=='draco')return previousAvatar330(m,big);
   ensure330(m);
+  if((window.STAR_GROWTH226?.appearance?.(m)?.stage??2)<2)return window.STAR_ART116.avatar(m,big);
   const sp=(typeof SP!=='undefined'&&SP.draco)?SP.draco[0]:'ドラコ';
   const alt=esc330((m?.name?m.name+' / ':'')+sp);
   return '<div class="avatar art draco-stable329 '+(big?'bigArt':'')+'">'+

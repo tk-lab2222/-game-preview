@@ -46,7 +46,7 @@ css.textContent=`
   z-index:20!important;
   isolation:isolate!important;
   overflow:hidden!important;
-  background:linear-gradient(#fff9eb,#f4ead6)!important;
+  background:transparent!important;
 }
 
 /* Only the actual art primitive may be visible inside these image boxes. */
