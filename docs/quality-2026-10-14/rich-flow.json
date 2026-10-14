@@ -1,0 +1,33 @@
+{
+  "release": "v0.34.12",
+  "actualBirthsAdoptionThreeRoundsMatch": true,
+  "sameSaveScreens": [
+    {
+      "screen": "lab",
+      "visibleCopyUnchanged": true
+    },
+    {
+      "screen": "training",
+      "visibleCopyUnchanged": true
+    },
+    {
+      "screen": "nest",
+      "visibleCopyUnchanged": true
+    },
+    {
+      "screen": "tournament",
+      "visibleCopyUnchanged": true
+    }
+  ],
+  "priorSourceTrainingMatchParity": true,
+  "reloadAthletesPreserved": true,
+  "starNativeControlsWork": true,
+  "rosterPortraitPixelsAndTouchSelection": true,
+  "widths": [
+    320,
+    390,
+    414
+  ],
+  "errors": [],
+  "missing": []
+}
