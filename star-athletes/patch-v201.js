@@ -49,6 +49,7 @@ function repairBirth201(){
 }
 // Nest presentation reads canonical collections; view selection stays in memory only.
 let nestGroup201='team',nestPicked201=null;
+const nestStarView201={mode:'earned',key:'speed'};
 function collections201(){
  const unique=list=>{const seen=new Set();return(list||[]).filter(m=>m?.id&&!seen.has(m.id)&&seen.add(m.id))};
  return {team:unique(S.nest),lineage:unique(S.lineage),stars:unique((S.myStars323||[]).map(x=>x?.athlete))};
@@ -78,6 +79,7 @@ function gallery201(section){
   const strip=make('div','nestChoices201');strip.setAttribute('role','group');strip.setAttribute('aria-label','見る個体を選ぶ');
   for(const x of list){const b=make('button',x.id===m.id?'on201':'');b.type='button';b.dataset.nestPick201=x.id;b.setAttribute('aria-pressed',String(x.id===m.id));b.setAttribute('aria-label',x.name||'アスリート');const art=make('div','nestThumb201');art.innerHTML=avatar(x);b.append(art,make('span','',x.name||'アスリート'));b.onclick=()=>{nestPicked201=x.id;gallery201(section)};strip.appendChild(b)}
   host.appendChild(strip);
+  const star=window.STAR_GROWTH226?.starMap?.(m,nestStarView201);if(star)host.appendChild(star);
   const profile=make('details','nestProfile201');profile.open=open;profile.appendChild(make('summary','','能力'));
   const stats=make('div','nestStats201');for(const [k,label] of Object.entries(SL)){const row=make('span','');row.append(make('small','',label),make('b','',String(m.stats?.[k]??0)));stats.appendChild(row)}profile.appendChild(stats);host.appendChild(profile);
  }

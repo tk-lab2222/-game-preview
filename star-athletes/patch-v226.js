@@ -170,24 +170,50 @@ document.addEventListener('click',e=>{
  if(run&&!run.disabled){const promo=!!S.rivalsPromo225;watchBattle226(promo)}
 },true);
 
-// Small visible checkpoint so growth inheritance is understandable while testing.
-function badges226(){
- document.querySelectorAll('.train210').forEach(c=>{
-   if(c.querySelector('.growth226'))return;const id=c.querySelector('[data-m210]')?.dataset.m210,m=(S.nest||[]).find(x=>x.id===id);if(!m)return;meta226(m);
-   const tg=Math.round(K226.reduce((a,k)=>a+n226(m.trainingGain226[k]),0)),mg=Math.round(K226.reduce((a,k)=>a+n226(m.matchGain226[k]),0));
-   const d=document.createElement('div');d.className='growth226';d.textContent=`血統基礎 + 現役育成　練習+${tg} / 実戦+${mg}`;c.appendChild(d);
- });
+// GAME CORE: one readonly view of the existing earned-growth journal.
+// Never migrate, infer birth history, save, or roll RNG while drawing a star.
+const STAR_AXES226=['speed','agility','tech','guts','stamina','power'];
+function starValues226(m){
+ const finite=v=>Number.isFinite(Number(v))?Number(v):0;
+ return STAR_AXES226.map(key=>({key,label:L226[key],current:finite(m?.stats?.[key]),training:finite(m?.trainingGain226?.[key]),match:finite(m?.matchGain226?.[key])}));
 }
-const oldRender226=render;
-render=function(){const out=oldRender226();setTimeout(badges226,0);return out};
-const css=document.createElement('style');css.textContent=`.growth226{margin-top:7px;padding:5px 7px;border-radius:8px;background:#edf7ff;border:1px solid #acd5ef;color:#35546c;font-size:7px;font-weight:900}.matchGrowth226{margin-top:9px;padding:9px;border:2px solid #e7c454;border-radius:11px;background:#fff8d8;color:#594915;font-size:9px;line-height:1.6}.matchGrowth226 b{font-size:11px}`;document.head.appendChild(css);
+function starMap226(m,view={mode:'earned',key:'speed'}){
+ const host=document.createElement('details');host.className='starMap226';host.setAttribute('aria-label','育てた星');host.open=!!view.open;
+ const signed=n=>(n>=0?'+':'')+n;
+ function draw(){
+  const rows=starValues226(m),mode=view.mode==='current'?'current':'earned',key=STAR_AXES226.includes(view.key)?view.key:'speed';
+  view.mode=mode;view.key=key;host.dataset.starView226=mode;host.dataset.starSelection226=key;
+  const values=rows.map(r=>mode==='current'?r.current:r.training+r.match),max=Math.max(mode==='current'?120:40,...values.map(v=>Math.max(0,v)))*1.12;
+  const point=(i,r)=>{const a=(-90+i*60)*Math.PI/180;return [120+Math.cos(a)*r,96+Math.sin(a)*r].map(n=>n.toFixed(2)).join(',')};
+  const points=values.map((v,i)=>point(i,Math.sqrt(Math.max(0,v)/max)*66));
+  const selected=rows.find(r=>r.key===key),empty=values.every(v=>v===0),total=values.reduce((a,v)=>a+v,0),description=rows.map((r,i)=>r.label+' '+(mode==='earned'?signed(values[i]):values[i])).join('、');
+  host.innerHTML=`<summary><span>✦ 育てた星</span><svg viewBox="0 0 240 192" aria-hidden="true"><polygon points="${points.join(' ')}" class="starShape226"/>${points.map(p=>`<circle cx="${p.split(',')[0]}" cy="${p.split(',')[1]}" r="5" class="starLight226"/>`).join('')}</svg><b><small>${mode==='earned'?'育成':'いま'}</small>${mode==='earned'?signed(total):total}</b><i aria-hidden="true">⌄</i></summary>
+   <header><div role="group" aria-label="星の表示"><button type="button" data-star-mode226="earned" aria-pressed="${mode==='earned'}">育成</button><button type="button" data-star-mode226="current" aria-pressed="${mode==='current'}">いま</button></div></header>
+   <div class="starSky226"><svg viewBox="0 0 240 192" role="img" aria-label="${mode==='earned'?'練習と実戦の記録':'現在の能力'}：${description}">
+   <circle cx="120" cy="96" r="66" class="starOrbit226"/><circle cx="120" cy="96" r="33" class="starOrbit226"/>
+   ${rows.map((r,i)=>`<line x1="120" y1="96" x2="${point(i,66).split(',')[0]}" y2="${point(i,66).split(',')[1]}" class="starAxis226"/>`).join('')}
+   <polygon points="${points.join(' ')}" class="starShape226"/>
+   ${rows.map((r,i)=>`<circle cx="${points[i].split(',')[0]}" cy="${points[i].split(',')[1]}" r="${key===r.key?5:3}" class="starLight226 ${key===r.key?'selected226':''}"/>`).join('')}
+   <path d="M120 88l2 6 6 2-6 2-2 6-2-6-6-2 6-2Z" class="starHeart226"/></svg>
+   ${rows.map((r,i)=>`<button type="button" class="starAxisButton226 axis226-${i}" data-star-key226="${r.key}" aria-pressed="${key===r.key}" aria-label="${r.label} ${mode==='earned'?signed(values[i]):values[i]}">${r.label}</button>`).join('')}</div>
+   <div class="starReadout226" aria-live="polite"><div><span>${selected.label}</span><strong>${mode==='earned'?signed(selected.training+selected.match):selected.current}</strong></div><small>練習 ${signed(selected.training)}<br>実戦 ${signed(selected.match)}</small></div>
+   ${mode==='earned'&&empty?'<p class="starStart226">練習で、星が伸びる</p>':''}`;
+ }
+ host.addEventListener('click',e=>{const mode=e.target.closest?.('[data-star-mode226]'),key=e.target.closest?.('[data-star-key226]');if(!mode&&!key)return;const restore=mode?'[data-star-mode226="'+mode.dataset.starMode226+'"]':'[data-star-key226="'+key.dataset.starKey226+'"]';if(mode)view.mode=mode.dataset.starMode226;if(key)view.key=key.dataset.starKey226;draw();host.querySelector(restore)?.focus({preventScroll:true})});
+ host.addEventListener('toggle',()=>{view.open=host.open});
+ draw();return host;
+}
+// Retire the old debug growth badge and its render wrapper; native owners mount the map.
+const css=document.createElement('style');css.textContent=`.matchGrowth226{margin-top:9px;padding:9px;border:2px solid #e7c454;border-radius:11px;background:#fff8d8;color:#594915;font-size:9px;line-height:1.6}.matchGrowth226 b{font-size:11px}`;document.head.appendChild(css);
 window.STAR_GROWTH226={
  trainingDelta:trainingDelta226,
  appearance:appearance226,
  appearanceBirth:appearanceBirth226,
  appearanceTraining:appearanceTraining226,
+ starValues:starValues226,
+ starMap:starMap226,
  heritageRate:heritageRate226,
  inherited:(m,k,rate)=>inherited226(m,k,rate)
 };
-setTimeout(()=>{migrate226();badges226()},0);
+setTimeout(migrate226,0);
 })();
